@@ -6,6 +6,11 @@
     <title>Aplikacja z Menu</title>
 
     <style>
+        :root {
+            --nav-bg: #333;
+            --nav-height: 68px; /* początkowa wartość; realna wysokość ustalana JS-em */
+        }
+
         /* ----- NAV (zawsze na górze) ----- */
         nav {
             position: fixed; /* zawsze widoczny */
@@ -13,18 +18,26 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            background: #333;
+            background: var(--nav-bg);
             padding: 12px 1rem;
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
             box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            box-sizing: border-box;
         }
 
-        /* zostaw trochę miejsca u góry strony, aby zawartość nie była zasłonięta przez fixed nav */
-        body { 
+        /* zostaw trochę miejsca u góry strony — zostanie nadpisane w JS na faktyczną wysokość nav */
+        body {
             font-family: sans-serif;
             margin: 0;
-            padding-top: 68px; /* dopasuj jeśli zmienisz wysokość nav */
+            padding-top: var(--nav-height);
             background: #f7f7f7;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            transition: background 0.15s;
         }
 
         nav button {
@@ -32,7 +45,7 @@
             color: white;
             border: none;
             padding: 8px 16px;
-            margin: 0 6px;
+            margin: 0;
             cursor: pointer;
             border-radius: 6px;
             font-size: 15px;
@@ -75,7 +88,7 @@
         /* ----- Gra ----- */
         .game-wrapper { border: 2px dashed #ccc; padding: 20px; border-radius: 8px; background: #fff; }
         .container { position: relative; padding-top: 10px; background: transparent; border-radius: 12px; }
-        #timer-bar { position: absolute; top: 0; left: 0; height: 5px; background: #dc3545; width: 100%; transition: width 0.1s linear; border-radius: 4px 4px 0 0; }
+        #timer-bar { position: absolute; top: 0; left: 0; height: 5px; background: #dc3545; width: 100%; /* bez transition */ border-radius: 4px 4px 0 0; }
 
         h2 { color: #333; margin-bottom: 6px; }
         .word-box { font-size: 1.6rem; font-weight: 700; color: #007bff; margin: 12px 0; min-height: 44px; display:flex; align-items:center; justify-content:center; }
@@ -91,18 +104,18 @@
 
         /* Ustawienia */
         #settings input[type="number"] { width: 80px; padding: 6px; }
+
         @media (max-width: 520px) {
             nav button { padding: 8px 10px; margin: 4px 4px; font-size: 14px; }
-            body { padding-top: 84px; } /* mobilnie daj więcej miejsca jeśli nav zajmuje 2 linie */
         }
     </style>
 </head>
 <body>
 
-<nav>
-    <button onclick="showSection('home', this)" class="active">Start</button>
-    <button id="graj" onclick="showSection('game', this)">Graj</button>
-    <button onclick="showSection('settings', this)">Ustawienia</button>
+<nav id="topnav" role="navigation" aria-label="Główne menu">
+    <button type="button" onclick="showSection('home', this)" class="active">Start</button>
+    <button id="graj" type="button" onclick="showSection('game', this)">Graj</button>
+    <button type="button" onclick="showSection('settings', this)">Ustawienia</button>
 </nav>
 
 <!-- Sekcja 1: Start -->
@@ -110,7 +123,7 @@
     <div id="python-quiz-container">
         <h3>Szybki Test: 20 Pytań z Pythona</h3>
         <div id="questions-list"></div>
-        <button id="check-quiz" style="margin-top:12px; padding:10px; cursor:pointer;">Sprawdź wynik</button>
+        <button id="check-quiz" type="button" style="margin-top:12px; padding:10px; cursor:pointer;">Sprawdź wynik</button>
         <p id="final-score" style="font-weight:bold; margin-top:12px;"></p>
     </div>
 </div>
@@ -130,7 +143,7 @@
                 <input type="text" id="v2" placeholder="II forma (Past Simple)" autocomplete="off">
                 <input type="text" id="v3" placeholder="III forma (Past Participle)" autocomplete="off">
 
-                <button id="submit-answer" class="game-btn">Zatwierdź (Enter)</button>
+                <button id="submit-answer" class="game-btn" type="button">Zatwierdź (Enter)</button>
 
                 <div id="feedback" class="result"></div>
                 <div class="score-board">Punkty: <span id="points">0</span></div>
@@ -160,6 +173,25 @@ jeść,eat,ate,eaten
 </div>
 
 <script>
+/* ----------------- Pomoc: ustaw padding-top body zgodnie z aktualną wysokością nav (żeby nav nie zasłaniał treści) ----------------- */
+(function fixBodyPaddingForNav(){
+    const nav = document.getElementById('topnav');
+    const root = document.documentElement;
+
+    function applyPadding() {
+        // zmierz rzeczywistą wysokość nav i ustaw ją w CSS var i body padding
+        const h = nav.getBoundingClientRect().height;
+        root.style.setProperty('--nav-height', h + 'px');
+        document.body.style.paddingTop = h + 'px';
+    }
+
+    // uruchom na ładowaniu i przy zmianie rozmiaru okna (np. mobilne przełamanie wierszy)
+    window.addEventListener('load', applyPadding);
+    window.addEventListener('resize', applyPadding);
+    // też wywołaj od razu
+    applyPadding();
+})();
+
 /* ----------------- POKAZYWANIE SEKCJI (menu) ----------------- */
 function showSection(sectionId, element) {
     const sections = document.querySelectorAll('.content-section');
@@ -169,7 +201,7 @@ function showSection(sectionId, element) {
     buttons.forEach(btn => btn.classList.remove('active'));
 
     document.getElementById(sectionId).classList.add('active');
-    element.classList.add('active');
+    if (element && element.classList) element.classList.add('active');
 }
 
 /* ----------------- QUIZ (Start) ----------------- */
@@ -223,12 +255,16 @@ function showSection(sectionId, element) {
     });
 })();
 
-/* ----------------- GRA: czasowniki (czysty, poprawiony) ----------------- */
+/* ----------------- GRA: czasowniki (poprawiony timer z requestAnimationFrame) ----------------- */
 (function setupGame(){
     let verbs = [];
     let currentVerb = null;
     let points = 0;
-    let timerId = null;
+
+    // timer:
+    let rafId = null;
+    let startTime = 0;
+    let endTime = 0;
     let timeLeft = 0;
     let TIME_LIMIT = 2; // domyślnie (sekundy)
 
@@ -252,29 +288,52 @@ function showSection(sectionId, element) {
         return (isNaN(v) || v <= 0) ? 2 : v;
     }
 
+    function cancelTimer() {
+        if (rafId !== null) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+        }
+    }
+
     function startTimer() {
-        clearInterval(timerId);
+        cancelTimer();
         TIME_LIMIT = getTimeLimitFromSettings();
+        // safety
+        if (TIME_LIMIT <= 0) TIME_LIMIT = 2;
+
+        startTime = performance.now();
+        endTime = startTime + TIME_LIMIT * 1000;
         timeLeft = TIME_LIMIT;
+
+        // ustaw początkową szerokość
         updateTimerBar();
 
-        timerId = setInterval(() => {
-            timeLeft = Math.max(0, +(timeLeft - 0.1).toFixed(1));
+        function tick(now) {
+            const current = now || performance.now();
+            const remainingMs = Math.max(0, endTime - current);
+            timeLeft = remainingMs / 1000;
             updateTimerBar();
-            if (timeLeft <= 0) {
-                clearInterval(timerId);
+
+            if (remainingMs <= 0) {
+                rafId = null;
                 showTimeout();
+            } else {
+                rafId = requestAnimationFrame(tick);
             }
-        }, 100);
+        }
+
+        rafId = requestAnimationFrame(tick);
     }
 
     function updateTimerBar() {
-        const percentage = (timeLeft / TIME_LIMIT) * 100;
+        const limit = (TIME_LIMIT > 0) ? TIME_LIMIT : 1;
+        const percentage = Math.max(0, Math.min(100, (timeLeft / limit) * 100));
         document.getElementById('timer-bar').style.width = percentage + "%";
     }
 
     function showTimeout() {
         if (!currentVerb) return;
+        cancelTimer();
         document.getElementById('feedback').style.color = "#ff8c00";
         document.getElementById('feedback').innerText = `Czas minął! Poprawnie: ${currentVerb.v1}, ${currentVerb.v2}, ${currentVerb.v3}`;
         disableInputs(true);
@@ -300,7 +359,7 @@ function showSection(sectionId, element) {
 
     function checkAnswer() {
         if (!currentVerb) return;
-        clearInterval(timerId);
+        cancelTimer();
         const v1 = document.getElementById('v1').value.trim().toLowerCase();
         const v2 = document.getElementById('v2').value.trim().toLowerCase();
         const v3 = document.getElementById('v3').value.trim().toLowerCase();
@@ -330,7 +389,6 @@ function showSection(sectionId, element) {
 
     // Inicjuj grę gdy użytkownik kliknie przycisk "Graj"
     startButton.addEventListener('click', () => {
-        // jeśli gra jeszcze nie załadowana, załaduj bazę
         if (verbs.length === 0) loadVerbs();
         points = 0;
         document.getElementById('points').innerText = points;
@@ -345,8 +403,17 @@ function showSection(sectionId, element) {
         const gameSection = document.getElementById('game');
         if (!gameSection.classList.contains('active')) return;
         if (e.key === 'Enter') {
-            // Jeśli inputs nie są disabled, sprawdź odpowiedź
             if (!document.getElementById('v1').disabled) checkAnswer();
+        }
+    });
+
+    // Jeśli użytkownik zmieni ustawienie czasu podczas aktywnej rundy, restartujemy timer
+    document.getElementById('Timer').addEventListener('change', () => {
+        // Jeżeli gra aktywna i inputs aktywne (czyli runda trwa) — restart timera z nową wartością
+        const gameActive = document.getElementById('game').classList.contains('active');
+        const inputsDisabled = document.getElementById('v1').disabled;
+        if (gameActive && !inputsDisabled) {
+            startTimer();
         }
     });
 
