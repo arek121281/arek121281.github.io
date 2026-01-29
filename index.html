@@ -116,6 +116,7 @@
     <button type="button" onclick="showSection('home', this)" class="active">Start</button>
     <button id="graj" type="button" onclick="showSection('game', this)">Graj</button>
     <button type="button" onclick="showSection('settings', this)">Ustawienia</button>
+    <button type="button" onclick="showSection('h4', this)">h4</button>
 </nav>
 
 <!-- Sekcja 1: Start -->
@@ -172,6 +173,12 @@ jeść,eat,ate,eaten
     <input type="number" id="Timer" value="2" min="1" />
 </div>
 
+<div id="h4" class="content-section">
+    <h2>Ustawienia</h2>
+    <p>Tutaj możesz zmienić np. czas na odpowiedź (w sekundach).</p>
+    <label for="Timer">Czas na odpowiedź (sekundy): </label>
+    <input type="number" id="Timer" value="2" min="1" />
+</div>
 <script>
 /* ----------------- Pomoc: ustaw padding-top body zgodnie z aktualną wysokością nav (żeby nav nie zasłaniał treści) ----------------- */
 (function fixBodyPaddingForNav(){
