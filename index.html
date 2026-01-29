@@ -57,17 +57,67 @@
 
 <!-- Sekcja 1: Start -->
 <div id="home" class="content-section active">
-    <h1>Witaj w nauce angielskiego!</h1>
-    <p>Wybierz "Graj" z menu, aby zacząć quiz.</p>
+<div id="python-quiz-container" style="font-family: sans-serif; max-width: 600px; padding: 20px; border: 1px solid #ccc;">
+    <h3>Szybki Test: 20 Pytań z Pythona</h3>
+    <div id="questions-list"></div>
+    <button onclick="calculateResult()" style="margin-top:20px; padding:10px; cursor:pointer;">Sprawdź wynik</button>
+    <p id="final-score" style="font-weight:bold; margin-top:15px;"></p>
+
+    <script>
+        const questions = [
+            { q: "Funkcja do wyświetlania tekstu?", a: "print" },
+            { q: "Typ danych dla liczb całkowitych?", a: "int" },
+            { q: "Typ danych dla tekstu?", a: "str" },
+            { q: "Zmienna logiczna (Prawda)?", a: "True" },
+            { q: "Zmienna logiczna (Fałsz)?", a: "False" },
+            { q: "Słowo kluczowe do definicji funkcji?", a: "def" },
+            { q: "Słowo kluczowe do pętli warunkowej?", a: "while" },
+            { q: "Operator modulo (reszta z dzielenia)?", a: "%" },
+            { q: "Symbol potęgowania?", a: "**" },
+            { q: "Dodawanie elementu na koniec listy?", a: "append" },
+            { q: "Długość listy (funkcja)?", a: "len" },
+            { q: "Słowo kluczowe do pętli iteracyjnej?", a: "for" },
+            { q: "Instrukcja warunkowa 'jeśli'?", a: "if" },
+            { q: "Instrukcja 'w przeciwnym razie'?", a: "else" },
+            { q: "Instrukcja 'w przeciwnym razie jeśli'?", a: "elif" },
+            { q: "Jak nazywa się lista niemutowalna?", a: "tuple" },
+            { q: "Zwracanie wartości z funkcji?", a: "return" },
+            { q: "Importowanie modułów?", a: "import" },
+            { q: "Usuwanie spacji z początku i końca tekstu?", a: "strip" },
+            { q: "Konwersja na liczbę zmiennoprzecinkową?", a: "float" }
+        ];
+
+        const container = document.getElementById('questions-list');
+        questions.forEach((item, index) => {
+            container.innerHTML += `
+                <div style="margin-bottom:10px;">
+                    <label>${index + 1}. ${item.q}</label><br>
+                    <input type="text" class="quiz-input" data-ans="${item.a}" style="width:100%;">
+                </div>`;
+        });
+
+        function calculateResult() {
+            let score = 0;
+            const inputs = document.querySelectorAll('.quiz-input');
+            inputs.forEach(input => {
+                if (input.value.trim().toLowerCase() === input.getAttribute('data-ans').toLowerCase()) {
+                    score++;
+                    input.style.borderColor = "green";
+                } else {
+                    input.style.borderColor = "red";
+                }
+            });
+            document.getElementById('final-score').innerText = "Wynik: " + score + " / " + questions.length;
+        }
+    </script>
+</div>
 </div>
 
 <!-- Sekcja 2: Gra (Tutaj wklej kod swojej gry) -->
 <div id="game" class="content-section">
     <h2>Twoja Gra</h2>
     <div style="border: 2px dashed #ccc; padding: 20px;">
-        <!-- Tutaj ląduje kod kontenera gry z poprzednich odpowiedzi -->
-<!DOCTYPE html>
-<html lang="pl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
