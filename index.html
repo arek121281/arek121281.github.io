@@ -1,1 +1,263 @@
-test
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikacja z Menu</title>
+    <style>
+        /* Styl menu */
+        nav {
+            background: #333;
+            padding: 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+        }
+
+        nav button {
+            background: #444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        nav button:hover { background: #555; }
+        nav button.active { background: #007bff; } /* Podświetlenie aktywnej opcji */
+
+        /* Styl kontenerów z treścią */
+        .content-section {
+            display: none; /* Domyślnie wszystkie sekcje są ukryte */
+            padding: 20px;
+            text-align: center;
+            animation: fadeIn 0.3s; /* Prosta animacja pojawiania się */
+        }
+
+        /* Klasa, która pokazuje aktywną sekcję */
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <button onclick="showSection('home', this)" class="active">Start</button>
+    <button onclick="showSection('game', this)" id="graj">Graj</button>
+    <button onclick="showSection('settings', this)">Ustawienia</button>
+</nav>
+
+<!-- Sekcja 1: Start -->
+<div id="home" class="content-section active">
+    <h1>Witaj w nauce angielskiego!</h1>
+    <p>Wybierz "Graj" z menu, aby zacząć quiz.</p>
+</div>
+
+<!-- Sekcja 2: Gra (Tutaj wklej kod swojej gry) -->
+<div id="game" class="content-section">
+    <h2>Twoja Gra</h2>
+    <div style="border: 2px dashed #ccc; padding: 20px;">
+        <!-- Tutaj ląduje kod kontenera gry z poprzednich odpowiedzi -->
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szybki Quiz: Czasowniki</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; padding: 20px; background: #eef2f3; }
+        .container {  padding-top: 70px; background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; position: relative; overflow: hidden; }
+        
+        /* Pasek czasu */
+        #timer-bar { position: absolute; top: 0; left: 0; height: 5px; background: #dc3545; width: 100%; transition: width 0.1s linear; }
+        
+        h2 { color: #333; margin-bottom: 5px; }
+        .word-box { font-size: 1.8rem; font-weight: bold; color: #007bff; margin: 15px 0; min-height: 40px; }
+        
+        input { width: 100%; padding: 12px; margin: 6px 0; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; transition: 0.3s; }
+        input:focus { border-color: #007bff; outline: none; background: #f8fbff; }
+        
+        button { background: #007bff; color: white; border: none; padding: 14px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; margin-top: 10px; }
+        button:hover { background: #0056b3; }
+        
+        .result { margin-top: 15px; font-weight: bold; min-height: 40px; font-size: 14px; }
+        .score-board { margin-top: 10px; font-size: 1.1rem; color: #555; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="timer-bar"></div>
+    <h2>Przetłumacz:</h2>
+    <div id="polish-word" class="word-box">-</div>
+    
+    <input type="text" id="v1" placeholder="I forma (Infinitive)" autocomplete="off">
+    <input type="text" id="v2" placeholder="II forma (Past Simple)" autocomplete="off">
+    <input type="text" id="v3" placeholder="III forma (Past Participle)" autocomplete="off">
+    
+    <button onclick="checkAnswer()">Zatwierdź (Enter)</button>
+    
+    <div id="feedback" class="result"></div>
+    <div class="score-board">Punkty: <span id="points">0</span></div>
+</div>
+
+<!-- TWOJA BAZA DANYCH -->
+<pre id="csvData" style="display:none;">
+być,be,was,been
+robić,do,did,done
+iść,go,went,gone
+mieć,have,had,had
+pisać,write,wrote,written
+widzieć,see,saw,seen
+pić,drink,drank,drunk
+jeść,eat,ate,eaten
+</pre>
+
+<script>
+ // document.addEventListener('DOMContentLoaded', () => {
+  const przycisk = document.getElementById('graj');
+  graj.addEventListener('click', () => {
+    let verbs = [];
+    let currentVerb;
+    let points = 0;
+    let timer=0;
+    let timeLeft=0;
+    const TIME_LIMIT = Number(document.getElementById('Timer').value) * 10 ;
+    console.log(timeLeft)
+    console.log(timer)
+    initGame();
+    //startTimer()
+    //const TIME_LIMIT = 20; // sekundy na odpowiedź
+
+    function initGame() {
+        const rawData = document.getElementById('csvData').innerText;
+        verbs = rawData.trim().split('\n').map(line => {
+            const [pl, v1, v2, v3] = line.split(',');
+            return { pl: pl.trim(), v1: v1.trim().toLowerCase(), v2: v2.trim().toLowerCase(), v3: v3.trim().toLowerCase() };
+        });
+        nextQuestion();
+    }
+
+    function startTimer() {
+        clearInterval(timer);
+        timeLeft = TIME_LIMIT;
+        updateTimerBar();
+        
+        timer = setInterval(() => {
+            timeLeft -= 0.1;
+            updateTimerBar();
+            
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                showTimeout();
+            }
+        }, 100);
+    }
+
+    function updateTimerBar() {
+        const percentage = (timeLeft / TIME_LIMIT) * 100;
+        document.getElementById('timer-bar').style.width = percentage + "%";
+    }
+
+    function showTimeout() {
+        document.getElementById('feedback').style.color = "#ff8c00";
+        document.getElementById('feedback').innerText = `Czas minął! Poprawnie: ${currentVerb.v1}, ${currentVerb.v2}, ${currentVerb.v3}`;
+        disableInputs(true);
+        setTimeout(nextQuestion, 2500);
+    }
+
+    function nextQuestion() {
+      startTimer();
+        if (verbs.length === 0) return;
+        disableInputs(false);
+        currentVerb = verbs[Math.floor(Math.random() * verbs.length)];
+        
+        document.getElementById('polish-word').innerText = currentVerb.pl;
+        document.getElementById('v1').value = "";
+        document.getElementById('v2').value = "";
+        document.getElementById('v3').value = "";
+        document.getElementById('feedback').innerText = "";
+        document.getElementById('v1').focus();
+        
+        
+    }
+
+    function checkAnswer() {
+        clearInterval(timer);
+        const v1 = document.getElementById('v1').value.trim().toLowerCase();
+        const v2 = document.getElementById('v2').value.trim().toLowerCase();
+        const v3 = document.getElementById('v3').value.trim().toLowerCase();
+
+        const isCorrect = (v1 === currentVerb.v1 && v2 === currentVerb.v2 && v3 === currentVerb.v3);
+
+        if (isCorrect) {
+            points++;
+            document.getElementById('points').innerText = points;
+            document.getElementById('feedback').style.color = "#28a745";
+            document.getElementById('feedback').innerText = "Świetnie! +1 punkt";
+            disableInputs(true);
+            setTimeout(nextQuestion, 1000);
+        } else {
+            document.getElementById('feedback').style.color = "#dc3545";
+            document.getElementById('feedback').innerText = `Błąd! Poprawnie: ${currentVerb.v1}, ${currentVerb.v2}, ${currentVerb.v3}`;
+            disableInputs(true);
+            setTimeout(nextQuestion, 2500); // Czekaj 2.5s po błędzie, żeby gracz zobaczył poprawną formę
+        }
+    }
+
+    function disableInputs(disabled) {
+        document.getElementById('v1').disabled = disabled;
+        document.getElementById('v2').disabled = disabled;
+        document.getElementById('v3').disabled = disabled;
+    }
+
+    document.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') checkAnswer();
+    });
+
+    
+  });
+
+</script>
+
+</body>
+</html>
+
+    </div>
+</div>
+
+<!-- Sekcja 3: Ustawienia -->
+<div id="settings" class="content-section">
+    <h2>Ustawienia</h2>
+    <p>Tutaj możesz zmienić np. czas na odpowiedź (wersja rozwojowa).</p>
+    <input type="number" id="Timer" value="2"/>
+</div>
+
+<script>
+    function showSection(sectionId, element) {
+        // 1. Ukryj wszystkie sekcje
+        const sections = document.querySelectorAll('.content-section');
+        sections.forEach(sec => sec.classList.remove('active'));
+
+        // 2. Usuń kolor aktywny ze wszystkich przycisków menu
+        const buttons = document.querySelectorAll('nav button');
+        buttons.forEach(btn => btn.classList.remove('active'));
+
+        // 3. Pokaż wybraną sekcję
+        document.getElementById(sectionId).classList.add('active');
+
+        // 4. Dodaj kolor aktywny do klikniętego przycisku
+        element.classList.add('active');
+    }
+</script>
+
+</body>
+</html>
