@@ -558,6 +558,7 @@ function showSection(sectionId, element) {
     let endTime = 0;
     let timeLeft = 0;
     let TIME_LIMIT = 2; // domyślnie (sekundy)
+    let TIME_BREAK = 2; // domyślnie (sekundy)
 
     const startButton = document.getElementById('graj');
     const submitBtn = document.getElementById('submit-answer');
@@ -628,7 +629,7 @@ function showSection(sectionId, element) {
         document.getElementById('feedback').style.color = "#ff8c00";
         document.getElementById('feedback').innerText = `Czas minął! Poprawnie: ${currentVerb.v1}, ${currentVerb.v2}, ${currentVerb.v3}`;
         disableInputs(true);
-        setTimeout(nextQuestion, 2000);
+        setTimeout(nextQuestion, TIME_BREAK * 1000);
     }
 
     function nextQuestion() {
