@@ -558,7 +558,7 @@ function showSection(sectionId, element) {
     let endTime = 0;
     let timeLeft = 0;
     let TIME_LIMIT = 2; // domyślnie (sekundy)
-    let TIME_BREAK = 4; // domyślnie (sekundy)
+    let TIME_BREAK = 4000; // uwaga milisekundy
 
     const startButton = document.getElementById('graj');
     const submitBtn = document.getElementById('submit-answer');
@@ -629,7 +629,7 @@ function showSection(sectionId, element) {
         document.getElementById('feedback').style.color = "#ff8c00";
         document.getElementById('feedback').innerText = `Czas minął! Poprawnie: ${currentVerb.v1}, ${currentVerb.v2}, ${currentVerb.v3}`;
         disableInputs(true);
-        setTimeout(nextQuestion, TIME_BREAK * 1000);
+        setTimeout(nextQuestion, TIME_BREAK);
     }
 
     function nextQuestion() {
@@ -669,7 +669,7 @@ function showSection(sectionId, element) {
             document.getElementById('feedback').style.color = "#dc3545";
             document.getElementById('feedback').innerText = `Błąd! Poprawnie: ${currentVerb.v1}, ${currentVerb.v2}, ${currentVerb.v3}`;
             disableInputs(true);
-            setTimeout(nextQuestion, 2000);
+            setTimeout(nextQuestion, TIME_BREAK);
         }
     }
 
