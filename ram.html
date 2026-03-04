@@ -1001,4 +1001,117 @@
                     </div>
                 </div>
                 <button class="sim-btn read" onclick="calcCapacity()" style="display:block;margin:0 auto;">Oblicz 📊</button>
-                <div class="calc-result" 
+                <div class="calc-result" style="margin-top: 16px;">
+                    <div id="calcCapResult" style="font-size: 0.95rem; line-height: 1.8; color: #c7d2fe;">
+                        📄 ~3.2 mln stron tekstu (5KB/strona)<br>
+                        🎵 ~3,500 piosenek MP3 (4.5MB/szt.)<br>
+                        📸 ~5,300 zdjęć (3MB/szt.)<br>
+                        🎬 ~2 filmy Full HD (8GB/film)<br>
+                        🔢 ~17.2 miliarda liczb (int32)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DUAL CHANNEL & PARAMETRY -->
+<section style="background: #eef2ff;">
+    <div class="container">
+        <div class="section-title fade-in">
+            <h2>🔧 Ważne parametry i technologie</h2>
+            <div class="line"></div>
+        </div>
+
+        <div class="card fade-in">
+            <h3><span class="icon">🔀</span> Dual Channel — podwójny kanał</h3>
+            <p><strong>Dual Channel</strong> to technologia pozwalająca na jednoczesne korzystanie z dwóch modułów RAM, co <strong>podwaja szerokość magistrali</strong> (z 64 do 128 bitów).</p>
+
+            <div class="grid-2" style="margin-top: 16px;">
+                <div style="background: #fef2f2; padding: 20px; border-radius: 12px; text-align: center;">
+                    <h4 style="color: var(--accent);">❌ Single Channel</h4>
+                    <p>1 moduł RAM → magistrala 64-bit</p>
+                    <div style="font-size: 2rem; font-weight: 900; color: var(--accent);">25.6 GB/s</div>
+                    <p style="color: var(--text-light);">(DDR4-3200)</p>
+                </div>
+                <div style="background: #ecfdf5; padding: 20px; border-radius: 12px; text-align: center;">
+                    <h4 style="color: var(--accent2);">✅ Dual Channel</h4>
+                    <p>2 moduły RAM → magistrala 128-bit</p>
+                    <div style="font-size: 2rem; font-weight: 900; color: var(--accent2);">51.2 GB/s</div>
+                    <p style="color: var(--text-light);">(2× DDR4-3200)</p>
+                </div>
+            </div>
+
+            <div class="info-box green" style="margin-top: 16px;">
+                <h4>💡 Wskazówka praktyczna</h4>
+                <p>Zawsze lepiej kupić <strong>2×8 GB</strong> niż <strong>1×16 GB</strong> — dual channel daje zauważalny wzrost wydajności, zwłaszcza w grach i aplikacjach graficznych (nawet 10-30% więcej FPS!).</p>
+            </div>
+        </div>
+
+        <div class="card fade-in">
+            <h3><span class="icon">⏱️</span> CAS Latency i Timingi</h3>
+            <p>Timingi RAM (np. <strong>16-18-18-36</strong>) opisują opóźnienia w cyklach zegara:</p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Timing</th><th>Nazwa</th><th>Co oznacza</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>CL (CAS Latency)</strong></td><td>tCL</td><td>Opóźnienie między żądaniem kolumny a danymi — najważniejszy!</td></tr>
+                        <tr><td><strong>tRCD</strong></td><td>RAS to CAS Delay</td><td>Czas od aktywacji wiersza do podania kolumny</td></tr>
+                        <tr><td><strong>tRP</strong></td><td>Row Precharge</td><td>Czas zamknięcia wiersza przed otwarciem nowego</td></tr>
+                        <tr><td><strong>tRAS</strong></td><td>Row Active Time</td><td>Minimalny czas aktywności wiersza</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="terminal">
+                <span class="c">// Obliczanie rzeczywistego opóźnienia (w nanosekundach):</span><br><br>
+                <span class="y">Opóźnienie [ns]</span> = (CL / Częstotliwość [MHz]) × 1000<br><br>
+                <span class="c">// Przykład DDR4-3200 CL16:</span><br>
+                Częstotliwość rzeczywista = 3200 / 2 = <span class="b">1600 MHz</span><br>
+                Opóźnienie = (16 / 1600) × 1000 = <span class="g">10 ns</span><br><br>
+                <span class="c">// Przykład DDR5-6400 CL32:</span><br>
+                Częstotliwość = 6400 / 2 = <span class="b">3200 MHz</span><br>
+                Opóźnienie = (32 / 3200) × 1000 = <span class="g">10 ns</span><br><br>
+                <span class="c">// 🤔 DDR5 ma wyższe CL, ale wyższy zegar —</span><br>
+                <span class="c">// opóźnienie w nanosekundach jest podobne!</span>
+            </div>
+        </div>
+
+        <div class="card fade-in">
+            <h3><span class="icon">🎮</span> XMP / EXPO — Profile overclockingu</h3>
+            <p>Większość pamięci RAM domyślnie działa na bazowych prędkościach (np. DDR4 na 2133 MHz). Aby osiągnąć reklamowaną szybkość (np. 3200 MHz), musisz włączyć profil <strong>XMP</strong> (Intel) lub <strong>EXPO</strong> (AMD) w BIOS-ie.</p>
+
+            <div class="info-box yellow">
+                <h4>⚠️ Bez XMP/EXPO tracisz wydajność!</h4>
+                <p>Po zainstalowaniu nowej pamięci RAM wejdź do BIOS-u i włącz profil XMP/EXPO. To jednorazowa czynność, która może przyspieszyć pamięć nawet o 50%!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HISTORIA -->
+<section>
+    <div class="container">
+        <div class="section-title fade-in">
+            <h2>📜 Historia pamięci RAM</h2>
+            <div class="line"></div>
+            <p>Od pamięci rdzeniowej do DDR5</p>
+        </div>
+
+        <div class="timeline fade-in">
+            <div class="tl-item" data-year="1947">
+                <h4>Pamięć Williams'a (CRT)</h4>
+                <p>Pierwsza elektroniczna pamięć — dane przechowywane jako ładunki na ekranie lampy kineskopowej. Pojemność: kilkaset bitów.</p>
+            </div>
+            <div class="tl-item" data-year="1951">
+                <h4>Pamięć rdzeniowa (ferrite core)</h4>
+                <p>Małe pierścienie ferrytowe nawleczone na druty. Każdy rdzeń = 1 bit. Dominowała przez ~20 lat. Była nieulotna!</p>
+            </div>
+            <div class="tl-item" data-year="1966">
+                <h4>Pierwszy układ DRAM (IBM)</h4>
+                <p>Robert Dennard z IBM patentuje DRAM — 1 tranzystor + 1 kondensator na bit. Rewolucja w pojemności i koszcie.</p>
+            </div>
+        
