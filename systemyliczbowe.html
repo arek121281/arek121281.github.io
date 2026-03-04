@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Systemy Liczbowe - Kompletny Przewodnik</title>
+    <style>
+        /* ===== RESET & ZMIENNE ===== */
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --accent2: #27ae60;
+            --accent3: #f39c12;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            scroll-behavior: smooth;
+        }
+
+        /* ===== NAWIGACJA ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        nav ul li a {
+            display: block;
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 18px 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        nav ul li a:hover {
+            background: rgba(52, 152, 219, 0.3);
+            border-bottom: 3px solid var(--secondary);
+            color: #3498db;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
+            text-align: center;
+            padding: 160px 20px 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "01001 AF3B 1011 0xFF 777 1010";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 1.5rem;
+            color: rgba(52, 152, 219, 0.07);
+            word-wrap: break-word;
+            line-height: 2;
+            pointer-events: none;
+            padding: 20px;
+            letter-spacing: 10px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            text-shadow: 0 0 30px rgba(52, 152, 219, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #b0b8c8;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .hero .badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== KONTENERY ===== */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .section-title .underline {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ===== KARTY ===== */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card h3 .icon {
+            font-size: 2rem;
+        }
+
+        .card p, .card li {
+            color: #555;
+            font-size: 1.05rem;
+        }
+
+        /* ===== GRID SYSTEMÓW ===== */
+        .systems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .system-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border-top: 5px solid var(--secondary);
+            transition: all 0.3s;
+        }
+
+        .system-card:nth-child(1) { border-top-color: var(--accent); }
+        .system-card:nth-child(2) { border-top-color: var(--accent3); }
+        .system-card:nth-child(3) { border-top-color: var(--accent2); }
+        .system-card:nth-child(4) { border-top-color: var(--secondary); }
+
+        .system-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .system-card .number {
+            font-size: 3rem;
+            font-weight: 900;
+            margin: 10px 0;
+        }
+
+        .system-card:nth-child(1) .number { color: var(--accent); }
+        .system-card:nth-child(2) .number { color: var(--accent3); }
+        .system-card:nth-child(3) .number { color: var(--accent2); }
+        .system-card:nth-child(4) .number { color: var(--secondary); }
+
+        .system-card h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .system-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .system-card .digits {
+            background: #f8f9fa;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            margin-top: 12px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        /* ===== TABELE ===== */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: 30px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary), #34495e);
+            color: white;
+            padding: 16px 20px;
+            text-align: center;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 14px 20px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tr:hover {
+            background: #e8f4fd;
+        }
+
+        /* ===== BLOKI KODU / PRZYKŁADY ===== */
+        .example-box {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #00ff88;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            line-height: 2;
+            overflow-x: auto;
+            border-left: 5px solid #00ff88;
+        }
+
+        .example-box .comment {
+            color: #636e88;
+        }
+
+        .example-box .highlight {
+            color: #ff6b6b;
+            font-weight: 700;
+        }
+
+        .example-box .highlight2 {
+            color: #ffd93d;
+            font-weight: 700;
+        }
+
+        .example-box .highlight3 {
+            color: #6bcaff;
+            font-weight: 700;
+        }
+
+        /* ===== KROKI / PROCES ===== */
+        .steps {
+            position: relative;
+            padding-left: 50px;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--secondary), var(--accent));
+        }
+
+        .step {
+            position: relative;
+            margin-bottom: 30px;
+            background: var(--card-bg);
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .step::before {
+            content: attr(data-step);
+            position: absolute;
+            left: -42px;
+            top: 25px;
+            width: 36px;
+            height: 36px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .step h4 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1.15rem;
+        }
+
+        /* ===== KONWERTER ===== */
+        .converter-container {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: var(--radius);
+            padding: 50px 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .converter-container h3 {
+            color: white;
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+        }
+
+        .converter-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 14px 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            min-width: 200px;
+            transition: all 0.3s;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: white;
+            background: rgba(255,255,255,0.25);
+        }
+
+        .form-group select option {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-convert {
+            padding: 14px 40px;
+            background: white;
+            color: #764ba2;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-convert:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .result-item {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .result-item .label {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .result-item .value {
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-size: 1.4rem;
+            font-weight: 700;
+            word-break: break-all;
+        }
+
+        /* ===== ZASTOSOWANIA ===== */
+        .use-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .use-case {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 35px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid;
+            transition: transform 0.3s;
+        }
+
+        .use-case:hover {
+            transform: translateY(-5px);
+        }
+
+        .use-case:nth-child(1) { border-left-color: var(--accent); }
+        .use-case:nth-child(2) { border-left-color: var(--secondary); }
+        .use-case:nth-child(3) { border-left-color: var(--accent2); }
+        .use-case:nth-child(4) { border-left-color: var(--accent3); }
+
+        .use-case h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .use-case p {
+            color: var(--text-light);
+        }
+
+        /* ===== INTERAKTYWNA WIZUALIZACJA BITÓW ===== */
+        .bit-visualizer {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .bits-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .bit-box {
+            width: 60px;
+            height: 70px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+            user-select: none;
+        }
+
+        .bit-box.off {
+            background: #ecf0f1;
+            color: #95a5a6;
+            border: 2px solid #bdc3c7;
+        }
+
+        .bit-box.on {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: 2px solid #e74c3c;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .bit-box .bit-value {
+            font-size: 1.5rem;
+            font-weight: 900;
+        }
+
+        .bit-box .bit-power {
+            font-size: 0.65rem;
+            margin-top: 2px;
+            opacity: 0.8;
+        }
+
+        .bit-result {
+            font-size: 1.5rem;
+            margin-top: 15px;
+        }
+
+        .bit-result span {
+            font-weight: 700;
+            color: var(--secondary);
+            font-family: 'Courier New', monospace;
+            font-size: 2rem;
+        }
+
+        /* ===== QUIZ ===== */
+        .quiz-container {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .quiz-question {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-option {
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.05rem;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--secondary);
+            background: #e8f4fd;
+        }
+
+        .quiz-option.correct {
+            border-color: var(--accent2);
+            background: #d4edda;
+            color: var(--accent2);
+        }
+
+        .quiz-option.wrong {
+            border-color: var(--accent);
+            background: #f8d7da;
+            color: var(--accent);
+        }
+
+        .quiz-feedback {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+
+        .quiz-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .quiz-btn {
+            padding: 12px 30px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .quiz-btn:hover { background: #2980b9; }
+        .quiz-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .quiz-score {
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        /* ===== PORÓWNANIE ===== */
+        .comparison-table td:first-child {
+            font-weight: 700;
+            text-align: left;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* ===== WAŻNE INFORMACJE ===== */
+        .info-box {
+            background: linear-gradient(135deg, #e8f4fd, #d6eaf8);
+            border-left: 5px solid var(--secondary);
+            border-radius: 0 12px 12px 0;
+            padding: 25px 30px;
+            margin: 25px 0;
+        }
+
+        .info-box.warning {
+            background: linear-gradient(135deg, #fdf2e9, #fdebd0);
+            border-left-color: var(--accent3);
+        }
+
+        .info-box.success {
+            background: linear-gradient(135deg, #e8f8f0, #d5f5e3);
+            border-left-color: var(--accent2);
+        }
+
+        .info-box h4 {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #b0b8c8;
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        footer h3 {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        footer p {
+            max-width: 500px;
+            margin: 0 auto 20px;
+            font-size: 0.95rem;
+        }
+
+        footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        footer .footer-links a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        footer .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== ANIMACJE ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== RESPONSYWNOŚĆ ===== */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1rem; }
+            .section-title h2 { font-size: 1.8rem; }
+            .card { padding: 25px; }
+            nav ul li a { padding: 12px 14px; font-size: 0.8rem; }
+            .converter-container { padding: 30px 20px; }
+            .bit-box { width: 45px; height: 55px; }
+            .bit-box .bit-value { font-size: 1.2rem; }
+            .quiz-options { grid-template-columns: 1fr; }
+            .steps { padding-left: 40px; }
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        /* Ukrycie scrolla na tabeli */
+        .table-wrapper::-webkit-scrollbar {
+            height: 8px;
+        }
+        .table-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: #bbb;
+            border-radius: 4px;
+        }
+
+        /* Listy */
+        .card ul, .card ol {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+
+        .card ul li, .card ol li {
+            margin-bottom: 8px;
+        }
+
+        .formula {
+            background: #f8f9fa;
+            border: 2px dashed #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            margin: 20px 0;
+            color: var(--primary);
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAWIGACJA -->
+    <nav>
+        <ul>
+            <li><a href="#intro">Wprowadzenie</a></li>
+            <li><a href="#systems">Systemy</a></li>
+            <li><a href="#binary">Dwójkowy</a></li>
+            <li><a href="#hex">Szesnastkowy</a></li>
+            <li><a href="#conversions">Konwersje</a></li>
+            <li><a href="#converter">Konwerter</a></li>
+            <li><a href="#visualizer">Wizualizacja</a></li>
+            <li><a href="#table">Tabela</a></li>
+            <li><a href="#uses">Zastosowania</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+        <h1>🔢 Systemy Liczbowe</h1>
+        <p>Kompletny, interaktywny przewodnik po systemach liczbowych — od binarnego po szesnastkowy. Zrozum, jak komputery widzą liczby!</p>
+        <div class="badges">
+            <span class="badge">🖥️ Binarny (2)</span>
+            <span class="badge">🔢 Ósemkowy (8)</span>
+            <span class="badge">📊 Dziesiętny (10)</span>
+            <span class="badge">🎨 Szesnastkowy (16)</span>
+        </div>
+    </header>
+
+    <!-- WPROWADZENIE -->
+    <section id="intro">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Czym jest system liczbowy?</h2>
+                <div class="underline"></div>
+                <p>Fundament matematyki i informatyki</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🌍</span> Definicja</h3>
+                <p><strong>System liczbowy</strong> (system pozycyjny) to sposób zapisywania liczb przy użyciu ograniczonego zestawu symboli (cyfr). Wartość każdej cyfry zależy od jej <strong>pozycji</strong> w liczbie.</p>
+                
+                <div class="info-box" style="margin-top: 20px;">
+                    <h4>💡 Kluczowe pojęcie: Podstawa systemu</h4>
+                    <p><strong>Podstawa (baza)</strong> systemu liczbowego określa, ile różnych cyfr jest w nim używanych. Na przykład system dziesiętny ma podstawę 10 i używa cyfr od 0 do 9.</p>
+                </div>
+
+                <p>W życiu codziennym używamy <strong>systemu dziesiętnego</strong> (podstawa 10), ponieważ mamy 10 palców. Ale komputery używają <strong>systemu dwójkowego</strong> (podstawa 2), bo ich obwody elektroniczne znają tylko dwa stany: włączony (1) i wyłączony (0).</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">⚙️</span> Jak działa system pozycyjny?</h3>
+                <p>W systemie pozycyjnym każda cyfra ma wagę zależną od jej pozycji. Waga to <strong>podstawa podniesiona do potęgi pozycji</strong> (licząc od prawej, zaczynając od 0).</p>
+                
+                <div class="formula">
+                    Liczba = c<sub>n</sub> × b<sup>n</sup> + c<sub>n-1</sub> × b<sup>n-1</sup> + ... + c<sub>1</sub> × b<sup>1</sup> + c<sub>0</sub> × b<sup>0</sup>
+                </div>
+
+                <p>Gdzie <strong>b</strong> to podstawa systemu, a <strong>c</strong> to cyfra na danej pozycji.</p>
+
+                <div class="example-box">
+                    <span class="comment">// Przykład: liczba 365 w systemie dziesiętnym (b=10)</span><br>
+                    3 × 10² + 6 × 10¹ + 5 × 10⁰<br>
+                    = 3 × <span class="highlight">100</span> + 6 × <span class="highlight2">10</span> + 5 × <span class="highlight3">1</span><br>
+                    = <span class="highlight">300</span> + <span class="highlight2">60</span> + <span class="highlight3">5</span><br>
+                    = <span class="highlight">365</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRZEGLĄD SYSTEMÓW -->
+    <section id="systems" style="background: #eef2f7;">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Cztery najważniejsze systemy</h2>
+                <div class="underline"></div>
+                <p>Przegląd systemów używanych w informatyce</p>
+            </div>
+
+            <div class="systems-grid fade-in">
+                <div class="system-card">
+                    <div class="number">BIN</div>
+                    <h4>Dwójkowy (Binarny)</h4>
+                    <p>Podstawa: <strong>2</strong></p>
+                    <p>Język komputerów — dwa stany: 0 i 1</p>
+                    <div class="digits">0 1</div>
+                </div>
+                <div class="system-card">
+                    <div class="number">OCT</div>
+                    <h4>Ósemkowy (Oktalny)</h4>
+                    <p>Podstawa: <strong>8</strong></p>
+                    <p>Skrót dla binarnego (3 bity = 1 cyfra)</p>
+                    <div class="digits">0 1 2 3 4 5 6 7</div>
+                </div>
+                <div class="system-card">
+                    <div class="number">DEC</div>
+                    <h4>Dziesiętny (Decymalny)</h4>
+                    <p>Podstawa: <strong>10</strong></p>
+                    <p>Nasz codzienny system liczbowy</p>
+                    <div class="digits">0 1 2 3 4 5 6 7 8 9</div>
+                </div>
+                <div class="system-card">
+                    <div class="number">HEX</div>
+                    <h4>Szesnastkowy (Heksadecymalny)</h4>
+                    <p>Podstawa: <strong>16</strong></p>
+                    <p>Kompaktowy zapis danych binarnych</p>
+                    <div class="digits">0-9 A B C D E F</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SYSTEM DWÓJKOWY -->
+    <section id="binary">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🖥️ System Dwójkowy (Binarny)</h2>
+                <div class="underline"></div>
+                <p>Podstawa 2 — język maszyn</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">💡</span> Dlaczego komputery używają systemu binarnego?</h3>
+                <p>Komputery działają na tranzystorach, które mogą być w jednym z dwóch stanów:</p>
+                <ul>
+                    <li><strong>0</strong> — brak napięcia / wyłączony / fałsz (false)</li>
+                    <li><strong>1</strong> — jest napięcie / włączony / prawda (true)</li>
+                </ul>
+                <p>Dlatego cała informacja w komputerze — tekst, obrazy, filmy, programy — jest zapisywana jako ciąg zer i jedynek.</p>
+                
+                <div class="info-box success">
+                    <h4>✅ Jednostki danych</h4>
+                    <p><strong>1 bit</strong> = jedna cyfra binarna (0 lub 1)<br>
+                    <strong>1 bajt (byte)</strong> = 8 bitów = pozwala zapisać liczbę od 0 do 255<br>
+                    <strong>1 kilobajt (KB)</strong> = 1024 bajty<br>
+                    <strong>1 megabajt (MB)</strong> = 1024 KB</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🔍</span> Jak odczytać liczbę binarną?</h3>
+                <p>Każda pozycja w liczbie binarnej odpowiada potędze dwójki (od prawej, zaczynając od 2⁰):</p>
+
+                <div class="example-box">
+                    <span class="comment">// Liczba binarna: 1 0 1 1 0 1</span><br><br>
+                    Pozycja:  5   4   3   2   1   0<br>
+                    Waga:    2⁵  2⁴  2³  2²  2¹  2⁰<br>
+                    Wartość: 32  16   8   4   2   1<br>
+                    Cyfra:    <span class="highlight">1</span>   <span class="highlight2">0</span>   <span class="highlight">1</span>   <span class="highlight">1</span>   <span class="highlight2">0</span>   <span class="highlight">1</span><br><br>
+                    <span class="comment">// Sumujemy pozycje, gdzie jest 1:</span><br>
+                    = <span class="highlight">32</span> + <span class="highlight">8</span> + <span class="highlight">4</span> + <span class="highlight">1</span> = <span class="highlight3">45</span> (dziesiętnie)
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">📐</span> Arytmetyka binarna — dodawanie</h3>
+                <p>Dodawanie binarne działa jak dziesiętne, ale przeniesienie następuje po 1 (bo 1+1 = 10 w systemie binarnym).</p>
+
+                <div class="example-box">
+                    <span class="comment">// Zasady dodawania binarnego:</span><br>
+                    0 + 0 = <span class="highlight3">0</span><br>
+                    0 + 1 = <span class="highlight3">1</span><br>
+                    1 + 0 = <span class="highlight3">1</span><br>
+                    1 + 1 = <span class="highlight">10</span> <span class="comment">(= 0, przeniesienie 1)</span><br>
+                    1 + 1 + 1 = <span class="highlight">11</span> <span class="comment">(= 1, przeniesienie 1)</span><br><br>
+                    
+                    <span class="comment">// Przykład: 1011 + 1101 (= 11 + 13 = 24)</span><br><br>
+                    &nbsp;&nbsp;<span class="highlight2">1 1 1 1</span>&nbsp;&nbsp; <span class="comment">← przeniesienia</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;1 0 1 1<br>
+                    + &nbsp;1 1 0 1<br>
+                    ─────────<br>
+                    &nbsp;<span class="highlight3">1 1 0 0 0</span>&nbsp;&nbsp; <span class="comment">= 24 (dziesiętnie)</span>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🔄</span> Konwersja: Dziesiętny → Binarny</h3>
+                <p>Dzielimy liczbę przez 2, zapisując reszty. Odczytujemy reszty od dołu do góry.</p>
+
+                <div class="steps">
+                    <div class="step" data-step="1">
+                        <h4>Podziel liczbę przez 2</h4>
+                        <p>Zapisz wynik i resztę z dzielenia</p>
+                    </div>
+                    <div class="step" data-step="2">
+                        <h4>Powtarzaj</h4>
+                        <p>Dziel wynik przez 2, aż dojdziesz do 0</p>
+                    </div>
+                    <div class="step" data-step="3">
+                        <h4>Odczytaj wynik</h4>
+                        <p>Reszty odczytane od dołu do góry tworzą liczbę binarną</p>
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <span class="comment">// Przykład: 42 → system binarny</span><br><br>
+                    42 ÷ 2 = 21 &nbsp;reszta <span class="highlight">0</span><br>
+                    21 ÷ 2 = 10 &nbsp;reszta <span class="highlight">1</span><br>
+                    10 ÷ 2 = 5  &nbsp;reszta <span class="highlight">0</span><br>
+                    &nbsp;5 ÷ 2 = 2  &nbsp;reszta <span class="highlight">1</span><br>
+                    &nbsp;2 ÷ 2 = 1  &nbsp;reszta <span class="highlight">0</span><br>
+                    &nbsp;1 ÷ 2 = 0  &nbsp;reszta <span class="highlight">1</span><br><br>
+                    <span class="comment">// Odczyt od dołu ↑</span><br>
+                    42₁₀ = <span class="highlight3">101010</span>₂
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SYSTEM SZESNASTKOWY -->
+    <section id="hex" style="background: #eef2f7;">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🎨 System Szesnastkowy (Heksadecymalny)</h2>
+                <div class="underline"></div>
+                <p>Podstawa 16 — kompaktowy zapis danych</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">📋</span> Cyfry szesnastkowe</h3>
+                <p>System szesnastkowy potrzebuje 16 cyfr. Ponieważ mamy tylko 10 cyfr arabskich (0-9), używamy dodatkowo liter A-F:</p>
+
+                <div class="table-wrapper" style="margin-top: 20px;">
+                    <table>
+                        <tr>
+                            <th>HEX</th>
+                            <th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>
+                            <th>8</th><th>9</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th>
+                        </tr>
+                        <tr>
+                            <td style="font-family: sans-serif; font-weight: 700;">DEC</td>
+                            <td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td>
+                            <td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="info-box warning" style="margin-top: 20px;">
+                    <h4>⚠️ Uwaga</h4>
+                    <p>Litery A-F mogą być pisane zarówno wielką, jak i małą literą (a-f). W programowaniu liczby hex często zapisuje się z prefiksem <strong>0x</strong> (np. 0xFF) lub z sufiksem <strong>h</strong> (np. FFh).</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🔗</span> Związek HEX z systemem binarnym</h3>
+                <p>Główna zaleta systemu szesnastkowego: <strong>każda cyfra HEX odpowiada dokładnie 4 bitom</strong> (pół bajta, tzw. nibble). Dzięki temu łatwo konwertować między HEX a BIN.</p>
+
+                <div class="example-box">
+                    <span class="comment">// 1 cyfra HEX = 4 bity</span><br>
+                    <span class="comment">// 2 cyfry HEX = 8 bitów = 1 bajt</span><br><br>
+                    
+                    Hex:  &nbsp;&nbsp;&nbsp;<span class="highlight">A</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight2">3</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight3">F</span><br>
+                    Bin: <span class="highlight">1010</span> &nbsp;<span class="highlight2">0011</span> &nbsp;<span class="highlight3">1111</span><br><br>
+                    
+                    <span class="comment">// Więc A3F (hex) = 1010 0011 1111 (bin)</span><br><br>
+                    
+                    <span class="comment">// Zamiast pisać: 10100011 11111100</span><br>
+                    <span class="comment">// Piszemy po prostu: A3FC</span><br>
+                    <span class="comment">// Dużo czytelniej! 🎉</span>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🎨</span> HEX w kolorach (CSS/HTML)</h3>
+                <p>Kolory w webdev zapisuje się jako 3 pary cyfr hex (po parze na R, G, B):</p>
+
+                <div class="example-box">
+                    <span class="comment">// Format: #RRGGBB</span><br><br>
+                    #<span class="highlight">FF</span><span class="highlight2">00</span><span class="highlight3">00</span> = Czerwony &nbsp;(R=255, G=0, B=0)<br>
+                    #<span class="highlight">00</span><span class="highlight2">FF</span><span class="highlight3">00</span> = Zielony &nbsp;(R=0, G=255, B=0)<br>
+                    #<span class="highlight">00</span><span class="highlight2">00</span><span class="highlight3">FF</span> = Niebieski (R=0, G=0, B=255)<br>
+                    #<span class="highlight">FF</span><span class="highlight2">FF</span><span class="highlight3">FF</span> = Biały &nbsp;&nbsp;&nbsp;(R=255, G=255, B=255)<br>
+                    #<span class="highlight">00</span><span class="highlight2">00</span><span class="highlight3">00</span> = Czarny &nbsp;&nbsp;(R=0, G=0, B=0)<br>
+                    #<span class="highlight">FF</span><span class="highlight2">A5</span><span class="highlight3">00</span> = Pomarańczowy (R=255, G=165, B=0)
+                </div>
+
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+                    <div style="width:60px;height:60px;background:#FF0000;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.2);" title="#FF0000"></div>
+                    <div style="width:60px;height:60px;background:#00FF00;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.2);" title="#00FF00"></div>
+                    <div style="width:60px;height:60px;background:#0000FF;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.2);" title="#0000FF"></div>
+                    <div style="width:60px;height:60px;background:#FFA500;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.2);" title="#FFA500"></div>
+                    <div style="width:60px;height:60px;background:#800080;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.2);" title="#800080"></div>
+                    <div style="width:60px;height:60px;background:#3498db;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.2);" title="#3498DB"></div>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🔄</span> Konwersja: Dziesiętny → Szesnastkowy</h3>
+                <p>Dzielimy liczbę przez 16, zapisując reszty (zamieniając reszty 10-15 na A-F).</p>
+
+                <div class="example-box">
+                    <span class="comment">// Przykład: 255 → system szesnastkowy</span><br><br>
+                    255 ÷ 16 = 15 &nbsp;reszta <span class="highlight">15</span> → <span class="highlight3">F</span><br>
+                    &nbsp;15 ÷ 16 = 0  &nbsp;reszta <span class="highlight">15</span> → <span class="highlight3">F</span><br><br>
+                    <span class="comment">// Odczyt od dołu ↑</span><br>
+                    255₁₀ = <span class="highlight3">FF</span>₁₆<br><br><br>
+                    
+                    <span class="comment">// Przykład: 1000 → system szesnastkowy</span><br><br>
+                    1000 ÷ 16 = 62 &nbsp;reszta <span class="highlight">8</span> → <span class="highlight3">8</span><br>
+                    &nbsp;&nbsp;62 ÷ 16 = 3  &nbsp;reszta <span class="highlight">14</span> → <span class="highlight3">E</span><br>
+                    &nbsp;&nbsp;&nbsp;3 ÷ 16 = 0  &nbsp;reszta <span class="highlight">3</span> → <span class="highlight3">3</span><br><br>
+                    1000₁₀ = <span class="highlight3">3E8</span>₁₆
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KONWERSJE -->
+    <section id="conversions">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🔄 Metody konwersji</h2>
+                <div class="underline"></div>
+                <p>Jak zamieniać liczby między systemami</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">1️⃣</span> BIN → HEX (Binarny → Szesnastkowy)</h3>
+                <p>Grupuj bity po 4 (od prawej) i zamień każdą grupę na cyfrę HEX.</p>
+
+                <div class="example-box">
+                    <span class="comment">// Przykład: 11010110₂ → HEX</span><br><br>
+                    Grupowanie: <span class="highlight">1101</span> <span class="highlight2">0110</span><br><br>
+                    <span class="highlight">1101</span> = 8+4+0+1 = 13 = <span class="highlight3">D</span><br>
+                    <span class="highlight2">0110</span> = 0+4+2+0 = 6  = <span class="highlight3">6</span><br><br>
+                    Wynik: 11010110₂ = <span class="highlight3">D6</span>₁₆
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">2️⃣</span> HEX → BIN (Szesnastkowy → Binarny)</h3>
+                <p>Zamień każdą cyfrę HEX na 4-bitową grupę binarną.</p>
+
+                <div class="example-box">
+                    <span class="comment">// Przykład: 4AF₁₆ → BIN</span><br><br>
+                    <span class="highlight">4</span> = <span class="highlight">0100</span><br>
+                    <span class="highlight2">A</span> = <span class="highlight2">1010</span><br>
+                    <span class="highlight3">F</span> = <span class="highlight3">1111</span><br><br>
+                    Wynik: 4AF₁₆ = <span class="highlight">0100</span> <span class="highlight2">1010</span> <span class="highlight3">1111</span>₂
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">3️⃣</span> Dowolny system → Dziesiętny</h3>
+                <p>Pomnóż każdą cyfrę przez podstawę podniesioną do potęgi pozycji i zsumuj.</p>
+
+                <div class="example-box">
+                    <span class="comment">// Binarny → Dziesiętny: 10110₂</span><br>
+                    1×2⁴ + 0×2³ + 1×2² + 1×2¹ + 0×2⁰<br>
+                    = 16 + 0 + 4 + 2 + 0 = <span class="highlight3">22</span><br><br>
+                    
+                    <span class="comment">// Ósemkowy → Dziesiętny: 752₈</span><br>
+                    7×8² + 5×8¹ + 2×8⁰<br>
+                    = 448 + 40 + 2 = <span class="highlight3">490</span><br><br>
+                    
+                    <span class="comment">// Szesnastkowy → Dziesiętny: 1F4₁₆</span><br>
+                    1×16² + 15×16¹ + 4×16⁰<br>
+                    = 256 + 240 + 4 = <span class="highlight3">500</span>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">4️⃣</span> Dziesiętny → Dowolny system</h3>
+                <p>Dziel wielokrotnie przez podstawę docelowego systemu i odczytuj reszty od dołu.</p>
+
+                <div class="example-box">
+                    <span class="comment">// 200₁₀ → Ósemkowy (÷8)</span><br>
+                    200 ÷ 8 = 25 &nbsp;reszta <span class="highlight">0</span><br>
+                    &nbsp;25 ÷ 8 = 3  &nbsp;reszta <span class="highlight">1</span><br>
+                    &nbsp;&nbsp;3 ÷ 8 = 0  &nbsp;reszta <span class="highlight">3</span><br><br>
+                    200₁₀ = <span class="highlight3">310</span>₈
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTERAKTYWNY KONWERTER -->
+    <section id="converter" style="background: #eef2f7;">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>⚡ Interaktywny Konwerter</h2>
+                <div class="underline"></div>
+                <p>Wpisz liczbę i zobacz ją we wszystkich systemach</p>
+            </div>
+
+            <div class="converter-container fade-in">
+                <h3>🔄 Konwertuj liczbę</h3>
+                <div class="converter-form">
+                    <div class="form-group">
+                        <label>Wpisz liczbę</label>
+                        <input type="text" id="inputNumber" placeholder="np. 255" value="255">
+                    </div>
+                    <div class="form-group">
+                        <label>System źródłowy</label>
+                        <select id="inputBase">
+                            <option value="10" selected>Dziesiętny (10)</option>
+                            <option value="2">Binarny (2)</option>
+                            <option value="8">Ósemkowy (8)</option>
+                            <option value="16">Szesnastkowy (16)</option>
+                        </select>
+                    </div>
+                    <button class="btn-convert" onclick="convertNumber()">Konwertuj</button>
+                </div>
+                <div class="results" id="conversionResults">
+                    <div class="result-item">
+                        <div class="label">Binarny (2)</div>
+                        <div class="value" id="resultBin">11111111</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">Ósemkowy (8)</div>
+                        <div class="value" id="resultOct">377</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">Dziesiętny (10)</div>
+                        <div class="value" id="resultDec">255</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">Szesnastkowy (16)</div>
+                        <div class="value" id="resultHex">FF</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WIZUALIZACJA BITÓW -->
+    <section id="visualizer">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🎯 Interaktywna Wizualizacja Bitów</h2>
+                <div class="underline"></div>
+                <p>Klikaj bity, żeby je przełączać i obserwuj zmianę wartości</p>
+            </div>
+
+            <div class="bit-visualizer fade-in">
+                <h3 style="margin-bottom: 5px;">8-bitowa liczba binarna</h3>
+                <p style="color: var(--text-light); margin-bottom: 15px;">Kliknij na bit, aby zmienić jego wartość (0 ↔ 1)</p>
+                <div class="bits-container" id="bitsContainer"></div>
+                <div class="bit-result">
+                    Wartość dziesiętna: <span id="bitDecimal">0</span><br>
+                    Wartość HEX: <span id="bitHex" style="color: var(--accent);">0x00</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TABELA PORÓWNAWCZA -->
+    <section id="table" style="background: #eef2f7;">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>📊 Tabela Porównawcza</h2>
+                <div class="underline"></div>
+                <p>Liczby 0-31 we wszystkich czterech systemach</p>
+            </div>
+
+            <div class="table-wrapper fade-in">
+                <table id="comparisonTable" class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Dziesiętny (DEC)</th>
+                            <th>Binarny (BIN)</th>
+                            <th>Ósemkowy (OCT)</th>
+                            <th>Szesnastkowy (HEX)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card fade-in" style="margin-top: 30px;">
+                <h3><span class="icon">📌</span> Ważne wartości do zapamiętania</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Opis</th>
+                                <th>DEC</th>
+                                <th>BIN</th>
+                                <th>HEX</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-family:sans-serif; text-align:left;">Maks. wartość nibble (4 bity)</td>
+                                <td>15</td>
+                                <td>1111</td>
+                                <td>F</td>
+                            </tr>
+                            <tr>
+                                <td style="font-family:sans-serif; text-align:left;">Maks. wartość bajta (8 bitów)</td>
+                                <td>255</td>
+                                <td>11111111</td>
+                                <td>FF</td>
+                            </tr>
+                            <tr>
+                                <td style="font-family:sans-serif; text-align:left;">1 kilobajt</td>
+                                <td>1024</td>
+                                <td>10000000000</td>
+                                <td>400</td>
+                            </tr>
+                            <tr>
+                                <td style="font-family:sans-serif; text-align:left;">Maks. wartość 16-bit</td>
+                                <td>65535</td>
+                                <td>1111111111111111</td>
+                                <td>FFFF</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ZASTOSOWANIA -->
+    <section id="uses">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🚀 Zastosowania w praktyce</h2>
+                <div class="underline"></div>
+                <p>Gdzie spotykamy różne systemy liczbowe</p>
+            </div>
+
+            <div class="use-cases fade-in">
+                <div class="use-case">
+                    <h4>🖥️ Adresy pamięci</h4>
+                    <p>Adresy RAM i ROM zapisywane są w systemie szesnastkowym, np. <strong>0x7FFE0000</strong>. Dużo czytelniej niż ich binarny odpowiednik!</p>
+                </div>
+                <div class="use-case">
+                    <h4>🌐 Adresy MAC & IPv6</h4>
+                    <p>Adresy fizyczne kart sieciowych (MAC) i IPv6 używają notacji HEX, np. <strong>00:1A:2B:3C:4D:5E</strong></p>
+                </div>
+                <div class="use-case">
+                    <h4>🎨 Kolory w CSS/HTML</h4>
+                    <p>Kolory na stronach WWW zapisywane jako <strong>#RRGGBB</strong>, np. #FF5733 — to czysty zapis szesnastkowy!</p>
+                </div>
+                <div class="use-case">
+                    <h4>🔐 Kryptografia i hashe</h4>
+                    <p>Funkcje skrótu (MD5, SHA) wyświetlają wyniki w HEX, np. <strong>d41d8cd98f00b204e9800998ecf8427e</strong></p>
+                </div>
+                <div class="use-case">
+                    <h4>📝 Uprawnienia Unix/Linux</h4>
+                    <p>Uprawnienia plików zapisywane ósemkowo: <strong>chmod 755</strong> (rwxr-xr-x) — system ósemkowy w czystej postaci</p>
+                </div>
+                <div class="use-case">
+                    <h4>💾 Debugowanie i hex edytory</h4>
+                    <p>Programiści analizują pliki binarne za pomocą edytorów HEX, wyświetlających bajty jako pary cyfr szesnastkowych</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="quiz" style="background: #eef2f7;">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🧠 Quiz — Sprawdź swoją wiedzę!</h2>
+                <div class="underline"></div>
+                <p>Odpowiedz na pytania i sprawdź, ile zapamiętałeś</p>
+            </div>
+
+            <div class="quiz-container fade-in">
+                <div class="quiz-score">Pytanie <span id="qNumber">1</span> / <span id="qTotal">8</span> &nbsp;&nbsp;|&nbsp;&nbsp; Wynik: <span id="qScore">0</span></div>
+                <hr style="margin: 15px 0; border: 1px solid #eee;">
+                <div class="quiz-question" id="quizQuestion"></div>
+                <div class="quiz-options" id="quizOptions"></div>
+                <div class="quiz-feedback" id="quizFeedback"></div>
+                <div class="quiz-nav">
+                    <button class="quiz-btn" id="nextBtn" onclick="nextQuestion()" disabled>Następne pytanie →</button>
+                    <button class="quiz-btn" id="restartBtn" onclick="restartQuiz()" style="display:none; background: var(--accent);">Zacznij od nowa 🔄</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PODSUMOWANIE -->
+    <section id="summary">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>📝 Podsumowanie</h2>
+                <div class="underline"></div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🎯</span> Kluczowe wnioski</h3>
+                <ol>
+                    <li><strong>System pozycyjny</strong> — wartość cyfry zależy od jej pozycji (mnożenie przez potęgę podstawy).</li>
+                    <li><strong>System binarny (2)</strong> — fundament informatyki, komputery operują na bitach (0/1).</li>
+                    <li><strong>System ósemkowy (8)</strong> — skrót binarnego (1 cyfra = 3 bity), używany w uprawnieniach Unix.</li>
+                    <li><strong>System dziesiętny (10)</strong> — nasz naturalny system, używany na co dzień.</li>
+                    <li><strong>System szesnastkowy (16)</strong> — kompaktowy zapis danych binarnych (1 cyfra = 4 bity), kluczowy w programowaniu.</li>
+                    <li><strong>Konwersja</strong> — dzielenie przez podstawę (DEC → inny) lub mnożenie przez potęgi (inny → DEC).</li>
+                    <li><strong>BIN ↔ HEX</strong> — najłatwiejsza konwersja: grupuj/rozwijaj po 4 bity.</li>
+                </ol>
+
+                <div class="info-box success" style="margin-top: 20px;">
+                    <h4>🏆 Wskazówka</h4>
+                    <p>Warto zapamiętać potęgi dwójki: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 — przydadzą się w każdym aspekcie informatyki!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <h3>🔢 Systemy Liczbowe</h3>
+        <p>Interaktywny przewodnik edukacyjny po systemach liczbowych używanych w informatyce.</p>
+        <div class="footer-links">
+            <a href="#intro">Wprowadzenie</a>
+            <a href="#binary">System binarny</a>
+            <a href="#hex">System HEX</a>
+            <a href="#converter">Konwerter</a>
+            <a href="#quiz">Quiz</a>
+        </div>
+        <p style="font-size: 0.85rem; opacity: 0.6;">© 2024 — Projekt edukacyjny | Wszelkie prawa zastrzeżone</p>
+    </footer>
+
+    <!-- ===== SKRYPTY ===== -->
+    <script>
+        // =====================
+        // KONWERTER LICZB
+        // =====================
+        function convertNumber() {
+            const input = document.getElementById('inputNumber').value.trim().toUpperCase();
+            const base = parseInt(document.getElementById('inputBase').value);
+            
+            if (!input) {
+                alert('Wpisz liczbę!');
+                return;
+            }
+
+            // Parsuj liczbę
+            let decimal;
+            try {
+                decimal = parseInt(input, base);
+                if (isNaN(decimal) || decimal < 0) throw new Error();
+            } catch {
+                alert('Nieprawidłowa liczba dla wybranego systemu!');
+                return;
+            }
+
+            // Wyświetl wyniki
+            document.getElementById('resultBin').textContent = decimal.toString(2);
+            document.getElementById('resultOct').textContent = decimal.toString(8);
+            document.getElementById('resultDec').textContent = decimal.toString(10);
+            document.getElementById('resultHex').textContent = decimal.toString(16).toUpperCase();
+
+            // Animacja
+            document.querySelectorAll('.result-item').forEach((item, i) => {
+                item.style.transform = 'scale(0.9)';
+                setTimeout(() => { item.style.transform = 'scale(1)'; }, 100 + i * 80);
+            });
+        }
+
+        // Auto-konwersja przy Enter
+        document.getElementById('inputNumber').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') convertNumber();
+        });
+
+        // =====================
+        // WIZUALIZACJA BITÓW
+        // =====================
+        const bits = [0, 0, 0, 0, 0, 0, 0, 0];
+
+        function renderBits() {
+            const container = document.getElementById('bitsContainer');
+            container.innerHTML = '';
+            bits.forEach((bit, i) => {
+                const box = document.createElement('div');
+                box.className = `bit-box ${bit ? 'on' : 'off'}`;
+                const power = 7 - i;
+                box.innerHTML = `<div class="bit-value">${bit}</div><div class="bit-power">2<sup>${power}</sup> = ${Math.pow(2, power)}</div>`;
+                box.addEventListener('click', () => {
+                    bits[i] = bits[i] ? 0 : 1;
+                    renderBits();
+                });
+                container.appendChild(box);
+            });
+            updateBitResult();
+        }
+
+        function updateBitResult() {
+            let value = 0;
+            bits.forEach((bit, i) => {
+                value += bit * Math.pow(2, 7 - i);
+            });
+            document.getElementById('bitDecimal').textContent = value;
+            document.getElementById('bitHex').textContent = '0x' + value.toString(16).toUpperCase().padStart(2, '0');
+        }
+
+        renderBits();
+
+        // =====================
+        // TABELA PORÓWNAWCZA
+        // =====================
+        function generateTable() {
+            const tbody = document.getElementById('tableBody');
+            for (let i = 0; i <= 31; i++) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-family: sans-serif;">${i}</td>
+                    <td>${i.toString(2).padStart(i < 16 ? 4 : 5, '0')}</td>
+                    <td>${i.toString(8)}</td>
+                    <td>${i.toString(16).toUpperCase()}</td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+        generateTable();
+
+        // =====================
+        // QUIZ
+        // =====================
+        const questions = [
+            {
+                q: "Ile wynosi 1010₂ w systemie dziesiętnym?",
+                options: ["8", "10", "12", "14"],
+                correct: 1,
+                explanation: "1×2³ + 0×2² + 1×2¹ + 0×2⁰ = 8 + 0 + 2 + 0 = 10"
+            },
+            {
+                q: "Jaką wartość dziesiętną ma cyfra szesnastkowa 'F'?",
+                options: ["10", "12", "15", "16"],
+                correct: 2,
+                explanation: "F to ostatnia cyfra systemu szesnastkowego, odpowiadająca wartości 15."
+            },
+            {
+                q: "Ile bitów potrzeba do zapisania jednej cyfry szesnastkowej?",
+                options: ["2 bity", "4 bity", "8 bitów", "16 bitów"],
+                correct: 1,
+                explanation: "Jedna cyfra HEX (0-F, czyli 0-15) wymaga dokładnie 4 bitów (2⁴ = 16 możliwości)."
+            },
+            {
+                q: "Ile wynosi FF₁₆ w systemie dziesiętnym?",
+                options: ["200", "240", "255", "256"],
+                correct: 2,
+                explanation: "F×16¹ + F×16⁰ = 15×16 + 15×1 = 240 + 15 = 255"
+            },
+            {
+                q: "Jaki jest binarny zapis liczby dziesiętnej 42?",
+                options: ["101010", "110010", "100101", "101100"],
+                correct: 0,
+                explanation: "42 = 32+8+2 = 2⁵+2³+2¹ = 101010₂"
+            },
+            {
+                q: "Ile wynosi maksymalna wartość jednego bajta (8 bitów)?",
+                options: ["128", "200", "255", "256"],
+                correct: 2,
+                explanation: "11111111₂ = 128+64+32+16+8+4+2+1 = 255. Bajt przechowuje wartości 0-255 (256 możliwości)."
+            },
+            {
+                q: "Kolor #00FF00 w CSS to:",
+                options: ["Czerwony", "Niebieski", "Zielony", "Żółty"],
+                correct: 2,
+                explanation: "#00FF00 = R:0, G:255, B:0 — czysta zieleń (maksymalna wartość tylko w kanale G)."
+            },
+            {
+                q: "W jakim systemie liczbowym zapisywane są uprawnienia plików w Unix/Linux (np. chmod 755)?",
+                options: ["Binarnym", "Ósemkowym", "Dziesiętnym", "Szesnastkowym"],
+                correct: 1,
+                explanation: "Uprawnienia Unix używają systemu ósemkowego: 7=rwx, 5=r-x, więc 755 = rwxr-xr-x."
+            }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+        let answered = false;
+
+        function renderQuestion() {
+            if (currentQ >= questions.length) {
+                showFinalScore();
+                return;
+            }
+
+            const q = questions[currentQ];
+            document.getElementById('qNumber').textContent = currentQ + 1;
+            document.getElementById('qTotal').textContent = questions.length;
+            document.getElementById('quizQuestion').textContent = q.q;
+            
+            const optionsDiv = document.getElementById('quizOptions');
+            optionsDiv.innerHTML = '';
+            q.options.forEach((opt, i) => {
+                const btn = document.createElement('div');
+                btn.className = 'quiz-option';
+                btn.textContent = opt;
+                btn.addEventListener('click', () => selectAnswer(i));
+                optionsDiv.appendChild(btn);
+            });
+
+            document.getElementById('quizFeedback').className = 'quiz-feedback';
+            document.getElementById('quizFeedback').textContent = '';
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('nextBtn').style.display = 'inline-block';
+            document.getElementById('restartBtn').style.display = 'none';
+            answered = false;
+        }
+
+        function selectAnswer(index) {
+            if (answered) return;
+            answered = true;
+
+            const q = questions[currentQ];
+            const options = document.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById('quizFeedback');
+
+            options[q.correct].classList.add('correct');
+            
+            if (index === q.correct) {
+                score++;
+                feedback.textContent = '✅ Brawo! ' + q.explanation;
+                feedback.style.background = '#d4edda';
+                feedback.style.color = '#155724';
+            } else {
+                options[index].classList.add('wrong');
+                feedback.textContent = '❌ Niestety nie. ' + q.explanation;
+                feedback.style.background = '#f8d7da';
+                feedback.style.color = '#721c24';
+            }
+
+            feedback.className = 'quiz-feedback show';
+            document.getElementById('qScore').textContent = score;
+            document.getElementById('nextBtn').disabled = false;
+
+            // Zablokuj klikanie
+            options.forEach(o => o.style.pointerEvents = 'none');
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            if (currentQ >= questions.length) {
+                showFinalScore();
+            } else {
+                renderQuestion();
+            }
+        }
+
+        function showFinalScore() {
+            const container = document.querySelector('.quiz-container');
+            const percent = Math.round(score / questions.length * 100);
+            let emoji, msg;
+            
+            if (percent === 100) { emoji = '🏆'; msg = 'Perfekcyjnie! Jesteś ekspertem!'; }
+            else if (percent >= 75) { emoji = '🌟'; msg = 'Świetny wynik! Prawie idealnie!'; }
+            else if (percent >= 50) { emoji = '👍'; msg = 'Nieźle! Warto powtórzyć materiał.'; }
+            else { emoji = '📚'; msg = 'Przeczytaj materiał jeszcze raz i spróbuj ponownie!'; }
+
+            document.getElementById('quizQuestion').innerHTML = `${emoji} Wynik końcowy: <strong>${score} / ${questions.length}</strong> (${percent}%)`;
+            document.getElementById('quizOptions').innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 20px; font-size: 1.2rem; color: var(--text-light);">${msg}</div>`;
+            document.getElementById('quizFeedback').className = 'quiz-feedback';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('restartBtn').style.display = 'inline-block';
+        }
+
+        function restartQuiz() {
+            currentQ = 0;
+            score = 0;
+            document.getElementById('qScore').textContent = 0;
+            renderQuestion();
+        }
+
+        renderQuestion();
+
+        // =====================
+        // ANIMACJE SCROLL
+        // =====================
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Konwersja początkowa
+        convertNumber();
+    </script>
+
+</body>
+</html>
