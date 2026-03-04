@@ -1,3 +1,6 @@
+
+
+```html
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -1114,4 +1117,451 @@
                 <h4>Pierwszy układ DRAM (IBM)</h4>
                 <p>Robert Dennard z IBM patentuje DRAM — 1 tranzystor + 1 kondensator na bit. Rewolucja w pojemności i koszcie.</p>
             </div>
-        
+            <div class="tl-item" data-year="1970">
+                <h4>Intel 1103 — pierwszy komercyjny DRAM</h4>
+                <p>Układ 1 Kbit (1024 bity). Początki ery krzemowej pamięci.</p>
+            </div>
+            <div class="tl-item" data-year="1993">
+                <h4>SDRAM (Synchronous DRAM)</h4>
+                <p>Pamięć zsynchronizowana z zegarem systemu — koniec asynchronicznych opóźnień.</p>
+            </div>
+            <div class="tl-item" data-year="2000">
+                <h4>DDR SDRAM (DDR1)</h4>
+                <p>Podwójny transfer danych — przesył na obydwu zboczach zegara. Przepustowość 2x.</p>
+            </div>
+            <div class="tl-item" data-year="2020">
+                <h4>DDR5 — najnowsza generacja</h4>
+                <p>Do 6400 MT/s, 1.1V, moduły do 128 GB. Wbudowany regulator napięcia (PMIC) na module.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" style="background: #eef2ff;">
+    <div class="container">
+        <div class="section-title fade-in">
+            <h2>❓ Najczęściej Zadawane Pytania</h2>
+            <div class="line"></div>
+        </div>
+
+        <div class="accordion fade-in">
+            <div class="acc-item">
+                <div class="acc-header" onclick="toggleAcc(this)">
+                    Ile RAM potrzebuję? <span class="arrow">▼</span>
+                </div>
+                <div class="acc-body"><div class="acc-body-inner">
+                    <strong>4 GB</strong> — minimum dla lekkiego użytkowania (przeglądarka, dokumenty)<br>
+                    <strong>8 GB</strong> — wystarczające dla większości użytkowników<br>
+                    <strong>16 GB</strong> — zalecane dla graczy i multitaskingu<br>
+                    <strong>32 GB</strong> — edycja wideo, profesjonalne aplikacje, ciężkie gry<br>
+                    <strong>64+ GB</strong> — serwery, wirtualizacja, obróbka 3D, uczenie maszynowe
+                </div></div>
+            </div>
+            <div class="acc-item">
+                <div class="acc-header" onclick="toggleAcc(this)">
+                    Dlaczego dane z RAM znikają po wyłączeniu komputera? <span class="arrow">▼</span>
+                </div>
+                <div class="acc-body"><div class="acc-body-inner">
+                    DRAM przechowuje dane jako ładunek w kondensatorach. Bez zasilania kondensatory rozładowują się w ciągu milisekund, a dane bezpowrotnie znikają. To właśnie oznacza „pamięć ulotna" (volatile memory). Dlatego niezapisane dokumenty przepadają przy nagłym wyłączeniu komputera.
+                </div></div>
+            </div>
+            <div class="acc-item">
+                <div class="acc-header" onclick="toggleAcc(this)">
+                    Czy mogę mieszać moduły RAM o różnych parametrach? <span class="arrow">▼</span>
+                </div>
+                <div class="acc-body"><div class="acc-body-inner">
+                    Technicznie jest to możliwe (w ramach tej samej generacji, np. DDR4), ale <strong>nie jest zalecane</strong>. Wszystkie moduły będą pracować z parametrami najwolniejszego modułu. Mieszanie może powodować problemy ze stabilnością, a dual channel może nie działać prawidłowo. Najlepiej używać identycznych modułów (ten sam producent, model, pojemność).
+                </div></div>
+            </div>
+            <div class="acc-item">
+                <div class="acc-header" onclick="toggleAcc(this)">
+                    Co to jest „pamięć wirtualna" i jak się wiąże z RAM? <span class="arrow">▼</span>
+                </div>
+                <div class="acc-body"><div class="acc-body-inner">
+                    Pamięć wirtualna to mechanizm systemu operacyjnego, który używa fragmentu dysku (plik wymiany / swap) jako rozszerzenia RAM. Gdy brakuje fizycznego RAM, system przenosi rzadko używane dane na dysk. Jest to <strong>znacznie wolniejsze</strong> niż prawdziwa RAM (nawet 1000x dla HDD), dlatego widoczne „przycinanie" komputera to często oznaka zbyt małej ilości RAM.
+                </div></div>
+            </div>
+            <div class="acc-item">
+                <div class="acc-header" onclick="toggleAcc(this)">
+                    Czym różni się RAM od ROM? <span class="arrow">▼</span>
+                </div>
+                <div class="acc-body"><div class="acc-body-inner">
+                    <strong>RAM</strong> = pamięć do odczytu i zapisu, ulotna, szybka, tymczasowa<br>
+                    <strong>ROM</strong> (Read-Only Memory) = pamięć głównie do odczytu, nieulotna, przechowuje firmware (np. BIOS). Dane zapisane w ROM pozostają nawet po odcięciu zasilania. Nowoczesne wersje (EEPROM, Flash) pozwalają na ograniczony zapis.
+                </div></div>
+            </div>
+            <div class="acc-item">
+                <div class="acc-header" onclick="toggleAcc(this)">
+                    Czy więcej RAM = szybszy komputer? <span class="arrow">▼</span>
+                </div>
+                <div class="acc-body"><div class="acc-body-inner">
+                    <strong>Do pewnego momentu — tak!</strong> Jeśli twój komputer regularnie zużywa całą dostępną RAM (widoczne w Menedżerze zadań), dodanie pamięci znacząco przyspieszy działanie. Jednak po przekroczeniu potrzeb dodatkowy RAM nie daje przyspieszenia — liczy się wtedy szybkość procesora, dysku i karty graficznej. Ważna jest też <strong>szybkość RAM</strong> (MHz) i <strong>timingi</strong> (CL), nie tylko pojemność.
+                </div></div>
+            </div>
+            <div class="acc-item">
+                <div class="acc-header" onclick="toggleAcc(this)">
+                    Co to jest ECC RAM? <span class="arrow">▼</span>
+                </div>
+                <div class="acc-body"><div class="acc-body-inner">
+                    <strong>ECC (Error-Correcting Code)</strong> — pamięć z dodatkowym układem wykrywania i naprawiania błędów bitowych. Używana w serwerach i stacjach roboczych, gdzie błąd w jednym bicie mógłby mieć poważne konsekwencje (bazy danych, obliczenia naukowe). ECC RAM jest nieco droższa i wymaga kompatybilnej płyty głównej.
+                </div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz">
+    <div class="container">
+        <div class="section-title fade-in">
+            <h2>🧠 Quiz — Sprawdź swoją wiedzę!</h2>
+            <div class="line"></div>
+            <p>10 pytań o pamięci RAM</p>
+        </div>
+
+        <div class="quiz-box fade-in">
+            <div class="quiz-meta">Pytanie <span id="qNum">1</span>/<span id="qTot">10</span> &nbsp;|&nbsp; Wynik: <span id="qScr">0</span></div>
+            <div class="quiz-q" id="quizQ"></div>
+            <div class="quiz-opts" id="quizO"></div>
+            <div class="quiz-fb" id="quizFb"></div>
+            <div class="quiz-nav">
+                <button class="q-btn next" id="nxtBtn" onclick="qNext()" disabled>Następne →</button>
+                <button class="q-btn restart" id="rstBtn" onclick="qRestart()">Od nowa 🔄</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <h3>🧠 Jak Działa RAM</h3>
+    <p>Interaktywny przewodnik edukacyjny po pamięci operacyjnej komputera</p>
+    <p style="margin-top: 12px;">
+        <a href="#what">Czym jest RAM</a> &nbsp;•&nbsp;
+        <a href="#how">Jak działa</a> &nbsp;•&nbsp;
+        <a href="#ddr">Generacje DDR</a> &nbsp;•&nbsp;
+        <a href="#sim">Symulacja</a> &nbsp;•&nbsp;
+        <a href="#quiz">Quiz</a>
+    </p>
+    <p style="font-size: 0.8rem; opacity: 0.5; margin-top: 20px;">© 2024 — Projekt edukacyjny</p>
+</footer>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+// ==================
+// SYMULACJA RAM
+// ==================
+const memory = Array.from({length: 8}, () => Array(8).fill(0));
+
+function renderMemory(highlightRow, highlightCol, type) {
+    const grid = document.getElementById('memoryGrid');
+    grid.innerHTML = '';
+    for (let r = 0; r < 8; r++) {
+        const addr = document.createElement('div');
+        addr.className = 'mem-address';
+        addr.textContent = '0x' + (r * 8).toString(16).toUpperCase().padStart(2, '0');
+        grid.appendChild(addr);
+
+        const cells = document.createElement('div');
+        cells.className = 'mem-cells';
+        for (let c = 0; c < 8; c++) {
+            const cell = document.createElement('div');
+            cell.className = 'mem-cell';
+            if (memory[r][c] !== 0) cell.classList.add('active');
+            if (r === highlightRow && c === highlightCol) {
+                cell.classList.add(type || 'active');
+            }
+            cell.textContent = memory[r][c].toString(16).toUpperCase().padStart(2, '0');
+            cell.title = `[${r},${c}] = ${memory[r][c]} (0x${memory[r][c].toString(16).toUpperCase()})`;
+            const cr = r, cc = c;
+            cell.addEventListener('click', () => {
+                document.getElementById('simRow').value = cr;
+                document.getElementById('simCol').value = cc;
+                document.getElementById('simVal').value = memory[cr][cc];
+            });
+            cells.appendChild(cell);
+        }
+        grid.appendChild(cells);
+    }
+}
+
+function simLog(msg, cls) {
+    const log = document.getElementById('simLog');
+    const entry = document.createElement('div');
+    entry.className = 'log-entry ' + (cls || '');
+    const time = new Date().toLocaleTimeString();
+    entry.textContent = `[${time}] ${msg}`;
+    log.prepend(entry);
+    if (log.children.length > 50) log.removeChild(log.lastChild);
+}
+
+function simWrite() {
+    const r = parseInt(document.getElementById('simRow').value);
+    const c = parseInt(document.getElementById('simCol').value);
+    const v = parseInt(document.getElementById('simVal').value);
+    if (r<0||r>7||c<0||c>7||v<0||v>255||isNaN(r)||isNaN(c)||isNaN(v)) {
+        alert('Nieprawidłowe wartości! Wiersz/Kolumna: 0-7, Wartość: 0-255');
+        return;
+    }
+    const old = memory[r][c];
+    memory[r][c] = v;
+    renderMemory(r, c, 'writing');
+    simLog(`WRITE: Adres [${r},${c}] (0x${(r*8+c).toString(16).toUpperCase().padStart(2,'0')}) ← ${v} (0x${v.toString(16).toUpperCase().padStart(2,'0')}) [poprzednio: ${old}]`, 'log-write');
+    setTimeout(() => renderMemory(), 600);
+}
+
+function simRead() {
+    const r = parseInt(document.getElementById('simRow').value);
+    const c = parseInt(document.getElementById('simCol').value);
+    if (r<0||r>7||c<0||c>7||isNaN(r)||isNaN(c)) {
+        alert('Nieprawidłowy adres!');
+        return;
+    }
+    const v = memory[r][c];
+    renderMemory(r, c, 'reading');
+    document.getElementById('simVal').value = v;
+    simLog(`READ: Adres [${r},${c}] (0x${(r*8+c).toString(16).toUpperCase().padStart(2,'0')}) → ${v} (0x${v.toString(16).toUpperCase().padStart(2,'0')})`, 'log-read');
+    setTimeout(() => renderMemory(), 600);
+}
+
+function simRefresh() {
+    simLog('REFRESH: Odświeżanie wszystkich wierszy... ✓', 'log-info');
+    for (let r = 0; r < 8; r++) {
+        setTimeout(() => {
+            renderMemory(r, -1, 'reading');
+        }, r * 100);
+    }
+    setTimeout(() => renderMemory(), 900);
+}
+
+function simClear() {
+    for (let r = 0; r < 8; r++)
+        for (let c = 0; c < 8; c++)
+            memory[r][c] = 0;
+    renderMemory();
+    simLog('CLEAR: Pamięć wyczyszczona (wszystkie bajty = 0x00)', 'log-info');
+}
+
+renderMemory();
+
+// ==================
+// KALKULATOR
+// ==================
+function calcBandwidth() {
+    const freq = parseInt(document.getElementById('calcFreq').value);
+    const bus = parseInt(document.getElementById('calcBus').value);
+    const bandwidth = freq * 2 * bus; // MT/s * bytes
+    const gbps = (bandwidth / 1000).toFixed(1);
+    document.getElementById('calcResult').textContent = gbps + ' GB/s';
+    document.getElementById('calcDetail').textContent =
+        `${freq} MHz × 2 (DDR) × ${bus} bajtów = ${bandwidth} MB/s`;
+}
+
+function calcCapacity() {
+    const gb = parseInt(document.getElementById('calcRamSize').value);
+    const bytes = gb * 1024 * 1024 * 1024;
+    const pages = Math.round(bytes / 5000).toLocaleString('pl');
+    const songs = Math.round(bytes / (4.5 * 1024 * 1024)).toLocaleString('pl');
+    const photos = Math.round(bytes / (3 * 1024 * 1024)).toLocaleString('pl');
+    const movies = (bytes / (8 * 1024 * 1024 * 1024)).toFixed(1);
+    const ints = (bytes / 4 / 1e9).toFixed(1);
+
+    document.getElementById('calcCapResult').innerHTML =
+        `📄 ~${pages} stron tekstu (5KB/strona)<br>` +
+        `🎵 ~${songs} piosenek MP3 (4.5MB/szt.)<br>` +
+        `📸 ~${photos} zdjęć (3MB/szt.)<br>` +
+        `🎬 ~${movies} filmów Full HD (8GB/film)<br>` +
+        `🔢 ~${ints} miliarda liczb (int32)`;
+}
+
+// ==================
+// ACCORDION
+// ==================
+function toggleAcc(header) {
+    const item = header.parentElement;
+    const body = item.querySelector('.acc-body');
+    const isOpen = item.classList.contains('open');
+
+    document.querySelectorAll('.acc-item').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.acc-body').style.maxHeight = null;
+    });
+
+    if (!isOpen) {
+        item.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+    }
+}
+
+// ==================
+// QUIZ
+// ==================
+const quizData = [
+    {
+        q: "Co oznacza skrót RAM?",
+        o: ["Random Access Memory", "Read And Modify", "Rapid Action Memory", "Rewritable Access Module"],
+        a: 0, e: "RAM = Random Access Memory — pamięć o dostępie swobodnym, co oznacza, że każda komórka jest dostępna w tym samym czasie."
+    },
+    {
+        q: "Z ilu elementów składa się jedna komórka DRAM?",
+        o: ["1 (tranzystor)", "2 (tranzystor + kondensator)", "4 (flip-flop)", "6 (tranzystory SRAM)"],
+        a: 1, e: "Komórka DRAM = 1 tranzystor (bramka) + 1 kondensator (przechowuje bit jako ładunek)."
+    },
+    {
+        q: "Dlaczego DRAM wymaga odświeżania?",
+        o: ["Bo się przegrzewa", "Bo kondensatory tracą ładunek", "Bo tranzystory się zużywają", "Bo procesor tego wymaga"],
+        a: 1, e: "Kondensatory w DRAM tracą ładunek przez upływ prądu — muszą być odświeżane tysiące razy na sekundę."
+    },
+    {
+        q: "Co oznacza DDR w nazwie pamięci?",
+        o: ["Double Data Rate", "Dynamic Data Reading", "Dual Device RAM", "Direct Data Relay"],
+        a: 0, e: "DDR = Double Data Rate — transfer danych na obydwu zboczach zegara, podwajając przepustowość."
+    },
+    {
+        q: "Która pamięć jest najszybsza?",
+        o: ["RAM DRAM", "Cache L1", "SSD NVMe", "HDD"],
+        a: 1, e: "Cache L1 to pamięć SRAM wbudowana bezpośrednio w rdzeń procesora — najszybsza po rejestrach (~1 ns)."
+    },
+    {
+        q: "Ile wynosi napięcie zasilania DDR5?",
+        o: ["2.5V", "1.5V", "1.2V", "1.1V"],
+        a: 3, e: "DDR5 pracuje przy napięciu 1.1V — najniższym w historii DDR, co zmniejsza zużycie energii."
+    },
+    {
+        q: "Co oznacza CAS Latency (CL)?",
+        o: ["Pojemność pamięci", "Opóźnienie między żądaniem kolumny a danymi", "Częstotliwość zegara", "Liczbę kanałów"],
+        a: 1, e: "CL (CAS Latency) to liczba cykli zegara między wysłaniem adresu kolumny a otrzymaniem danych. Im niższe, tym lepiej."
+    },
+    {
+        q: "Dlaczego lepiej mieć 2×8GB niż 1×16GB?",
+        o: ["Bo jest taniej", "Bo włącza się dual channel (podwójna przepustowość)", "Bo mniej się grzeje", "Nie ma różnicy"],
+        a: 1, e: "2 moduły = dual channel = podwójna szerokość magistrali (128-bit zamiast 64-bit), co daje do 2x większą przepustowość."
+    },
+    {
+        q: "Co to jest ECC RAM?",
+        o: ["Pamięć z podświetleniem RGB", "Pamięć z korekcją błędów bitowych", "Pamięć o zwiększonej pojemności", "Pamięć do laptopów"],
+        a: 1, e: "ECC (Error-Correcting Code) RAM wykrywa i naprawia błędy pojedynczych bitów — kluczowe w serwerach i stacjach roboczych."
+    },
+    {
+        q: "RAM jest pamięcią:",
+        o: ["Nieulotną (zachowuje dane bez prądu)", "Ulotną (traci dane bez prądu)", "Tylko do odczytu", "Magnetyczną"],
+        a: 1, e: "RAM jest pamięcią ulotną (volatile) — po odcięciu zasilania wszystkie dane bezpowrotnie znikają."
+    }
+];
+
+let qIdx = 0, qScore = 0, qAnswered = false;
+
+function qRender() {
+    if (qIdx >= quizData.length) { qEnd(); return; }
+    const q = quizData[qIdx];
+    document.getElementById('qNum').textContent = qIdx + 1;
+    document.getElementById('qTot').textContent = quizData.length;
+    document.getElementById('quizQ').textContent = q.q;
+    const opts = document.getElementById('quizO');
+    opts.innerHTML = '';
+    q.o.forEach((o, i) => {
+        const d = document.createElement('div');
+        d.className = 'quiz-opt';
+        d.textContent = o;
+        d.addEventListener('click', () => qAnswer(i));
+        opts.appendChild(d);
+    });
+    document.getElementById('quizFb').className = 'quiz-fb';
+    document.getElementById('nxtBtn').disabled = true;
+    document.getElementById('nxtBtn').style.display = '';
+    document.getElementById('rstBtn').style.display = 'none';
+    qAnswered = false;
+}
+
+function qAnswer(i) {
+    if (qAnswered) return;
+    qAnswered = true;
+    const q = quizData[qIdx];
+    const opts = document.querySelectorAll('.quiz-opt');
+    const fb = document.getElementById('quizFb');
+    opts[q.a].classList.add('correct');
+    if (i === q.a) {
+        qScore++;
+        fb.textContent = '✅ Dobrze! ' + q.e;
+        fb.style.background = '#d1fae5'; fb.style.color = '#065f46';
+    } else {
+        opts[i].classList.add('wrong');
+        fb.textContent = '❌ Źle. ' + q.e;
+        fb.style.background = '#fee2e2'; fb.style.color = '#991b1b';
+    }
+    fb.className = 'quiz-fb show';
+    document.getElementById('qScr').textContent = qScore;
+    document.getElementById('nxtBtn').disabled = false;
+    opts.forEach(o => o.style.pointerEvents = 'none');
+}
+
+function qNext() { qIdx++; qRender(); }
+
+function qEnd() {
+    const pct = Math.round(qScore / quizData.length * 100);
+    let emoji = pct === 100 ? '🏆' : pct >= 70 ? '🌟' : pct >= 40 ? '👍' : '📚';
+    let msg = pct === 100 ? 'Perfekcyjnie! Znasz RAM na wylot!' :
+              pct >= 70 ? 'Świetnie! Solidna wiedza!' :
+              pct >= 40 ? 'Nieźle, ale warto powtórzyć materiał.' :
+              'Przeczytaj przewodnik jeszcze raz i spróbuj ponownie!';
+    document.getElementById('quizQ').innerHTML = `${emoji} Wynik: <strong>${qScore}/${quizData.length}</strong> (${pct}%)`;
+    document.getElementById('quizO').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;font-size:1.1rem;color:var(--text-light);">${msg}</div>`;
+    document.getElementById('quizFb').className = 'quiz-fb';
+    document.getElementById('nxtBtn').style.display = 'none';
+    document.getElementById('rstBtn').style.display = '';
+}
+
+function qRestart() { qIdx = 0; qScore = 0; document.getElementById('qScr').textContent = 0; qRender(); }
+
+qRender();
+
+// ==================
+// SCROLL ANIMATIONS
+// ==================
+const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+// ==================
+// LATENCY BAR ANIMATION
+// ==================
+const latObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.querySelectorAll('.lat-bar-fill').forEach(bar => {
+                const w = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => { bar.style.width = w; }, 200);
+            });
+        }
+    });
+}, { threshold: 0.3 });
+document.querySelectorAll('.latency-bars').forEach(el => latObs.observe(el));
+</script>
+
+</body>
+</html>
+```
+
+## Co zawiera strona:
+
+### 📖 Sekcje edukacyjne:
+| Sekcja | Zawartość |
+|--------|-----------|
+| **Czym jest RAM** | Definicja, analogia biurka, 6 kluczowych cech |
+| **Jak działa od środka** | Budowa komórki DRAM (kondensator+tranzystor), matryca wierszy/kolumn, proces RAS/CAS, cykl odświeżania |
+| **Rodzaje** | SRAM vs DRAM — pełne porównanie tabelaryczne |
+| **Generacje DDR** | DDR1→DDR5, wyjaśnienie Double Data Rate, tabela parametrów |
+| **Hierarchia pamięci** | Piramida ASCII, wizualne porównanie opóźnień |
+| **Parametry** | Dual Channel, CAS Latency/timingi, XMP/EXPO |
+| **Historia** | Oś czasu od 1947 do DDR5 |
+| **FAQ** | 7 pytań w akordeonach |
+
+### 🛠️ Narzędzia interaktywne:
+1. **Symulacja RAM 8×8** — zapisuj/odczytuj/odświeżaj bajty, log operacji
+2. **Kalkulator przepustowości** — oblicz GB/s na podstawie MHz i kanałów
+3. **Kalkulator pojemności** — ile piosenek/zdjęć/filmów mieści się w RAM
+4. **Quiz 10 pytań** — z wyjaśnieniami i punktacją
+5. **Animowane paski opóźnień** — wizualizacja różnic szybkości
