@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jak Działa RAM — Kompletny Przewodnik</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #6366f1;
+            --accent: #f43f5e;
+            --accent2: #10b981;
+            --accent3: #f59e0b;
+            --accent4: #06b6d4;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --shadow: 0 10px 40px rgba(0,0,0,0.08);
+            --radius: 18px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.75;
+        }
+
+        /* NAV */
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+        nav .nav-inner {
+            max-width: 1300px; margin: 0 auto;
+            display: flex; align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+        nav .logo {
+            color: #fff; font-weight: 800; font-size: 1.2rem;
+            padding: 16px 0; display: flex; align-items: center; gap: 8px;
+        }
+        nav .logo span { color: var(--secondary); }
+        nav ul {
+            display: flex; list-style: none; gap: 0; flex-wrap: wrap;
+        }
+        nav ul li a {
+            display: block; color: #cbd5e1; text-decoration: none;
+            padding: 18px 16px; font-size: 0.85rem; font-weight: 500;
+            transition: 0.3s; border-bottom: 3px solid transparent;
+        }
+        nav ul li a:hover {
+            color: #fff; border-bottom-color: var(--secondary);
+            background: rgba(99,102,241,0.1);
+        }
+        .menu-toggle {
+            display: none; background: none; border: none;
+            color: white; font-size: 1.5rem; cursor: pointer;
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #312e81 100%);
+            color: white; text-align: center;
+            padding: 150px 24px 100px;
+            position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(99,102,241,0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(244,63,94,0.1) 0%, transparent 50%);
+            animation: heroPulse 8s ease-in-out infinite alternate;
+        }
+        @keyframes heroPulse {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.1) rotate(3deg); }
+        }
+        .hero > * { position: relative; z-index: 1; }
+        .hero .chip-icon {
+            font-size: 5rem; margin-bottom: 20px;
+            filter: drop-shadow(0 0 30px rgba(99,102,241,0.5));
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+        .hero h1 { font-size: 3.5rem; font-weight: 900; margin-bottom: 16px; letter-spacing: -1px; }
+        .hero h1 span { color: var(--secondary); }
+        .hero p { font-size: 1.25rem; color: #94a3b8; max-width: 650px; margin: 0 auto 30px; }
+        .hero-stats {
+            display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;
+        }
+        .hero-stat {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 16px 28px; border-radius: 14px;
+            backdrop-filter: blur(5px);
+        }
+        .hero-stat .val { font-size: 1.8rem; font-weight: 900; color: var(--secondary); }
+        .hero-stat .lbl { font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* CONTAINERS */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        section { padding: 90px 0; }
+        .section-title { text-align: center; margin-bottom: 55px; }
+        .section-title h2 { font-size: 2.6rem; color: var(--primary); font-weight: 800; letter-spacing: -0.5px; }
+        .section-title .line {
+            width: 70px; height: 4px; margin: 16px auto;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            border-radius: 2px;
+        }
+        .section-title p { color: var(--text-light); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+
+        /* CARDS */
+        .card {
+            background: var(--card); border-radius: var(--radius);
+            box-shadow: var(--shadow); padding: 40px; margin-bottom: 28px;
+            border: 1px solid rgba(0,0,0,0.04); transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-3px); }
+        .card h3 {
+            font-size: 1.55rem; margin-bottom: 16px; color: var(--primary);
+            display: flex; align-items: center; gap: 12px;
+        }
+        .card h3 .icon { font-size: 1.8rem; }
+        .card p, .card li { color: #475569; font-size: 1.05rem; }
+        .card ul, .card ol { padding-left: 22px; margin: 14px 0; }
+        .card ul li, .card ol li { margin-bottom: 8px; }
+
+        /* GRID LAYOUTS */
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 28px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 24px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 22px; }
+
+        /* FEATURE CARDS */
+        .feature-card {
+            background: var(--card); border-radius: var(--radius);
+            padding: 32px; box-shadow: var(--shadow);
+            border-top: 5px solid var(--secondary);
+            transition: all 0.3s; text-align: center;
+        }
+        .feature-card:nth-child(2) { border-top-color: var(--accent); }
+        .feature-card:nth-child(3) { border-top-color: var(--accent2); }
+        .feature-card:nth-child(4) { border-top-color: var(--accent3); }
+        .feature-card:nth-child(5) { border-top-color: var(--accent4); }
+        .feature-card:nth-child(6) { border-top-color: #8b5cf6; }
+        .feature-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.12); }
+        .feature-card .f-icon { font-size: 3rem; margin-bottom: 14px; }
+        .feature-card h4 { font-size: 1.2rem; margin-bottom: 10px; color: var(--primary); }
+        .feature-card p { color: var(--text-light); font-size: 0.95rem; }
+
+        /* INFO BOXES */
+        .info-box {
+            border-radius: 0 14px 14px 0; padding: 24px 28px; margin: 22px 0;
+            border-left: 5px solid;
+        }
+        .info-box.blue { background: #eff6ff; border-color: var(--secondary); }
+        .info-box.green { background: #ecfdf5; border-color: var(--accent2); }
+        .info-box.yellow { background: #fffbeb; border-color: var(--accent3); }
+        .info-box.red { background: #fef2f2; border-color: var(--accent); }
+        .info-box h4 { margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+
+        /* DARK CODE/TERMINAL */
+        .terminal {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #4ade80; border-radius: 14px;
+            padding: 28px 32px; margin: 22px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem; line-height: 2;
+            overflow-x: auto; border-left: 5px solid #4ade80;
+        }
+        .terminal .c { color: #64748b; }
+        .terminal .r { color: #f87171; font-weight: 700; }
+        .terminal .y { color: #fbbf24; font-weight: 700; }
+        .terminal .b { color: #60a5fa; font-weight: 700; }
+        .terminal .g { color: #4ade80; font-weight: 700; }
+        .terminal .p { color: #c084fc; font-weight: 700; }
+
+        /* TABLES */
+        .table-wrap { overflow-x: auto; border-radius: var(--radius); box-shadow: var(--shadow); margin: 28px 0; }
+        table { width: 100%; border-collapse: collapse; background: var(--card); }
+        th {
+            background: linear-gradient(135deg, var(--primary), #334155);
+            color: white; padding: 16px 18px; text-align: center;
+            font-size: 0.88rem; text-transform: uppercase; letter-spacing: 1px;
+        }
+        td { padding: 14px 18px; text-align: center; border-bottom: 1px solid #f1f5f9; font-size: 0.98rem; }
+        td:first-child { text-align: left; font-weight: 600; }
+        tr:nth-child(even) { background: #f8fafc; }
+        tr:hover { background: #eef2ff; }
+
+        /* TIMELINE */
+        .timeline { position: relative; padding-left: 50px; }
+        .timeline::before {
+            content: ''; position: absolute; left: 20px; top: 0; bottom: 0;
+            width: 3px; background: linear-gradient(to bottom, var(--secondary), var(--accent), var(--accent2));
+        }
+        .tl-item {
+            position: relative; margin-bottom: 28px;
+            background: var(--card); padding: 28px 32px;
+            border-radius: 14px; box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+        .tl-item::before {
+            content: attr(data-year); position: absolute;
+            left: -52px; top: 28px; width: 42px; height: 42px;
+            background: var(--secondary); color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 0.65rem;
+        }
+        .tl-item h4 { color: var(--primary); margin-bottom: 6px; font-size: 1.1rem; }
+        .tl-item p { color: var(--text-light); font-size: 0.95rem; }
+
+        /* INTERACTIVE SIM */
+        .sim-container {
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            border-radius: var(--radius); padding: 40px;
+            box-shadow: var(--shadow); color: white;
+        }
+        .sim-container h3 { text-align: center; font-size: 1.6rem; margin-bottom: 8px; }
+        .sim-subtitle { text-align: center; color: #a5b4fc; margin-bottom: 24px; }
+
+        .memory-grid-container {
+            display: grid; grid-template-columns: auto 1fr;
+            gap: 0; margin: 20px 0;
+            background: rgba(0,0,0,0.3); border-radius: 12px; overflow: hidden;
+        }
+        .mem-address {
+            background: rgba(99,102,241,0.3); padding: 8px 14px;
+            font-family: 'Courier New', monospace; font-size: 0.85rem;
+            color: #a5b4fc; border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex; align-items: center;
+        }
+        .mem-cells {
+            display: flex; gap: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .mem-cell {
+            flex: 1; padding: 8px 6px; text-align: center;
+            font-family: 'Courier New', monospace; font-size: 0.82rem;
+            color: #94a3b8; transition: all 0.4s;
+            border-right: 1px solid rgba(255,255,255,0.03);
+            cursor: pointer; min-width: 36px;
+        }
+        .mem-cell.active {
+            background: rgba(99,102,241,0.4); color: #fff;
+            text-shadow: 0 0 10px rgba(99,102,241,0.8);
+        }
+        .mem-cell.writing {
+            background: rgba(244,63,94,0.5); color: #fff;
+            animation: cellPulse 0.5s;
+        }
+        .mem-cell.reading {
+            background: rgba(16,185,129,0.5); color: #fff;
+            animation: cellPulse 0.5s;
+        }
+        @keyframes cellPulse {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .sim-controls {
+            display: flex; gap: 12px; justify-content: center;
+            flex-wrap: wrap; margin-top: 24px;
+        }
+        .sim-btn {
+            padding: 12px 28px; border: none; border-radius: 10px;
+            font-size: 0.95rem; font-weight: 700; cursor: pointer;
+            transition: all 0.3s; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .sim-btn.write { background: var(--accent); color: white; }
+        .sim-btn.read { background: var(--accent2); color: white; }
+        .sim-btn.clear { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3); }
+        .sim-btn.refresh { background: var(--accent3); color: var(--primary); }
+        .sim-btn:hover { transform: scale(1.05); box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
+
+        .sim-log {
+            background: rgba(0,0,0,0.3); border-radius: 10px;
+            padding: 16px 20px; margin-top: 20px;
+            font-family: 'Courier New', monospace; font-size: 0.85rem;
+            max-height: 140px; overflow-y: auto; color: #94a3b8;
+        }
+        .sim-log .log-entry { margin-bottom: 4px; }
+        .sim-log .log-write { color: #fca5a5; }
+        .sim-log .log-read { color: #86efac; }
+        .sim-log .log-info { color: #93c5fd; }
+
+        .sim-input-row {
+            display: flex; gap: 12px; justify-content: center;
+            align-items: flex-end; flex-wrap: wrap; margin-bottom: 20px;
+        }
+        .sim-field { display: flex; flex-direction: column; }
+        .sim-field label { font-size: 0.8rem; color: #a5b4fc; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+        .sim-field input, .sim-field select {
+            padding: 10px 16px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.1); color: white; font-size: 1rem;
+            font-family: 'Courier New', monospace;
+        }
+        .sim-field input:focus, .sim-field select:focus {
+            outline: none; border-color: var(--secondary);
+            background: rgba(255,255,255,0.18);
+        }
+        .sim-field select option { background: var(--primary); }
+
+        /* COMPARE BAR */
+        .compare-bar {
+            display: flex; align-items: center; gap: 0;
+            background: #e2e8f0; border-radius: 10px; overflow: hidden;
+            height: 36px; margin: 8px 0;
+        }
+        .compare-bar .bar-fill {
+            height: 100%; display: flex; align-items: center;
+            justify-content: center; color: white; font-weight: 700;
+            font-size: 0.8rem; min-width: 40px; transition: width 0.6s;
+        }
+
+        /* PROCESS FLOW */
+        .process-flow {
+            display: flex; align-items: center; justify-content: center;
+            gap: 0; flex-wrap: wrap; margin: 30px 0;
+        }
+        .pf-step {
+            background: var(--card); border-radius: 14px;
+            padding: 20px 24px; text-align: center;
+            box-shadow: var(--shadow); min-width: 150px;
+        }
+        .pf-step .pf-icon { font-size: 2rem; margin-bottom: 8px; }
+        .pf-step h5 { font-size: 0.95rem; color: var(--primary); }
+        .pf-step p { font-size: 0.8rem; color: var(--text-light); }
+        .pf-arrow { font-size: 1.5rem; color: var(--secondary); padding: 0 8px; font-weight: 900; }
+
+        /* QUIZ */
+        .quiz-box {
+            background: var(--card); border-radius: var(--radius);
+            padding: 40px; box-shadow: var(--shadow);
+        }
+        .quiz-q { font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
+        .quiz-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .quiz-opt {
+            padding: 16px 20px; border: 2px solid #e2e8f0; border-radius: 12px;
+            cursor: pointer; transition: 0.3s; font-size: 1rem; text-align: center; font-weight: 500;
+        }
+        .quiz-opt:hover { border-color: var(--secondary); background: #eef2ff; }
+        .quiz-opt.correct { border-color: var(--accent2); background: #d1fae5; color: #065f46; }
+        .quiz-opt.wrong { border-color: var(--accent); background: #fee2e2; color: #991b1b; }
+        .quiz-fb { padding: 16px; border-radius: 10px; margin-top: 16px; font-weight: 600; display: none; }
+        .quiz-fb.show { display: block; }
+        .quiz-meta { color: var(--text-light); margin-bottom: 12px; font-size: 0.95rem; }
+        .quiz-nav { display: flex; justify-content: space-between; margin-top: 18px; }
+        .q-btn {
+            padding: 12px 28px; border: none; border-radius: 10px; cursor: pointer;
+            font-size: 0.95rem; font-weight: 700; transition: 0.3s;
+        }
+        .q-btn.next { background: var(--secondary); color: white; }
+        .q-btn.restart { background: var(--accent); color: white; display: none; }
+        .q-btn:hover { transform: scale(1.04); }
+        .q-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* CAPACITY CALCULATOR */
+        .calc-container {
+            background: linear-gradient(135deg, #064e3b, #065f46);
+            border-radius: var(--radius); padding: 40px; color: white;
+        }
+        .calc-container h3 { text-align: center; margin-bottom: 6px; }
+        .calc-sub { text-align: center; color: #6ee7b7; margin-bottom: 24px; }
+        .calc-row {
+            display: flex; gap: 16px; justify-content: center;
+            align-items: flex-end; flex-wrap: wrap; margin-bottom: 20px;
+        }
+        .calc-field { display: flex; flex-direction: column; }
+        .calc-field label { font-size: 0.8rem; color: #a7f3d0; margin-bottom: 4px; text-transform: uppercase; }
+        .calc-field input, .calc-field select {
+            padding: 12px 18px; border-radius: 10px; border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1); color: white; font-size: 1.1rem;
+        }
+        .calc-field input:focus, .calc-field select:focus { outline: none; border-color: #34d399; }
+        .calc-field select option { background: #064e3b; }
+        .calc-result {
+            background: rgba(0,0,0,0.2); border-radius: 12px; padding: 24px;
+            text-align: center;
+        }
+        .calc-result .big { font-size: 2.5rem; font-weight: 900; color: #34d399; }
+        .calc-result p { color: #a7f3d0; margin-top: 6px; }
+
+        /* LATENCY VIS */
+        .latency-bars { margin: 20px 0; }
+        .lat-bar-item { margin-bottom: 18px; }
+        .lat-bar-label {
+            display: flex; justify-content: space-between; margin-bottom: 5px;
+            font-weight: 600; font-size: 0.95rem;
+        }
+        .lat-bar-label span:last-child { color: var(--text-light); }
+        .lat-bar-track { background: #e2e8f0; border-radius: 8px; height: 28px; overflow: hidden; }
+        .lat-bar-fill {
+            height: 100%; border-radius: 8px; display: flex;
+            align-items: center; padding-left: 12px;
+            color: white; font-weight: 700; font-size: 0.8rem;
+            transition: width 1s ease;
+        }
+
+        /* ACCORDION */
+        .accordion { margin: 10px 0; }
+        .acc-item { margin-bottom: 8px; }
+        .acc-header {
+            background: var(--card); border: 1px solid #e2e8f0;
+            padding: 18px 24px; border-radius: 12px;
+            cursor: pointer; font-weight: 700; font-size: 1.05rem;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: 0.3s;
+        }
+        .acc-header:hover { background: #f1f5f9; }
+        .acc-header .arrow { transition: transform 0.3s; font-size: 1.2rem; }
+        .acc-item.open .acc-header .arrow { transform: rotate(180deg); }
+        .acc-body {
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+            background: #f8fafc; border-radius: 0 0 12px 12px;
+        }
+        .acc-body-inner { padding: 20px 24px; color: #475569; line-height: 1.8; }
+
+        /* DIAGRAM */
+        .diagram-box {
+            background: var(--card); border-radius: var(--radius);
+            padding: 30px; box-shadow: var(--shadow);
+            text-align: center; overflow-x: auto;
+        }
+        .diagram-box svg { max-width: 100%; height: auto; }
+
+        /* DDR COMPARE */
+        .ddr-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 16px; }
+        .ddr-card {
+            border-radius: 14px; padding: 24px 16px; text-align: center;
+            color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
+        }
+        .ddr-card:hover { transform: translateY(-5px); }
+        .ddr-card h5 { font-size: 1.4rem; margin-bottom: 6px; }
+        .ddr-card .speed { font-size: 2rem; font-weight: 900; }
+        .ddr-card p { font-size: 0.8rem; opacity: 0.85; margin-top: 4px; }
+
+        /* FOOTER */
+        footer {
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
+            color: #94a3b8; text-align: center; padding: 50px 24px;
+        }
+        footer h3 { color: white; margin-bottom: 8px; }
+        footer a { color: var(--secondary); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        /* ANIMATIONS */
+        .fade-in {
+            opacity: 0; transform: translateY(30px);
+            transition: all 0.7s cubic-bezier(0.16,1,0.3,1);
+        }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1rem; }
+            .section-title h2 { font-size: 1.9rem; }
+            .card { padding: 24px; }
+            nav ul { display: none; }
+            nav ul.open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: rgba(15,23,42,0.98); }
+            .menu-toggle { display: block; }
+            .quiz-opts { grid-template-columns: 1fr; }
+            .pf-arrow { transform: rotate(90deg); }
+            .process-flow { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAWIGACJA -->
+<nav>
+    <div class="nav-inner">
+        <div class="logo">🧠 <span>RAM</span>Explained</div>
+        <button class="menu-toggle" onclick="document.querySelector('nav ul').classList.toggle('open')">☰</button>
+        <ul>
+            <li><a href="#what">Czym jest RAM</a></li>
+            <li><a href="#how">Jak działa</a></li>
+            <li><a href="#types">Rodzaje</a></li>
+            <li><a href="#ddr">Generacje DDR</a></li>
+            <li><a href="#sim">Symulacja</a></li>
+            <li><a href="#hierarchy">Hierarchia</a></li>
+            <li><a href="#calc">Kalkulator</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+    <div class="chip-icon">🧩</div>
+    <h1>Jak działa <span>RAM</span>?</h1>
+    <p>Kompletny, interaktywny przewodnik po pamięci operacyjnej komputera — od tranzystorów po DDR5</p>
+    <div class="hero-stats">
+        <div class="hero-stat"><div class="val">~0.1μs</div><div class="lbl">Czas dostępu</div></div>
+        <div class="hero-stat"><div class="val">DDR5</div><div class="lbl">Najnowsza generacja</div></div>
+        <div class="hero-stat"><div class="val">6400 MT/s</div><div class="lbl">Maks. przepustowość</div></div>
+        <div class="hero-stat"><div class="val">~50 GB/s</div><div class="lbl">Szybkość transferu</div></div>
+    </div>
+</header>
+
+<!-- CZYM JEST RAM -->
+<section id="what">
+    <div class="container">
+        <div class="section-title fade-in">
+            <h2>🔍 Czym jest RAM?</h2>
+            <div class="line"></div>
+            <p>Pamięć o dostępie swobodnym — biurko twojego komputera</p>
+        </div>
+
+        <div class="card fade-in">
+            <h3><span class="icon">📖</span> Definicja</h3>
+            <p><strong>RAM (Random Access Memory)</strong> — pamięć o dostępie swobodnym — to szybka, <strong>ulotna</strong> pamięć komputera służąca do tymczasowego przechowywania danych i instrukcji, z których aktualnie korzysta procesor.</p>
+
+            <div class="info-box blue" style="margin-top: 20px;">
+                <h4>💡 Analogia: biurko</h4>
+                <p>Wyobraź sobie, że <strong>dysk twardy to szafa z dokumentami</strong>, a <strong>RAM to biurko</strong>. Gdy pracujesz, wyjmujesz potrzebne dokumenty z szafy i kładziesz na biurku — im większe biurko (więcej RAM), tym więcej dokumentów masz pod ręką i szybciej pracujesz. Gdy wyłączasz światło (komputer), biurko zostaje puste (dane z RAM znikają).</p>
+            </div>
+        </div>
+
+        <div class="card fade-in">
+            <h3><span class="icon">⚡</span> Kluczowe cechy RAM</h3>
+            <div class="grid-3" style="margin-top: 16px;">
+                <div class="feature-card">
+                    <div class="f-icon">💨</div>
+                    <h4>Szybkość</h4>
+                    <p>Tysiące razy szybsza od dysku twardego. Czas dostępu mierzony w nanosekundach.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="f-icon">🔌</div>
+                    <h4>Ulotność</h4>
+                    <p>Traci dane po odcięciu zasilania. Wymaga ciągłego odświeżania (DRAM).</p>
+                </div>
+                <div class="feature-card">
+                    <div class="f-icon">🎯</div>
+                    <h4>Dostęp swobodny</h4>
+                    <p>Każda komórka dostępna w tym samym czasie — bez czekania w kolejce.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="f-icon">📝</div>
+                    <h4>Odczyt i zapis</h4>
+                    <p>Dane można zarówno odczytywać, jak i zapisywać z jednakową prędkością.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="f-icon">📦</div>
+                    <h4>Tymczasowość</h4>
+                    <p>Przechowuje dane tylko na czas działania programu lub systemu.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="f-icon">🧱</div>
+                    <h4>Modułowość</h4>
+                    <p>Łatwo rozbudować — wystarczy dodać kolejne moduły (DIMM) do płyty głównej.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- JAK DZIAŁA -->
+<section id="how" style="background: #eef2ff;">
+    <div class="container">
+        <div class="section-title fade-in">
+            <h2>⚙️ Jak działa RAM od środka?</h2>
+            <div class="line"></div>
+            <p>Od tranzystorów i kondensatorów po gigabajty danych</p>
+        </div>
+
+        <!-- Budowa komórki DRAM -->
+        <div class="card fade-in">
+            <h3><span class="icon">🔬</span> Budowa komórki DRAM</h3>
+            <p>Każda komórka pamięci DRAM (Dynamic RAM) składa się z zaledwie <strong>dwóch elementów</strong>:</p>
+
+            <div class="grid-2" style="margin: 20px 0;">
+                <div style="background: #f0f9ff; padding: 24px; border-radius: 14px; border-left: 4px solid var(--secondary);">
+                    <h4>🔋 Kondensator</h4>
+                    <p>Mały „pojemnik" na ładunek elektryczny. <strong>Naładowany = 1</strong>, <strong>rozładowany = 0</strong>. To on przechowuje właściwy bit informacji.</p>
+                </div>
+                <div style="background: #fef3f2; padding: 24px; border-radius: 14px; border-left: 4px solid var(--accent);">
+                    <h4>⚡ Tranzystor</h4>
+                    <p>Działa jak <strong>bramka / przełącznik</strong>. Kontroluje dostęp do kondensatora — pozwala odczytać lub zmienić jego stan.</p>
+                </div>
+            </div>
+
+            <div class="info-box yellow">
+                <h4>⚠️ Problem: wyciekanie ładunku</h4>
+                <p>Kondensatory w DRAM <strong>tracą ładunek w ciągu milisekund</strong>. Dlatego RAM musi być ciągle <strong>odświeżany</strong> (refresh) — tysiące razy na sekundę kontroler pamięci odczytuje i ponownie zapisuje dane. Stąd nazwa <em>Dynamic</em> RAM.</p>
+            </div>
+        </div>
+
+        <!-- Organizacja pamięci -->
+        <div class="card fade-in">
+            <h3><span class="icon">🏗️</span> Organizacja pamięci — wiersze i kolumny</h3>
+            <p>Miliardy komórek DRAM zorganizowane są w <strong>dwuwymiarową tablicę</strong> (matrycę) wierszy i kolumn:</p>
+
+            <div class="terminal">
+                <span class="c">// Struktura pamięci RAM — matryca bitów</span><br><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kol.0 &nbsp;Kol.1 &nbsp;Kol.2 &nbsp;Kol.3 &nbsp;... &nbsp;Kol.n<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┌──────┬──────┬──────┬──────┬─────┐<br>
+                Wiersz 0 │ <span class="r">1</span> bit │ <span class="g">0</span> bit │ <span class="r">1</span> bit │ <span class="r">1</span> bit │ ... │<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──────┼──────┼──────┼──────┼─────┤<br>
+                Wiersz 1 │ <span class="g">0</span> bit │ <span class="r">1</span> bit │ <span class="g">0</span> bit │ <span class="g">0</span> bit │ ... │<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──────┼──────┼──────┼──────┼─────┤<br>
+                Wiersz 2 │ <span class="r">1</span> bit │ <span class="r">1</span> bit │ <span class="g">0</span> bit │ <span class="r">1</span> bit │ ... │<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──────┼──────┼──────┼──────┼─────┤<br>
+                &nbsp;... &nbsp;&nbsp;│ ... &nbsp;│ ... &nbsp;│ ... &nbsp;│ ... &nbsp;│ ... │<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──────┴──────┴──────┴──────┴─────┘<br><br>
+                <span class="c">// Adres komórki = numer wiersza + numer kolumny</span><br>
+                <span class="c">// Np. adres [Wiersz 2, Kol.3] → wartość: <span class="y">1</span></span>
+            </div>
+        </div>
+
+        <!-- Proces odczytu i zapisu -->
+        <div class="card fade-in">
+            <h3><span class="icon">📋</span> Proces odczytu danych z RAM</h3>
+
+            <div class="process-flow">
+                <div class="pf-step">
+                    <div class="pf-icon">🎯</div>
+                    <h5>1. CPU wysyła adres</h5>
+                    <p>Procesor podaje adres żądanych danych</p>
+                </div>
+                <div class="pf-arrow">→</div>
+                <div class="pf-step">
+                    <div class="pf-icon">🔑</div>
+                    <h5>2. Dekoder adresu</h5>
+                    <p>Kontroler rozkłada adres na wiersz i kolumnę</p>
+                </div>
+                <div class="pf-arrow">→</div>
+                <div class="pf-step">
+                    <div class="pf-icon">⚡</div>
+                    <h5>3. Aktywacja wiersza</h5>
+                    <p>Sygnał RAS aktywuje cały wiersz</p>
+                </div>
+                <div class="pf-arrow">→</div>
+                <div class="pf-step">
+                    <div class="pf-icon">📌</div>
+                    <h5>4. Wybór kolumny</h5>
+                    <p>Sygnał CAS wybiera konkretną kolumnę</p>
+                </div>
+                <div class="pf-arrow">→</div>
+                <div class="pf-step">
+                    <div class="pf-icon">📤</div>
+                    <h5>5. Dane → CPU</h5>
+                    <p>Odczytane dane trafiają do procesora</p>
+                </div>
+            </div>
+
+            <div class="info-box green">
+                <h4>✅ RAS i CAS — kluczowe sygnały</h4>
+                <p><strong>RAS (Row Address Strobe)</strong> — aktywuje wiersz w matrycy.<br>
+                <strong>CAS (Column Address Strobe)</strong> — wybiera kolumnę w aktywnym wierszu.<br>
+                <strong>CAS Latency (CL)</strong> — opóźnienie między podaniem kolumny a otrzymaniem danych. Im niższe CL, tym szybsza pamięć!</p>
+            </div>
+        </div>
+
+        <!-- Cykl odświeżania -->
+        <div class="card fade-in">
+            <h3><span class="icon">🔄</span> Cykl odświeżania (Refresh)</h3>
+            <p>Ponieważ kondensatory tracą ładunek, kontroler pamięci musi regularnie odświeżać każdy wiersz:</p>
+
+            <div class="terminal">
+                <span class="c">// Cykl życia bitu w DRAM:</span><br><br>
+                <span class="y">ZAPIS</span> → Kondensator naładowany (bit = 1)<br>
+                &nbsp;&nbsp;&nbsp;↓<br>
+                <span class="r">UPŁYW CZASU</span> → Ładunek wycieka (~64ms to limit)<br>
+                &nbsp;&nbsp;&nbsp;↓<br>
+                <span class="g">ODŚWIEŻANIE</span> → Kontroler odczytuje i zapisuje ponownie<br>
+                &nbsp;&nbsp;&nbsp;↓<br>
+                <span class="y">BIT BEZPIECZNY</span> → Ładunek przywrócony ✓<br><br>
+                <span class="c">// Odświeżanie zajmuje ~1-5% czasu pracy RAM</span><br>
+                <span class="c">// Standardowo co 64ms trzeba odświeżyć WSZYSTKIE wiersze</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- RODZAJE RAM -->
+<section id="types">
+    <div class="container">
+        <div class="section-title fade-in">
+            <h2>📦 Rodzaje pamięci RAM</h2>
+            <div class="line"></div>
+            <p>SRAM vs DRAM i ich zastosowania</p>
+        </div>
+
+        <div class="grid-2 fade-in">
+            <div class="card" style="border-top: 5px solid var(--secondary);">
+                <h3><span class="icon">⚡</span> SRAM (Static RAM)</h3>
+                <ul>
+                    <li><strong>Budowa:</strong> 6 tranzystorów na bit (flip-flop)</li>
+                    <li><strong>Odświeżanie:</strong> NIE wymaga odświeżania</li>
+                    <li><strong>Szybkość:</strong> Bardzo szybka (~1-2 ns)</li>
+                    <li><strong>Pojemność:</strong> Mała (drogie, duże komórki)</li>
+                    <li><strong>Koszt:</strong> Bardzo droga</li>
+                    <li><strong>Zastosowanie:</strong> Pamięć cache procesora (L1, L2, L3)</li>
+                </ul>
+                <div class="info-box blue">
+                    <p>SRAM jest jak tablica – dane utrzymują się tak długo, jak jest zasilanie, bez potrzeby ciągłego „przypominania".</p>
+                </div>
+            </div>
+
+            <div class="card" style="border-top: 5px solid var(--accent);">
+                <h3><span class="icon">🔋</span> DRAM (Dynamic RAM)</h3>
+                <ul>
+                    <li><strong>Budowa:</strong> 1 tranzystor + 1 kondensator na bit</li>
+                    <li><strong>Odświeżanie:</strong> WYMAGA ciągłego odświeżania</li>
+                    <li><strong>Szybkość:</strong> Szybka (~10-70 ns)</li>
+                    <li><strong>Pojemność:</strong> Duża (tanie, małe komórki)</li>
+                    <li><strong>Koszt:</strong> Stosunkowo tania</li>
+                    <li><strong>Zastosowanie:</strong> Główna pamięć RAM komputera</li>
+                </ul>
+                <div class="info-box red">
+                    <p>DRAM jest jak nieszczelne wiadro – trzeba ciągle dolewać wody (odświeżać ładunek), ale za to jest tania i pojemna.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card fade-in">
+            <h3><span class="icon">📊</span> Porównanie SRAM vs DRAM</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Cecha</th><th>SRAM</th><th>DRAM</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Elementy na bit</td><td>6 tranzystorów</td><td>1 tranzystor + 1 kondensator</td></tr>
+                        <tr><td>Odświeżanie</td><td>❌ Nie</td><td>✅ Tak (co ~64ms)</td></tr>
+                        <tr><td>Prędkość</td><td>~1-2 ns</td><td>~10-70 ns</td></tr>
+                        <tr><td>Gęstość</td><td>Niska</td><td>Wysoka</td></tr>
+                        <tr><td>Koszt/bit</td><td>💰💰💰 Drogi</td><td>💰 Tani</td></tr>
+                        <tr><td>Zużycie energii</td><td>Niskie (idle)</td><td>Wyższe (refresh)</td></tr>
+                        <tr><td>Zastosowanie</td><td>Cache CPU</td><td>Pamięć główna</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- GENERACJE DDR -->
+<section id="ddr" style="background: #eef2ff;">
+    <div class="container">
+        <div class="section-title fade-in">
+            <h2>🚀 Generacje DDR</h2>
+            <div class="line"></div>
+            <p>Ewolucja standardów pamięci RAM</p>
+        </div>
+
+        <div class="card fade-in">
+            <h3><span class="icon">📡</span> Co to DDR?</h3>
+            <p><strong>DDR (Double Data Rate)</strong> oznacza, że dane przesyłane są <strong>dwa razy w jednym cyklu zegara</strong> — zarówno na wznoszącej, jak i opadającej krawędzi sygnału. To podwaja efektywną przepustowość w porównaniu do starszych pamięci SDR.</p>
+
+            <div class="terminal">
+                <span class="c">// SDR vs DDR — transfer danych w cyklu zegara</span><br><br>
+                <span class="y">SDR:</span> ──╱╲──╱╲──╱╲── → Transfer tylko na ↑ = <span class="r">1x</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↑ &nbsp;&nbsp;↑ &nbsp;&nbsp;↑<br><br>
+                <span class="g">DDR:</span> ──╱╲──╱╲──╱╲── → Transfer na ↑ i ↓ = <span class="g">2x</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↑↓ &nbsp;↑↓ &nbsp;↑↓
+            </div>
+        </div>
+
+        <div class="ddr-cards fade-in">
+            <div class="ddr-card" style="background: linear-gradient(135deg, #6b7280, #4b5563);">
+                <h5>DDR1</h5>
+                <div class="speed">400</div>
+                <p>MT/s • 3.2 GB/s</p>
+                <p>2.5V • Rok 2000</p>
+            </div>
+            <div class="ddr-card" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+                <h5>DDR2</h5>
+                <div class="speed">1066</div>
+                <p>MT/s • 8.5 GB/s</p>
+                <p>1.8V • Rok 2003</p>
+            </div>
+            <div class="ddr-card" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">
+                <h5>DDR3</h5>
+                <div class="speed">2133</div>
+                <p>MT/s • 17 GB/s</p>
+                <p>1.5V • Rok 2007</p>
+            </div>
+            <div class="ddr-card" style="background: linear-gradient(135deg, #f43f5e, #be123c);">
+                <h5>DDR4</h5>
+                <div class="speed">3200</div>
+                <p>MT/s • 25.6 GB/s</p>
+                <p>1.2V • Rok 2014</p>
+            </div>
+            <div class="ddr-card" style="background: linear-gradient(135deg, #10b981, #047857);">
+                <h5>DDR5</h5>
+                <div class="speed">6400</div>
+                <p>MT/s • 51.2 GB/s</p>
+                <p>1.1V • Rok 2020</p>
+            </div>
+        </div>
+
+        <div class="card fade-in" style="margin-top: 28px;">
+            <h3><span class="icon">📈</span> Porównanie generacji DDR</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Parametr</th><th>DDR1</th><th>DDR2</th><th>DDR3</th><th>DDR4</th><th>DDR5</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Rok wprowadzenia</td><td>2000</td><td>2003</td><td>2007</td><td>2014</td><td>2020</td></tr>
+                        <tr><td>Napięcie</td><td>2.5V</td><td>1.8V</td><td>1.5V</td><td>1.2V</td><td>1.1V</td></tr>
+                        <tr><td>Szybkość zegara</td><td>100-200</td><td>200-533</td><td>400-1066</td><td>800-1600</td><td>2400-3200</td></tr>
+                        <tr><td>Transfer (MT/s)</td><td>200-400</td><td>400-1066</td><td>800-2133</td><td>1600-3200</td><td>4800-6400</td></tr>
+                        <tr><td>Przepustowość</td><td>3.2 GB/s</td><td>8.5 GB/s</td><td>17 GB/s</td><td>25.6 GB/s</td><td>51.2 GB/s</td></tr>
+                        <tr><td>Typowa pojemność</td><td>128MB-1GB</td><td>256MB-4GB</td><td>1-8GB</td><td>4-32GB</td><td>8-64GB</td></tr>
+                        <tr><td>Maks. pojemność/moduł</td><td>1 GB</td><td>4 GB</td><td>8 GB</td><td>32 GB</td><td>128 GB</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INTERAKTYWNA SYMULACJA -->
+<section id="sim">
+    <div class="container">
+        <div class="section-title fade-in">
+            <h2>🎮 Symulacja Pamięci RAM</h2>
+            <div class="line"></div>
+            <p>Interaktywny model — zapisuj i odczytuj dane z wirtualnej pamięci</p>
+        </div>
+
+        <div class="sim-container fade-in">
+            <h3>🧩 Wirtualna pamięć RAM (8×8 = 64 bajty)</h3>
+            <p class="sim-subtitle">Wpisz adres i wartość, a następnie zapisz lub odczytaj dane</p>
+
+            <div class="sim-input-row">
+                <div class="sim-field">
+                    <label>Wiersz (0-7)</label>
+                    <input type="number" id="simRow" min="0" max="7" value="0" style="width: 80px;">
+                </div>
+                <div class="sim-field">
+                    <label>Kolumna (0-7)</label>
+                    <input type="number" id="simCol" min="0" max="7" value="0" style="width: 80px;">
+                </div>
+                <div class="sim-field">
+                    <label>Wartość (0-255)</label>
+                    <input type="number" id="simVal" min="0" max="255" value="42" style="width: 100px;">
+                </div>
+            </div>
+
+            <div class="sim-controls">
+                <button class="sim-btn write" onclick="simWrite()">✏️ Zapisz (Write)</button>
+                <button class="sim-btn read" onclick="simRead()">📖 Odczytaj (Read)</button>
+                <button class="sim-btn refresh" onclick="simRefresh()">🔄 Odśwież (Refresh)</button>
+                <button class="sim-btn clear" onclick="simClear()">🗑️ Wyczyść pamięć</button>
+            </div>
+
+            <div class="memory-grid-container" id="memoryGrid"></div>
+
+            <div class="sim-log" id="simLog">
+                <div class="log-entry log-info">💻 System: Pamięć RAM zainicjalizowana (64 bajty, wartość: 00)</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HIERARCHIA PAMIĘCI -->
+<section id="hierarchy" style="background: #eef2ff;">
+    <div class="container">
+        <div class="section-title fade-in">
+            <h2>🏔️ Hierarchia pamięci komputera</h2>
+            <div class="line"></div>
+            <p>Od najszybszych rejestrów do najwolniejszych dysków</p>
+        </div>
+
+        <div class="card fade-in">
+            <h3><span class="icon">📐</span> Piramida pamięci</h3>
+            <p>W komputerze istnieje kilka poziomów pamięci — im szybsza, tym mniejsza i droższa:</p>
+
+            <div class="terminal">
+                <span class="c">// Hierarchia pamięci — od najszybszej do najwolniejszej</span><br><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╱╲<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╱ <span class="r">R</span> ╲ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Rejestry CPU<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╱<span class="r">E</span> <span class="r">G</span>╲ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ~0.3 ns | ~KB<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╱──────╲<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╱ <span class="y">CACHE</span> ╲ &nbsp;&nbsp;&nbsp;&nbsp; Cache L1/L2/L3<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╱ <span class="y">L1 L2 L3</span>╲ &nbsp;&nbsp;&nbsp; ~1-10 ns | KB-MB<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╱────────────╲<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╱ &nbsp;&nbsp;<span class="g">RAM</span> &nbsp;&nbsp;&nbsp;&nbsp;╲ &nbsp;&nbsp; Pamięć operacyjna<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╱ &nbsp;<span class="g">DRAM DDR5</span> &nbsp;╲ &nbsp; ~10-100 ns | GB<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;╱────────────────╲<br>
+                &nbsp;&nbsp;&nbsp;╱ &nbsp;&nbsp;&nbsp;<span class="b">SSD/NVMe</span> &nbsp;&nbsp;&nbsp;╲ &nbsp; Dyski półprzewod.<br>
+                &nbsp;&nbsp;╱ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╲ &nbsp;~0.1 ms | TB<br>
+                &nbsp;╱────────────────────╲<br>
+                ╱ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="p">HDD</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╲ Dyski talerzowe<br>
+                ╱ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╲ ~5-10 ms | TB<br>
+                ╱──────────────────────────╲<br><br>
+                <span class="c">&nbsp;&nbsp;&nbsp;↑ Szybkość &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓ Pojemność</span><br>
+                <span class="c">&nbsp;&nbsp;&nbsp;↑ Koszt/bit &nbsp;&nbsp;&nbsp;&nbsp;↓ Koszt/bit</span>
+            </div>
+        </div>
+
+        <div class="card fade-in">
+            <h3><span class="icon">⏱️</span> Opóźnienia — porównanie wizualne</h3>
+            <p>Gdyby jeden cykl zegara CPU (0.3 ns) trwał <strong>1 sekundę</strong>, to:</p>
+
+            <div class="latency-bars">
+                <div class="lat-bar-item">
+                    <div class="lat-bar-label"><span>Rejestry CPU</span><span>~1 s</span></div>
+                    <div class="lat-bar-track"><div class="lat-bar-fill" style="width:1%; background: linear-gradient(90deg, #ef4444, #dc2626);">~1s</div></div>
+                </div>
+                <div class="lat-bar-item">
+                    <div class="lat-bar-label"><span>Cache L1</span><span>~3 s</span></div>
+                    <div class="lat-bar-track"><div class="lat-bar-fill" style="width:2%; background: linear-gradient(90deg, #f59e0b, #d97706);">~3s</div></div>
+                </div>
+                <div class="lat-bar-item">
+                    <div class="lat-bar-label"><span>Cache L2</span><span>~10 s</span></div>
+                    <div class="lat-bar-track"><div class="lat-bar-fill" style="width:3%; background: linear-gradient(90deg, #eab308, #ca8a04);">~10s</div></div>
+                </div>
+                <div class="lat-bar-item">
+                    <div class="lat-bar-label"><span>Cache L3</span><span>~40 s</span></div>
+                    <div class="lat-bar-track"><div class="lat-bar-fill" style="width:6%; background: linear-gradient(90deg, #22c55e, #16a34a);">~40s</div></div>
+                </div>
+                <div class="lat-bar-item">
+                    <div class="lat-bar-label"><span>🎯 RAM (DRAM)</span><span>~3 min</span></div>
+                    <div class="lat-bar-track"><div class="lat-bar-fill" style="width:14%; background: linear-gradient(90deg, #6366f1, #4f46e5);">~3 min</div></div>
+                </div>
+                <div class="lat-bar-item">
+                    <div class="lat-bar-label"><span>SSD NVMe</span><span>~3-4 dni</span></div>
+                    <div class="lat-bar-track"><div class="lat-bar-fill" style="width:40%; background: linear-gradient(90deg, #06b6d4, #0891b2);">~3-4 dni</div></div>
+                </div>
+                <div class="lat-bar-item">
+                    <div class="lat-bar-label"><span>HDD</span><span>~3-6 miesięcy</span></div>
+                    <div class="lat-bar-track"><div class="lat-bar-fill" style="width:90%; background: linear-gradient(90deg, #8b5cf6, #7c3aed);">~3-6 miesięcy</div></div>
+                </div>
+            </div>
+
+            <div class="info-box blue">
+                <h4>💡 Wniosek</h4>
+                <p>RAM jest ~1000x szybsza od SSD i ~100000x szybsza od HDD, ale ~10-100x wolniejsza od cache CPU. Dlatego hierarchia pamięci jest niezbędna — każdy poziom buforuje dane dla poziomu niżej.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- KALKULATOR POJEMNOŚCI -->
+<section id="calc">
+    <div class="container">
+        <div class="section-title fade-in">
+            <h2>🧮 Kalkulator RAM</h2>
+            <div class="line"></div>
+            <p>Oblicz przepustowość i sprawdź, ile danych mieści się w RAM</p>
+        </div>
+
+        <div class="grid-2 fade-in">
+            <div class="calc-container">
+                <h3>📐 Przepustowość RAM</h3>
+                <p class="calc-sub">Oblicz teoretyczną przepustowość na podstawie parametrów</p>
+                <div class="calc-row">
+                    <div class="calc-field">
+                        <label>Taktowanie (MHz)</label>
+                        <input type="number" id="calcFreq" value="3200" min="100">
+                    </div>
+                    <div class="calc-field">
+                        <label>Szerokość magistrali</label>
+                        <select id="calcBus">
+                            <option value="8">64-bit (1 kanał)</option>
+                            <option value="16" selected>128-bit (2 kanały)</option>
+                            <option value="32">256-bit (4 kanały)</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="sim-btn write" onclick="calcBandwidth()" style="display:block;margin:0 auto;">Oblicz 📊</button>
+                <div class="calc-result" style="margin-top: 16px;">
+                    <div class="big" id="calcResult">51.2 GB/s</div>
+                    <p id="calcDetail">3200 MHz × 2 (DDR) × 16 bajtów = 102400 MB/s</p>
+                </div>
+            </div>
+
+            <div class="calc-container" style="background: linear-gradient(135deg, #312e81, #4338ca);">
+                <h3>📦 Co mieści się w RAM?</h3>
+                <p class="calc-sub">Sprawdź, ile danych możesz przechować</p>
+                <div class="calc-row">
+                    <div class="calc-field">
+                        <label>Ilość RAM</label>
+                        <select id="calcRamSize">
+                            <option value="4">4 GB</option>
+                            <option value="8">8 GB</option>
+                            <option value="16" selected>16 GB</option>
+                            <option value="32">32 GB</option>
+                            <option value="64">64 GB</option>
+                            <option value="128">128 GB</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="sim-btn read" onclick="calcCapacity()" style="display:block;margin:0 auto;">Oblicz 📊</button>
+                <div class="calc-result" 
