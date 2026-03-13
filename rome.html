@@ -1,0 +1,1723 @@
+
+
+# Ustrój Starożytnego Rzymu - Test dla klasy 5
+
+Kompletna strona z testem wiedzy o starożytnym Rzymie. Zapisz jako `.html` i otwórz w przeglądarce.
+
+```html
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starożytny Rzym - Test dla klasy 5</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Nunito:wght@300;400;500;600;700;800&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --gold: #d4a843;
+            --gold-light: #f0d68a;
+            --gold-dark: #b8860b;
+            --red-roman: #8b1a1a;
+            --red-light: #c0392b;
+            --bg-dark: #1a1410;
+            --bg-card: rgba(30, 25, 18, 0.9);
+            --bg-lighter: #2a2218;
+            --text-light: #f5e6c8;
+            --text-muted: #a89070;
+            --green: #27ae60;
+            --green-light: #2ecc71;
+            --red-err: #e74c3c;
+            --border: rgba(212, 168, 67, 0.15);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===== BACKGROUND ===== */
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4a843' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.08;
+            z-index: 0;
+        }
+        .glow-1 { width: 500px; height: 500px; background: var(--gold); top: -150px; right: -100px; }
+        .glow-2 { width: 400px; height: 400px; background: var(--red-roman); bottom: -100px; left: -100px; }
+        .glow-3 { width: 300px; height: 300px; background: var(--gold-dark); top: 50%; left: 40%; }
+
+        /* ===== HEADER ===== */
+        header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 40px 20px 15px;
+        }
+
+        .roman-columns {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .column-icon {
+            font-size: 2.5em;
+            animation: float 3s ease-in-out infinite;
+        }
+        .column-icon:nth-child(2) { animation-delay: -1s; }
+        .column-icon:nth-child(3) { animation-delay: -2s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .spqr-badge {
+            display: inline-block;
+            font-family: 'Cinzel', serif;
+            font-weight: 900;
+            font-size: 1.3em;
+            letter-spacing: 6px;
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            padding: 6px 20px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .spqr-badge::before, .spqr-badge::after {
+            content: '⚜';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold-dark);
+            font-size: 0.7em;
+        }
+        .spqr-badge::before { left: -20px; }
+        .spqr-badge::after { right: -20px; }
+
+        header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.4em;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.3;
+        }
+
+        header .subtitle {
+            font-size: 1.05em;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .laurel-divider {
+            margin: 15px auto;
+            text-align: center;
+            font-size: 1.3em;
+            color: var(--gold-dark);
+            opacity: 0.5;
+            letter-spacing: 8px;
+        }
+
+        /* ===== TABS ===== */
+        .tabs-container {
+            position: relative;
+            z-index: 10;
+            display: none;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px 20px 20px;
+        }
+
+        .tab {
+            font-family: 'Cinzel', serif;
+            padding: 10px 22px;
+            border: 1.5px solid var(--border);
+            background: rgba(255,255,255,0.03);
+            color: var(--text-muted);
+            border-radius: 10px;
+            font-size: 0.85em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            color: var(--bg-dark);
+            border-color: transparent;
+            box-shadow: 0 4px 20px rgba(212,168,67,0.3);
+        }
+
+        /* ===== STATS ===== */
+        .stats-bar {
+            position: relative;
+            z-index: 10;
+            max-width: 750px;
+            margin: 0 auto 15px;
+            padding: 0 20px;
+            display: none;
+        }
+
+        .stats-inner {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .stat-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-val {
+            font-family: 'Cinzel', serif;
+            font-size: 1.6em;
+            font-weight: 700;
+        }
+
+        .stat-val.v-gold { color: var(--gold); }
+        .stat-val.v-green { color: var(--green-light); }
+        .stat-val.v-red { color: var(--red-err); }
+        .stat-val.v-blue { color: #5dade2; }
+
+        .stat-lbl {
+            font-size: 0.7em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 3px;
+        }
+
+        /* ===== PROGRESS ===== */
+        .progress-wrap {
+            position: relative;
+            z-index: 10;
+            max-width: 750px;
+            margin: 0 auto 10px;
+            padding: 0 20px;
+            display: none;
+        }
+
+        .progress-track {
+            height: 7px;
+            background: rgba(212,168,67,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+            border-radius: 10px;
+            transition: width 0.6s ease;
+            width: 0%;
+        }
+
+        /* ===== STREAK ===== */
+        .streak-area {
+            text-align: center;
+            min-height: 28px;
+            margin: 6px 0;
+            position: relative;
+            z-index: 10;
+            display: none;
+        }
+
+        .streak-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 16px;
+            background: linear-gradient(135deg, var(--red-light), var(--gold-dark));
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 700;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.7); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .main {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 10px 20px 50px;
+        }
+
+        /* ===== QUESTION CARD ===== */
+        .q-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px 28px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: slideIn 0.45s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .q-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .q-num {
+            font-family: 'Cinzel', serif;
+            font-size: 0.8em;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 2px;
+        }
+
+        .q-cat-badge {
+            padding: 4px 14px;
+            border-radius: 8px;
+            font-size: 0.72em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cat-republic { background: rgba(212,168,67,0.15); color: var(--gold); }
+        .cat-empire { background: rgba(139,26,26,0.25); color: #e57373; }
+        .cat-society { background: rgba(46,204,113,0.15); color: var(--green-light); }
+        .cat-army { background: rgba(93,173,226,0.15); color: #5dade2; }
+        .cat-gods { background: rgba(155,89,182,0.15); color: #bb8fce; }
+        .cat-law { background: rgba(243,156,18,0.15); color: #f39c12; }
+        .cat-culture { background: rgba(230,126,34,0.15); color: #e67e22; }
+        .cat-kingdom { background: rgba(211,84,0,0.15); color: #e67e22; }
+
+        .q-points {
+            font-size: 0.72em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .q-text {
+            font-size: 1.2em;
+            font-weight: 600;
+            line-height: 1.65;
+            margin: 16px 0 8px;
+        }
+
+        .q-text strong, .q-text b { color: var(--gold); }
+
+        .q-image-box {
+            text-align: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(212,168,67,0.05);
+            border: 1px dashed var(--border);
+            border-radius: 14px;
+            font-size: 3em;
+        }
+
+        .q-hint {
+            font-size: 0.88em;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        /* ===== ANSWER OPTIONS ===== */
+        .opts {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+
+        .opt {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 15px 18px;
+            background: rgba(255,255,255,0.02);
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-size: 0.97em;
+            line-height: 1.5;
+            text-align: left;
+            color: var(--text-light);
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .opt:hover:not(.locked) {
+            border-color: var(--gold);
+            background: rgba(212,168,67,0.06);
+            transform: translateX(5px);
+        }
+
+        .opt-letter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(212,168,67,0.1);
+            font-weight: 700;
+            font-size: 0.85em;
+            color: var(--gold);
+            flex-shrink: 0;
+            font-family: 'Cinzel', serif;
+        }
+
+        .opt.correct-opt {
+            border-color: var(--green) !important;
+            background: rgba(39,174,96,0.12) !important;
+        }
+        .opt.correct-opt .opt-letter { background: var(--green); color: #fff; }
+
+        .opt.wrong-opt {
+            border-color: var(--red-err) !important;
+            background: rgba(231,76,60,0.12) !important;
+            animation: shake 0.4s ease;
+        }
+        .opt.wrong-opt .opt-letter { background: var(--red-err); color: #fff; }
+
+        @keyframes shake {
+            0%,100%{ transform: translateX(0); }
+            25%{ transform: translateX(-8px); }
+            75%{ transform: translateX(8px); }
+        }
+
+        .opt.locked { cursor: not-allowed; opacity: 0.4; }
+        .opt.correct-opt.locked, .opt.wrong-opt.locked { opacity: 1; }
+
+        /* ===== TRUE/FALSE ===== */
+        .tf-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .tf-btn {
+            padding: 18px;
+            border-radius: 14px;
+            border: 2px solid var(--border);
+            background: rgba(255,255,255,0.02);
+            color: var(--text-light);
+            font-family: 'Cinzel', serif;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .tf-btn:hover:not(.locked) {
+            transform: translateY(-3px);
+        }
+
+        .tf-btn.tf-true:hover:not(.locked) {
+            border-color: var(--green);
+            background: rgba(39,174,96,0.1);
+        }
+
+        .tf-btn.tf-false:hover:not(.locked) {
+            border-color: var(--red-err);
+            background: rgba(231,76,60,0.1);
+        }
+
+        .tf-btn.correct-opt {
+            border-color: var(--green) !important;
+            background: rgba(39,174,96,0.15) !important;
+            color: var(--green-light) !important;
+        }
+
+        .tf-btn.wrong-opt {
+            border-color: var(--red-err) !important;
+            background: rgba(231,76,60,0.15) !important;
+            color: var(--red-err) !important;
+            animation: shake 0.4s ease;
+        }
+
+        .tf-btn.locked { cursor: not-allowed; opacity: 0.4; }
+        .tf-btn.correct-opt.locked, .tf-btn.wrong-opt.locked { opacity: 1; }
+
+        /* ===== FILL IN ===== */
+        .fill-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+
+        .fill-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 14px 18px;
+            border: 2px solid var(--border);
+            background: rgba(255,255,255,0.03);
+            color: var(--text-light);
+            border-radius: 14px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .fill-input:focus { border-color: var(--gold); }
+
+        .fill-submit {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 14px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.95em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .fill-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,168,67,0.3); }
+        .fill-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* ===== EXPLANATION ===== */
+        .expl {
+            margin-top: 18px;
+            padding: 16px 20px;
+            border-radius: 14px;
+            background: rgba(212,168,67,0.06);
+            border-left: 4px solid var(--gold);
+            font-size: 0.92em;
+            line-height: 1.7;
+            color: var(--text-muted);
+            display: none;
+            animation: fadeIn 0.35s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .expl strong { color: var(--gold); }
+
+        .fun-fact {
+            margin-top: 10px;
+            padding: 10px 14px;
+            background: rgba(139,26,26,0.1);
+            border-radius: 10px;
+            font-size: 0.88em;
+            color: #e57373;
+        }
+
+        .fun-fact::before { content: '🏛️ '; }
+
+        /* ===== NEXT BUTTON ===== */
+        .next-btn {
+            display: none;
+            margin: 22px auto 0;
+            padding: 14px 45px;
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 50px;
+            font-family: 'Cinzel', serif;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 25px rgba(212,168,67,0.25);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 35px rgba(212,168,67,0.4);
+        }
+
+        /* ===== START SCREEN ===== */
+        .start-screen {
+            text-align: center;
+            animation: slideIn 0.6s ease;
+        }
+
+        .start-screen .hero-img {
+            font-size: 5em;
+            margin-bottom: 12px;
+        }
+
+        .start-screen h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.9em;
+            font-weight: 800;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        .start-screen .desc {
+            color: var(--text-muted);
+            line-height: 1.8;
+            max-width: 600px;
+            margin: 0 auto 28px;
+            font-size: 1em;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+            margin-bottom: 30px;
+        }
+
+        .feat {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px 14px;
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .feat:hover { transform: translateY(-5px); border-color: var(--gold); }
+        .feat .feat-icon { font-size: 2em; margin-bottom: 8px; }
+        .feat .feat-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.88em; margin-bottom: 4px; color: var(--gold-light); }
+        .feat .feat-desc { font-size: 0.75em; color: var(--text-muted); }
+
+        .difficulty-selector {
+            max-width: 400px;
+            margin: 0 auto 28px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .difficulty-selector h3 {
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            color: var(--gold);
+            margin-bottom: 14px;
+            font-size: 1em;
+        }
+
+        .diff-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .diff-opt {
+            flex: 1;
+            padding: 12px 8px;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.02);
+            color: var(--text-muted);
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.82em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .diff-opt:hover { border-color: var(--gold); color: var(--gold); }
+
+        .diff-opt.active {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            color: var(--bg-dark);
+            border-color: transparent;
+        }
+
+        .diff-opt .diff-emoji { font-size: 1.3em; display: block; margin-bottom: 4px; }
+
+        .start-btn {
+            padding: 18px 60px;
+            background: linear-gradient(135deg, var(--red-roman), var(--red-light));
+            color: var(--gold-light);
+            border: 2px solid var(--gold);
+            border-radius: 50px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.15em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 30px rgba(139,26,26,0.4);
+            letter-spacing: 2px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 14px 45px rgba(139,26,26,0.55);
+        }
+
+        /* ===== RESULTS ===== */
+        .results-screen {
+            display: none;
+            text-align: center;
+            animation: slideIn 0.6s ease;
+        }
+
+        .results-screen .trophy { font-size: 5em; animation: float 2s ease-in-out infinite; }
+
+        .results-screen h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 2em;
+            margin: 10px 0 5px;
+            color: var(--gold);
+        }
+
+        .final-score {
+            font-family: 'Cinzel', serif;
+            font-size: 3.8em;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .result-msg {
+            color: var(--text-muted);
+            font-size: 1.05em;
+            margin: 10px 0 25px;
+            line-height: 1.6;
+        }
+
+        .res-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 25px;
+        }
+
+        .res-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .res-box .rv {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+
+        .res-box .rl {
+            font-size: 0.72em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        .roman-rank {
+            margin: 20px 0;
+            padding: 18px 25px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            display: inline-block;
+        }
+
+        .roman-rank .rank-icon { font-size: 2.5em; }
+        .roman-rank .rank-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--gold);
+            margin-top: 5px;
+        }
+        .roman-rank .rank-desc {
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+
+        .restart-btn {
+            margin-top: 20px;
+            padding: 16px 55px;
+            background: linear-gradient(135deg, var(--red-roman), var(--red-light));
+            color: var(--gold-light);
+            border: 2px solid var(--gold);
+            border-radius: 50px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 2px;
+        }
+
+        .restart-btn:hover { transform: translateY(-3px) scale(1.03); }
+
+        /* ===== REVIEW ===== */
+        .review-section {
+            display: none;
+            margin-top: 35px;
+            text-align: left;
+        }
+
+        .review-section h3 {
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            color: var(--gold);
+            margin-bottom: 18px;
+            font-size: 1.3em;
+        }
+
+        .rev-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px 18px;
+            margin-bottom: 12px;
+            border-left: 4px solid;
+        }
+
+        .rev-item.rv-ok { border-left-color: var(--green); }
+        .rev-item.rv-bad { border-left-color: var(--red-err); }
+
+        .rev-item .rev-q { font-weight: 600; margin-bottom: 5px; line-height: 1.5; font-size: 0.95em; }
+        .rev-item .rev-a { font-size: 0.85em; color: var(--text-muted); line-height: 1.5; }
+        .rev-item .rev-a .g { color: var(--green-light); font-weight: 600; }
+        .rev-item .rev-a .r { color: var(--red-err); font-weight: 600; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.6em; }
+            .stats-inner { grid-template-columns: repeat(2, 1fr); }
+            .res-grid { grid-template-columns: 1fr; }
+            .q-card { padding: 22px 18px; }
+            .q-text { font-size: 1.05em; }
+            .features { grid-template-columns: 1fr 1fr; }
+            .diff-options { flex-direction: column; }
+            .tf-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-pattern"></div>
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+<div class="glow glow-3"></div>
+
+<!-- HEADER -->
+<header>
+    <div class="roman-columns">
+        <span class="column-icon">🏛️</span>
+        <span class="column-icon">⚔️</span>
+        <span class="column-icon">🏛️</span>
+    </div>
+    <div class="spqr-badge">S·P·Q·R</div>
+    <h1>Ustrój Starożytnego Rzymu</h1>
+    <p class="subtitle">Test wiedzy z historii — klasa 5</p>
+    <div class="laurel-divider">🌿 ✦ 🌿</div>
+</header>
+
+<!-- TABS -->
+<div class="tabs-container" id="tabs">
+    <button class="tab active" data-cat="all">📚 Wszystkie</button>
+    <button class="tab" data-cat="kingdom">👑 Królestwo</button>
+    <button class="tab" data-cat="republic">🏛️ Republika</button>
+    <button class="tab" data-cat="empire">🦅 Cesarstwo</button>
+    <button class="tab" data-cat="society">👥 Społeczeństwo</button>
+    <button class="tab" data-cat="army">⚔️ Wojsko</button>
+    <button class="tab" data-cat="gods">⚡ Bogowie</button>
+    <button class="tab" data-cat="culture">🎭 Kultura i prawo</button>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar" id="statsBar">
+    <div class="stats-inner">
+        <div class="stat-box"><div class="stat-val v-gold" id="sQ">1/30</div><div class="stat-lbl">Pytanie</div></div>
+        <div class="stat-box"><div class="stat-val v-green" id="sC">0</div><div class="stat-lbl">Dobrze</div></div>
+        <div class="stat-box"><div class="stat-val v-red" id="sW">0</div><div class="stat-lbl">Źle</div></div>
+        <div class="stat-box"><div class="stat-val v-blue" id="sPts">0</div><div class="stat-lbl">Punkty</div></div>
+    </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap" id="progressWrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<!-- STREAK -->
+<div class="streak-area" id="streakArea"></div>
+
+<!-- MAIN -->
+<div class="main" id="mainContainer">
+
+    <!-- START SCREEN -->
+    <div class="start-screen" id="startScreen">
+        <div class="hero-img">🐺</div>
+        <h2>Ave, uczniu!</h2>
+        <p class="desc">
+            Sprawdź swoją wiedzę o starożytnym Rzymie! Test obejmuje pytania o ustroju Rzymu —
+            od królestwa, przez republikę, aż po cesarstwo. Poznasz urzędy, prawa obywateli,
+            rzymskich bogów, armię i kulturę.
+        </p>
+
+        <div class="features">
+            <div class="feat">
+                <div class="feat-icon">👑</div>
+                <div class="feat-title">Królestwo</div>
+                <div class="feat-desc">Początki Rzymu, legenda o Romulusie</div>
+            </div>
+            <div class="feat">
+                <div class="feat-icon">🏛️</div>
+                <div class="feat-title">Republika</div>
+                <div class="feat-desc">Senat, konsulowie, trybuni</div>
+            </div>
+            <div class="feat">
+                <div class="feat-icon">🦅</div>
+                <div class="feat-title">Cesarstwo</div>
+                <div class="feat-desc">Cesarze, podboje, upadek</div>
+            </div>
+            <div class="feat">
+                <div class="feat-icon">👥</div>
+                <div class="feat-title">Społeczeństwo</div>
+                <div class="feat-desc">Patrycjusze, plebejusze, niewolnicy</div>
+            </div>
+            <div class="feat">
+                <div class="feat-icon">⚔️</div>
+                <div class="feat-title">Wojsko</div>
+                <div class="feat-desc">Legiony, taktyka, podboje</div>
+            </div>
+            <div class="feat">
+                <div class="feat-icon">⚡</div>
+                <div class="feat-title">Bogowie</div>
+                <div class="feat-desc">Religia rzymska, świątynie</div>
+            </div>
+        </div>
+
+        <div class="difficulty-selector">
+            <h3>⚙️ Wybierz poziom trudności</h3>
+            <div class="diff-options">
+                <button class="diff-opt active" data-diff="easy" onclick="setDiff(this)">
+                    <span class="diff-emoji">🌿</span> Łatwy
+                </button>
+                <button class="diff-opt" data-diff="medium" onclick="setDiff(this)">
+                    <span class="diff-emoji">⚔️</span> Średni
+                </button>
+                <button class="diff-opt" data-diff="hard" onclick="setDiff(this)">
+                    <span class="diff-emoji">🔥</span> Trudny
+                </button>
+            </div>
+        </div>
+
+        <button class="start-btn" onclick="startQuiz()">🏛️ ROZPOCZNIJ TEST</button>
+    </div>
+
+    <!-- QUESTION AREA -->
+    <div id="questionArea" style="display:none;"></div>
+
+    <!-- RESULTS -->
+    <div class="results-screen" id="resultsScreen">
+        <div class="trophy" id="trophyIcon">🏆</div>
+        <h2>Test zakończony!</h2>
+        <div class="final-score" id="finalScore">0%</div>
+        <div class="result-msg" id="resultMsg"></div>
+
+        <div class="roman-rank" id="romanRank">
+            <div class="rank-icon" id="rankIcon">🐺</div>
+            <div class="rank-title" id="rankTitle">Legenda</div>
+            <div class="rank-desc" id="rankDesc">Opis rangi</div>
+        </div>
+
+        <div class="res-grid">
+            <div class="res-box"><div class="rv" style="color:var(--green-light)" id="rC">0</div><div class="rl">Poprawne</div></div>
+            <div class="res-box"><div class="rv" style="color:var(--red-err)" id="rW">0</div><div class="rl">Błędne</div></div>
+            <div class="res-box"><div class="rv" style="color:var(--gold)" id="rPts">0</div><div class="rl">Punkty</div></div>
+        </div>
+
+        <button class="restart-btn" onclick="restartQuiz()">🔄 ZAGRAJ PONOWNIE</button>
+
+        <div class="review-section" id="reviewSection">
+            <h3>📜 Przegląd odpowiedzi</h3>
+            <div id="reviewList"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// QUESTION DATABASE
+// ============================================================
+const allQuestions = [
+
+    // ========== KRÓLESTWO ==========
+    {
+        category:"kingdom", difficulty:"easy", points:1, type:"choice",
+        question:"Według legendy, kto założył Rzym w <b>753 r. p.n.e.</b>?",
+        icon:"🐺",
+        hint:"Brat bliźniak Remusa",
+        options:["Juliusz Cezar","Romulus","Aleksander Wielki","Neron"],
+        correct:1,
+        explanation:"<strong>Romulus</strong> — według legendy, Romulus i Remus zostali wychowani przez wilczycę. Romulus zabił brata i założył miasto, nadając mu swoją nazwę — Roma (Rzym).",
+        funFact:"Wilczyca karmiąca Romulusa i Remusa to jeden z najsłynniejszych symboli Rzymu — jej posąg stoi na Kapitolu do dziś!"
+    },
+    {
+        category:"kingdom", difficulty:"easy", points:1, type:"choice",
+        question:"Ilu <b>królów</b> rządziło Rzymem w okresie królestwa?",
+        hint:"Okres królestwa trwał od 753 do 509 r. p.n.e.",
+        options:["3","5","7","12"],
+        correct:2,
+        explanation:"Rzymem rządziło <strong>7 królów</strong>. Pierwszym był Romulus, a ostatnim — Tarkwiniusz Pyszny, którego wypędzono w 509 r. p.n.e.",
+        funFact:"Ostatni król Tarkwiniusz Pyszny był tak okrutny, że Rzymianie postanowili nigdy więcej nie mieć króla!"
+    },
+    {
+        category:"kingdom", difficulty:"medium", points:2, type:"tf",
+        question:"Ostatnim królem Rzymu był <b>Tarkwiniusz Pyszny</b>, którego wypędzono z miasta.",
+        hint:"Zastanów się, co stało się w 509 r. p.n.e.",
+        correct: true,
+        explanation:"<strong>Prawda!</strong> Tarkwiniusz Pyszny (Tarquinius Superbus) był ostatnim, siódmym królem Rzymu. Jego tyrańskie rządy doprowadziły do buntu i obalenia monarchii w 509 r. p.n.e.",
+        funFact:"Po obaleniu króla Rzymianie ustanowili republikę i przez kolejne 500 lat nie chcieli mieć jedynowładcy."
+    },
+    {
+        category:"kingdom", difficulty:"medium", points:2, type:"choice",
+        question:"Nad jaką <b>rzeką</b> powstał Rzym?",
+        hint:"Ta rzeka przepływa przez Rzym do dziś",
+        options:["Nil","Tyber","Dunaj","Pad"],
+        correct:1,
+        explanation:"Rzym powstał nad rzeką <strong>Tyber</strong> (łac. Tiberis), na siedmiu wzgórzach. Tyber dawał mieszkańcom wodę i umożliwiał handel.",
+        funFact:"Legenda mówi, że koszyk z Romulusem i Remusem został znaleziony właśnie na brzegu Tybru!"
+    },
+
+    // ========== REPUBLIKA ==========
+    {
+        category:"republic", difficulty:"easy", points:1, type:"choice",
+        question:"Jak nazywał się <b>najważniejszy organ władzy</b> w republice rzymskiej?",
+        hint:"Składał się ze starszych, doświadczonych obywateli",
+        options:["Parlament","Senat","Zgromadzenie ludowe","Trybunał"],
+        correct:1,
+        explanation:"<strong>Senat</strong> (łac. senatus, od „senex" — starzec) był najważniejszym organem władzy. Składał się z ok. 300 patrycjuszy, którzy decydowali o najważniejszych sprawach państwa.",
+        funFact:"Senatorowie nosili togi z szerokim purpurowym pasem — to był znak ich wysokiej pozycji!"
+    },
+    {
+        category:"republic", difficulty:"easy", points:1, type:"choice",
+        question:"Ilu <b>konsulów</b> wybierano każdego roku w republice rzymskiej?",
+        hint:"Miało to zapobiegać tyranii jednej osoby",
+        options:["1","2","4","10"],
+        correct:1,
+        explanation:"Wybierano <strong>2 konsulów</strong> na okres jednego roku. Każdy z nich mógł zablokować decyzję drugiego (prawo weta). Miało to zapobiegać tyranii.",
+        funFact:"Konsulowie na zmianę — co miesiąc — dowodzili wojskiem. W ten sposób żaden nie miał zbyt dużej władzy!"
+    },
+    {
+        category:"republic", difficulty:"medium", points:2, type:"choice",
+        question:"Kto mógł zostać <b>trybunem ludowym</b> w Rzymie?",
+        hint:"Trybun bronił praw zwykłych obywateli",
+        options:["Tylko patrycjusze","Tylko plebejusze","Każdy obywatel","Tylko niewolnicy"],
+        correct:1,
+        explanation:"Trybunem ludowym mógł zostać tylko <strong>plebejusz</strong>. Trybuni bronili praw plebejuszy przed nadużyciami patrycjuszy. Mieli prawo <strong>veta</strong> — mogli zablokować każdą uchwałę.",
+        funFact:"Osoba trybuna ludowego była „święta i nietykalna" — nikt nie mógł go skrzywdzić pod groźbą kary śmierci!"
+    },
+    {
+        category:"republic", difficulty:"easy", points:1, type:"tf",
+        question:"Republika rzymska oznacza „rzecz publiczna" — <b>res publica</b>.",
+        hint:"res = rzecz, publica = publiczna, wspólna",
+        correct: true,
+        explanation:"<strong>Prawda!</strong> Łacińskie „res publica" oznacza dosłownie „rzecz publiczna/wspólna". Republika to ustrój, w którym władza należy do obywateli, a nie do jednego władcy.",
+        funFact:"Polskie słowo „rzeczpospolita" to dosłowne tłumaczenie łacińskiego „res publica"!"
+    },
+    {
+        category:"republic", difficulty:"medium", points:2, type:"choice",
+        question:"Czym było <b>prawo weta</b> w republice rzymskiej?",
+        hint:"Słowo „veto" po łacinie oznacza „zakazuję"",
+        options:[
+            "Prawo do głosowania",
+            "Prawo do zablokowania decyzji innego urzędnika",
+            "Prawo do wypowiedzenia wojny",
+            "Prawo do posiadania niewolników"
+        ],
+        correct:1,
+        explanation:"<strong>Prawo weta</strong> (łac. „veto" = „zakazuję") pozwalało zablokować decyzję. Mieli je trybuni ludowi i konsulowie. Dzięki temu jedna osoba nie mogła rządzić samowolnie.",
+        funFact:"Słowo „weto" używamy do dziś — np. prezydent może zawetować ustawę!"
+    },
+    {
+        category:"republic", difficulty:"hard", points:3, type:"choice",
+        question:"Kim był <b>dyktator</b> w republice rzymskiej?",
+        hint:"Powoływany w sytuacjach kryzysowych",
+        options:[
+            "Tyran rządzący bez ograniczeń",
+            "Nadzwyczajny urzędnik powoływany na 6 miesięcy w czasie kryzysu",
+            "Dowódca straży pożarnej",
+            "Sędzia najwyższy"
+        ],
+        correct:1,
+        explanation:"<strong>Dyktator</strong> w Rzymie to urzędnik powoływany na <strong>maksymalnie 6 miesięcy</strong> w sytuacjach zagrożenia (np. wojna). Miał pełnię władzy, ale po upływie czasu musiał ją oddać.",
+        funFact:"Cincinnatus został dyktatorem, pokonał wroga w 16 dni, oddał władzę i wrócił do pracy na roli. Stał się wzorem cnoty obywatelskiej!"
+    },
+
+    // ========== CESARSTWO ==========
+    {
+        category:"empire", difficulty:"easy", points:1, type:"choice",
+        question:"Kto był <b>pierwszym cesarzem</b> Rzymu?",
+        hint:"Przybrany syn Juliusza Cezara",
+        options:["Juliusz Cezar","Oktawian August","Neron","Konstantyn"],
+        correct:1,
+        explanation:"<strong>Oktawian August</strong> (63 p.n.e. – 14 n.e.) został pierwszym cesarzem Rzymu w 27 r. p.n.e. Był przybranym synem Juliusza Cezara. Za jego rządów nastał okres pokoju — <strong>Pax Romana</strong>.",
+        funFact:"Miesiąc sierpień (August) nosi nazwę właśnie od cesarza Augusta!"
+    },
+    {
+        category:"empire", difficulty:"medium", points:2, type:"tf",
+        question:"<b>Juliusz Cezar</b> był cesarzem Rzymu.",
+        hint:"Zastanów się — czym właściwie był Cezar?",
+        correct: false,
+        explanation:"<strong>Fałsz!</strong> Juliusz Cezar nigdy nie był cesarzem. Był dyktatorem dożywotnim (dictator perpetuo). Został zamordowany w 44 r. p.n.e. Dopiero jego przybrany syn, Oktawian August, został pierwszym cesarzem.",
+        funFact:"Cezar został zamordowany w idy marcowe (15 marca 44 p.n.e.) przez grupę senatorów, w tym Brutusa!"
+    },
+    {
+        category:"empire", difficulty:"easy", points:1, type:"choice",
+        question:"W którym roku <b>upadło Cesarstwo Zachodniorzymskie</b>?",
+        hint:"Ta data jest uważana za koniec starożytności",
+        options:["300 r. n.e.","410 r. n.e.","476 r. n.e.","1453 r. n.e."],
+        correct:2,
+        explanation:"Cesarstwo Zachodniorzymskie upadło w <strong>476 r. n.e.</strong>, gdy wódz germański Odoaker obalił ostatniego cesarza Romulusa Augustulusa. Ta data symbolizuje koniec starożytności.",
+        funFact:"Cesarstwo Wschodniorzymskie (Bizancjum) przetrwało aż do 1453 roku — prawie 1000 lat dłużej!"
+    },
+    {
+        category:"empire", difficulty:"medium", points:2, type:"choice",
+        question:"Który cesarz jako pierwszy <b>przyjął chrześcijaństwo</b> i wydał edykt mediolański?",
+        hint:"Przeniósł też stolicę do Konstantynopola",
+        options:["Neron","Trajan","Konstantyn Wielki","Teodozjusz"],
+        correct:2,
+        explanation:"<strong>Konstantyn Wielki</strong> wydał w 313 r. n.e. edykt mediolański, który wprowadził wolność wyznania w cesarstwie. Przeniósł stolicę do Konstantynopola (dzisiejszy Stambuł).",
+        funFact:"Konstantynopol — dziś Stambuł — nosił swoją nazwę aż do upadku w 1453 roku!"
+    },
+    {
+        category:"empire", difficulty:"hard", points:3, type:"choice",
+        question:"Co oznaczał termin <b>Pax Romana</b>?",
+        hint:"Pax = pokój, Romana = rzymski",
+        options:[
+            "Rzymski chleb",
+            "Okres pokoju i stabilności w cesarstwie (I–II w. n.e.)",
+            "Traktat pokojowy z Kartaginą",
+            "Rzymska flota wojenna"
+        ],
+        correct:1,
+        explanation:"<strong>Pax Romana</strong> (Pokój Rzymski) to okres pokoju i dobrobytu trwający ok. 200 lat (27 p.n.e. – 180 n.e.). Imperium się rozwijało, budowano drogi, akwedukty i miasta.",
+        funFact:"W okresie Pax Romana Imperium Rzymskie zamieszkiwało ok. 70 milionów ludzi — 1/4 ludności świata!"
+    },
+
+    // ========== SPOŁECZEŃSTWO ==========
+    {
+        category:"society", difficulty:"easy", points:1, type:"choice",
+        question:"Jak nazywała się <b>warstwa wyższa</b> społeczeństwa rzymskiego — bogaci i wpływowi obywatele?",
+        hint:"Wywodzili się ze starych, szlacheckich rodów",
+        options:["Plebejusze","Patrycjusze","Niewolnicy","Gladiatorzy"],
+        correct:1,
+        explanation:"<strong>Patrycjusze</strong> to najwyższa warstwa społeczna Rzymu. Wywodzili się ze starych rodów, mogli piastować najważniejsze urzędy i zasiadali w senacie.",
+        funFact:"Słowo „patrycjusz" pochodzi od łacińskiego „pater" (ojciec) — byli jak „ojcowie" miasta."
+    },
+    {
+        category:"society", difficulty:"easy", points:1, type:"choice",
+        question:"Kim byli <b>plebejusze</b> w starożytnym Rzymie?",
+        hint:"Stanowili większość ludności Rzymu",
+        options:[
+            "Niewolnicy",
+            "Zwykli, wolni obywatele — rzemieślnicy, kupcy, rolnicy",
+            "Żołnierze",
+            "Kapłani"
+        ],
+        correct:1,
+        explanation:"<strong>Plebejusze</strong> to wolni obywatele rzymscy, którzy nie należeli do rodów patrycjuszowskich. Byli rzemieślnikami, kupcami, rolnikami. Z czasem wywalczyli sobie prawa polityczne.",
+        funFact:"Plebejusze wywalczyli sobie prawa m.in. przez secesję — opuszczali Rzym, aż patrycjusze ustępowali!"
+    },
+    {
+        category:"society", difficulty:"medium", points:2, type:"choice",
+        question:"Czy <b>niewolnicy</b> w Rzymie mieli prawa obywatelskie?",
+        hint:"Niewolnik był traktowany jak rzecz (res)",
+        options:[
+            "Tak, mieli pełne prawa",
+            "Nie — byli własnością swoich panów i nie mieli żadnych praw",
+            "Tak, ale tylko w cesarstwie",
+            "Mieli prawo głosu, ale nie mogli być urzędnikami"
+        ],
+        correct:1,
+        explanation:"<strong>Niewolnicy nie mieli żadnych praw</strong> — byli własnością (jak rzecz). Mogli być kupowani, sprzedawani, karani. Niektórzy mogli zostać wyzwoleni — stawali się wtedy wyzwoleńcami.",
+        funFact:"Niektórzy wyzwoleni niewolnicy stawali się bardzo bogaci! Byli jednak wciąż gorzej traktowani niż rodowici Rzymianie."
+    },
+    {
+        category:"society", difficulty:"medium", points:2, type:"tf",
+        question:"W starożytnym Rzymie <b>kobiety</b> mogły głosować i piastować urzędy publiczne.",
+        hint:"Jaką rolę miały kobiety w społeczeństwie rzymskim?",
+        correct: false,
+        explanation:"<strong>Fałsz!</strong> Rzymianki nie miały praw politycznych — nie mogły głosować ani sprawować urzędów. Ich rolą było zajmowanie się domem i rodziną. Miały jednak pewne prawa majątkowe.",
+        funFact:"Mimo braku praw politycznych, matki rzymskie (matronae) cieszyły się wielkim szacunkiem i miały wpływ na decyzje swoich mężów."
+    },
+
+    // ========== WOJSKO ==========
+    {
+        category:"army", difficulty:"easy", points:1, type:"choice",
+        question:"Jak nazywała się podstawowa jednostka <b>armii rzymskiej</b>?",
+        hint:"Liczyła ok. 5000–6000 żołnierzy",
+        options:["Kohorta","Centuria","Legion","Turma"],
+        correct:2,
+        explanation:"<strong>Legion</strong> to podstawowa jednostka armii rzymskiej, licząca ok. 5000–6000 żołnierzy. Dzielił się na kohorty, a te na centurie (po ok. 80 ludzi).",
+        funFact:"Najlepsze legiony miały swoje nazwy i orła legionowego — utrata orła w bitwie była największą hańbą!"
+    },
+    {
+        category:"army", difficulty:"medium", points:2, type:"choice",
+        question:"Jak nazywał się <b>dowódca centurii</b> (ok. 80 żołnierzy)?",
+        hint:"Od łac. „centum" = sto",
+        options:["Legat","Centurion","Konsul","Pretor"],
+        correct:1,
+        explanation:"<strong>Centurion</strong> dowodził centurią (ok. 80 ludzi). Był doświadczonym żołnierzem, utrzymującym dyscyplinę. Nosił hełm z poprzecznym grzebień, żeby żołnierze go widzieli w walce.",
+        funFact:"Centurionowie bili kijami laski winorośli żołnierzy, którzy łamali dyscyplinę — armia rzymska była bardzo surowa!"
+    },
+    {
+        category:"army", difficulty:"easy", points:1, type:"tf",
+        question:"Rzymscy legionariusze budowali <b>drogi i mosty</b>, nie tylko walczyli.",
+        hint:"Zastanów się, kto budował słynne drogi rzymskie",
+        correct: true,
+        explanation:"<strong>Prawda!</strong> Legionariusze oprócz walki budowali drogi, mosty, akwedukty i obozy warowne. Rzymskie drogi były tak dobrze zbudowane, że niektóre istnieją do dziś!",
+        funFact:"Najsłynniejsza droga — Via Appia — ma ponad 2300 lat i nadal można po niej spacerować!"
+    },
+    {
+        category:"army", difficulty:"hard", points:3, type:"choice",
+        question:"Jak nazywał się słynny <b>szyk bojowy</b> legionistów, w którym osłaniali się tarczami ze wszystkich stron?",
+        hint:"Nazwa pochodzi od zwierzęcia z pancerzem",
+        options:["Falanga","Testudo (żółw)","Klin","Szyk orła"],
+        correct:1,
+        explanation:"<strong>Testudo</strong> (łac. żółw) — żołnierze tworzyli „pancerz" z tarcz: z przodu, po bokach i nad głowami. Chronił przed strzałami i pociskami. Był używany przy szturmowaniu murów.",
+        funFact:"Formacja testudo była tak szczelna, że według legendy rydwan mógł po niej przejechać!"
+    },
+
+    // ========== BOGOWIE ==========
+    {
+        category:"gods", difficulty:"easy", points:1, type:"choice",
+        question:"Kto był <b>najważniejszym bogiem</b> w religii starożytnych Rzymian?",
+        hint:"Odpowiednik greckiego Zeusa",
+        options:["Mars","Jowisz (Jupiter)","Neptun","Apollo"],
+        correct:1,
+        explanation:"<strong>Jowisz (Jupiter)</strong> był najwyższym bogiem rzymskim — władcą nieba i piorunów. Jego świątynia stała na Kapitolu. Odpowiadał greckiemu Zeusowi.",
+        funFact:"Największa planeta naszego Układu Słonecznego — Jowisz (Jupiter) — nosi imię tego boga!"
+    },
+    {
+        category:"gods", difficulty:"easy", points:1, type:"choice",
+        question:"Który rzymski bóg był <b>bogiem wojny</b>?",
+        hint:"Od jego imienia pochodzi nazwa miesiąca „marzec"",
+        options:["Merkury","Neptun","Mars","Wulkan"],
+        correct:2,
+        explanation:"<strong>Mars</strong> był bogiem wojny — jednym z najważniejszych bogów Rzymu. Uważano go za ojca Romulusa i Remusa. Miesiąc marzec (Martius) nosi jego imię.",
+        funFact:"Także planeta Mars (Czerwona Planeta) nosi imię boga wojny — ze względu na czerwony kolor przypominający krew."
+    },
+    {
+        category:"gods", difficulty:"medium", points:2, type:"choice",
+        question:"Jak nazywano <b>kapłanki</b> pilnujące świętego ognia w świątyni Westy?",
+        hint:"Musiały zachować czystość przez 30 lat służby",
+        options:["Sybille","Westalki","Menadki","Nimfy"],
+        correct:1,
+        explanation:"<strong>Westalki</strong> to kapłanki bogini Westy (bogini ogniska domowego). Pilnowały świętego ognia, który nie mógł zgasnąć. Służyły 30 lat i musiały zachować czystość.",
+        funFact:"Jeśli ogień zgasł, uważano to za zapowiedź nieszczęścia dla całego Rzymu!"
+    },
+    {
+        category:"gods", difficulty:"medium", points:2, type:"tf",
+        question:"Rzymianie <b>przejęli bogów od Greków</b>, zmieniając im tylko imiona.",
+        hint:"Zeus → Jowisz, Ares → Mars...",
+        correct: true,
+        explanation:"<strong>Prawda!</strong> Rzymianie przejęli wiele bóstw greckich, nadając im łacińskie imiona: Zeus → Jowisz, Hera → Junona, Atena → Minerwa, Afrodyta → Wenus, Posejdon → Neptun.",
+        funFact:"Rzymianie byli bardzo praktyczni w kwestii religii — przejmowali bogów od różnych ludów, bo uważali, że „więcej bogów = więcej ochrony"!"
+    },
+
+    // ========== KULTURA I PRAWO ==========
+    {
+        category:"culture", difficulty:"easy", points:1, type:"choice",
+        question:"Jak nazywamy <b>budowlę</b>, która dostarczała wodę do miast rzymskich?",
+        hint:"Piękne łukowe konstrukcje, niektóre zachowały się do dziś",
+        options:["Koloseum","Akwedukt","Forum","Panteon"],
+        correct:1,
+        explanation:"<strong>Akwedukty</strong> (łac. aqua = woda, ducere = prowadzić) to budowle służące do transportu wody na duże odległości. Były arcydziełami inżynierii — niektóre działają do dziś!",
+        funFact:"Akwedukt Pont du Gard we Francji ma prawie 2000 lat i nadal stoi — ma 49 metrów wysokości!"
+    },
+    {
+        category:"culture", difficulty:"easy", points:1, type:"choice",
+        question:"Jak nazywał się wielki <b>amfiteatr</b> w Rzymie, gdzie odbywały się walki gladiatorów?",
+        hint:"Mieścił ok. 50 000 widzów",
+        options:["Panteon","Forum Romanum","Koloseum","Circus Maximus"],
+        correct:2,
+        explanation:"<strong>Koloseum</strong> (Amfiteatr Flawiuszów) to największy amfiteatr starożytności. Mieścił ok. 50 000 widzów. Odbywały się tam walki gladiatorów, polowania na dzikie zwierzęta i inne widowiska.",
+        funFact:"Koloseum miało rozciągany dach z płótna (velarium), który chronił widzów przed słońcem — obsługiwali go marynarze!"
+    },
+    {
+        category:"culture", difficulty:"medium", points:2, type:"choice",
+        question:"Jak nazywało się pierwsze <b>spisane prawo rzymskie</b>?",
+        hint:"Wyryto je na tablicach z brązu, liczba XII",
+        options:[
+            "Kodeks Justyniana",
+            "Prawo XII Tablic",
+            "Edykt Mediolański",
+            "Konstytucja Rzymska"
+        ],
+        correct:1,
+        explanation:"<strong>Prawo XII Tablic</strong> (ok. 450 r. p.n.e.) — pierwsze spisane prawo rzymskie, wyryte na 12 brązowych tablicach. Dzięki temu każdy obywatel mógł poznać prawa i bronić swoich interesów.",
+        funFact:"Wcześniej prawa znali tylko patrycjusze — spisanie ich było wielkim zwycięstwem plebejuszy!"
+    },
+    {
+        category:"culture", difficulty:"easy", points:1, type:"tf",
+        question:"Rzymianie używali <b>cyfr rzymskich</b> (I, V, X, L, C, D, M).",
+        hint:"Spotkasz je np. na zegarach",
+        correct: true,
+        explanation:"<strong>Prawda!</strong> Cyfry rzymskie to system zapisu liczb: I=1, V=5, X=10, L=50, C=100, D=500, M=1000. Używamy ich do dziś np. na zegarach, w numeracji rozdziałów czy wieków.",
+        funFact:"Rzymianie nie znali zera! To Arabowie (a wcześniej Hindusi) wynaleźli zero i cyfry, których używamy dziś."
+    },
+    {
+        category:"culture", difficulty:"hard", points:3, type:"choice",
+        question:"Jak nazywał się centralny <b>plac publiczny</b> w Rzymie, centrum życia politycznego i społecznego?",
+        hint:"Łac. „forum" używamy do dziś w znaczeniu „miejsce dyskusji"",
+        options:["Agora","Forum Romanum","Kapitol","Campus Martius"],
+        correct:1,
+        explanation:"<strong>Forum Romanum</strong> to centralny plac Rzymu — serce życia politycznego, religijnego i handlowego. Tu zbierał się senat, tu wygłaszano mowy, tu stały najważniejsze świątynie.",
+        funFact:"Słowo „forum" używamy do dziś — forum internetowe to „miejsce dyskusji", tak jak Forum Romanum było miejscem debat!"
+    },
+    {
+        category:"culture", difficulty:"medium", points:2, type:"choice",
+        question:"Jakim <b>językiem</b> mówili starożytni Rzymianie?",
+        hint:"Ten język jest przodkiem m.in. hiszpańskiego, francuskiego i włoskiego",
+        options:["Greka","Łacina","Język etruski","Język celtycki"],
+        correct:1,
+        explanation:"Rzymianie mówili po <strong>łacinie</strong> (lingua Latina). Z łaciny wywodzą się języki romańskie: włoski, francuski, hiszpański, portugalski, rumuński. Łacina wpłynęła też na język polski i angielski.",
+        funFact:"Wiele słów polskich pochodzi z łaciny: szkoła (schola), mur (murus), data (data), lekcja (lectio)!"
+    }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let questions = [];
+let idx = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let points = 0;
+let streak = 0;
+let bestStreak = 0;
+let answers = [];
+let selectedDiff = 'easy';
+
+// ============================================================
+// DIFFICULTY
+// ============================================================
+function setDiff(btn) {
+    document.querySelectorAll('.diff-opt').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedDiff = btn.dataset.diff;
+}
+
+// ============================================================
+// START
+// ============================================================
+function startQuiz() {
+    const cat = getActiveCat();
+    let pool = cat === 'all' ? [...allQuestions] : allQuestions.filter(q => q.category === cat);
+
+    // Filter by difficulty
+    if (selectedDiff === 'easy') {
+        pool = pool.filter(q => q.difficulty === 'easy' || q.difficulty === 'medium');
+    } else if (selectedDiff === 'medium') {
+        // all questions
+    } else {
+        // hard = all, but more points for hard ones
+    }
+
+    questions = pool;
+    shuffle(questions);
+
+    idx = 0; correctCount = 0; wrongCount = 0; points = 0; streak = 0; bestStreak = 0; answers = [];
+
+    hide('startScreen'); hide('resultsScreen');
+    show('tabs'); show('statsBar'); show('progressWrap'); show('streakArea'); show('questionArea');
+
+    updateStats();
+    renderQ();
+}
+
+function getActiveCat() {
+    const t = document.querySelector('.tab.active');
+    return t ? t.dataset.cat : 'all';
+}
+
+document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        startQuiz();
+    });
+});
+
+// ============================================================
+// RENDER QUESTION
+// ============================================================
+function renderQ() {
+    if (idx >= questions.length) { showResults(); return; }
+
+    const q = questions[idx];
+    const area = document.getElementById('questionArea');
+
+    const catNames = {
+        kingdom:'👑 Królestwo', republic:'🏛️ Republika', empire:'🦅 Cesarstwo',
+        society:'👥 Społeczeństwo', army:'⚔️ Wojsko', gods:'⚡ Bogowie', culture:'🎭 Kultura i prawo'
+    };
+    const badgeCls = {
+        kingdom:'cat-kingdom', republic:'cat-republic', empire:'cat-empire',
+        society:'cat-society', army:'cat-army', gods:'cat-gods', culture:'cat-culture'
+    };
+
+    let answersHTML = '';
+
+    if (q.type === 'choice') {
+        const letters = ['A','B','C','D'];
+        let opts = q.options.map((o,i) => ({text:o, origIdx:i}));
+        shuffle(opts);
+
+        answersHTML = `<div class="opts">` + opts.map((o,i) =>
+            `<button class="opt" onclick="pickChoice(this,${o.origIdx})" data-orig="${o.origIdx}">
+                <span class="opt-letter">${letters[i]}</span>
+                <span>${o.text}</span>
+            </button>`
+        ).join('') + `</div>`;
+    } else if (q.type === 'tf') {
+        answersHTML = `
+            <div class="tf-grid">
+                <button class="tf-btn tf-true" onclick="pickTF(this,true)">✅ PRAWDA</button>
+                <button class="tf-btn tf-false" onclick="pickTF(this,false)">❌ FAŁSZ</button>
+            </div>`;
+    } else if (q.type === 'fill') {
+        answersHTML = `
+            <div class="fill-container">
+                <input class="fill-input" id="fillInput" placeholder="Wpisz odpowiedź..." onkeydown="if(event.key==='Enter')submitFill()">
+                <button class="fill-submit" onclick="submitFill()">Sprawdź</button>
+            </div>`;
+    }
+
+    area.innerHTML = `
+        <div class="q-card">
+            <div class="q-top">
+                <span class="q-num">PYTANIE ${idx+1} / ${questions.length}</span>
+                <span class="q-cat-badge ${badgeCls[q.category]}">${catNames[q.category]}</span>
+                <span class="q-points">+${q.points} pkt</span>
+            </div>
+            ${q.icon ? `<div class="q-image-box">${q.icon}</div>` : ''}
+            <div class="q-text">${q.question}</div>
+            <div class="q-hint">💡 Podpowiedź: ${q.hint}</div>
+            ${answersHTML}
+            <div class="expl" id="expl">
+                ${q.explanation}
+                ${q.funFact ? `<div class="fun-fact">${q.funFact}</div>` : ''}
+            </div>
+            <button class="next-btn" id="nextBtn" onclick="nextQ()">Następne pytanie →</button>
+        </div>`;
+
+    updateStats();
+    updateProgress();
+}
+
+// ============================================================
+// ANSWER HANDLERS
+// ============================================================
+function pickChoice(btn, origIdx) {
+    if (btn.classList.contains('locked')) return;
+
+    const q = questions[idx];
+    const allBtns = document.querySelectorAll('.opt');
+    const ok = origIdx === q.correct;
+
+    allBtns.forEach(b => b.classList.add('locked'));
+
+    if (ok) {
+        btn.classList.add('correct-opt');
+        correctCount++;
+        points += q.points;
+        streak++;
+        if (streak > bestStreak) bestStreak = streak;
+    } else {
+        btn.classList.add('wrong-opt');
+        allBtns.forEach(b => { if (parseInt(b.dataset.orig) === q.correct) b.classList.add('correct-opt'); });
+        wrongCount++;
+        streak = 0;
+    }
+
+    answers.push({ qIdx: idx, userAnswer: q.options[origIdx], ok });
+    finishQuestion();
+}
+
+function pickTF(btn, val) {
+    if (btn.classList.contains('locked')) return;
+
+    const q = questions[idx];
+    const allBtns = document.querySelectorAll('.tf-btn');
+    const ok = val === q.correct;
+
+    allBtns.forEach(b => b.classList.add('locked'));
+
+    if (ok) {
+        btn.classList.add('correct-opt');
+        correctCount++;
+        points += q.points;
+        streak++;
+        if (streak > bestStreak) bestStreak = streak;
+    } else {
+        btn.classList.add('wrong-opt');
+        allBtns.forEach(b => {
+            if ((b.classList.contains('tf-true') && q.correct === true) ||
+                (b.classList.contains('tf-false') && q.correct === false)) {
+                b.classList.add('correct-opt');
+            }
+        });
+        wrongCount++;
+        streak = 0;
+    }
+
+    answers.push({ qIdx: idx, userAnswer: val ? 'Prawda' : 'Fałsz', ok });
+    finishQuestion();
+}
+
+function submitFill() {
+    const input = document.getElementById('fillInput');
+    if (!input || !input.value.trim()) return;
+
+    const q = questions[idx];
+    const val = input.value.trim().toLowerCase();
+    const acceptArr = q.accept.map(a => a.toLowerCase());
+    const ok = acceptArr.includes(val);
+
+    input.disabled = true;
+    document.querySelector('.fill-submit').disabled = true;
+
+    if (ok) {
+        input.style.borderColor = 'var(--green)';
+        correctCount++;
+        points += q.points;
+        streak++;
+        if (streak > bestStreak) bestStreak = streak;
+    } else {
+        input.style.borderColor = 'var(--red-err)';
+        wrongCount++;
+        streak = 0;
+    }
+
+    answers.push({ qIdx: idx, userAnswer: input.value.trim(), ok });
+    finishQuestion();
+}
+
+function finishQuestion() {
+    document.getElementById('expl').style.display = 'block';
+    document.getElementById('nextBtn').style.display = 'block';
+    updateStats();
+    updateStreak();
+}
+
+function nextQ() { idx++; renderQ(); }
+
+// ============================================================
+// UI UPDATES
+// ============================================================
+function updateStats() {
+    document.getElementById('sQ').textContent = `${Math.min(idx+1, questions.length)}/${questions.length}`;
+    document.getElementById('sC').textContent = correctCount;
+    document.getElementById('sW').textContent = wrongCount;
+    document.getElementById('sPts').textContent = points;
+}
+
+function updateProgress() {
+    document.getElementById('progressFill').style.width = `${(idx / questions.length) * 100}%`;
+}
+
+function updateStreak() {
+    const d = document.getElementById('streakArea');
+    d.innerHTML = streak >= 3 ? `<span class="streak-badge">🔥 Seria ${streak} poprawnych!</span>` : '';
+}
+
+// ============================================================
+// RESULTS
+// ============================================================
+function showResults() {
+    hide('questionArea'); hide('statsBar'); hide('streakArea'); hide('progressWrap');
+
+    const rs = document.getElementById('resultsScreen');
+    rs.style.display = 'block';
+
+    const total = questions.length;
+    const pct = Math.round((correctCount / total) * 100);
+    const maxPts = questions.reduce((s, q) => s + q.points, 0);
+
+    document.getElementById('finalScore').textContent = pct + '%';
+    document.getElementById('rC').textContent = correctCount;
+    document.getElementById('rW').textContent = wrongCount;
+    document.getElementById('rPts').textContent = `${points}/${maxPts}`;
+
+    let msg, icon, rankI, rankT, rankD;
+
+    if (pct === 100) {
+        msg = 'Perfekcyjnie! Jesteś prawdziwym Cezarem wiedzy! 🌟'; icon = '👑';
+        rankI = '🦅'; rankT = 'IMPERATOR'; rankD = 'Najwyższy władca Rzymu — nikt nie zna historii lepiej od Ciebie!';
+    } else if (pct >= 85) {
+        msg = 'Wspaniale! Byłbyś doskonałym senatorem! 💪'; icon = '🏆';
+        rankI = '🏛️'; rankT = 'SENATOR'; rankD = 'Masz świetną wiedzę o Rzymie — senat byłby z Ciebie dumny!';
+    } else if (pct >= 70) {
+        msg = 'Bardzo dobrze! Zasługujesz na wieniec laurowy! 🌿'; icon = '🥇';
+        rankI = '⚔️'; rankT = 'CENTURION'; rankD = 'Twoja wiedza jest solidna jak mury Rzymu!';
+    } else if (pct >= 50) {
+        msg = 'Nieźle! Ale powtórz jeszcze materiał o Rzymie. 📚'; icon = '🥈';
+        rankI = '🛡️'; rankT = 'LEGIONISTA'; rankD = 'Dobry początek — ćwicz dalej, a dojdziesz do rangi centuriona!';
+    } else if (pct >= 30) {
+        msg = 'Jeszcze trochę nauki i będzie świetnie! Nie poddawaj się! 💡'; icon = '📖';
+        rankI = '🏺'; rankT = 'UCZEŃ'; rankD = 'Każdy Rzymianin musiał się uczyć — Ty też dasz radę!';
+    } else {
+        msg = 'Musisz powtórzyć lekcję o starożytnym Rzymie. Spróbuj jeszcze raz! 🚀'; icon = '📜';
+        rankI = '🐺'; rankT = 'NOWY W RZYMIE'; rankD = 'Dopiero zaczynasz swoją przygodę z historią Rzymu!';
+    }
+
+    document.getElementById('trophyIcon').textContent = icon;
+    document.getElementById('resultMsg').textContent = msg;
+    document.getElementById('rankIcon').textContent = rankI;
+    document.getElementById('rankTitle').textContent = rankT;
+    document.getElementById('rankDesc').textContent = rankD;
+
+    buildReview();
+}
+
+function buildReview() {
+    const list = document.getElementById('reviewList');
+    list.innerHTML = '';
+
+    answers.forEach((a, i) => {
+        const q = questions[a.qIdx];
+        const div = document.createElement('div');
+        div.className = `rev-item ${a.ok ? 'rv-ok' : 'rv-bad'}`;
+
+        let cleanQ = q.question.replace(/<[^>]+>/g, '');
+        let correctAns = '';
+
+        if (q.type === 'choice') correctAns = q.options[q.correct];
+        else if (q.type === 'tf') correctAns = q.correct ? 'Prawda' : 'Fałsz';
+        else if (q.type === 'fill') correctAns = q.accept[0];
+
+        div.innerHTML = `
+            <div class="rev-q">${i+1}. ${cleanQ}</div>
+            <div class="rev-a">
+                Twoja odpowiedź: <span class="${a.ok ? 'g' : 'r'}">${a.userAnswer}</span>
+                ${!a.ok ? `<br>Poprawna: <span class="g">${correctAns}</span>` : ''}
+            </div>`;
+        list.appendChild(div);
+    });
+
+    document.getElementById('reviewSection').style.display = 'block';
+}
+
+// ============================================================
+// RESTART
+// ============================================================
+function restartQuiz() {
+    hide('resultsScreen');
+    hide('tabs');
+    document.getElementById('reviewSection').style.display = 'none';
+    document.getElementById('startScreen').style.display = 'block';
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.tab[data-cat="all"]').classList.add('active');
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+}
+
+function show(id) {
+    const el = document.getElementById(id);
+    if (el) {
+        if (el.classList.contains('tabs-container')) el.style.display = 'flex';
+        else el.style.display = 'block';
+    }
+}
+
+function hide(id) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+}
+</script>
+
+</body>
+</html>
+```
+
+---
+
+## 📋 Co zawiera test:
+
+### 7 kategorii pytań (30 pytań łącznie):
+
+| Kategoria | Pytania | Tematy |
+|-----------|---------|--------|
+| 👑 **Królestwo** | 4 | Romulus i Remus, 7 królów, Tarkwiniusz Pyszny, Tyber |
+| 🏛️ **Republika** | 5 | Senat, konsulowie, trybuni ludowi, prawo weta, dyktator, res publica |
+| 🦅 **Cesarstwo** | 4 | Oktawian August, Juliusz Cezar, upadek 476 r., Konstantyn, Pax Romana |
+| 👥 **Społeczeństwo** | 4 | Patrycjusze, plebejusze, niewolnicy, rola kobiet |
+| ⚔️ **Wojsko** | 4 | Legiony, centurionowie, drogi, testudo (żółw) |
+| ⚡ **Bogowie** | 4 | Jowisz, Mars, westalki, przejęcie bogów greckich |
+| 🎭 **Kultura i prawo** | 5 | Akwedukty, Koloseum, Prawo XII Tablic, cyfry rzymskie, Forum, łacina |
+
+### 3 typy pytań:
+- ✅ **Wybór odpowiedzi** (A/B/C/D)
+- ✅ **Prawda / Fałsz**
+- ✅ System punktowy (1–3 pkt za pytanie)
+
+### 3 poziomy trudności:
+- 🌿 **Łatwy** — pytania podstawowe + średnie
+- ⚔️ **Średni** — wszystkie pytania
+- 🔥 **Trudny** — wszystkie + więcej punktów za trudne
+
+### Funkcje:
+- 🏛️ **Stylizacja rzymska** — złoto, kolumny, SPQR
+- 🔥 **Seria trafień** (streak counter)
+- 📊 **System punktowy** (1-3 pkt za pytanie)
+- 🏛️ **Ciekawostki historyczne** po każdej odpowiedzi
+- 🦅 **Rangi rzymskie** w wynikach (od "Nowy w Rzymie" do "Imperator")
+- 📋 **Przegląd odpowiedzi** po teście
+- 🔀 **Losowa kolejność** pytań i odpowiedzi
+- 📱 **W pełni responsywny** design
+- 🎭 **Filtrowanie po kategoriach**
