@@ -1,0 +1,910 @@
+
+
+# Ustrój Rzymski – Quiz dla klasy 5
+
+Zapisz poniższy kod jako `rzym_quiz.html` i otwórz w przeglądarce.
+
+```html
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏛️ Starożytny Rzym – Quiz dla klasy 5</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+:root{
+    --gold:#f0a500;
+    --gold-dark:#c98600;
+    --red:#c0392b;
+    --red-light:#e74c3c;
+    --maroon:#6b1d1d;
+    --cream:#fdf6e3;
+    --cream2:#faf0d7;
+    --brown:#5d4037;
+    --brown-light:#8d6e63;
+    --green:#27ae60;
+    --green-light:#2ecc71;
+    --blue:#2980b9;
+    --purple:#8e44ad;
+    --orange:#e67e22;
+    --bg:#1a0f0a;
+    --bg2:#2c1810;
+    --bg3:#3e2518;
+    --bg4:#4f3222;
+    --text:#fde8d0;
+    --text-light:#c9a882;
+    --card-bg:rgba(62,37,24,0.85);
+    --glow-gold:rgba(240,165,0,0.15);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+    font-family:'Nunito',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+/* ── Tło dekoracyjne ── */
+body::before{
+    content:'';position:fixed;inset:0;z-index:-1;
+    background:
+        radial-gradient(ellipse at 15% 25%,rgba(240,165,0,.07) 0%,transparent 55%),
+        radial-gradient(ellipse at 80% 70%,rgba(192,57,43,.06) 0%,transparent 55%),
+        radial-gradient(ellipse at 50% 50%,rgba(142,68,173,.04) 0%,transparent 60%);
+}
+
+body::after{
+    content:'';position:fixed;inset:0;z-index:-1;
+    background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0v60M0 30h60' stroke='rgba(240,165,0,0.04)' stroke-width='1'/%3E%3C/svg%3E");
+    background-size:60px 60px;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--gold-dark)}
+
+/* ══════════ HEADER ══════════ */
+.header{
+    text-align:center;
+    padding:40px 20px 10px;
+    position:relative;
+}
+
+.header-icon{
+    font-size:4rem;
+    display:block;
+    margin-bottom:10px;
+    filter:drop-shadow(0 4px 20px rgba(240,165,0,.3));
+    animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-10px)}
+}
+
+.header h1{
+    font-size:clamp(1.8rem,5vw,3rem);
+    font-weight:900;
+    background:linear-gradient(135deg,var(--gold),#ffe066,var(--gold-dark));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;
+    letter-spacing:-1px;
+    margin-bottom:8px;
+}
+
+.header p{
+    color:var(--text-light);
+    font-size:1rem;
+    max-width:600px;
+    margin:0 auto;
+    line-height:1.6;
+}
+
+.header-stars{
+    display:flex;justify-content:center;gap:6px;margin-top:12px;
+}
+
+.header-stars span{
+    font-size:1.2rem;
+    animation:twinkle 2s ease-in-out infinite;
+}
+.header-stars span:nth-child(2){animation-delay:.3s}
+.header-stars span:nth-child(3){animation-delay:.6s}
+.header-stars span:nth-child(4){animation-delay:.9s}
+.header-stars span:nth-child(5){animation-delay:1.2s}
+
+@keyframes twinkle{
+    0%,100%{opacity:.4;transform:scale(.8)}
+    50%{opacity:1;transform:scale(1.1)}
+}
+
+/* ══════════ TABS ══════════ */
+.tabs{
+    display:flex;justify-content:center;flex-wrap:wrap;
+    gap:8px;padding:20px 16px 10px;
+}
+
+.tab{
+    padding:10px 20px;
+    border:2px solid var(--bg3);
+    background:var(--bg2);
+    color:var(--text-light);
+    border-radius:30px;
+    cursor:pointer;
+    font-family:'Nunito',sans-serif;
+    font-size:.88rem;
+    font-weight:700;
+    transition:all .3s;
+}
+
+.tab:hover{
+    border-color:var(--gold);color:var(--gold);
+    transform:translateY(-2px);
+    box-shadow:0 4px 16px var(--glow-gold);
+}
+
+.tab.active{
+    background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+    color:#1a0f0a;border-color:transparent;
+    box-shadow:0 4px 16px var(--glow-gold);
+}
+
+/* ══════════ SECTIONS ══════════ */
+.sec{display:none;max-width:880px;margin:0 auto;padding:16px 16px 60px;animation:fadeUp .45s ease}
+.sec.active{display:block}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══════════ CARD ══════════ */
+.card{
+    background:var(--card-bg);
+    border:1px solid rgba(240,165,0,.1);
+    border-radius:20px;
+    padding:28px;
+    margin-bottom:20px;
+    backdrop-filter:blur(15px);
+    transition:border-color .3s,box-shadow .3s;
+}
+
+.card:hover{
+    border-color:rgba(240,165,0,.2);
+    box-shadow:0 6px 30px rgba(0,0,0,.3);
+}
+
+.card-head{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+
+.card-icon{
+    width:48px;height:48px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.4rem;flex-shrink:0;
+}
+
+.ci-gold{background:rgba(240,165,0,.15)}
+.ci-red{background:rgba(192,57,43,.15)}
+.ci-blue{background:rgba(41,128,185,.15)}
+.ci-green{background:rgba(39,174,96,.15)}
+.ci-purple{background:rgba(142,68,173,.15)}
+.ci-orange{background:rgba(230,126,34,.15)}
+
+.card h2{font-size:1.35rem;color:var(--cream);font-weight:800}
+.card .sub{color:var(--text-light);font-size:.85rem;margin-bottom:22px}
+
+/* ── Progress ── */
+.prog-row{display:flex;justify-content:space-between;font-size:.82rem;color:var(--text-light);margin-bottom:6px}
+.prog-track{width:100%;height:8px;background:var(--bg3);border-radius:4px;margin-bottom:20px;overflow:hidden}
+.prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold),var(--red-light));transition:width .5s ease}
+
+/* ── Question Block ── */
+.qb{
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.05);
+    border-radius:16px;
+    padding:24px;
+    margin-bottom:14px;
+    transition:all .3s;
+}
+
+.qb.ok{border-color:var(--green);background:rgba(39,174,96,.07)}
+.qb.nok{border-color:var(--red-light);background:rgba(231,76,60,.07)}
+
+.qn{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:34px;height:34px;border-radius:50%;
+    background:linear-gradient(135deg,var(--gold),var(--red));
+    color:#fff;font-size:.85rem;font-weight:800;margin-right:10px;flex-shrink:0;
+}
+
+.qt{font-size:1.02rem;line-height:1.65;margin-bottom:16px}
+.qt strong,.qt b{color:var(--gold)}
+
+/* ── Choices ── */
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:620px){.choices{grid-template-columns:1fr}}
+
+.ch{
+    padding:14px 16px;
+    border:2px solid var(--bg3);
+    background:rgba(255,255,255,.02);
+    color:var(--text);
+    border-radius:14px;
+    cursor:pointer;
+    font-family:'Nunito',sans-serif;
+    font-size:.95rem;
+    font-weight:600;
+    text-align:left;
+    transition:all .25s;
+    display:flex;align-items:center;gap:10px;
+    line-height:1.4;
+}
+
+.ch:hover:not(.locked){
+    border-color:var(--gold);
+    background:rgba(240,165,0,.08);
+    transform:translateX(4px);
+}
+
+.ch-l{
+    display:flex;align-items:center;justify-content:center;
+    min-width:30px;height:30px;border-radius:10px;
+    background:rgba(255,255,255,.07);
+    font-weight:800;font-size:.8rem;flex-shrink:0;
+}
+
+.ch.ok-ch{border-color:var(--green)!important;background:rgba(39,174,96,.12)!important;color:#fff}
+.ch.nok-ch{border-color:var(--red-light)!important;background:rgba(231,76,60,.12)!important}
+.ch.locked{cursor:default;opacity:.7}
+
+/* ── Feedback ── */
+.fb{font-size:.85rem;margin-top:10px;padding:10px 16px;border-radius:10px;display:none;line-height:1.5}
+.fb.show{display:block;animation:fadeUp .3s ease}
+.fb.ok{color:var(--green-light);background:rgba(39,174,96,.08)}
+.fb.nok{color:var(--red-light);background:rgba(231,76,60,.08)}
+
+.ex{
+    margin-top:10px;padding:12px 16px;border-radius:10px;
+    background:rgba(240,165,0,.08);font-size:.87rem;color:var(--gold);
+    display:none;line-height:1.6;border-left:4px solid var(--gold);
+}
+.ex.show{display:block;animation:fadeUp .3s ease}
+
+/* ── Buttons ── */
+.btn{
+    padding:13px 30px;border:none;border-radius:14px;
+    font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:700;
+    cursor:pointer;transition:all .3s;display:inline-flex;align-items:center;gap:8px;
+}
+
+.btn-gold{
+    background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+    color:#1a0f0a;
+    box-shadow:0 4px 16px var(--glow-gold);
+}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 6px 24px var(--glow-gold)}
+
+.btn-out{background:rgba(255,255,255,.06);color:var(--text);border:2px solid var(--bg3)}
+.btn-out:hover{border-color:var(--gold);background:rgba(240,165,0,.08)}
+
+.btn-row{display:flex;gap:12px;justify-content:center;margin-top:26px;flex-wrap:wrap}
+
+/* ── Score ── */
+.score-box{text-align:center;padding:36px 20px;display:none}
+.s-emoji{font-size:3.6rem;margin-bottom:10px}
+
+.s-ring{
+    width:150px;height:150px;border-radius:50%;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    margin:0 auto 18px;position:relative;
+}
+.s-ring::before{
+    content:'';position:absolute;inset:-4px;border-radius:50%;padding:4px;
+    background:linear-gradient(135deg,var(--gold),var(--red),var(--gold-dark));
+    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+}
+
+.s-pct{
+    font-size:2.6rem;font-weight:900;
+    background:linear-gradient(135deg,var(--gold),var(--red-light));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.s-sub{font-size:.82rem;color:var(--text-light)}
+.s-msg{font-size:1.2rem;font-weight:700;margin-bottom:6px;color:var(--cream)}
+.s-det{color:var(--text-light);margin-bottom:20px;font-size:.9rem}
+
+.stats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.st{
+    flex:1;min-width:100px;max-width:150px;
+    background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+    border-radius:14px;padding:14px;text-align:center;
+}
+.st-v{font-size:1.6rem;font-weight:800}
+.st-v.g{color:var(--green-light)}.st-v.r{color:var(--red-light)}.st-v.b{color:var(--gold)}
+.st-l{font-size:.72rem;color:var(--text-light);margin-top:3px}
+
+/* ── Knowledge cards ── */
+.know-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:16px}
+
+.know-card{
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:14px;
+    padding:18px;
+    cursor:pointer;
+    transition:all .3s;
+}
+.know-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.25)}
+
+.know-icon{font-size:2rem;margin-bottom:8px}
+.know-title{font-weight:800;color:var(--gold);margin-bottom:4px;font-size:1rem}
+.know-desc{color:var(--text-light);font-size:.85rem;line-height:1.5}
+
+/* ── Timeline ── */
+.timeline{position:relative;padding-left:30px;margin-top:20px}
+.timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--gold),var(--red),var(--purple));border-radius:2px}
+
+.tl-item{position:relative;margin-bottom:20px;padding-left:20px}
+.tl-item::before{
+    content:'';position:absolute;left:-22px;top:6px;
+    width:14px;height:14px;border-radius:50%;
+    background:var(--gold);border:3px solid var(--bg2);
+    box-shadow:0 0 8px var(--glow-gold);
+}
+
+.tl-date{font-weight:800;color:var(--gold);font-size:.9rem;margin-bottom:2px}
+.tl-text{color:var(--text-light);font-size:.88rem;line-height:1.5}
+
+/* ── Confetti ── */
+@keyframes confDrop{0%{transform:translateY(-100vh) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+.conf{position:fixed;top:-12px;z-index:9999;animation:confDrop 3s ease-in forwards;pointer-events:none}
+
+/* ── Shake ── */
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.shake{animation:shake .4s ease}
+
+/* ── Badge ── */
+.badge{
+    position:fixed;bottom:16px;right:16px;
+    background:var(--bg2);border:1px solid rgba(240,165,0,.15);
+    border-radius:12px;padding:8px 16px;font-size:.75rem;color:var(--text-light);
+    backdrop-filter:blur(14px);z-index:100;
+}
+
+/* ── True/False style ── */
+.tf-row{display:flex;gap:12px;flex-wrap:wrap}
+.tf-btn{
+    flex:1;min-width:120px;padding:14px;
+    border:2px solid var(--bg3);
+    background:rgba(255,255,255,.02);
+    color:var(--text);
+    border-radius:14px;
+    cursor:pointer;
+    font-family:'Nunito',sans-serif;
+    font-size:1rem;font-weight:700;
+    text-align:center;
+    transition:all .25s;
+}
+.tf-btn:hover:not(.locked){
+    border-color:var(--gold);
+    transform:translateY(-2px);
+}
+.tf-btn.ok-ch{border-color:var(--green)!important;background:rgba(39,174,96,.12)!important;color:#fff}
+.tf-btn.nok-ch{border-color:var(--red-light)!important;background:rgba(231,76,60,.12)!important}
+.tf-btn.locked{cursor:default;opacity:.7}
+
+/* ── Image placeholder ── */
+.img-badge{
+    display:inline-block;
+    padding:6px 14px;
+    border-radius:8px;
+    font-size:.72rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    margin-bottom:6px;
+}
+.ib-gold{background:rgba(240,165,0,.12);color:var(--gold)}
+.ib-red{background:rgba(192,57,43,.12);color:var(--red-light)}
+.ib-blue{background:rgba(41,128,185,.12);color:var(--blue)}
+.ib-green{background:rgba(39,174,96,.12);color:var(--green)}
+
+@media(max-width:600px){
+    .card{padding:20px}
+    .header h1{font-size:1.6rem}
+    .header-icon{font-size:3rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ HEADER ═══════ -->
+<div class="header">
+    <span class="header-icon">🏛️</span>
+    <h1>Starożytny Rzym – Quiz</h1>
+    <p>Sprawdź swoją wiedzę o Rzymie, republice, cesarstwie i codziennym życiu Rzymian! 🦅</p>
+    <div class="header-stars">
+        <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
+    </div>
+</div>
+
+<!-- ═══════ TABS ═══════ -->
+<nav class="tabs">
+    <button class="tab active" onclick="openSec('rep',this)">🏛️ Republika</button>
+    <button class="tab" onclick="openSec('emp',this)">👑 Cesarstwo</button>
+    <button class="tab" onclick="openSec('life',this)">🏟️ Życie Rzymian</button>
+    <button class="tab" onclick="openSec('tf',this)">✅❌ Prawda / Fałsz</button>
+    <button class="tab" onclick="openSec('mega',this)">🎯 Mega Quiz (25)</button>
+    <button class="tab" onclick="openSec('learn',this)">📚 Powtórka</button>
+</nav>
+
+<!-- ═══════ SEKCJA: REPUBLIKA ═══════ -->
+<div id="sec-rep" class="sec active">
+<div class="card">
+    <div class="card-head"><div class="card-icon ci-gold">🏛️</div><div><h2>Republika Rzymska</h2></div></div>
+    <div class="sub">Konsulowie, senat, trybuni ludowi i patrycjusze – 10 pytań</div>
+    <div class="prog-row"><span>Pytanie <span id="rep-cur">1</span>/<span id="rep-tot">10</span></span><span id="rep-pts">0 pkt</span></div>
+    <div class="prog-track"><div class="prog-fill" id="rep-bar" style="width:10%"></div></div>
+    <div id="rep-area"></div>
+    <div class="btn-row">
+        <button class="btn btn-gold" id="rep-next" onclick="nxt('rep')" style="display:none">Dalej ➡️</button>
+        <button class="btn btn-out" onclick="init('rep')">🔄 Od nowa</button>
+    </div>
+    <div class="score-box" id="rep-score"></div>
+</div>
+</div>
+
+<!-- ═══════ SEKCJA: CESARSTWO ═══════ -->
+<div id="sec-emp" class="sec">
+<div class="card">
+    <div class="card-head"><div class="card-icon ci-red">👑</div><div><h2>Cesarstwo Rzymskie</h2></div></div>
+    <div class="sub">Cesarze, podboje, upadek Rzymu – 10 pytań</div>
+    <div class="prog-row"><span>Pytanie <span id="emp-cur">1</span>/<span id="emp-tot">10</span></span><span id="emp-pts">0 pkt</span></div>
+    <div class="prog-track"><div class="prog-fill" id="emp-bar" style="width:10%"></div></div>
+    <div id="emp-area"></div>
+    <div class="btn-row">
+        <button class="btn btn-gold" id="emp-next" onclick="nxt('emp')" style="display:none">Dalej ➡️</button>
+        <button class="btn btn-out" onclick="init('emp')">🔄 Od nowa</button>
+    </div>
+    <div class="score-box" id="emp-score"></div>
+</div>
+</div>
+
+<!-- ═══════ SEKCJA: ŻYCIE ═══════ -->
+<div id="sec-life" class="sec">
+<div class="card">
+    <div class="card-head"><div class="card-icon ci-blue">🏟️</div><div><h2>Życie codzienne Rzymian</h2></div></div>
+    <div class="sub">Koloseum, drogi, termy, szkoła – 10 pytań</div>
+    <div class="prog-row"><span>Pytanie <span id="life-cur">1</span>/<span id="life-tot">10</span></span><span id="life-pts">0 pkt</span></div>
+    <div class="prog-track"><div class="prog-fill" id="life-bar" style="width:10%"></div></div>
+    <div id="life-area"></div>
+    <div class="btn-row">
+        <button class="btn btn-gold" id="life-next" onclick="nxt('life')" style="display:none">Dalej ➡️</button>
+        <button class="btn btn-out" onclick="init('life')">🔄 Od nowa</button>
+    </div>
+    <div class="score-box" id="life-score"></div>
+</div>
+</div>
+
+<!-- ═══════ SEKCJA: PRAWDA / FAŁSZ ═══════ -->
+<div id="sec-tf" class="sec">
+<div class="card">
+    <div class="card-head"><div class="card-icon ci-green">✅</div><div><h2>Prawda czy Fałsz?</h2></div></div>
+    <div class="sub">Zdecyduj, czy zdanie jest prawdziwe – 10 pytań</div>
+    <div class="prog-row"><span>Pytanie <span id="tf-cur">1</span>/<span id="tf-tot">10</span></span><span id="tf-pts">0 pkt</span></div>
+    <div class="prog-track"><div class="prog-fill" id="tf-bar" style="width:10%"></div></div>
+    <div id="tf-area"></div>
+    <div class="btn-row">
+        <button class="btn btn-gold" id="tf-next" onclick="nxt('tf')" style="display:none">Dalej ➡️</button>
+        <button class="btn btn-out" onclick="init('tf')">🔄 Od nowa</button>
+    </div>
+    <div class="score-box" id="tf-score"></div>
+</div>
+</div>
+
+<!-- ═══════ SEKCJA: MEGA QUIZ ═══════ -->
+<div id="sec-mega" class="sec">
+<div class="card">
+    <div class="card-head"><div class="card-icon ci-purple">🎯</div><div><h2>Mega Quiz – 25 pytań</h2></div></div>
+    <div class="sub">Losowe pytania ze wszystkich kategorii – sprawdź się!</div>
+    <div class="prog-row"><span>Pytanie <span id="mega-cur">1</span>/<span id="mega-tot">25</span></span><span id="mega-pts">0 pkt</span></div>
+    <div class="prog-track"><div class="prog-fill" id="mega-bar" style="width:4%"></div></div>
+    <div id="mega-area"></div>
+    <div class="btn-row">
+        <button class="btn btn-gold" id="mega-next" onclick="nxt('mega')" style="display:none">Dalej ➡️</button>
+        <button class="btn btn-out" onclick="init('mega')">🔄 Od nowa</button>
+    </div>
+    <div class="score-box" id="mega-score"></div>
+</div>
+</div>
+
+<!-- ═══════ SEKCJA: POWTÓRKA ═══════ -->
+<div id="sec-learn" class="sec">
+
+<!-- Oś czasu -->
+<div class="card">
+    <div class="card-head"><div class="card-icon ci-gold">📜</div><div><h2>Oś czasu – najważniejsze daty</h2></div></div>
+    <div class="sub">Historia Rzymu w pigułce</div>
+    <div class="timeline">
+        <div class="tl-item"><div class="tl-date">753 r. p.n.e.</div><div class="tl-text">Legendarne <b>założenie Rzymu</b> przez Romulusa i Remusa 🐺</div></div>
+        <div class="tl-item"><div class="tl-date">753–509 r. p.n.e.</div><div class="tl-text">Okres <b>królestwa</b> – Rzymem rządzili królowie (ostatni: Tarkwiniusz Pyszny)</div></div>
+        <div class="tl-item"><div class="tl-date">509 r. p.n.e.</div><div class="tl-text">Powstaje <b>republika</b> – władza należy do senatu i konsulów 🏛️</div></div>
+        <div class="tl-item"><div class="tl-date">264–146 r. p.n.e.</div><div class="tl-text"><b>Wojny punickie</b> z Kartaginą (Hannibal i jego słonie! 🐘)</div></div>
+        <div class="tl-item"><div class="tl-date">44 r. p.n.e.</div><div class="tl-text"><b>Zamordowanie Juliusza Cezara</b> – „I ty, Brutusie?" 🗡️</div></div>
+        <div class="tl-item"><div class="tl-date">27 r. p.n.e.</div><div class="tl-text"><b>Oktawian August</b> zostaje pierwszym cesarzem – początek cesarstwa 👑</div></div>
+        <div class="tl-item"><div class="tl-date">80 r. n.e.</div><div class="tl-text">Otwarcie <b>Koloseum</b> w Rzymie 🏟️</div></div>
+        <div class="tl-item"><div class="tl-date">313 r. n.e.</div><div class="tl-text"><b>Edykt mediolański</b> – wolność wyznawania chrześcijaństwa ✝️</div></div>
+        <div class="tl-item"><div class="tl-date">395 r. n.e.</div><div class="tl-text">Podział cesarstwa na <b>zachodnie i wschodnie</b></div></div>
+        <div class="tl-item"><div class="tl-date">476 r. n.e.</div><div class="tl-text"><b>Upadek cesarstwa zachodniorzymskiego</b> – koniec starożytności</div></div>
+    </div>
+</div>
+
+<!-- Pojęcia -->
+<div class="card">
+    <div class="card-head"><div class="card-icon ci-blue">📖</div><div><h2>Najważniejsze pojęcia</h2></div></div>
+    <div class="sub">Kliknij kartę, aby zobaczyć więcej</div>
+    <div class="know-grid">
+        <div class="know-card"><div class="know-icon">👤👤</div><div class="know-title">Konsulowie</div><div class="know-desc">Dwóch urzędników wybieranych co rok. Dowodzili armią i rządzili republiką. Mogli zawetować swoje decyzje nawzajem.</div></div>
+        <div class="know-card"><div class="know-icon">🏛️</div><div class="know-title">Senat</div><div class="know-desc">Rada starszych (ok. 300 osób). Doradzali konsulom, decydowali o finansach i polityce zagranicznej.</div></div>
+        <div class="know-card"><div class="know-icon">📢</div><div class="know-title">Trybun ludowy</div><div class="know-desc">Bronił praw plebejuszy. Miał prawo VETO – mógł zablokować każdą decyzję, która szkodziła zwykłym ludziom.</div></div>
+        <div class="know-card"><div class="know-icon">👑</div><div class="know-title">Patrycjusze</div><div class="know-desc">Bogata, uprzywilejowana warstwa społeczna. Na początku tylko oni mogli pełnić urzędy.</div></div>
+        <div class="know-card"><div class="know-icon">👷</div><div class="know-title">Plebejusze</div><div class="know-desc">Zwykli obywatele – rzemieślnicy, rolnicy, kupcy. Z czasem wywalczyli sobie więcej praw.</div></div>
+        <div class="know-card"><div class="know-icon">⚔️</div><div class="know-title">Legion</div><div class="know-desc">Podstawowa jednostka armii rzymskiej. Liczył ok. 5000 żołnierzy. Legiony podbijały ogromne tereny!</div></div>
+        <div class="know-card"><div class="know-icon">🗡️</div><div class="know-title">Gladiator</div><div class="know-desc">Wojownik walczący na arenie (np. w Koloseum) dla rozrywki publiczności. Często byli to niewolnicy.</div></div>
+        <div class="know-card"><div class="know-icon">🛣️</div><div class="know-title">Drogi rzymskie</div><div class="know-desc">Słynne drogi łączące całe imperium. „Wszystkie drogi prowadzą do Rzymu!" Używane jeszcze wiele wieków później.</div></div>
+        <div class="know-card"><div class="know-icon">🏛️</div><div class="know-title">Forum Romanum</div><div class="know-desc">Główny plac w Rzymie – centrum życia publicznego, handlu, polityki i religii.</div></div>
+        <div class="know-card"><div class="know-icon">🛁</div><div class="know-title">Termy</div><div class="know-desc">Publiczne łaźnie. Rzymianie chodzili tam się kąpać, spotykać z przyjaciółmi, ćwiczyć i rozmawiać.</div></div>
+        <div class="know-card"><div class="know-icon">🏗️</div><div class="know-title">Akwedukty</div><div class="know-desc">Kamienne kanały doprowadzające wodę do miast. Niektóre stoją do dziś!</div></div>
+        <div class="know-card"><div class="know-icon">📋</div><div class="know-title">Prawo rzymskie</div><div class="know-desc">System praw, który jest podstawą prawa w Europie do dziś. Np. „domniemanie niewinności".</div></div>
+    </div>
+</div>
+</div>
+
+<div class="badge">🏛️ Rzym Quiz v1.0 – Klasa 5</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- JAVASCRIPT -->
+<!-- ═══════════════════════════════════════ -->
+<script>
+/* ═══ BANKI PYTAŃ ═══ */
+
+const repQ = [
+{q:"Kto rządził Rzymem w czasach republiki?",ch:["Jeden król","Dwóch konsulów wybieranych co rok","Cesarz i jego żona","Grupa kapłanów"],c:1,
+ex:"W republice najwyższą władzę sprawowało dwóch konsulów. Wybierano ich co rok, żeby nikt nie miał za dużo władzy! 🏛️"},
+{q:"Co to był <b>senat</b> w starożytnym Rzymie?",ch:["Szkoła dla żołnierzy","Rada starszych, która doradzała i podejmowała ważne decyzje","Świątynia bogów","Rodzaj areny do walk"],c:1,
+ex:"Senat składał się z ok. 300 doświadczonych obywateli. Doradzali konsulom w sprawach państwa."},
+{q:"Kim byli <b>patrycjusze</b>?",ch:["Niewolnicy","Bogata i uprzywilejowana warstwa społeczna","Żołnierze legionów","Gladiatorzy"],c:1,
+ex:"Patrycjusze to najzamożniejsi obywatele. Na początku republiki tylko oni mogli zajmować najważniejsze urzędy."},
+{q:"Kim byli <b>plebejusze</b>?",ch:["Bogaci kupcy","Kapłani","Zwykli obywatele – rolnicy, rzemieślnicy, kupcy","Wojownicy z Galii"],c:2,
+ex:"Plebejusze stanowili większość społeczeństwa. Musieli walczyć o swoje prawa polityczne! 💪"},
+{q:"Co oznaczało słowo <b>VETO</b> w Rzymie?",ch:["„Zgadzam się"","„Nie pozwalam" – prawo do zablokowania decyzji","„Zabieram głos"","„Wybieram cię""],c:1,
+ex:"VETO to łacińskie słowo oznaczające „nie pozwalam". Trybun ludowy mógł zablokować każdą decyzję szkodzącą plebejuszom."},
+{q:"Kto miał prawo VETO w republice?",ch:["Konsulowie","Senat","Trybun ludowy","Gladiatorzy"],c:2,
+ex:"Trybun ludowy był obrońcą praw plebejuszy. Jego osoba była „święta" – nikt nie mógł go skrzywdzić! 📢"},
+{q:"W którym roku (wg legendy) powstała republika rzymska?",ch:["753 r. p.n.e.","509 r. p.n.e.","27 r. p.n.e.","476 r. n.e."],c:1,
+ex:"W 509 r. p.n.e. Rzymianie obalili ostatniego króla (Tarkwiniusza Pysznego) i utworzyli republikę."},
+{q:"Dlaczego konsulów było <b>dwóch</b>?",ch:["Bo jeden nie miał czasu","Żeby mogli się wzajemnie kontrolować i żaden nie miał za dużo władzy","Bo tak kazał senat","Bo jeden rządził miastem, a drugi wioską"],c:1,
+ex:"System dwóch konsulów zapobiegał tyranii. Każdy mógł zawetować decyzję drugiego!"},
+{q:"Co to jest <b>Forum Romanum</b>?",ch:["Stadion sportowy","Główny plac w Rzymie – centrum życia politycznego i handlowego","Szkoła","Więzienie"],c:1,
+ex:"Forum Romanum to serce starożytnego Rzymu – tu wygłaszano mowy, handlowano i modlono się. 🏛️"},
+{q:"Kto według legendy założył Rzym?",ch:["Juliusz Cezar","Hannibal","Romulus i Remus","Aleksander Wielki"],c:2,
+ex:"Legenda mówi, że bliźniacy Romulus i Remus zostali wykarmieni przez wilczycę 🐺 Romulus założył Rzym w 753 r. p.n.e."},
+{q:"Czym jest <b>republika</b>?",ch:["Państwo rządzone przez króla","Państwo, w którym władzę sprawują obywatele przez wybieranych urzędników","Państwo bez żadnej władzy","Państwo rządzone przez kapłanów"],c:1,
+ex:"Słowo republika pochodzi od łacińskiego „res publica" – rzecz publiczna, wspólna sprawa obywateli."},
+{q:"Jak nazywał się ostatni król Rzymu?",ch:["Romulus","Tarkwiniusz Pyszny","Juliusz Cezar","August"],c:1,
+ex:"Tarkwiniusz Pyszny był tak okrutny, że Rzymianie obalili go i postanowili, że nie chcą więcej królów!"},
+{q:"Co to jest <b>dyktator</b> w republice rzymskiej?",ch:["Tytuł honorowy","Urzędnik z pełnią władzy mianowany na czas zagrożenia (max 6 miesięcy)","Przywódca niewolników","Naczelny kapłan"],c:1,
+ex:"Dyktator był powoływany tylko w sytuacjach kryzysowych. Po rozwiązaniu problemu oddawał władzę."},
+{q:"Które prawo zostało spisane na <b>12 tablicach</b>?",ch:["Prawo religijne","Pierwsze spisane prawo rzymskie, obowiązujące wszystkich","Prawo dotyczące gladiatorów","Prawo handlowe Kartaginy"],c:1,
+ex:"Prawo XII tablic (ok. 450 r. p.n.e.) – plebejusze wywalczyli spisanie praw, żeby patrycjusze nie mogli ich dowolnie zmieniać!"}
+];
+
+const empQ = [
+{q:"Kto był <b>pierwszym cesarzem</b> Rzymu?",ch:["Juliusz Cezar","Neron","Oktawian August","Konstantyn"],c:2,
+ex:"Oktawian August (27 r. p.n.e. – 14 r. n.e.) zapoczątkował okres cesarstwa i „Pax Romana" – rzymski pokój. 👑"},
+{q:"Kim był <b>Juliusz Cezar</b>?",ch:["Pierwszy cesarz Rzymu","Wybitny wódz i polityk, który został zamordowany w 44 r. p.n.e.","Król Rzymu","Grecki filozof"],c:1,
+ex:"Cezar nie był cesarzem – był dyktatorem. Został zabity przez senatorów, którzy bali się, że chce zostać królem. 🗡️"},
+{q:"Co to było <b>Koloseum</b>?",ch:["Świątynia bogów","Pałac cesarza","Ogromny amfiteatr, w którym odbywały się walki gladiatorów","Biblioteka"],c:2,
+ex:"Koloseum pomieściło ok. 50 000 widzów! Oglądano tam walki gladiatorów, polowania na zwierzęta i inne widowiska. 🏟️"},
+{q:"Co oznacza <b>Pax Romana</b>?",ch:["Wojna domowa","Pokój rzymski – okres pokoju i dobrobytu w cesarstwie","Święto religijne","Nazwa prowincji"],c:1,
+ex:"Pax Romana trwał ok. 200 lat (27 r. p.n.e. – 180 r. n.e.) – to czas pokoju, rozwoju handlu i budowy dróg."},
+{q:"Na jakie dwie części podzielono cesarstwo w 395 r.?",ch:["Północne i południowe","Zachodnie i wschodnie","Górne i dolne","Morskie i lądowe"],c:1,
+ex:"Cesarstwo zachodniorzymskie (stolica: Rzym) upadło w 476 r. Wschodnie (Bizancjum) przetrwało do 1453 r.!"},
+{q:"Kiedy upadło <b>cesarstwo zachodniorzymskie</b>?",ch:["27 r. p.n.e.","44 r. p.n.e.","313 r. n.e.","476 r. n.e."],c:3,
+ex:"W 476 r. n.e. germański wódz Odoaker obalił ostatniego cesarza zachodniorzymskiego – to koniec starożytności! 📅"},
+{q:"Który cesarz wydał <b>edykt mediolański</b> (313 r.) zezwalający na chrześcijaństwo?",ch:["Neron","Konstantyn Wielki","August","Tytus"],c:1,
+ex:"Konstantyn Wielki pozwolił na swobodne wyznawanie chrześcijaństwa i przeniósł stolicę do Konstantynopola. ✝️"},
+{q:"Kim był <b>Neron</b>?",ch:["Budowniczy Koloseum","Cesarz znany z okrucieństwa, oskarżany o podpalenie Rzymu","Wódz galijskich powstańców","Filozof stoicki"],c:1,
+ex:"Neron (54–68 r. n.e.) był znany z tyranii i prześladowania chrześcijan. Legendy mówią, że grał na lirze podczas pożaru Rzymu. 🔥"},
+{q:"Jak nazywało się <b>cesarstwo wschodnie</b> po podziale?",ch:["Gallia","Cesarstwo Bizantyńskie (Bizancjum)","Persja","Kartagina"],c:1,
+ex:"Bizancjum ze stolicą w Konstantynopolu przetrwało prawie 1000 lat dłużej niż cesarstwo zachodnie!"},
+{q:"Dlaczego upadło cesarstwo zachodniorzymskie?",ch:["Bo nie mieli dróg","Przez najazdy barbarzyńców, kryzysy gospodarcze i słabość władzy","Bo wszyscy wyjechali","Bo wyschło morze"],c:1,
+ex:"Upadek miał wiele przyczyn: ataki Germanów, Hunów, problemy finansowe, korupcja i osłabienie armii."},
+{q:"Co budowali Rzymianie, aby dostarczać wodę do miast?",ch:["Studnie na pustyni","Akwedukty – kamienne kanały na łukach","Plastikowe rury","Drewniane wiadra"],c:1,
+ex:"Akwedukty to jedne z największych osiągnięć inżynieryjnych Rzymu. Niektóre zachowały się do dziś! 🏗️"},
+{q:"Kto walczył z Rzymem w <b>wojnach punickich</b>?",ch:["Grecja","Egipt","Kartagina","Persja"],c:2,
+ex:"Trzy wojny punickie (264–146 r. p.n.e.) toczyły się między Rzymem a Kartaginą. Sławny wódz Hannibal przeprawił się przez Alpy ze słoniami! 🐘"},
+{q:"Co stało się z Kartaginą po trzeciej wojnie punickiej?",ch:["Stała się stolicą","Została zniszczona i zrównana z ziemią przez Rzym","Zawarła sojusz z Rzymem","Podbiła Grecję"],c:1,
+ex:"Rzymianie całkowicie zniszczyli Kartaginę w 146 r. p.n.e. – legenda mówi, że posypali ziemię solą."}
+];
+
+const lifeQ = [
+{q:"Co to były <b>termy</b>?",ch:["Więzienia","Publiczne łaźnie, w których Rzymianie się kąpali i spotykali","Koszary wojskowe","Szpitale"],c:1,
+ex:"Termy to nie tylko łaźnie – były też siłownią, biblioteką i miejscem spotkań towarzyskich! 🛁"},
+{q:"Jak nazywał się strój noszony przez obywateli rzymskich?",ch:["Chiton","Kimono","Toga","Tunika bojowa"],c:2,
+ex:"Toga to długi, biały materiał owijany wokół ciała. Nosili ją tylko wolni obywatele rzymscy. Nie była zbyt wygodna! 👘"},
+{q:"Co to jest <b>legion</b>?",ch:["Rodzaj potrawy","Podstawowa jednostka armii rzymskiej (ok. 5000 żołnierzy)","Nazwa świątyni","Typ okrętu"],c:1,
+ex:"Legiony rzymskie były świetnie wyszkolone i zdyscyplinowane. Dzięki nim Rzym podbił ogromne tereny! ⚔️"},
+{q:"Co robili <b>gladiatorzy</b>?",ch:["Pisali wiersze","Walczyli na arenie dla rozrywki publiczności","Budowali drogi","Uczyli w szkołach"],c:1,
+ex:"Gladiatorzy to wojownicy (często niewolnicy) walczący na arenach. Walki były niezwykle popularne w Rzymie. 🗡️"},
+{q:"Jakie powiedzenie związane jest z rzymskimi drogami?",ch:["„Droga do nikąd"","„Wszystkie drogi prowadzą do Rzymu"","„Droga przez las"","„Prosta jak droga"],c:1,
+ex:"Rzymianie zbudowali ponad 80 000 km dróg! Łączyły one wszystkie części imperium ze stolicą. 🛣️"},
+{q:"Jaki język był używany w starożytnym Rzymie?",ch:["Grecki","Angielski","Łacina","Arabski"],c:2,
+ex:"Łacina była językiem urzędowym Rzymu. Wiele współczesnych słów pochodzi właśnie z łaciny! 📖"},
+{q:"Co to był <b>akwedukt</b>?",ch:["Rodzaj broni","Budowla doprowadzająca wodę do miasta","Typ statku","Instrument muzyczny"],c:1,
+ex:"Akwedukty to kamienne kanały na łukach. Doprowadzały czystą wodę z gór do miast, nawet na odległość ponad 100 km!"},
+{q:"Z jakiego materiału Rzymianie budowali swoje drogi?",ch:["Z drewna","Z kamienia i żwiru – wielowarstwowo","Z cegieł glinianych","Z piasku"],c:1,
+ex:"Drogi rzymskie miały kilka warstw: fundament, żwir, piasek, kamienne płyty na wierzchu. Były bardzo trwałe!"},
+{q:"Kim byli <b>niewolnicy</b> w Rzymie?",ch:["Bogaci kupcy","Ludzie pozbawieni wolności, pracujący dla właścicieli","Żołnierze na emeryturze","Kapłani"],c:1,
+ex:"Niewolnicy stanowili dużą część społeczeństwa. Pracowali w domach, kopalniach, na polach. Nie mieli żadnych praw. 😢"},
+{q:"Co to jest <b>mozaika</b> w sztuce rzymskiej?",ch:["Obraz malowany na ścianie","Obrazek ułożony z małych kolorowych kamyczków lub szkiełek","Rzeźba z marmuru","Biżuteria"],c:1,
+ex:"Mozaiki zdobily podłogi i ściany bogatych domów. Przedstawiały sceny z życia, bogów i zwierzęta. 🎨"},
+{q:"Jakich bogów czcili starożytni Rzymianie?",ch:["Tylko jednego boga","Wielu bogów (byli politeistami) – np. Jowisz, Mars, Minerwa","Nie mieli religii","Bogów egipskich"],c:1,
+ex:"Rzymianie wierzyli w wielu bogów. Jowisz – król bogów, Mars – bóg wojny, Minerwa – bogini mądrości. ⚡"},
+{q:"Co jadali Rzymianie na ucztach?",ch:["Hamburgery i frytki","Owoce morza, mięso, owoce, oliwki, wino – jedli leżąc!","Tylko chleb i wodę","Pizza i makaron"],c:1,
+ex:"Bogaci Rzymianie urządzali wystawne uczty. Jedli leżąc na specjalnych łożach! Biedni jedli głównie owsiankę i chleb."},
+{q:"Do czego służyło <b>Forum Romanum</b>?",ch:["Do walk gladiatorów","Było centrum handlu, polityki i życia publicznego","Do wyścigów rydwanów","Było portem morskim"],c:1,
+ex:"Na Forum stały świątynie, bazyliki sądowe i sklepy. Tu senatorowie wygłaszali mowy, a kupcy handlowali."}
+];
+
+const tfQ = [
+{q:"Republika rzymska powstała w 509 r. p.n.e.",tf:true,
+ex:"Tak! W 509 r. p.n.e. Rzymianie obalili ostatniego króla i utworzyli republikę. ✅"},
+{q:"Juliusz Cezar był pierwszym cesarzem Rzymu.",tf:false,
+ex:"Nie! Cezar był dyktatorem, nie cesarzem. Pierwszym cesarzem był Oktawian August. ❌"},
+{q:"W Koloseum odbywały się walki gladiatorów.",tf:true,
+ex:"Tak! Koloseum to ogromny amfiteatr w Rzymie, gdzie walczyli gladiatorzy. Mieściło 50 000 widzów! 🏟️"},
+{q:"Patrycjusze to biedni mieszkańcy Rzymu.",tf:false,
+ex:"Nie! Patrycjusze to bogata warstwa społeczna. Biedni to plebejusze. ❌"},
+{q:"Trybun ludowy miał prawo VETO.",tf:true,
+ex:"Tak! Trybun ludowy mógł zablokować każdą decyzję, która szkodziła plebejuszom. 📢"},
+{q:"Cesarstwo rzymskie podzielono na 3 części.",tf:false,
+ex:"Nie! Cesarstwo podzielono na 2 części – zachodnią i wschodnią (w 395 r. n.e.). ❌"},
+{q:"Łacina to język starożytnych Greków.",tf:false,
+ex:"Nie! Łacina to język Rzymian. Grecy mówili po grecku. 📖"},
+{q:"Akwedukty doprowadzały wodę do rzymskich miast.",tf:true,
+ex:"Tak! Akwedukty to wspaniałe budowle doprowadzające czystą wodę z gór. 🏗️"},
+{q:"Cesarstwo zachodniorzymskie upadło w 476 r. n.e.",tf:true,
+ex:"Tak! To data uznawana za koniec starożytności. Ostatni cesarz został obalony przez barbarzyńców."},
+{q:"Romulus i Remus to synowie Juliusza Cezara.",tf:false,
+ex:"Nie! Romulus i Remus to legendarni założyciele Rzymu – wychowała ich wilczyca. 🐺"},
+{q:"W republice rządziło dwóch konsulów.",tf:true,
+ex:"Tak! Dwóch konsulów, żeby mogli się wzajemnie kontrolować. ✅"},
+{q:"Gladiatorzy walczyli tylko dla zabawy, nikt nie ginął.",tf:false,
+ex:"Niestety nie – walki gladiatorów były brutalne i wielu traciło życie na arenie. 😢"},
+{q:"Termy to publiczne łaźnie.",tf:true,
+ex:"Tak! Termy były miejscem kąpieli, ćwiczeń i spotkań towarzyskich. 🛁"},
+{q:"Konstantyn Wielki prześladował chrześcijan.",tf:false,
+ex:"Nie! To Konstantyn wydał edykt mediolański (313 r.), który zezwolił na chrześcijaństwo. ✝️"},
+{q:"Drogi rzymskie budowano z kamienia w wielu warstwach.",tf:true,
+ex:"Tak! Drogi miały kilka warstw i były bardzo trwałe – niektóre istnieją do dziś! 🛣️"},
+{q:"Hannibal przeprawił przez Alpy słonie bojowe.",tf:true,
+ex:"Tak! Kartagiński wódz Hannibal przeprawił armię ze słoniami przez Alpy, zaskakując Rzymian. 🐘"},
+{q:"Senat składał się z 10 osób.",tf:false,
+ex:"Nie! Senat liczył ok. 300 członków (w różnych okresach nawet więcej). 🏛️"},
+{q:"Niewolnicy w Rzymie mieli pełne prawa obywatelskie.",tf:false,
+ex:"Nie! Niewolnicy nie mieli żadnych praw – byli traktowani jak własność. 😢"},
+{q:"Toga to strój noszony przez rzymskich obywateli.",tf:true,
+ex:"Tak! Toga była symbolem obywatelstwa rzymskiego. Nosili ją tylko wolni obywatele. 👘"},
+{q:"Rzym został założony w 753 r. p.n.e. według legendy.",tf:true,
+ex:"Tak! Legenda mówi, że Romulus założył Rzym na wzgórzu Palatyn w 753 r. p.n.e."}
+];
+
+/* ═══ ENGINE ═══ */
+const banks={rep:repQ,emp:empQ,life:lifeQ};
+const st={};
+
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+
+function openSec(id,btn){
+    document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.getElementById('sec-'+id).classList.add('active');
+    btn.classList.add('active');
+}
+
+/* ── Init quiz ── */
+function init(cat){
+    let pool;
+    if(cat==='mega'){
+        pool=shuffle([...repQ,...empQ,...lifeQ].map(q=>({...q,mode:'choice'}))).slice(0,25);
+    } else if(cat==='tf'){
+        pool=shuffle(tfQ).slice(0,10).map(q=>({...q,mode:'tf'}));
+    } else {
+        pool=shuffle(banks[cat]).slice(0,10).map(q=>({...q,mode:'choice'}));
+    }
+    st[cat]={cur:0,score:0,qs:pool,done:false};
+    document.getElementById(cat+'-score').style.display='none';
+    document.getElementById(cat+'-tot').textContent=pool.length;
+    showQ(cat);
+}
+
+/* ── Show question ── */
+function showQ(cat){
+    const s=st[cat],tot=s.qs.length;
+    if(s.cur>=tot){showResult(cat);return}
+    s.done=false;
+    document.getElementById(cat+'-next').style.display='none';
+    document.getElementById(cat+'-cur').textContent=s.cur+1;
+    document.getElementById(cat+'-pts').textContent=s.score+' pkt';
+    document.getElementById(cat+'-bar').style.width=((s.cur+1)/tot*100)+'%';
+
+    const q=s.qs[s.cur];
+    const area=document.getElementById(cat+'-area');
+
+    if(q.mode==='tf'){
+        area.innerHTML=`
+        <div class="qb" id="${cat}-qb">
+            <div class="qt"><span class="qn">${s.cur+1}</span>${q.q}</div>
+            <div class="tf-row">
+                <button class="tf-btn" id="${cat}-tf1" onclick="ansTF('${cat}',true)">✅ Prawda</button>
+                <button class="tf-btn" id="${cat}-tf0" onclick="ansTF('${cat}',false)">❌ Fałsz</button>
+            </div>
+            <div class="fb" id="${cat}-fb"></div>
+            <div class="ex" id="${cat}-ex"></div>
+        </div>`;
+    } else {
+        const idxArr=q.ch.map((_,i)=>i);
+        const sh=shuffle(idxArr);
+        s.cmap=sh;
+        s.ccor=sh.indexOf(q.c);
+        area.innerHTML=`
+        <div class="qb" id="${cat}-qb">
+            <div class="qt"><span class="qn">${s.cur+1}</span>${q.q}</div>
+            <div class="choices">
+                ${sh.map((oi,ci)=>`<button class="ch" onclick="ans('${cat}',${ci})" id="${cat}-c${ci}"><span class="ch-l">${'ABCD'[ci]}</span><span>${q.ch[oi]}</span></button>`).join('')}
+            </div>
+            <div class="fb" id="${cat}-fb"></div>
+            <div class="ex" id="${cat}-ex"></div>
+        </div>`;
+    }
+}
+
+/* ── Answer (choice) ── */
+function ans(cat,ci){
+    const s=st[cat];
+    if(s.done)return;
+    s.done=true;
+    const q=s.qs[s.cur],cor=s.ccor;
+    for(let j=0;j<q.ch.length;j++) document.getElementById(cat+'-c'+j).classList.add('locked');
+    const fb=document.getElementById(cat+'-fb'),ex=document.getElementById(cat+'-ex');
+    if(ci===cor){
+        s.score++;
+        document.getElementById(cat+'-c'+ci).classList.add('ok-ch');
+        fb.textContent='🎉 Brawo! Poprawna odpowiedź!';
+        fb.className='fb show ok';
+        document.getElementById(cat+'-qb').classList.add('ok');
+    } else {
+        document.getElementById(cat+'-c'+ci).classList.add('nok-ch');
+        document.getElementById(cat+'-c'+cor).classList.add('ok-ch');
+        fb.textContent='😕 Niestety, to nie ta odpowiedź.';
+        fb.className='fb show nok';
+        document.getElementById(cat+'-qb').classList.add('nok','shake');
+    }
+    if(q.ex){ex.innerHTML='📚 '+q.ex;ex.classList.add('show')}
+    document.getElementById(cat+'-pts').textContent=s.score+' pkt';
+    document.getElementById(cat+'-next').style.display='inline-flex';
+}
+
+/* ── Answer (true/false) ── */
+function ansTF(cat,val){
+    const s=st[cat];
+    if(s.done)return;
+    s.done=true;
+    const q=s.qs[s.cur];
+    document.getElementById(cat+'-tf1').classList.add('locked');
+    document.getElementById(cat+'-tf0').classList.add('locked');
+    const fb=document.getElementById(cat+'-fb'),ex=document.getElementById(cat+'-ex');
+    const correct = val===q.tf;
+    const btnYes=document.getElementById(cat+'-tf1'),btnNo=document.getElementById(cat+'-tf0');
+
+    if(correct){
+        s.score++;
+        (val?btnYes:btnNo).classList.add('ok-ch');
+        fb.textContent='🎉 Brawo! To poprawna odpowiedź!';
+        fb.className='fb show ok';
+        document.getElementById(cat+'-qb').classList.add('ok');
+    } else {
+        (val?btnYes:btnNo).classList.add('nok-ch');
+        (q.tf?btnYes:btnNo).classList.add('ok-ch');
+        fb.textContent='😕 Niestety, to nie ta odpowiedź.';
+        fb.className='fb show nok';
+        document.getElementById(cat+'-qb').classList.add('nok','shake');
+    }
+    if(q.ex){ex.innerHTML='📚 '+q.ex;ex.classList.add('show')}
+    document.getElementById(cat+'-pts').textContent=s.score+' pkt';
+    document.getElementById(cat+'-next').style.display='inline-flex';
+}
+
+function nxt(cat){st[cat].cur++;showQ(cat)}
+
+/* ── Result ── */
+function showResult(cat){
+    const s=st[cat],tot=s.qs.length,pct=Math.round(s.score/tot*100);
+    let emoji,msg;
+    if(pct===100){emoji='🏆';msg='PERFEKCYJNIE! Jesteś mistrzem Rzymu!';}
+    else if(pct>=80){emoji='🌟';msg='Super wynik! Znasz się na historii!';}
+    else if(pct>=60){emoji='👍';msg='Dobra robota! Powtórz jeszcze trochę.';}
+    else if(pct>=40){emoji='💪';msg='Niezły początek! Ucz się dalej!';}
+    else{emoji='📖';msg='Przeczytaj jeszcze raz notatki i spróbuj ponownie!';}
+
+    document.getElementById(cat+'-area').innerHTML='';
+    document.getElementById(cat+'-next').style.display='none';
+    const el=document.getElementById(cat+'-score');
+    el.style.display='block';
+    el.innerHTML=`
+        <div class="s-emoji">${emoji}</div>
+        <div class="s-ring"><div class="s-pct">${pct}%</div><div class="s-sub">${s.score} / ${tot}</div></div>
+        <div class="s-msg">${msg}</div>
+        <div class="s-det">${pct>=80?'Cezar byłby z Ciebie dumny! 🦅':'Powtórz materiał w zakładce 📚 Powtórka!'}</div>
+        <div class="stats">
+            <div class="st"><div class="st-v g">${s.score}</div><div class="st-l">✅ Poprawne</div></div>
+            <div class="st"><div class="st-v r">${tot-s.score}</div><div class="st-l">❌ Błędne</div></div>
+            <div class="st"><div class="st-v b">${pct}%</div><div class="st-l">📊 Wynik</div></div>
+        </div>`;
+    el.scrollIntoView({behavior:'smooth',block:'center'});
+    if(pct>=80) confetti();
+}
+
+function confetti(){
+    const cols=['#f0a500','#c0392b','#e74c3c','#27ae60','#2980b9','#8e44ad','#e67e22','#ffe066'];
+    for(let i=0;i<60;i++){
+        const c=document.createElement('div');
+        c.className='conf';
+        c.style.left=Math.random()*100+'vw';
+        c.style.background=cols[Math.floor(Math.random()*cols.length)];
+        c.style.width=(Math.random()*8+5)+'px';
+        c.style.height=(Math.random()*8+5)+'px';
+        c.style.borderRadius=Math.random()>.5?'50%':'2px';
+        c.style.animationDuration=(Math.random()*2+2)+'s';
+        c.style.animationDelay=(Math.random()*1.5)+'s';
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(),5000);
+    }
+}
+
+/* ── Init all ── */
+document.addEventListener('DOMContentLoaded',()=>{
+    ['rep','emp','life','tf','mega'].forEach(c=>init(c));
+});
+</script>
+</body>
+</html>
+```
+
+---
+
+## 📋 Co zawiera quiz – przegląd
+
+| Zakładka | Tematyka | Pytań | Format |
+|---|---|---|---|
+| 🏛️ **Republika** | Konsulowie, senat, trybun ludowy, patrycjusze, plebejusze, VETO, Forum, XII tablic | 14 (losowane 10) | ABCD |
+| 👑 **Cesarstwo** | August, Cezar, Koloseum, Pax Romana, podział cesarstwa, upadek Rzymu, wojny punickie | 13 (losowane 10) | ABCD |
+| 🏟️ **Życie Rzymian** | Termy, toga, legiony, gladiatorzy, drogi, łacina, akwedukty, mozaiki, bogowie, jedzenie | 13 (losowane 10) | ABCD |
+| ✅❌ **Prawda / Fałsz** | Pytania o fakty z wszystkich tematów | 20 (losowane 10) | P/F |
+| 🎯 **Mega Quiz** | Mix losowy ze **wszystkich** kategorii | 25 | ABCD |
+| 📚 **Powtórka** | **Oś czasu** (753 p.n.e.→476 n.e.) + **12 kart z pojęciami** | — | Materiał do nauki |
+
+### ✨ Funkcje:
+- 📚 **Wyjaśnienie** po każdej odpowiedzi (z emoji – przyjazne dla dzieci)
+- 🔀 Pytania i odpowiedzi losowane przy każdym podejściu
+- 📊 Pasek postępu + podsumowanie z procentem
+- 🎉 Confetti przy wyniku ≥ 80%
+- 📱 Responsywność (telefon, tablet, komputer)
+- 🎨 Ciepła kolorystyka „złoto-brąz" nawiązująca do starożytności
