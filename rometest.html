@@ -1,0 +1,464 @@
+```html
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test: Administracja Starożytnego Rzymu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f5e7c9 0%, #e8d5b7 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #8B0000 0%, #A52A2A 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 5px solid #DAA520;
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .test-area {
+            padding: 30px;
+        }
+        
+        .question-block {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-left: 4px solid #8B0000;
+            border-radius: 5px;
+            transition: transform 0.3s;
+        }
+        
+        .question-block:hover {
+            transform: translateX(5px);
+        }
+        
+        .question {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .answers label {
+            display: block;
+            padding: 10px;
+            margin: 8px 0;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .answers label:hover {
+            border-color: #DAA520;
+            background: #fff8e1;
+        }
+        
+        .answers input[type="radio"] {
+            margin-right: 10px;
+        }
+        
+        .answers input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #8B0000 0%, #A52A2A 100%);
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 30px;
+        }
+        
+        .submit-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(139,0,0,0.4);
+        }
+        
+        .result {
+            display: none;
+            padding: 30px;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            color: white;
+            text-align: center;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        .result h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .result p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        
+        .score {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .retry-btn {
+            padding: 10px 30px;
+            background: white;
+            color: #2E7D32;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .retry-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #8B0000;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .timer {
+                position: static;
+                margin: 20px auto;
+                display: inline-block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="timer" id="timer">Czas: 15:00</div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ Test Wiedzy</h1>
+            <p>Administracja Starożytnego Rzymu: Od Królestwa do Cesarstwa</p>
+        </div>
+        
+        <div class="test-area" id="testArea">
+            <form id="quizForm">
+                <!-- Pytanie 1 -->
+                <div class="question-block">
+                    <div class="question">1. W okresie królestwa rzymskiego Senatus pełnił rolę:</div>
+                    <div class="answers">
+                        <label><input type="radio" name="q1" value="a"> a) Rady doradczej bez formalnej władzy ustawodawczej</label>
+                        <label><input type="radio" name="q1" value="b"> b) Najwyższego organu ustawodawczego</label>
+                        <label><input type="radio" name="q1" value="c"> c) Władzy sądowniczej wyłącznie</label>
+                        <label><input type="radio" name="q1" value="d"> d) Głowy administracji wojskowej</label>
+                    </div>
+                </div>
+
+                <!-- Pytanie 2 -->
+                <div class="question-block">
+                    <div class="question">2. Zaznacz cechy charakterystyczne okresu republiki (wielokrotny wybór):</div>
+                    <div class="answers">
+                        <label><input type="checkbox" name="q2" value="a"> a) Kolegialność urzędów</label>
+                        <label><input type="checkbox" name="q2" value="b"> b) Rokczne urzędy</label>
+                        <label><input type="checkbox" name="q2" value="c"> c) Władza absolutna cesarza</label>
+                        <label><input type="checkbox" name="q2" value="d"> d) Podział władz</label>
+                    </div>
+                </div>
+
+                <!-- Pytanie 3 -->
+                <div class="question-block">
+                    <div class="question">3. Najwyżsi urzędnicy w Republice Rzymskiej to:</div>
+                    <div class="answers">
+                        <label><input type="radio" name="q3" value="a"> a) Pretorzy i Edylusi</label>
+                        <label><input type="radio" name="q3" value="b"> b) Dwaj Konsulowie</label>
+                        <label><input type="radio" name="q3" value="c"> c) Cenzorowie</label>
+                        <label><input type="radio" name="q3" value="d"> d) Trybuni Plebsu</label>
+                    </div>
+                </div>
+
+                <!-- Pytanie 4 -->
+                <div class="question-block">
+                    <div class="question">4. W Principacie prowincje podzielono na:</div>
+                    <div class="answers">
+                        <label><input type="radio" name="q4" value="a"> a) Północne i Południowe</label>
+                        <label><input type="radio" name="q4" value="b"> b) Senatorskie i Cesarskie</label>
+                        <label><input type="radio" name="q4" value="c"> c) Wschodnie i Zachodnie</label>
+                        <label><input type="radio" name="q4" value="d"> d) Stare i Nowe</label>
+                    </div>
+                </div>
+
+                <!-- Pytanie 5 -->
+                <div class="question-block">
+                    <div class="question">5. Kto nadzorował finanse w prowincjach cesarskich za Augusta?</div>
+                    <div class="answers">
+                        <label><input type="radio" name="q5" value="a"> a) Konsulowie</label>
+                        <label><input type="radio" name="q5" value="b"> b) Senat</label>
+                        <label><input type="radio" name="q5" value="c"> c) Procuratores</label>
+                        <label><input type="radio" name="q5" value="d"> d) Trybuni</label>
+                    </div>
+                </div>
+
+                <!-- Pytanie 6 -->
+                <div class="question-block">
+                    <div class="question">6. Reformy Dioklecjana wprowadziły (wielokrotny wybór):</div>
+                    <div class="answers">
+                        <label><input type="checkbox" name="q6" value="a"> a) Podział na prefektury</label>
+                        <label><input type="checkbox" name="q6" value="b"> b) Diecezeje</label>
+                        <label><input type="checkbox" name="q6" value="c"> c) Władzę absolutną cesarza</label>
+                        <label><input type="checkbox" name="q6" value="d"> d) Podział władzy cywilnej i wojskowej</label>
+                    </div>
+                </div>
+
+                <!-- Pytanie 7 -->
+                <div class="question-block">
+                    <div class="question">7. Ile prefektur utworzono w Dominacie?</div>
+                    <div class="answers">
+                        <label><input type="radio" name="q7" value="a"> a) 2</label>
+                        <label><input type="radio" name="q7" value="b"> b) 4</label>
+                        <label><input type="radio" name="q7" value="c"> c) 6</label>
+                        <label><input type="radio" name="q7" value="d"> d) 12</label>
+                    </div>
+                </div>
+
+                <!-- Pytanie 8 -->
+                <div class="question-block">
+                    <div class="question">8. Praefectus praetorio w Dominacie był:</div>
+                    <div class="answers">
+                        <label><input type="radio" name="q8" value="a"> a) Tylko dowódcą gwardii cesarskiej</label>
+                        <label><input type="radio" name="q8" value="b"> b) Głową administracji regionalnej</label>
+                        <label><input type="radio" name="q8" value="c"> c) Ministrem finansów</label>
+                        <label><input type="radio" name="q8" value="d"> d) Namiestnikiem jednej prowincji</label>
+                    </div>
+                </div>
+
+                <!-- Pytanie 9 -->
+                <div class="question-block">
+                    <div class="question">9. W Republice zgromadzenia ludowe nazywano:</div>
+                    <div class="answers">
+                        <label><input type="radio" name="q9" value="a"> a) Senatus</label>
+                        <label><input type="radio" name="q9" value="b"> b) Comitia</label>
+                        <label><input type="radio" name="q9" value="c"> c) Consilium</label>
+                        <label><input type="radio" name="q9" value="d"> d) Concilium</label>
+                    </div>
+                </div>
+
+                <!-- Pytanie 10 -->
+                <div class="question-block">
+                    <div class="question">10. Który okres charakteryzował się władzą "pierwszego obywatela"?</div>
+                    <div class="answers">
+                        <label><input type="radio" name="q10" value="a"> a) Dominat</label>
+                        <label><input type="radio" name="q10" value="b"> b) Principat</label>
+                        <label><input type="radio" name="q10" value="c"> c) Republika</label>
+                        <label><input type="radio" name="q10" value="d"> d) Królestwo</label>
+                    </div>
+                </div>
+
+                <!-- Pytanie 11 -->
+                <div class="question-block">
+                    <div class="question">11. Cursus publicus w Dominacie to:</div>
+                    <div class="answers">
+                        <label><input type="radio" name="q11" value="a"> a) Szlak handlowy</label>
+                        <label><input type="radio" name="q11" value="b"> b) Państwowa sieć komunikacyjna</label>
+                        <label><input type="radio" name="q11" value="c"> c) System edukacji</label>
+                        <label><input type="radio" name="q11" value="d"> d) Armia cesarska</label>
+                    </div>
+                </div>
+
+                <!-- Pytanie 12 -->
+                <div class="question-block">
+                    <div class="question">12. W królestwie rzymskim król był wybierany przez:</div>
+                    <div class="answers">
+                        <label><input type="radio" name="q12" value="a"> a) Senat</label>
+                        <label><input type="radio" name="q12" value="b"> b) Zgromadzenie plebsu (Curiate Comitia)</label>
+                        <label><input type="radio" name="q12" value="c"> c) Armię</label>
+                        <label><input type="radio" name="q12" value="d"> d) Kapłanów</label>
+                    </div>
+                </div>
+
+                <!-- Pytanie 13 -->
+                <div class="question-block">
+                    <div class="question">13. W Dominacie urzędników finansowych nazywano:</div>
+                    <div class="answers">
+                        <label><input type="radio" name="q13" value="a"> a) Procuratores</label>
+                        <label><input type="radio" name="q13" value="b"> b) Numerarii</label>
+                        <label><input type="radio" name="q13" value="c"> c) Quaestores</label>
+                        <label><input type="radio" name="q13" value="d"> d) Aediles</label>
+                    </div>
+                </div>
+
+                <!-- Pytanie 14 -->
+                <div class="question-block">
+                    <div class="question">14. Podział władzy cywilnej i wojskowej w Dominacie oznaczał:</div>
+                    <div class="answers">
+                        <label><input type="radio" name="q14" value="a"> a) Że cesarz nie miał władzy wojskowej</label>
+                        <label><input type="radio" name="q14" value="b"> b) Rozdział kompetencji między prefektów a magistri militum</label>
+                        <label><input type="radio" name="q14" value="c"> c) Że armia była niezależna od państwa</label>
+                        <label><input type="radio" name="q14" value="d"> d) Że senat przejął władzę wojskową</label>
+                    </div>
+                </div>
+
+                <!-- Pytanie 15 -->
+                <div class="question-block">
+                    <div class="question">15. W Principacie Consilium principis był:</div>
+                    <div class="answers">
+                        <label><input type="radio" name="q15" value="a"> a) Organem senackim</label>
+                        <label><input type="radio" name="q15" value="b"> b) Cesarską radą, faktycznym centrum decyzyjnym</label>
+                        <label><input type="radio" name="q15" value="c"> c) Sądem najwyższym</label>
+                        <label><input type="radio" name="q15" value="d"> d) Zgromadzeniem wojskowym</label>
+                    </div>
+                </div>
+
+                <button type="button" class="submit-btn" onclick="checkAnswers()">Zakończ Test i Sprawdź Wynik</button>
+            </form>
+        </div>
+
+        <div class="result" id="result">
+            <h2>🎉 Gratulacje!</h2>
+            <p>Ukończyłeś test z administracji starożytnego Rzymu</p>
+            <div class="score" id="score">0/15</div>
+            <p id="feedback"></p>
+            <button class="retry-btn" onclick="location.reload()">Spróbuj Ponownie</button>
+        </div>
+    </div>
+
+    <script>
+        // Odpowiedzi
+        const correctAnswers = {
+            q1: 'a',
+            q2: ['a', 'b', 'd'],
+            q3: 'b',
+            q4: 'b',
+            q5: 'c',
+            q6: ['a', 'b', 'c', 'd'],
+            q7: 'b',
+            q8: 'b',
+            q9: 'b',
+            q10: 'b',
+            q11: 'b',
+            q12: 'b',
+            q13: 'b',
+            q14: 'b',
+            q15: 'b'
+        };
+
+        // Licznik czasu
+        let timeLeft = 900; // 15 minut
+        const timerElement = document.getElementById('timer');
+        
+        const timer = setInterval(() => {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `Czas: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                checkAnswers();
+            } else {
+                timeLeft--;
+            }
+        }, 1000);
+
+        function checkAnswers() {
+            clearInterval(timer);
+            
+            let score = 0;
+            const totalQuestions = 15;
+            
+            // Sprawdzanie pytań jednokrotnego wyboru
+            for (let i = 1; i <= totalQuestions; i++) {
+                if (i === 2 || i === 6) continue; // Pomiń pytania wielokrotnego wyboru
+                
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected && selected.value === correctAnswers[`q${i}`]) {
+                    score++;
+                }
+            }
+            
+            // Sprawdzanie pytania 2
+            const q2Answers = Array.from(document.querySelectorAll('input[name="q2"]:checked')).map(el => el.value);
+            if (JSON.stringify(q2Answers.sort()) === JSON.stringify(correctAnswers.q2.sort())) {
+                score++;
+            }
+            
+            // Sprawdzanie pytania 6
+            const q6Answers = Array.from(document.querySelectorAll('input[name="q6"]:checked')).map(el => el.value);
+            if (JSON.stringify(q6Answers.sort()) === JSON.stringify(correctAnswers.q6.sort())) {
+                score++;
+            }
+            
+            // Wyświetlenie wyniku
+            const percentage = Math.round((score / totalQuestions) * 100);
+            document.getElementById('score').textContent = `${score}/${totalQuestions} (${percentage}%)`;
+            
+            let feedback = '';
+            if (percentage >= 90) {
+                feedback = 'Wybitna wiedza! Jesteś prawdziwym znawcą rzymskiej administracji!';
+            } else if (percentage >= 70) {
+                feedback = 'Bardzo dobry wynik! Masz solidną wiedzę o Rzymskiej administracji.';
+            } else if (percentage >= 50) {
+                feedback = 'Dobry wynik, ale warto jeszcze powtórzyć niektóre zagadnienia.';
+            } else {
+                feedback = 'Czas na powtórkę! Przeczytaj uważnie materiał i spróbuj ponownie.';
+            }
+            
+            document.getElementById('feedback').textContent = feedback;
+            
+            // Ukryj test, pokaż wynik
+            document.getElementById('testArea').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+            
+            // Przewiń do góry
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
+```
