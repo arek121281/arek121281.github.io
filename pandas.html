@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Pandas - Quiz Python</title>
+    <style>
+        /* ===== RESET & PODSTAWY ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* ===== NAWIGACJA ===== */
+        nav {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #00d2ff;
+        }
+
+        /* ===== HERO SEKCJA ===== */
+        .hero {
+            text-align: center;
+            padding: 80px 20px 40px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #aaa;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #00d2ff;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* ===== KONTENER QUIZU ===== */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ===== EKRAN STARTOWY ===== */
+        .start-screen {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 50px 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .start-screen h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .start-screen p {
+            color: #aaa;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .diff-btn {
+            padding: 12px 30px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            background: transparent;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .diff-btn:hover {
+            border-color: #00d2ff;
+            background: rgba(0, 210, 255, 0.1);
+        }
+
+        .diff-btn.active {
+            border-color: #00d2ff;
+            background: rgba(0, 210, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+        }
+
+        .diff-btn .emoji {
+            display: block;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .start-btn {
+            padding: 16px 60px;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.4);
+        }
+
+        /* ===== PYTANIE ===== */
+        .question-screen {
+            display: none;
+        }
+
+        .progress-section {
+            margin-bottom: 30px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .progress-bar-bg {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .timer-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .timer-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #ffaa00, #ff4444);
+            border-radius: 10px;
+            transition: width 0.1s linear;
+            width: 100%;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .question-category {
+            background: rgba(0, 210, 255, 0.15);
+            color: #00d2ff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .question-points {
+            color: #ffaa00;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin: 20px 0 10px;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0 25px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            color: #e0e0e0;
+        }
+
+        .code-block .keyword {
+            color: #c792ea;
+        }
+
+        .code-block .function {
+            color: #82aaff;
+        }
+
+        .code-block .string {
+            color: #c3e88d;
+        }
+
+        .code-block .comment {
+            color: #546e7a;
+        }
+
+        .code-block .number {
+            color: #f78c6c;
+        }
+
+        /* ===== ODPOWIEDZI ===== */
+        .answers-grid {
+            display: grid;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .answer-btn {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 22px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: #ddd;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            width: 100%;
+        }
+
+        .answer-btn:hover:not(.disabled) {
+            border-color: #00d2ff;
+            background: rgba(0, 210, 255, 0.08);
+            transform: translateX(5px);
+        }
+
+        .answer-letter {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .answer-btn.correct {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.15);
+            animation: correctPulse 0.5s ease;
+        }
+
+        .answer-btn.correct .answer-letter {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .answer-btn.wrong {
+            border-color: #ff4444;
+            background: rgba(255, 68, 68, 0.15);
+            animation: wrongShake 0.5s ease;
+        }
+
+        .answer-btn.wrong .answer-letter {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        .answer-btn.disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .answer-btn.show-correct {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* ===== WYJAŚNIENIE ===== */
+        .explanation {
+            display: none;
+            background: rgba(0, 210, 255, 0.05);
+            border: 1px solid rgba(0, 210, 255, 0.2);
+            border-radius: 14px;
+            padding: 20px;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+
+        .explanation h4 {
+            color: #00d2ff;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .explanation p {
+            color: #bbb;
+            font-size: 0.95rem;
+        }
+
+        .next-btn {
+            display: none;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 210, 255, 0.4);
+        }
+
+        /* ===== EKRAN WYNIKÓW ===== */
+        .result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 50px 40px;
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.5s ease;
+        }
+
+        .result-emoji {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .result-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .result-subtitle {
+            color: #aaa;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(#00d2ff var(--score-deg, 0deg), rgba(255,255,255,0.1) 0deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .score-circle-inner {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #1a1a2e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .score-percent {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #00d2ff;
+        }
+
+        .score-label {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .result-stat {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .result-stat-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .result-stat-label {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .result-stat.correct-stat .result-stat-value {
+            color: #00ff88;
+        }
+
+        .result-stat.wrong-stat .result-stat-value {
+            color: #ff4444;
+        }
+
+        .result-stat.time-stat .result-stat-value {
+            color: #ffaa00;
+        }
+
+        .result-details {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .result-details h3 {
+            margin-bottom: 15px;
+            color: #aaa;
+            font-size: 1rem;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .result-item-icon {
+            font-size: 1.2rem;
+        }
+
+        .result-item-text {
+            flex: 1;
+            color: #ccc;
+        }
+
+        .result-item-status {
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .result-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .retry-btn {
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .retry-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.4);
+        }
+
+        .home-btn {
+            padding: 14px 40px;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .home-btn:hover {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #555;
+            font-size: 0.85rem;
+            margin-top: 60px;
+        }
+
+        footer a {
+            color: #00d2ff;
+            text-decoration: none;
+        }
+
+        /* ===== RESPONSYWNOŚĆ ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .question-card {
+                padding: 25px 20px;
+            }
+
+            .question-text {
+                font-size: 1.1rem;
+            }
+
+            .result-stats {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                padding: 12px 20px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .stats-bar {
+                gap: 20px;
+            }
+
+            .difficulty-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .diff-btn {
+                width: 80%;
+            }
+        }
+
+        /* ===== ANIMACJA TŁA ===== */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.03;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bg-shape:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            background: #00d2ff;
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .bg-shape:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            background: #7b2ff7;
+            bottom: -50px;
+            left: -50px;
+            animation-delay: 5s;
+        }
+
+        .bg-shape:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            background: #00ff88;
+            top: 50%;
+            left: 50%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(30px, -30px) rotate(90deg); }
+            50% { transform: translate(-20px, 20px) rotate(180deg); }
+            75% { transform: translate(20px, 30px) rotate(270deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Tło animowane -->
+    <div class="bg-shapes">
+        <div class="bg-shape"></div>
+        <div class="bg-shape"></div>
+        <div class="bg-shape"></div>
+    </div>
+
+    <!-- Nawigacja -->
+    <nav>
+        <div class="logo" onclick="goHome()">🐼 PandasQuiz</div>
+        <ul class="nav-links">
+            <li><a href="#" onclick="goHome()">Start</a></li>
+            <li><a href="#" onclick="startQuiz()">Quiz</a></li>
+            <li><a href="https://pandas.pydata.org/docs/" target="_blank">Dokumentacja</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+        <h1>🐼 Test wiedzy z Pandas</h1>
+        <p>Sprawdź swoją znajomość najpopularniejszej biblioteki do analizy danych w Pythonie. 
+           Czy jesteś mistrzem DataFrames?</p>
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-number" id="totalQuestions">20</div>
+                <div class="stat-label">Pytań</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Poziomy</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">30s</div>
+                <div class="stat-label">Na pytanie</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kontener quizu -->
+    <div class="quiz-container">
+
+        <!-- Ekran startowy -->
+        <div class="start-screen" id="startScreen">
+            <h2>Wybierz poziom trudności</h2>
+            <p>Każdy poziom zawiera inne pytania dostosowane do Twojego doświadczenia.</p>
+
+            <div class="difficulty-selector">
+                <button class="diff-btn active" onclick="setDifficulty('easy', this)">
+                    <span class="emoji">🌱</span>
+                    Początkujący
+                </button>
+                <button class="diff-btn" onclick="setDifficulty('medium', this)">
+                    <span class="emoji">🔥</span>
+                    Średniozaawansowany
+                </button>
+                <button class="diff-btn" onclick="setDifficulty('hard', this)">
+                    <span class="emoji">💀</span>
+                    Ekspert
+                </button>
+            </div>
+
+            <button class="start-btn" onclick="startQuiz()">
+                🚀 Rozpocznij Quiz
+            </button>
+        </div>
+
+        <!-- Ekran pytania -->
+        <div class="question-screen" id="questionScreen">
+            <div class="progress-section">
+                <div class="progress-info">
+                    <span id="questionCounter">Pytanie 1 / 10</span>
+                    <span id="scoreDisplay">Wynik: 0</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+                </div>
+                <div class="timer-bar">
+                    <div class="timer-fill" id="timerBar"></div>
+                </div>
+            </div>
+
+            <div class="question-card" id="questionCard">
+                <div class="question-header">
+                    <span class="question-category" id="questionCategory">DataFrame</span>
+                    <span class="question-points" id="questionPoints">+10 pkt</span>
+                </div>
+                <h3 class="question-text" id="questionText"></h3>
+                <div class="code-block hidden" id="codeBlock"></div>
+                <div class="answers-grid" id="answersGrid"></div>
+                <div class="explanation" id="explanation">
+                    <h4>💡 Wyjaśnienie:</h4>
+                    <p id="explanationText"></p>
+                </div>
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+                    Następne pytanie →
+                </button>
+            </div>
+        </div>
+
+        <!-- Ekran wyników -->
+        <div class="result-screen" id="resultScreen">
+            <div class="result-card">
+                <div class="result-emoji" id="resultEmoji">🏆</div>
+                <h2 class="result-title" id="resultTitle">Gratulacje!</h2>
+                <p class="result-subtitle" id="resultSubtitle">Świetnie Ci poszło!</p>
+
+                <div class="score-circle" id="scoreCircle">
+                    <div class="score-circle-inner">
+                        <div class="score-percent" id="scorePercent">0%</div>
+                        <div class="score-label">poprawnych</div>
+                    </div>
+                </div>
+
+                <div class="result-stats">
+                    <div class="result-stat correct-stat">
+                        <div class="result-stat-value" id="correctCount">0</div>
+                        <div class="result-stat-label">Poprawnych</div>
+                    </div>
+                    <div class="result-stat wrong-stat">
+                        <div class="result-stat-value" id="wrongCount">0</div>
+                        <div class="result-stat-label">Błędnych</div>
+                    </div>
+                    <div class="result-stat time-stat">
+                        <div class="result-stat-value" id="totalTime">0s</div>
+                        <div class="result-stat-label">Czas</div>
+                    </div>
+                </div>
+
+                <div class="result-details" id="resultDetails">
+                    <h3>📋 Podsumowanie pytań:</h3>
+                </div>
+
+                <div class="result-buttons">
+                    <button class="retry-btn" onclick="startQuiz()">🔄 Spróbuj ponownie</button>
+                    <button class="home-btn" onclick="goHome()">🏠 Strona główna</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stopka -->
+    <footer>
+        <p>🐼 PandasQuiz 2024 | Stworzono z ❤️ dla miłośników Pythona</p>
+        <p style="margin-top: 8px;">Naucz się więcej: 
+            <a href="https://pandas.pydata.org/" target="_blank">pandas.pydata.org</a>
+        </p>
+    </footer>
+
+    <script>
+        // ===== BAZA PYTAŃ =====
+        const questions = {
+            easy: [
+                {
+                    category: "Import",
+                    question: "Jak prawidłowo zaimportować bibliotekę Pandas?",
+                    code: null,
+                    answers: [
+                        "import pandas as pd",
+                        "import panda as pd",
+                        "from pandas import *",
+                        "include pandas"
+                    ],
+                    correct: 0,
+                    explanation: "Standardowa konwencja to 'import pandas as pd'. Jest to powszechnie przyjęty alias, który znajdziesz w dokumentacji i większości tutoriali.",
+                    points: 10
+                },
+                {
+                    category: "DataFrame",
+                    question: "Która struktura danych w Pandas jest dwuwymiarowa?",
+                    code: null,
+                    answers: [
+                        "Series",
+                        "DataFrame",
+                        "Panel",
+                        "Array"
+                    ],
+                    correct: 1,
+                    explanation: "DataFrame to dwuwymiarowa struktura danych z etykietowanymi osiami (wiersze i kolumny). Series jest jednowymiarowa.",
+                    points: 10
+                },
+                {
+                    category: "Series",
+                    question: "Co zwróci poniższy kod?",
+                    code: "import pandas as pd\ns = pd.Series([10, 20, 30])\nprint(s[1])",
+                    answers: [
+                        "10",
+                        "20",
+                        "30",
+                        "Błąd"
+                    ],
+                    correct: 1,
+                    explanation: "Series obsługuje indeksowanie od zera, więc s[1] zwróci drugi element, czyli 20.",
+                    points: 10
+                },
+                {
+                    category: "Wczytywanie",
+                    question: "Która funkcja służy do wczytania pliku CSV w Pandas?",
+                    code: null,
+                    answers: [
+                        "pd.load_csv()",
+                        "pd.read_csv()",
+                        "pd.open_csv()",
+                        "pd.import_csv()"
+                    ],
+                    correct: 1,
+                    explanation: "pd.read_csv() to standardowa funkcja do wczytywania plików CSV. Pandas używa konwencji 'read_' dla różnych formatów (read_excel, read_json, itp.).",
+                    points: 10
+                },
+                {
+                    category: "DataFrame",
+                    question: "Jak sprawdzić wymiary (liczbę wierszy i kolumn) DataFrame?",
+                    code: null,
+                    answers: [
+                        "df.size()",
+                        "df.dimensions()",
+                        "df.shape",
+                        "df.len()"
+                    ],
+                    correct: 2,
+                    explanation: "df.shape to atrybut (nie metoda), który zwraca krotkę (liczba_wierszy, liczba_kolumn).",
+                    points: 10
+                },
+                {
+                    category: "Eksploracja",
+                    question: "Która metoda wyświetla pierwsze 5 wierszy DataFrame?",
+                    code: null,
+                    answers: [
+                        "df.top()",
+                        "df.first()",
+                        "df.head()",
+                        "df.show()"
+                    ],
+                    correct: 2,
+                    explanation: "df.head() domyślnie wyświetla 5 pierwszych wierszy. Możesz podać argument, np. df.head(10) dla 10 wierszy.",
+                    points: 10
+                },
+                {
+                    category: "Selekcja",
+                    question: "Jak wybrać kolumnę 'name' z DataFrame df?",
+                    code: null,
+                    answers: [
+                        "df.column('name')",
+                        "df['name']",
+                        "df.get('name')",
+                        "df->name"
+                    ],
+                    correct: 1,
+                    explanation: "Do wyboru kolumny używamy notacji słownikowej df['nazwa_kolumny'] lub notacji kropkowej df.name (z ograniczeniami).",
+                    points: 10
+                },
+                {
+                    category: "Informacje",
+                    question: "Która metoda pokazuje typy danych, liczbę non-null wartości i zużycie pamięci?",
+                    code: null,
+                    answers: [
+                        "df.describe()",
+                        "df.info()",
+                        "df.types()",
+                        "df.summary()"
+                    ],
+                    correct: 1,
+                    explanation: "df.info() wyświetla podsumowanie DataFrame: typy danych, liczbę niepustych wartości i zużycie pamięci. df.describe() pokazuje statystyki opisowe.",
+                    points: 10
+                },
+                {
+                    category: "Statystyki",
+                    question: "Co zwraca df.describe()?",
+                    code: null,
+                    answers: [
+                        "Typy danych kolumn",
+                        "Statystyki opisowe (mean, std, min, max...)",
+                        "Liczbę brakujących wartości",
+                        "Nazwy kolumn"
+                    ],
+                    correct: 1,
+                    explanation: "df.describe() generuje statystyki opisowe dla kolumn numerycznych: count, mean, std, min, 25%, 50%, 75%, max.",
+                    points: 10
+                },
+                {
+                    category: "Brakujące dane",
+                    question: "Która metoda usuwa wiersze z brakującymi wartościami?",
+                    code: null,
+                    answers: [
+                        "df.remove_na()",
+                        "df.dropna()",
+                        "df.clean()",
+                        "df.delete_null()"
+                    ],
+                    correct: 1,
+                    explanation: "df.dropna() usuwa wiersze (domyślnie) zawierające brakujące wartości (NaN). Parametr axis=1 usuwa kolumny.",
+                    points: 10
+                }
+            ],
+            medium: [
+                {
+                    category: "Indeksowanie",
+                    question: "Jaka jest różnica między .loc[] a .iloc[]?",
+                    code: null,
+                    answers: [
+                        ".loc[] używa indeksów liczbowych, .iloc[] etykiet",
+                        ".loc[] używa etykiet, .iloc[] indeksów liczbowych",
+                        "Nie ma różnicy",
+                        ".loc[] działa na kolumnach, .iloc[] na wierszach"
+                    ],
+                    correct: 1,
+                    explanation: ".loc[] wybiera dane po etykietach (label-based), a .iloc[] po pozycji liczbowej (integer-based). To kluczowa różnica w Pandas!",
+                    points: 15
+                },
+                {
+                    category: "GroupBy",
+                    question: "Co zwróci poniższy kod?",
+                    code: "df = pd.DataFrame({'A': ['foo','bar','foo','bar'],\n                    'B': [1, 2, 3, 4]})\nresult = df.groupby('A')['B'].sum()\nprint(result['foo'])",
+                    answers: [
+                        "1",
+                        "3",
+                        "4",
+                        "6"
+                    ],
+                    correct: 2,
+                    explanation: "groupby('A') grupuje po kolumnie A, ['B'].sum() sumuje kolumnę B w każdej grupie. Dla 'foo': 1 + 3 = 4.",
+                    points: 15
+                },
+                {
+                    category: "Merge",
+                    question: "Który parametr w pd.merge() odpowiada typowi złączenia (jak SQL JOIN)?",
+                    code: null,
+                    answers: [
+                        "join_type",
+                        "method",
+                        "how",
+                        "type"
+                    ],
+                    correct: 2,
+                    explanation: "Parametr 'how' określa typ złączenia: 'inner', 'outer', 'left', 'right'. Domyślnie jest 'inner'.",
+                    points: 15
+                },
+                {
+                    category: "Filtrowanie",
+                    question: "Jak wybrać wiersze, gdzie kolumna 'age' > 25 i 'city' == 'Warsaw'?",
+                    code: null,
+                    answers: [
+                        "df[df.age > 25 and df.city == 'Warsaw']",
+                        "df[(df['age'] > 25) & (df['city'] == 'Warsaw')]",
+                        "df.filter(age > 25, city == 'Warsaw')",
+                        "df.where(age > 25).where(city == 'Warsaw')"
+                    ],
+                    correct: 1,
+                    explanation: "W Pandas używamy operatora & (zamiast 'and') do łączenia warunków i każdy warunek musi być w nawiasach.",
+                    points: 15
+                },
+                {
+                    category: "Apply",
+                    question: "Co robi metoda .apply()?",
+                    code: "df['new'] = df['value'].apply(lambda x: x * 2)",
+                    answers: [
+                        "Stosuje funkcję do każdego elementu Series/DataFrame",
+                        "Dodaje nową kolumnę z wartością 2",
+                        "Filtruje wartości większe niż 2",
+                        "Mnoży cały DataFrame przez 2"
+                    ],
+                    correct: 0,
+                    explanation: ".apply() stosuje podaną funkcję do każdego elementu (w przypadku Series) lub wiersza/kolumny (w przypadku DataFrame).",
+                    points: 15
+                },
+                {
+                    category: "Pivot",
+                    question: "Która metoda tworzy tabelę przestawną (pivot table)?",
+                    code: null,
+                    answers: [
+                        "df.crosstab()",
+                        "df.pivot_table()",
+                        "df.reshape()",
+                        "df.transform()"
+                    ],
+                    correct: 1,
+                    explanation: "df.pivot_table() tworzy tabelę przestawną, podobną do tabel przestawnych w Excelu. Funkcja pd.crosstab() też istnieje, ale jest oddzielną funkcją.",
+                    points: 15
+                },
+                {
+                    category: "String",
+                    question: "Jak zamienić wszystkie wartości tekstowe w kolumnie na małe litery?",
+                    code: null,
+                    answers: [
+                        "df['col'].lower()",
+                        "df['col'].str.lower()",
+                        "df['col'].to_lower()",
+                        "df['col'].apply(lower)"
+                    ],
+                    correct: 1,
+                    explanation: "Accessor .str pozwala na użycie metod stringowych na całej Series. .str.lower(), .str.upper(), .str.contains() itd.",
+                    points: 15
+                },
+                {
+                    category: "Sortowanie",
+                    question: "Jak posortować DataFrame po kolumnie 'price' malejąco?",
+                    code: null,
+                    answers: [
+                        "df.sort('price', reverse=True)",
+                        "df.sort_values('price', ascending=False)",
+                        "df.order_by('price', desc=True)",
+                        "df.sort_values('price', descending=True)"
+                    ],
+                    correct: 1,
+                    explanation: "df.sort_values() sortuje po wartościach. Parametr ascending=False daje kolejność malejącą.",
+                    points: 15
+                },
+                {
+                    category: "Duplikaty",
+                    question: "Co zwraca df.duplicated()?",
+                    code: null,
+                    answers: [
+                        "Liczbę duplikatów",
+                        "DataFrame bez duplikatów",
+                        "Series z wartościami True/False",
+                        "Listę zduplikowanych indeksów"
+                    ],
+                    correct: 2,
+                    explanation: "df.duplicated() zwraca boolowską Series, gdzie True oznacza zduplikowany wiersz. Do usunięcia użyj df.drop_duplicates().",
+                    points: 15
+                },
+                {
+                    category: "Typy danych",
+                    question: "Jak zmienić typ kolumny 'price' na float?",
+                    code: null,
+                    answers: [
+                        "df['price'] = float(df['price'])",
+                        "df['price'] = df['price'].astype(float)",
+                        "df['price'].convert(float)",
+                        "df.cast('price', float)"
+                    ],
+                    correct: 1,
+                    explanation: ".astype() to metoda do konwersji typów danych w Pandas. Możesz użyć np. .astype(int), .astype(str), .astype('category').",
+                    points: 15
+                }
+            ],
+            hard: [
+                {
+                    category: "Wydajność",
+                    question: "Co jest szybsze do iteracji po DataFrame?",
+                    code: null,
+                    answers: [
+                        "for index, row in df.iterrows()",
+                        "for row in df.itertuples()",
+                        "Wektoryzowane operacje (np. df['a'] + df['b'])",
+                        "df.apply(func, axis=1)"
+                    ],
+                    correct: 2,
+                    explanation: "Wektoryzowane operacje NumPy/Pandas są najszybsze, bo wykorzystują zoptymalizowane operacje C. iterrows() jest najwolniejsze. Kolejność: wektoryzacja > apply > itertuples > iterrows.",
+                    points: 20
+                },
+                {
+                    category: "MultiIndex",
+                    question: "Jak utworzyć DataFrame z MultiIndex?",
+                    code: "arrays = [['A','A','B','B'], [1,2,1,2]]\nindex = pd.MultiIndex.from_arrays(arrays, names=['letter','number'])\ndf = pd.DataFrame({'val': [10,20,30,40]}, index=index)",
+                    answers: [
+                        "df.loc['A'] zwróci 1 wiersz",
+                        "df.loc['A'] zwróci DataFrame z 2 wierszami",
+                        "df.loc['A',1] zwróci DataFrame",
+                        "Kod wyrzuci błąd"
+                    ],
+                    correct: 1,
+                    explanation: "df.loc['A'] na MultiIndex zwróci pod-DataFrame ze wszystkimi wierszami, gdzie pierwszy poziom to 'A' (2 wiersze: number 1 i 2).",
+                    points: 20
+                },
+                {
+                    category: "Window",
+                    question: "Co oblicza poniższy kod?",
+                    code: "df['MA_7'] = df['price'].rolling(window=7).mean()",
+                    answers: [
+                        "Średnią z 7 losowych elementów",
+                        "7-dniową średnią kroczącą",
+                        "Średnią co 7 element",
+                        "Medianę z okna 7"
+                    ],
+                    correct: 1,
+                    explanation: ".rolling(window=7).mean() oblicza średnią kroczącą (moving average) z okna 7 elementów. Pierwsze 6 wartości będą NaN.",
+                    points: 20
+                },
+                {
+                    category: "Pamięć",
+                    question: "Która technika NAJBARDZIEJ zmniejszy zużycie pamięci DataFrame z kolumnami tekstowymi o niskiej kardynalności?",
+                    code: null,
+                    answers: [
+                        "Użycie .astype('string')",
+                        "Użycie .astype('category')",
+                        "Użycie sparse arrays",
+                        "Kompresja gzip"
+                    ],
+                    correct: 1,
+                    explanation: "Typ 'category' przechowuje unikalne wartości + kody zamiast powtórzonych stringów. Dla niskiej kardynalności daje ogromne oszczędności pamięci (nawet 90%+).",
+                    points: 20
+                },
+                {
+                    category: "Reshaping",
+                    question: "Jaka jest różnica między stack() a melt()?",
+                    code: null,
+                    answers: [
+                        "Nie ma różnicy, to aliasy",
+                        "stack() działa na indeksie/kolumnach, melt() przekształca szerokie dane w długie",
+                        "stack() jest szybszy",
+                        "melt() działa tylko na danych numerycznych"
+                    ],
+                    correct: 1,
+                    explanation: "stack() przenosi kolumny do indeksu (tworzy MultiIndex). melt() to 'unpivot' - przekształca szerokie dane w format długi z kolumnami variable/value.",
+                    points: 20
+                },
+                {
+                    category: "Eval",
+                    question: "Jaką zaletę daje df.eval() przy dużych DataFrames?",
+                    code: "# Zamiast:\ndf['c'] = df['a'] + df['b'] * df['d']\n# Można:\ndf.eval('c = a + b * d', inplace=True)",
+                    answers: [
+                        "Szybsze parsowanie",
+                        "Czytelniejszy kod",
+                        "Mniejsze zużycie pamięci (brak pośrednich tablic)",
+                        "Automatyczna walidacja typów"
+                    ],
+                    correct: 2,
+                    explanation: "df.eval() unika tworzenia pośrednich tablic NumPy, co przy dużych DataFrames znacząco zmniejsza zużycie pamięci i może przyspieszyć obliczenia.",
+                    points: 20
+                },
+                {
+                    category: "Pipe",
+                    question: "Do czego służy metoda .pipe()?",
+                    code: "def clean(df):\n    return df.dropna()\n\ndef transform(df, col):\n    df[col] = df[col] * 100\n    return df\n\nresult = (df.pipe(clean)\n            .pipe(transform, col='price'))",
+                    answers: [
+                        "Zapisuje DataFrame do potoku I/O",
+                        "Umożliwia łańcuchowe wywoływanie funkcji na DataFrame",
+                        "Tworzy pipeline ML",
+                        "Łączy wiele DataFrames"
+                    ],
+                    correct: 1,
+                    explanation: ".pipe() umożliwia method chaining z własnymi funkcjami. Pierwszy argument funkcji to DataFrame. Poprawia czytelność przy złożonych transformacjach.",
+                    points: 20
+                },
+                {
+                    category: "Datetime",
+                    question: "Co robi poniższy kod?",
+                    code: "df['date'] = pd.to_datetime(df['date'])\nmonthly = df.resample('M', on='date')['sales'].sum()",
+                    answers: [
+                        "Grupuje sprzedaż po miesiącach i oblicza sumę",
+                        "Filtruje dane do jednego miesiąca",
+                        "Tworzy prognozę miesięczną",
+                        "Interpoluje brakujące miesiące"
+                    ],
+                    correct: 0,
+                    explanation: ".resample('M') to 'grupowanie po czasie'. 'M' oznacza częstotliwość miesięczną. Następnie .sum() sumuje wartości 'sales' w każdym miesiącu.",
+                    points: 20
+                },
+                {
+                    category: "Zaawansowane",
+                    question: "Co zwróci pd.cut() vs pd.qcut()?",
+                    code: null,
+                    answers: [
+                        "cut() dzieli na równe przedziały wartości, qcut() na równoliczne grupy (kwantyle)",
+                        "cut() i qcut() są identyczne",
+                        "cut() działa na stringach, qcut() na liczbach",
+                        "cut() zwraca Series, qcut() zwraca DataFrame"
+                    ],
+                    correct: 0,
+                    explanation: "pd.cut() dzieli na przedziały o równej szerokości (bins). pd.qcut() dzieli tak, aby każda grupa miała tę samą liczbę obserwacji (kwantyle).",
+                    points: 20
+                },
+                {
+                    category: "Wydajność",
+                    question: "Który sposób wczytania dużego CSV będzie najszybszy do analizy?",
+                    code: null,
+                    answers: [
+                        "pd.read_csv('big.csv')",
+                        "pd.read_csv('big.csv', usecols=['a','b'], dtype={'a': 'int32'})",
+                        "open('big.csv').readlines()",
+                        "pd.read_excel('big.xlsx')"
+                    ],
+                    correct: 1,
+                    explanation: "Określenie usecols (tylko potrzebne kolumny) i dtype (optymalne typy) znacząco przyspiesza wczytywanie i zmniejsza zużycie pamięci. Można też użyć chunksize.",
+                    points: 20
+                }
+            ]
+        };
+
+        // ===== ZMIENNE STANU =====
+        let currentDifficulty = 'easy';
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+        let timer = null;
+        let timeLeft = 30;
+        let startTime = 0;
+        let totalTimeSpent = 0;
+        let results = [];
+
+        // ===== FUNKCJE =====
+
+        function setDifficulty(level, btn) {
+            currentDifficulty = level;
+            document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const counts = { easy: 10, medium: 10, hard: 10 };
+            document.getElementById('totalQuestions').textContent = counts[level] || 10;
+        }
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function startQuiz() {
+            currentQuestions = shuffleArray(questions[currentDifficulty]);
+            currentQuestionIndex = 0;
+            score = 0;
+            totalTimeSpent = 0;
+            results = [];
+
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'none';
+            document.getElementById('questionScreen').style.display = 'block';
+            document.getElementById('hero').style.display = 'none';
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = currentQuestions[currentQuestionIndex];
+            answered = false;
+
+            // Aktualizuj info
+            document.getElementById('questionCounter').textContent =
+                `Pytanie ${currentQuestionIndex + 1} / ${currentQuestions.length}`;
+            document.getElementById('scoreDisplay').textContent = `Wynik: ${score}`;
+            document.getElementById('progressBar').style.width =
+                `${(currentQuestionIndex / currentQuestions.length) * 100}%`;
+
+            // Kategoria i punkty
+            document.getElementById('questionCategory').textContent = q.category;
+            document.getElementById('questionPoints').textContent = `+${q.points} pkt`;
+
+            // Pytanie
+            document.getElementById('questionText').textContent = q.question;
+
+            // Kod
+            const codeBlock = document.getElementById('codeBlock');
+            if (q.code) {
+                codeBlock.classList.remove('hidden');
+                codeBlock.innerHTML = highlightCode(q.code);
+            } else {
+                codeBlock.classList.add('hidden');
+            }
+
+            // Odpowiedzi
+            const grid = document.getElementById('answersGrid');
+            grid.innerHTML = '';
+            const letters = ['A', 'B', 'C', 'D'];
+
+            q.answers.forEach((answer, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.innerHTML = `
+                    <span class="answer-letter">${letters[index]}</span>
+                    <span>${answer}</span>
+                `;
+                btn.onclick = () => selectAnswer(index);
+                grid.appendChild(btn);
+            });
+
+            // Ukryj wyjaśnienie i przycisk next
+            document.getElementById('explanation').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+
+            // Animacja karty
+            const card = document.getElementById('questionCard');
+            card.style.animation = 'none';
+            card.offsetHeight; // trigger reflow
+            card.style.animation = 'slideIn 0.5s ease';
+
+            // Timer
+            startTimer();
+            startTime = Date.now();
+        }
+
+        function highlightCode(code) {
+            return code
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/(#.*)/g, '<span class="comment">$1</span>')
+                .replace(/('.*?'|".*?")/g, '<span class="string">$1</span>')
+                .replace(/\b(import|from|as|def|return|for|in|if|else|True|False|None|and|or|not)\b/g, '<span class="keyword">$1</span>')
+                .replace(/\b(print|len|range|type|int|float|str|list|dict|lambda)\b/g, '<span class="function">$1</span>')
+                .replace(/\b(\d+)\b/g, '<span class="number">$1</span>');
+        }
+
+        function startTimer() {
+            clearInterval(timer);
+            timeLeft = 30;
+            const timerBar = document.getElementById('timerBar');
+            timerBar.style.width = '100%';
+
+            timer = setInterval(() => {
+                timeLeft -= 0.1;
+                const percent = (timeLeft / 30) * 100;
+                timerBar.style.width = `${Math.max(0, percent)}%`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    if (!answered) {
+                        timeOut();
+                    }
+                }
+            }, 100);
+        }
+
+        function timeOut() {
+            answered = true;
+            const q = currentQuestions[currentQuestionIndex];
+            const buttons = document.querySelectorAll('.answer-btn');
+
+            buttons.forEach((btn, index) => {
+                btn.classList.add('disabled');
+                if (index === q.correct) {
+                    btn.classList.add('show-correct');
+                }
+            });
+
+            results.push({
+                question: q.question,
+                correct: false,
+                timeout: true
+            });
+
+            totalTimeSpent += 30;
+            showExplanation(q);
+        }
+
+        function selectAnswer(index) {
+            if (answered) return;
+            answered = true;
+            clearInterval(timer);
+
+            const q = currentQuestions[currentQuestionIndex];
+            const buttons = document.querySelectorAll('.answer-btn');
+            const timeUsed = (Date.now() - startTime) / 1000;
+            totalTimeSpent += timeUsed;
+
+            const isCorrect = index === q.correct;
+
+            buttons.forEach((btn, i) => {
+                btn.classList.add('disabled');
+                if (i === q.correct) {
+                    btn.classList.add('correct');
+                }
+                if (i === index && !isCorrect) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (isCorrect) {
+                const timeBonus = Math.floor(Math.max(0, timeLeft));
+                score += q.points + timeBonus;
+                document.getElementById('scoreDisplay').textContent = `Wynik: ${score}`;
+            }
+
+            results.push({
+                question: q.question,
+                correct: isCorrect,
+                timeout: false
+            });
+
+            showExplanation(q);
+        }
+
+        function showExplanation(q) {
+            document.getElementById('explanationText').textContent = q.explanation;
+            document.getElementById('explanation').style.display = 'block';
+            document.getElementById('nextBtn').style.display = 'block';
+
+            if (currentQuestionIndex === currentQuestions.length - 1) {
+                document.getElementById('nextBtn').textContent = '🏆 Zobacz wyniki';
+            } else {
+                document.getElementById('nextBtn').textContent = 'Następne pytanie →';
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('questionScreen').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'block';
+
+            const correct = results.filter(r => r.correct).length;
+            const total = results.length;
+            const percent = Math.round((correct / total) * 100);
+
+            // Emoji i tytuł
+            let emoji, title, subtitle;
+            if (percent === 100) {
+                emoji = '🏆'; title = 'Perfekcyjny wynik!'; subtitle = 'Jesteś mistrzem Pandas!';
+            } else if (percent >= 80) {
+                emoji = '🌟'; title = 'Świetny wynik!'; subtitle = 'Masz solidną wiedzę z Pandas!';
+            } else if (percent >= 60) {
+                emoji = '👍'; title = 'Dobry wynik!'; subtitle = 'Jeszcze trochę praktyki i będziesz ekspertem!';
+            } else if (percent >= 40) {
+                emoji = '📚'; title = 'Niezły początek!'; subtitle = 'Warto powtórzyć dokumentację Pandas.';
+            } else {
+                emoji = '💪'; title = 'Nie poddawaj się!'; subtitle = 'Każdy kiedyś zaczynał. Spróbuj ponownie!';
+            }
+
+            document.getElementById('resultEmoji').textContent = emoji;
+            document.getElementById('resultTitle').textContent = title;
+            document.getElementById('resultSubtitle').textContent = subtitle;
+
+            // Koło wyniku
+            const deg = (percent / 100) * 360;
+            document.getElementById('scoreCircle').style.setProperty('--score-deg', `${deg}deg`);
+            
+            // Animacja licznika
+            animateCounter('scorePercent', percent, '%');
+            
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('wrongCount').textContent = total - correct;
+            document.getElementById('totalTime').textContent = `${Math.round(totalTimeSpent)}s`;
+
+            // Szczegóły
+            const details = document.getElementById('resultDetails');
+            details.innerHTML = '<h3>📋 Podsumowanie pytań:</h3>';
+
+            results.forEach((r, i) => {
+                const item = document.createElement('div');
+                item.className = 'result-item';
+                item.innerHTML = `
+                    <span class="result-item-icon">${r.correct ? '✅' : (r.timeout ? '⏰' : '❌')}</span>
+                    <span class="result-item-text">${i + 1}. ${r.question.substring(0, 60)}${r.question.length > 60 ? '...' : ''}</span>
+                    <span class="result-item-status" style="color: ${r.correct ? '#00ff88' : '#ff4444'}">
+                        ${r.correct ? 'Poprawna' : (r.timeout ? 'Czas minął' : 'Błędna')}
+                    </span>
+                `;
+                details.appendChild(item);
+            });
+        }
+
+        function animateCounter(elementId, target, suffix) {
+            const el = document.getElementById(elementId);
+            let current = 0;
+            const step = target / 30;
+            const interval = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(interval);
+                }
+                el.textContent = Math.round(current) + suffix;
+            }, 30);
+        }
+
+        function goHome() {
+            clearInterval(timer);
+            document.getElementById('startScreen').style.display = 'block';
+            document.getElementById('questionScreen').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'none';
+            document.getElementById('hero').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
