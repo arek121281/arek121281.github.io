@@ -1,0 +1,451 @@
+
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Test Flask — Kompletny Quiz + Wyjaśnienie</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --bg:#080a10;--bg2:#0c0f17;
+            --card:rgba(255,255,255,0.03);--card2:rgba(255,255,255,0.06);
+            --brd:rgba(255,255,255,0.06);--brd2:rgba(255,255,255,0.14);
+            --tx:#e8ecf4;--tx2:#8b99b0;--tx3:#5a6577;
+            --flask:#44cc88;--flask2:rgba(68,204,136,0.1);
+            --blue:#3b82f6;--blue2:rgba(59,130,246,0.1);
+            --green:#34d399;--green2:rgba(52,211,153,0.1);
+            --red:#f87171;--red2:rgba(248,113,113,0.1);
+            --purple:#a78bfa;--purple2:rgba(167,139,250,0.1);
+            --orange:#fb923c;--orange2:rgba(251,146,60,0.1);
+            --cyan:#22d3ee;--cyan2:rgba(34,211,238,0.1);
+            --pink:#f472b6;--pink2:rgba(244,114,182,0.1);
+            --yellow:#fbbf24;--yellow2:rgba(251,191,36,0.1);
+            --teal:#2dd4bf;--teal2:rgba(45,212,191,0.1);
+        }
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);line-height:1.7;overflow-x:hidden}
+
+        .bg-fx{position:fixed;inset:0;pointer-events:none;z-index:0}
+        .bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(68,204,136,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(68,204,136,0.012) 1px,transparent 1px);background-size:48px 48px}
+        .bg-orb{position:absolute;border-radius:50%;filter:blur(100px);animation:od 22s ease-in-out infinite}
+        .o1{width:460px;height:460px;background:rgba(68,204,136,0.05);top:-100px;left:-70px}
+        .o2{width:400px;height:400px;background:rgba(59,130,246,0.04);bottom:-80px;right:-50px;animation-delay:-8s}
+        .o3{width:340px;height:340px;background:rgba(167,139,250,0.03);top:38%;left:52%;animation-delay:-14s}
+        @keyframes od{0%,100%{transform:translate(0,0)}33%{transform:translate(35px,-20px)}66%{transform:translate(-25px,30px)}}
+        .code-rain{position:absolute;inset:0;overflow:hidden}
+        .code-drop{position:absolute;font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(68,204,136,0.035);animation:cf linear infinite;white-space:pre;line-height:1.3}
+        @keyframes cf{0%{transform:translateY(-100%)}100%{transform:translateY(100vh)}}
+
+        nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,10,16,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--brd)}
+        .nav-in{max-width:980px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 20px}
+        .nav-logo{font-weight:800;font-size:1.1rem;display:flex;align-items:center;gap:8px}
+        .nav-logo .hl{color:var(--flask)}
+        .nav-r{display:flex;gap:6px}
+        .nav-tab{padding:6px 14px;border-radius:8px;color:var(--tx2);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .3s;border:none;background:none;font-family:'Inter',sans-serif}
+        .nav-tab:hover,.nav-tab.act{color:var(--tx);background:rgba(255,255,255,0.06)}
+        .wrap{max-width:980px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
+
+        /* HERO */
+        .hero{text-align:center;padding:82px 0 20px}
+        .hero-flask{font-size:4rem;margin-bottom:12px;animation:bob 3s ease-in-out infinite}
+        @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+        .hero h1{font-size:clamp(2rem,5.5vw,3.3rem);font-weight:900;line-height:1.15;margin-bottom:14px;letter-spacing:-1px}
+        .hero h1 .grad{background:linear-gradient(135deg,#44cc88,#3b82f6,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .hero-p{font-size:1.05rem;color:var(--tx2);max-width:650px;margin:0 auto 20px;line-height:1.8}
+        .hero-code{display:inline-block;background:#0d1117;border:1px solid var(--brd);border-radius:10px;padding:10px 20px;font-family:'JetBrains Mono',monospace;font-size:.82rem;margin-bottom:20px;text-align:left;line-height:1.8}
+        .hk{color:#ff7b72}.hf{color:#d2a8ff}.hs{color:#a5d6ff}.hn{color:#ffa657}.hc{color:#8b949e;font-style:italic}.hv{color:#79c0ff}.hg{color:#7ee787}.ho{color:#ffd43b}
+        .mode-sw{display:flex;justify-content:center;gap:10px;margin:18px 0}
+        .mode-btn{padding:12px 28px;border-radius:12px;border:2px solid var(--brd);background:transparent;color:var(--tx2);font-size:.95rem;font-weight:700;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif}
+        .mode-btn:hover{border-color:var(--flask);color:var(--flask)}
+        .mode-btn.act{background:linear-gradient(135deg,#44cc88,#2ea66d);border-color:transparent;color:#000;box-shadow:0 4px 25px rgba(68,204,136,0.3)}
+
+        .learn-wrap{display:block}.learn-wrap.hide{display:none}
+        .quiz-wrap{display:none}.quiz-wrap.show{display:block}
+        section{padding:50px 0}
+        .reveal{opacity:0;transform:translateY(22px);transition:all .5s cubic-bezier(.16,1,.3,1)}.reveal.vis{opacity:1;transform:translateY(0)}
+        .sec-label{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--flask);margin-bottom:8px}
+        .sec-title{font-size:clamp(1.5rem,3.5vw,2.1rem);font-weight:800;margin-bottom:12px;letter-spacing:-.5px}
+        .sec-desc{font-size:1rem;color:var(--tx2);max-width:700px;margin-bottom:28px;line-height:1.8}
+
+        .card{background:var(--card);border:1px solid var(--brd);border-radius:16px;padding:24px;margin-bottom:16px;backdrop-filter:blur(8px);transition:all .3s}
+        .card:hover{background:var(--card2);border-color:var(--brd2);transform:translateY(-2px)}
+        .card-h{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+        .card-i{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+        .ci-fl{background:var(--flask2)}.ci-bl{background:var(--blue2)}.ci-pu{background:var(--purple2)}.ci-gr{background:var(--green2)}.ci-re{background:var(--red2)}.ci-ye{background:var(--yellow2)}.ci-or{background:var(--orange2)}.ci-pk{background:var(--pink2)}.ci-te{background:var(--teal2)}.ci-cy{background:var(--cyan2)}
+        .card h3{font-size:1.05rem;font-weight:700}
+        .card p,.card li{color:var(--tx2);line-height:1.8;font-size:.9rem}
+        .card ul{list-style:none;margin-top:8px}
+        .card ul li{padding:4px 0 4px 20px;position:relative}
+        .card ul li::before{content:'›';position:absolute;left:0;color:var(--flask);font-weight:700;font-size:1.1rem}
+        .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+        .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:20px 0}
+        @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+
+        .code-box{background:#0d1117;border:1px solid var(--brd);border-radius:11px;overflow:hidden;margin:14px 0}
+        .code-top{background:rgba(255,255,255,0.03);padding:7px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--brd)}
+        .code-dots{display:flex;gap:5px}.cd{width:9px;height:9px;border-radius:50%}.cd-r{background:#ff5f56}.cd-y{background:#ffbd2e}.cd-g{background:#27c93f}
+        .code-lang{font-size:.62rem;color:var(--tx3);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:1px}
+        .code-body{padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.9;overflow-x:auto;white-space:pre;color:#e6edf3}
+
+        .tbl{width:100%;border-collapse:collapse;margin:16px 0}
+        .tbl th,.tbl td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--brd)}
+        .tbl th{font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--tx3);font-weight:700}
+        .tbl td{font-size:.84rem;color:var(--tx2)}
+        .tbl .mono{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--flask)}
+
+        .info{border-radius:13px;padding:20px;margin:16px 0}
+        .info.tip{background:rgba(68,204,136,0.04);border:1px solid rgba(68,204,136,0.12);border-left:4px solid var(--flask)}
+        .info.warn{background:var(--red2);border:1px solid rgba(248,113,113,0.12);border-left:4px solid var(--red)}
+        .info.note{background:var(--blue2);border:1px solid rgba(59,130,246,0.12);border-left:4px solid var(--blue)}
+        .info h4{font-size:.88rem;margin-bottom:5px;display:flex;align-items:center;gap:7px}
+        .info.tip h4{color:var(--flask)}.info.warn h4{color:var(--red)}.info.note h4{color:var(--blue)}
+        .info p{color:var(--tx2);font-size:.88rem;line-height:1.8}
+        .info code{background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--flask)}
+
+        .faq-item{background:var(--card);border:1px solid var(--brd);border-radius:12px;margin-bottom:8px;overflow:hidden}
+        .faq-q{padding:15px 18px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-weight:600;font-size:.9rem;transition:color .3s}
+        .faq-q:hover{color:var(--flask)}
+        .faq-tog{font-size:1.1rem;transition:transform .3s;color:var(--tx3)}
+        .faq-item.open .faq-tog{transform:rotate(45deg)}
+        .faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease}
+        .faq-item.open .faq-a{max-height:500px;padding:0 18px 15px}
+        .faq-a p{color:var(--tx2);line-height:1.8;font-size:.88rem}
+        .faq-a code{background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--flask)}
+
+        /* ===== QUIZ ===== */
+        .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:10px;margin:20px 0;text-align:left}
+        .feat-box{background:var(--card);border:1px solid var(--brd);border-radius:11px;padding:14px;display:flex;align-items:center;gap:11px}
+        .feat-ico{font-size:1.3rem}.feat-txt{font-size:.8rem;color:var(--tx2)}.feat-txt strong{display:block;color:var(--tx);font-size:.85rem}
+        .cat-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:14px 0}
+        .chip{padding:5px 12px;border-radius:7px;font-size:.73rem;font-weight:600;cursor:pointer;transition:all .3s;border:1px solid var(--brd);background:transparent;color:var(--tx2);font-family:'Inter',sans-serif}
+        .chip:hover{border-color:var(--flask);color:var(--flask)}
+        .chip.act{background:var(--flask);border-color:var(--flask);color:#000;box-shadow:0 3px 12px rgba(68,204,136,0.2)}
+        .diff-row{display:flex;gap:8px;justify-content:center;margin:14px 0;flex-wrap:wrap}
+        .diff-btn{padding:8px 18px;border-radius:9px;border:2px solid var(--brd);background:transparent;color:var(--tx2);font-size:.85rem;font-weight:700;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif}
+        .diff-btn:hover{border-color:var(--flask);color:var(--flask)}
+        .diff-btn.act{background:linear-gradient(135deg,#44cc88,#2ea66d);border-color:transparent;color:#000;box-shadow:0 4px 18px rgba(68,204,136,0.25)}
+        .start-btn{padding:14px 42px;border-radius:12px;border:none;background:linear-gradient(135deg,#44cc88,#2ea66d);color:#000;font-size:1.1rem;font-weight:800;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif;box-shadow:0 4px 25px rgba(68,204,136,0.3);margin-top:8px}
+        .start-btn:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 8px 35px rgba(68,204,136,0.4)}
+
+        .stats-bar{display:flex;justify-content:center;gap:11px;margin:16px 0;flex-wrap:wrap}
+        .st-box{background:var(--card);border:1px solid var(--brd);border-radius:10px;padding:10px 16px;text-align:center;min-width:88px}
+        .st-val{font-size:1.25rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+        .st-val.fl{color:var(--flask)}.st-val.bl{color:var(--blue)}.st-val.or{color:var(--orange)}.st-val.pu{color:var(--purple)}
+        .st-lbl{font-size:.62rem;color:var(--tx3);text-transform:uppercase;letter-spacing:1px;margin-top:2px;font-weight:600}
+        .prog-sec{margin:12px 0}.prog-info{display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px}
+        .prog-info .l{color:var(--flask);font-weight:600}.prog-info .r{color:var(--tx3)}
+        .prog-track{height:5px;background:rgba(255,255,255,0.04);border-radius:8px;overflow:hidden}
+        .prog-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,#44cc88,#3b82f6);transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+        .q-card{background:var(--card);border:1px solid var(--brd);border-radius:15px;padding:26px;margin:14px 0;animation:qI .4s ease}
+        @keyframes qI{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+        .q-meta{display:flex;align-items:center;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+        .q-badge{padding:3px 10px;border-radius:5px;font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+        .q-badge.easy{background:var(--green2);color:var(--green)}.q-badge.medium{background:var(--orange2);color:var(--orange)}.q-badge.hard{background:var(--red2);color:var(--red)}.q-badge.expert{background:var(--purple2);color:var(--purple)}
+        .q-cat{padding:3px 10px;border-radius:5px;font-size:.63rem;font-weight:600;background:var(--flask2);color:var(--flask)}
+        .q-text{font-size:1.08rem;font-weight:700;line-height:1.6;margin-bottom:4px}
+        .q-code{background:#0d1117;border:1px solid var(--brd);border-radius:9px;padding:12px 14px;margin:10px 0;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.7;overflow-x:auto;color:var(--flask);white-space:pre}
+
+        .ans-list{display:grid;gap:7px;margin-top:14px}
+        .ans-btn{display:flex;align-items:center;gap:11px;padding:12px 15px;border-radius:10px;border:2px solid var(--brd);background:transparent;color:var(--tx);font-size:.88rem;cursor:pointer;transition:all .25s;text-align:left;font-family:'Inter',sans-serif;line-height:1.5;width:100%}
+        .ans-btn:hover:not(.lk){border-color:var(--flask);background:rgba(68,204,136,0.03);transform:translateX(4px)}
+        .ans-ltr{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;color:var(--flask);flex-shrink:0;transition:all .25s;font-family:'JetBrains Mono',monospace}
+        .ans-btn:hover:not(.lk) .ans-ltr{background:var(--flask);color:#000}
+        .ans-btn.ok{border-color:var(--green);background:var(--green2)}.ans-btn.ok .ans-ltr{background:var(--green);color:#000}
+        .ans-btn.no{border-color:var(--red);background:var(--red2);animation:sh .4s ease}.ans-btn.no .ans-ltr{background:var(--red);color:#fff}
+        @keyframes sh{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+        .ans-btn.lk{cursor:default;opacity:.4}.ans-btn.ok.lk,.ans-btn.no.lk{opacity:1}
+        .ans-body{flex:1}.ans-body code{background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.76rem}
+
+        .expl-box{margin-top:12px;padding:14px;border-radius:10px;border-left:4px solid var(--flask);background:rgba(68,204,136,0.03);display:none;animation:fu .3s ease}
+        .expl-box.show{display:block}
+        @keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+        .expl-box h4{color:var(--flask);font-size:.82rem;margin-bottom:4px}.expl-box p{color:var(--tx2);line-height:1.8;font-size:.85rem}
+        .expl-box code{background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--flask)}
+
+        .nav-row{display:flex;justify-content:space-between;margin-top:16px;gap:10px}
+        .nb{padding:10px 22px;border-radius:10px;border:none;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px}
+        .nb.nx{background:linear-gradient(135deg,#44cc88,#2ea66d);color:#000;box-shadow:0 4px 16px rgba(68,204,136,0.2)}
+        .nb.nx:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 22px rgba(68,204,136,0.35)}
+        .nb.pv{background:var(--card);color:var(--tx2);border:1px solid var(--brd)}
+        .nb:disabled{opacity:.3;cursor:not-allowed;transform:none!important}
+
+        .res-screen{background:var(--card);border:1px solid var(--brd);border-radius:18px;padding:38px 26px;text-align:center;display:none;animation:qI .5s ease}
+        .res-screen.show{display:block}
+        .res-ico{font-size:60px;margin-bottom:10px;animation:bI .6s ease}
+        @keyframes bI{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+        .res-title{font-size:1.7rem;font-weight:900;margin-bottom:4px}.res-sub{color:var(--tx2);font-size:.92rem;margin-bottom:22px}
+        .score-ring{width:145px;height:145px;margin:0 auto 22px;position:relative;display:flex;align-items:center;justify-content:center}
+        .score-ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+        .sr-bg{fill:none;stroke:rgba(255,255,255,0.04);stroke-width:8}.sr-fg{fill:none;stroke:url(#rg);stroke-width:8;stroke-linecap:round;stroke-dasharray:365;stroke-dashoffset:365;transition:stroke-dashoffset 2s cubic-bezier(.4,0,.2,1)}
+        .score-pct{font-size:2rem;font-weight:900;font-family:'JetBrains Mono',monospace;z-index:1;background:linear-gradient(135deg,#44cc88,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .res-grid{display:flex;justify-content:center;gap:26px;margin:16px 0;flex-wrap:wrap}
+        .rs{text-align:center}.rs-v{font-size:1.3rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+        .rs-v.g{color:var(--green)}.rs-v.r{color:var(--red)}.rs-v.b{color:var(--blue)}.rs-v.p{color:var(--purple)}
+        .rs-l{font-size:.62rem;color:var(--tx3);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+        .res-msg{background:var(--flask2);border:1px solid rgba(68,204,136,0.1);border-radius:10px;padding:14px;margin:16px 0;color:var(--tx2);line-height:1.7;font-size:.9rem}
+        .restart-btn{padding:12px 30px;border-radius:10px;border:none;background:linear-gradient(135deg,#44cc88,#2ea66d);color:#000;font-size:.95rem;font-weight:800;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif;box-shadow:0 4px 18px rgba(68,204,136,0.25);margin-top:8px}
+        .restart-btn:hover{transform:translateY(-3px)}
+        .review-btn{padding:9px 20px;border-radius:9px;border:1px solid var(--brd);background:transparent;color:var(--tx2);font-size:.82rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-top:8px}
+        .rvw{margin-top:16px;text-align:left;display:none}.rvw.show{display:block}
+        .rvw-item{background:var(--card);border:1px solid var(--brd);border-radius:10px;padding:12px;margin-bottom:8px}
+        .rvw-item.rok{border-left:4px solid var(--green)}.rvw-item.rno{border-left:4px solid var(--red)}
+        .rvw-q{font-weight:600;margin-bottom:3px;font-size:.83rem}.rvw-a{font-size:.76rem;color:var(--tx3);line-height:1.6}
+        .rvw-a .rg{color:var(--green);font-weight:600}.rvw-a .rr{color:var(--red);font-weight:600}
+        .toast{position:fixed;top:14px;right:14px;padding:10px 16px;border-radius:9px;font-weight:600;font-size:.82rem;z-index:1000;display:flex;align-items:center;gap:6px;animation:tI .3s ease,tO .3s ease 2.2s forwards;font-family:'Inter',sans-serif;box-shadow:0 8px 28px rgba(0,0,0,0.4)}
+        .toast.ok{background:var(--green);color:#000}.toast.err{background:var(--red);color:#fff}
+        @keyframes tI{from{transform:translateX(110px);opacity:0}to{transform:translateX(0);opacity:1}}
+        @keyframes tO{to{opacity:0;transform:translateY(-12px)}}
+        #confetti{position:fixed;inset:0;pointer-events:none;z-index:999}
+        footer{text-align:center;padding:40px 20px 24px;color:var(--tx3);font-size:.75rem;border-top:1px solid var(--brd)}
+        @media(max-width:640px){.hero h1{font-size:1.7rem}.q-card{padding:16px}.q-text{font-size:.93rem}.stats-bar{gap:5px}.st-box{min-width:68px;padding:7px 9px}.nav-row{flex-direction:column}}
+    </style>
+</head>
+<body>
+<div class="bg-fx"><div class="bg-grid"></div><div class="bg-orb o1"></div><div class="bg-orb o2"></div><div class="bg-orb o3"></div><div class="code-rain" id="codeRain"></div></div>
+<canvas id="confetti"></canvas>
+
+<nav><div class="nav-in"><div class="nav-logo">🧪 <span class="hl">Flask</span> Quiz</div><div class="nav-r"><button class="nav-tab act" onclick="sw('learn',this)">📖 Nauka</button><button class="nav-tab" onclick="sw('quiz',this)">🧪 Test</button></div></div></nav>
+
+<div class="wrap">
+<section class="hero">
+    <div class="hero-flask">🧪</div>
+    <h1>Test wiedzy z <span class="grad">Flask</span></h1>
+    <p class="hero-p">Routing, Jinja2, formularze, REST API, SQLAlchemy, Blueprints, autentykacja — kompletny kurs i quiz z 40 pytań.</p>
+    <div class="hero-code"><span class="hk">from</span> flask <span class="hk">import</span> Flask
+app = Flask(<span class="hs">__name__</span>)
+
+<span class="ho">@app.route</span>(<span class="hs">"/"</span>)
+<span class="hk">def</span> <span class="hf">index</span>():
+    <span class="hk">return</span> <span class="hs">"Hello Flask! 🧪"</span></div>
+    <div class="mode-sw">
+        <button class="mode-btn act" id="mL" onclick="sw('learn')">📖 Nauka</button>
+        <button class="mode-btn" id="mQ" onclick="sw('quiz')">🧪 Test (40 pytań)</button>
+    </div>
+</section>
+
+<!-- ===== LEARN ===== -->
+<div class="learn-wrap" id="learnW">
+
+<section><div class="reveal"><div class="sec-label">🧪 Podstawy</div><h2 class="sec-title">Czym jest Flask?</h2>
+<p class="sec-desc">Flask to lekki framework webowy Pythona (micro-framework). Nie narzuca ORM, formularzy ani narzędzi — dodajesz to, czego potrzebujesz. Stworzony przez Armina Ronachera (Pallets Projects).</p></div>
+<div class="grid-3">
+<div class="card reveal"><div class="card-h"><div class="card-i ci-fl">🧪</div><h3>Micro-framework</h3></div><p>Minimalne jądro — routing, request/response, Jinja2. Resztę wybierasz sam (ORM, auth, forms).</p></div>
+<div class="card reveal"><div class="card-h"><div class="card-i ci-bl">🔧</div><h3>WSGI + Werkzeug</h3></div><p>Oparty na Werkzeug (WSGI toolkit) i Jinja2 (template engine). WSGI = interfejs między serwerem a aplikacją.</p></div>
+<div class="card reveal"><div class="card-h"><div class="card-i ci-pu">📦</div><h3>Ekosystem rozszerzeń</h3></div><p>Flask-SQLAlchemy, Flask-Login, Flask-WTF, Flask-RESTful, Flask-Migrate, Flask-Mail, Flask-CORS...</p></div>
+</div></section>
+
+<section><div class="reveal"><div class="sec-label">🛣️ Routing</div><h2 class="sec-title">Routing i widoki</h2></div>
+<div class="code-box reveal"><div class="code-top"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang">Python — Flask routing</span></div>
+<div class="code-body"><span class="hc"># Podstawowe routing</span>
+<span class="ho">@app.route</span>(<span class="hs">"/"</span>)
+<span class="hk">def</span> <span class="hf">index</span>():
+    <span class="hk">return</span> <span class="hs">"Strona główna"</span>
+
+<span class="hc"># Zmienna w URL</span>
+<span class="ho">@app.route</span>(<span class="hs">"/user/&lt;username&gt;"</span>)
+<span class="hk">def</span> <span class="hf">profile</span>(username):
+    <span class="hk">return</span> <span class="hs">f"Profil: </span>{username}<span class="hs">"</span>
+
+<span class="hc"># Konwerter typu</span>
+<span class="ho">@app.route</span>(<span class="hs">"/post/&lt;int:post_id&gt;"</span>)
+<span class="hk">def</span> <span class="hf">post</span>(post_id):
+    <span class="hk">return</span> <span class="hs">f"Post #</span>{post_id}<span class="hs">"</span>
+
+<span class="hc"># Metody HTTP</span>
+<span class="ho">@app.route</span>(<span class="hs">"/login"</span>, methods=[<span class="hs">"GET"</span>, <span class="hs">"POST"</span>])
+<span class="hk">def</span> <span class="hf">login</span>():
+    <span class="hk">if</span> request.method == <span class="hs">"POST"</span>:
+        <span class="hk">return</span> <span class="hs">"Logging in..."</span>
+    <span class="hk">return</span> render_template(<span class="hs">"login.html"</span>)
+
+<span class="hc"># url_for — generowanie URL</span>
+url_for(<span class="hs">"profile"</span>, username=<span class="hs">"jan"</span>)  <span class="hc"># → "/user/jan"</span></div></div></section>
+
+<section><div class="reveal"><div class="sec-label">📄 Jinja2</div><h2 class="sec-title">Szablony Jinja2</h2></div>
+<div class="code-box reveal"><div class="code-top"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang">Jinja2 Template</span></div>
+<div class="code-body"><span class="hc">{# Komentarz Jinja2 #}</span>
+
+<span class="hc">{# Dziedziczenie szablonów #}</span>
+{% <span class="hk">extends</span> <span class="hs">"base.html"</span> %}
+{% <span class="hk">block</span> content %}
+  &lt;h1&gt;{{ <span class="hv">title</span> }}&lt;/h1&gt;          <span class="hc">{# Zmienna #}</span>
+
+  {% <span class="hk">for</span> item <span class="hk">in</span> items %}       <span class="hc">{# Pętla #}</span>
+    &lt;p&gt;{{ item.name | <span class="hf">capitalize</span> }}&lt;/p&gt;  <span class="hc">{# Filtr #}</span>
+  {% <span class="hk">endfor</span> %}
+
+  {% <span class="hk">if</span> user.is_admin %}         <span class="hc">{# Warunek #}</span>
+    &lt;p&gt;Panel admina&lt;/p&gt;
+  {% <span class="hk">elif</span> user.is_logged %}
+    &lt;p&gt;Witaj {{ user.name }}&lt;/p&gt;
+  {% <span class="hk">else</span> %}
+    &lt;p&gt;Zaloguj się&lt;/p&gt;
+  {% <span class="hk">endif</span> %}
+
+  {{ url_for(<span class="hs">'static'</span>, filename=<span class="hs">'style.css'</span>) }}
+{% <span class="hk">endblock</span> %}</div></div>
+<div class="info tip reveal"><h4>💡 Autoescaping</h4><p>Jinja2 automatycznie escapuje HTML w <code>{{ }}</code> — chroni przed XSS. Aby wyłączyć: <code>{{ content | safe }}</code> — używaj ostrożnie!</p></div>
+</section>
+
+<section><div class="reveal"><div class="sec-label">🗄️ Bazy danych</div><h2 class="sec-title">Flask-SQLAlchemy</h2></div>
+<div class="code-box reveal"><div class="code-top"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang">Python — SQLAlchemy</span></div>
+<div class="code-body"><span class="hk">from</span> flask_sqlalchemy <span class="hk">import</span> SQLAlchemy
+
+app.config[<span class="hs">"SQLALCHEMY_DATABASE_URI"</span>] = <span class="hs">"sqlite:///app.db"</span>
+db = SQLAlchemy(app)
+
+<span class="hk">class</span> <span class="hf">User</span>(db.Model):
+    id = db.Column(db.Integer, primary_key=<span class="hn">True</span>)
+    username = db.Column(db.String(<span class="hn">80</span>), unique=<span class="hn">True</span>, nullable=<span class="hn">False</span>)
+    email = db.Column(db.String(<span class="hn">120</span>), unique=<span class="hn">True</span>)
+    posts = db.relationship(<span class="hs">"Post"</span>, backref=<span class="hs">"author"</span>)
+
+<span class="hc"># CRUD</span>
+user = User(username=<span class="hs">"jan"</span>, email=<span class="hs">"jan@mail.com"</span>)
+db.session.add(user)       <span class="hc"># CREATE</span>
+db.session.commit()
+User.query.all()           <span class="hc"># READ all</span>
+User.query.filter_by(username=<span class="hs">"jan"</span>).first()  <span class="hc"># READ one</span>
+user.email = <span class="hs">"new@mail.com"</span>  <span class="hc"># UPDATE</span>
+db.session.delete(user)    <span class="hc"># DELETE</span>
+db.session.commit()</div></div></section>
+
+<section><div class="reveal"><div class="sec-label">🔌 REST API</div><h2 class="sec-title">Tworzenie REST API</h2></div>
+<div class="code-box reveal"><div class="code-top"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang">Python — Flask REST</span></div>
+<div class="code-body"><span class="hk">from</span> flask <span class="hk">import</span> jsonify, request
+
+<span class="ho">@app.route</span>(<span class="hs">"/api/users"</span>, methods=[<span class="hs">"GET"</span>])
+<span class="hk">def</span> <span class="hf">get_users</span>():
+    users = User.query.all()
+    <span class="hk">return</span> jsonify([{<span class="hs">"id"</span>: u.id, <span class="hs">"name"</span>: u.username} <span class="hk">for</span> u <span class="hk">in</span> users])
+
+<span class="ho">@app.route</span>(<span class="hs">"/api/users"</span>, methods=[<span class="hs">"POST"</span>])
+<span class="hk">def</span> <span class="hf">create_user</span>():
+    data = request.get_json()
+    user = User(username=data[<span class="hs">"username"</span>])
+    db.session.add(user)
+    db.session.commit()
+    <span class="hk">return</span> jsonify({<span class="hs">"id"</span>: user.id}), <span class="hn">201</span>
+
+<span class="ho">@app.errorhandler</span>(<span class="hn">404</span>)
+<span class="hk">def</span> <span class="hf">not_found</span>(e):
+    <span class="hk">return</span> jsonify({<span class="hs">"error"</span>: <span class="hs">"Not found"</span>}), <span class="hn">404</span></div></div></section>
+
+<section><div class="reveal"><div class="sec-label">❓ FAQ</div><h2 class="sec-title">Najczęstsze pytania</h2></div><div class="reveal">
+<div class="faq-item"><div class="faq-q" onclick="togF(this)">Flask vs Django — kiedy który?<span class="faq-tog">+</span></div><div class="faq-a"><p><strong>Flask</strong> — gdy chcesz pełną kontrolę, mały projekt, REST API, mikroserwisy, nauka. <strong>Django</strong> — gdy potrzebujesz „batteries included" (admin, ORM, auth, forms), duży projekt, CMS. Flask = elastyczność, Django = produktywność.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="togF(this)">Co to jest application factory pattern?<span class="faq-tog">+</span></div><div class="faq-a"><p>Zamiast globalnego <code>app = Flask(__name__)</code>, tworzysz funkcję <code>create_app(config)</code>, która zwraca instancję aplikacji. Umożliwia: różne konfiguracje (dev/test/prod), testowanie, unikanie circular imports. Rekomendowany wzorzec dla większych projektów.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="togF(this)">Jak deployować Flask w produkcji?<span class="faq-tog">+</span></div><div class="faq-a"><p><strong>Nigdy</strong> nie używaj <code>app.run()</code> w produkcji! Użyj serwera WSGI: <code>Gunicorn</code> (Linux) lub <code>Waitress</code> (Windows). Przed nim reverse proxy: <code>Nginx</code>. Stack: Nginx → Gunicorn → Flask. Lub: Docker + cloud (AWS, GCP, Heroku).</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="togF(this)">Co to jest Blueprint?<span class="faq-tog">+</span></div><div class="faq-a"><p><code>Blueprint</code> to „mini-aplikacja" Flask — moduł z własnymi routes, templates, static files. Umożliwia podział dużej aplikacji na logiczne części: <code>auth_bp</code>, <code>api_bp</code>, <code>admin_bp</code>. Rejestrowany: <code>app.register_blueprint(auth_bp, url_prefix="/auth")</code>.</p></div></div>
+</div></section>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div class="quiz-wrap" id="quizW">
+<div class="stats-bar" id="sBar" style="display:none"><div class="st-box"><div class="st-val fl" id="sqN">1</div><div class="st-lbl">Pytanie</div></div><div class="st-box"><div class="st-val bl" id="sqOk">0</div><div class="st-lbl">Poprawne</div></div><div class="st-box"><div class="st-val or" id="sqSt">0</div><div class="st-lbl">🔥 Seria</div></div><div class="st-box"><div class="st-val pu" id="sqTm">0:00</div><div class="st-lbl">Czas</div></div></div>
+<div class="prog-sec" id="pSec" style="display:none"><div class="prog-info"><span class="l" id="prL">1/30</span><span class="r" id="prP">0%</span></div><div class="prog-track"><div class="prog-fill" id="prF" style="width:0%"></div></div></div>
+
+<div id="qStart" style="text-align:center;padding:20px 0">
+<h2 style="font-size:1.4rem;margin-bottom:6px">🧪 Test wiedzy z Flask</h2>
+<p style="color:var(--tx2);margin-bottom:16px;max-width:480px;margin:0 auto 16px">40 pytań — routing, Jinja2, SQLAlchemy, REST API, Blueprints, bezpieczeństwo.</p>
+<div class="feat-grid"><div class="feat-box"><div class="feat-ico">📝</div><div class="feat-txt"><strong>40 pytań</strong>Losowe 30</div></div><div class="feat-box"><div class="feat-ico">🎯</div><div class="feat-txt"><strong>4 poziomy</strong>Easy → Expert</div></div><div class="feat-box"><div class="feat-ico">💻</div><div class="feat-txt"><strong>Bloki kodu</strong>Realistyczne przykłady</div></div><div class="feat-box"><div class="feat-ico">💡</div><div class="feat-txt"><strong>Wyjaśnienia</strong>Z fragmentami kodu</div></div></div>
+<div class="cat-chips"><button class="chip act" onclick="setCat('all',this)">Wszystkie</button><button class="chip" onclick="setCat('Routing',this)">Routing</button><button class="chip" onclick="setCat('Jinja2',this)">Jinja2</button><button class="chip" onclick="setCat('DB',this)">Bazy danych</button><button class="chip" onclick="setCat('API',this)">REST API</button><button class="chip" onclick="setCat('Auth',this)">Auth</button><button class="chip" onclick="setCat('Zaawansowane',this)">Zaawansowane</button></div>
+<div class="diff-row"><button class="diff-btn" onclick="setDf('easy',this)">🟢 Easy</button><button class="diff-btn act" onclick="setDf('all',this)">🔵 Wszystkie</button><button class="diff-btn" onclick="setDf('expert',this)">🟣 Expert</button></div>
+<div style="margin-top:12px"><button class="start-btn" onclick="startQ()">▶ Rozpocznij test</button></div>
+</div>
+
+<div id="qArea" style="display:none"><div class="q-card" id="qCard"><div class="q-meta"><span class="q-badge" id="qBdg">EASY</span><span class="q-cat" id="qCat">Routing</span></div><div class="q-text" id="qTxt"></div><div class="q-code" id="qCode" style="display:none"></div><div class="ans-list" id="ansList"></div><div class="expl-box" id="explB"><h4>💡 Wyjaśnienie</h4><p id="explT"></p></div></div><div class="nav-row"><button class="nb pv" id="bPv" onclick="prevQ()" disabled>←</button><button class="nb nx" id="bNx" onclick="nextQ()" disabled>Następne →</button></div></div>
+
+<div class="res-screen" id="resScr"><div class="res-ico" id="rIco">🏆</div><h2 class="res-title" id="rTtl"></h2><p class="res-sub" id="rSub"></p><div class="score-ring"><svg viewBox="0 0 140 140"><defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#44cc88"/><stop offset="100%" style="stop-color:#3b82f6"/></linearGradient></defs><circle class="sr-bg" cx="70" cy="70" r="58"/><circle class="sr-fg" id="sRing" cx="70" cy="70" r="58"/></svg><span class="score-pct" id="sPct">0%</span></div><div class="res-grid"><div class="rs"><div class="rs-v g" id="rOk">0</div><div class="rs-l">Poprawne</div></div><div class="rs"><div class="rs-v r" id="rNo">0</div><div class="rs-l">Błędne</div></div><div class="rs"><div class="rs-v b" id="rTm">0:00</div><div class="rs-l">Czas</div></div><div class="rs"><div class="rs-v p" id="rMs">0</div><div class="rs-l">Max seria</div></div></div><div class="res-msg" id="rMsg"></div><button class="restart-btn" onclick="restQ()">🔄 Ponownie</button><br><button class="review-btn" onclick="togR()">📋 Przegląd</button><div class="rvw" id="rvwL"></div></div>
+</div>
+</div>
+<footer>🧪 Flask Quiz | <code style="color:var(--flask)">pip install flask</code></footer>
+
+<script>
+const QS=[
+// ===== EASY (1-12) =====
+{id:1,d:"easy",cat:"Podstawy",q:"Czym jest Flask?",a:["Pełny framework jak Django","Lekki micro-framework webowy Pythona","Biblioteka do machine learning","Silnik szablonów"],c:1,e:"<code>Flask</code> to micro-framework — dostarcza minimum: routing, request/response, szablony (Jinja2). Nie narzuca ORM, formularzy ani auth. Wszystko dodajesz przez rozszerzenia."},
+{id:2,d:"easy",cat:"Podstawy",q:"Jak stworzyć minimalną aplikację Flask?",code:'from flask import Flask\napp = Flask(__name__)\n\n@app.route("/")\ndef hello():\n    return "Hello!"',a:["app = Flask()","app = Flask(__name__)","app = new Flask()","import Flask; Flask.create()"],c:1,e:"<code>Flask(__name__)</code> tworzy instancję aplikacji. <code>__name__</code> mówi Flask gdzie szukać szablonów i plików statycznych. To standardowy wzorzec startowy."},
+{id:3,d:"easy",cat:"Routing",q:"Co robi dekorator @app.route()?",a:["Tworzy bazę danych","Mapuje URL na funkcję widoku (view function)","Importuje moduł","Uruchamia serwer"],c:1,e:"<code>@app.route(\"/path\")</code> rejestruje URL i kojarzy go z funkcją widoku. Gdy użytkownik odwiedzi /path, Flask wywoła tę funkcję i zwróci wynik jako odpowiedź HTTP."},
+{id:4,d:"easy",cat:"Jinja2",q:"Jak wyświetlić zmienną w szablonie Jinja2?",a:["{% variable %}","${ variable }","{{ variable }}","<%= variable %>"],c:2,e:"<code>{{ zmienna }}</code> — podwójne nawiasy klamrowe wyświetlają wartość zmiennej. <code>{% %}</code> = instrukcje (if, for). <code>{# #}</code> = komentarze. Jinja2 automatycznie escapuje HTML."},
+{id:5,d:"easy",cat:"Routing",q:"Jak pobrać dane z formularza POST?",a:["request.form['name']","request.post['name']","request.body['name']","request.data.name"],c:0,e:"<code>request.form['name']</code> pobiera dane z formularza (POST, application/x-www-form-urlencoded). <code>request.args</code> = parametry URL (GET). <code>request.get_json()</code> = dane JSON."},
+{id:6,d:"easy",cat:"Jinja2",q:"Jak renderować szablon HTML w Flask?",a:["return template('index.html')","return render_template('index.html')","return html('index.html')","return view('index.html')"],c:1,e:"<code>render_template('plik.html', zmienna=wartość)</code> renderuje szablon Jinja2 z folderu <code>templates/</code>. Przekazane zmienne są dostępne w szablonie jako <code>{{ zmienna }}</code>."},
+{id:7,d:"easy",cat:"Podstawy",q:"W jakim folderze Flask szuka szablonów HTML?",a:["views/","html/","templates/","pages/"],c:2,e:"Flask domyślnie szuka szablonów w folderze <code>templates/</code> obok pliku aplikacji. Pliki statyczne (CSS, JS, obrazy) w <code>static/</code>."},
+{id:8,d:"easy",cat:"Routing",q:"Co robi url_for()?",a:["Parsuje URL","Generuje URL dla podanej funkcji widoku","Przekierowuje do URL","Waliduje URL"],c:1,e:"<code>url_for('nazwa_funkcji', parametr=wartość)</code> generuje URL na podstawie nazwy funkcji widoku. Bezpieczniejsze niż hardcoding URL-i — automatycznie obsługuje prefixy i zmiany tras."},
+{id:9,d:"easy",cat:"Podstawy",q:"Jak uruchomić serwer deweloperski Flask?",a:["flask start","flask run","python -m flask serve","flask dev"],c:1,e:"<code>flask run</code> uruchamia serwer deweloperski (domyślnie port 5000). Ustaw <code>FLASK_APP=app.py</code>. Flaga <code>--debug</code> włącza debugger i auto-reload. NIGDY nie używaj w produkcji!"},
+{id:10,d:"easy",cat:"Routing",q:"Jak zdefiniować zmienną w URL?",code:'@app.route("/user/<username>")\ndef profile(username):\n    return f"User: {username}"',a:["@app.route('/user/:username')","@app.route('/user/<username>')","@app.route('/user/{username}')","@app.route('/user/$username')"],c:1,e:"<code>&lt;zmienna&gt;</code> w route definiuje dynamiczny segment URL. Flask przekazuje go jako argument do funkcji. Konwertery: <code>&lt;int:id&gt;</code>, <code>&lt;float:price&gt;</code>, <code>&lt;path:subpath&gt;</code>."},
+{id:11,d:"easy",cat:"Podstawy",q:"Jak zwrócić odpowiedź JSON w Flask?",a:["return json(data)","return jsonify(data)","return JSON.dumps(data)","return make_json(data)"],c:1,e:"<code>jsonify(data)</code> konwertuje dict/list na JSON response z nagłówkiem <code>Content-Type: application/json</code>. Od Flask 2.2+ można też <code>return dict</code> — Flask auto-konwertuje."},
+{id:12,d:"easy",cat:"Jinja2",q:"Jak działa dziedziczenie szablonów w Jinja2?",a:["import base.html","{% extends 'base.html' %} + {% block content %}","include('base.html')","@template('base.html')"],c:1,e:"<code>{% extends 'base.html' %}</code> dziedziczy z szablonu bazowego. <code>{% block nazwa %}...{% endblock %}</code> definiuje bloki, które szablony potomne mogą nadpisywać. DRY — jeden layout, wiele stron."},
+
+// ===== MEDIUM (13-24) =====
+{id:13,d:"medium",cat:"Routing",q:"Jak ograniczyć route do metody POST?",a:["@app.post('/')","@app.route('/', methods=['POST'])","@app.route('/', method='POST')","@app.route('/', type='POST')"],c:1,e:"<code>methods=['POST']</code> w dekoratorze. Domyślnie route akceptuje tylko GET. Od Flask 2.0+ można też: <code>@app.post('/')</code>, <code>@app.get('/')</code>, <code>@app.put('/')</code>, <code>@app.delete('/')</code>."},
+{id:14,d:"medium",cat:"DB",q:"Jak zdefiniować model w Flask-SQLAlchemy?",a:["class User(db.Table)","class User(db.Model)","class User(Flask.Model)","class User(SQLAlchemy.Entity)"],c:1,e:"<code>class User(db.Model)</code> definiuje model (tabelę). Kolumny: <code>db.Column(db.String(80))</code>. Relacje: <code>db.relationship()</code>. Flask-SQLAlchemy to wrapper na SQLAlchemy z integracją Flask."},
+{id:15,d:"medium",cat:"Jinja2",q:"Co robi filtr | safe w Jinja2?",a:["Sanitizuje HTML","Wyłącza auto-escaping — renderuje surowy HTML","Szyfruje tekst","Waliduje dane"],c:1,e:"<code>{{ content | safe }}</code> wyłącza auto-escaping. Domyślnie Jinja2 escapuje HTML (<code>&lt;</code> → <code>&amp;lt;</code>). <code>safe</code> pozwala na renderowanie surowego HTML — używaj ostrożnie (ryzyko XSS)!"},
+{id:16,d:"medium",cat:"Auth",q:"Do czego służy Flask-Login?",a:["Logowanie do bazy danych","Zarządzanie sesjami użytkowników (login/logout, @login_required)","Logowanie błędów","Login do API"],c:1,e:"<code>Flask-Login</code> dostarcza: <code>login_user()</code>, <code>logout_user()</code>, <code>current_user</code>, <code>@login_required</code> dekorator. Zarządza sesjami — przechowuje user ID w cookie sesji. Wymaga klasy User z <code>UserMixin</code>."},
+{id:17,d:"medium",cat:"Zaawansowane",q:"Co to jest Blueprint w Flask?",a:["Szablon HTML","Moduł aplikacji z własnymi routes, templates i static files","Typ bazy danych","Konfiguracja produkcyjna"],c:1,e:"<code>Blueprint('auth', __name__)</code> tworzy mini-aplikację. Własne route, szablony, pliki statyczne. Rejestracja: <code>app.register_blueprint(auth_bp, url_prefix='/auth')</code>. Modularyzacja dużych projektów."},
+{id:18,d:"medium",cat:"API",q:"Jak pobrać dane JSON z request body?",a:["request.json()","request.get_json()","request.body.json","request.parse_json()"],c:1,e:"<code>request.get_json()</code> parsuje JSON z request body (Content-Type: application/json). Zwraca dict/list. <code>request.json</code> to property (alias). Jeśli body nie jest JSON → zwraca None."},
+{id:19,d:"medium",cat:"DB",q:"Jak wykonać migrację bazy danych w Flask?",a:["db.migrate()","Flask-Migrate (Alembic): flask db migrate, flask db upgrade","flask db sync","db.create_all()"],c:1,e:"<code>Flask-Migrate</code> (wrapper na Alembic): <code>flask db init</code> → <code>flask db migrate -m 'msg'</code> → <code>flask db upgrade</code>. <code>db.create_all()</code> tworzy tabele, ale nie obsługuje zmian schematu (migracji)."},
+{id:20,d:"medium",cat:"Zaawansowane",q:"Co to jest application context w Flask?",a:["Kontekst CSS","Obiekt przechowujący stan aplikacji — current_app, g dostępne w request","Kontekst szablonu","Typ sesji"],c:1,e:"<code>Application context</code> umożliwia dostęp do <code>current_app</code> (instancja app) i <code>g</code> (per-request storage) bez przekazywania app jako argument. Tworzony automatycznie przy request, ręcznie: <code>with app.app_context():</code>."},
+{id:21,d:"medium",cat:"Auth",q:"Jak hashować hasło w Flask?",a:["hash(password)","werkzeug.security: generate_password_hash()","md5(password)","flask.hash(password)"],c:1,e:"<code>generate_password_hash(password)</code> z <code>werkzeug.security</code> — domyślnie PBKDF2 z solą. Weryfikacja: <code>check_password_hash(hash, password)</code>. Nigdy nie przechowuj haseł w plaintext!"},
+{id:22,d:"medium",cat:"API",q:"Jak zwrócić odpowiedź z kodem statusu 201?",a:["return jsonify(data), status=201","return jsonify(data), 201","return (data, 201, headers)","response.status = 201"],c:1,e:"<code>return jsonify(data), 201</code> — Flask przyjmuje krotkę (body, status_code, headers). <code>201 Created</code> — standardowy kod po utworzeniu zasobu w REST API. Można też: <code>make_response(jsonify(data), 201)</code>."},
+{id:23,d:"medium",cat:"Jinja2",q:"Co robi {% include 'partial.html' %}?",a:["Importuje zmienne","Wstawia zawartość innego szablonu w to miejsce","Tworzy nowy blok","Dziedziczy szablon"],c:1,e:"<code>{% include 'partial.html' %}</code> wstawia zawartość szablonu częściowego (partial) w bieżące miejsce. Przydatne do: navbar, footer, sidebar, formularze. Kontekst rodzica jest dostępny w partial."},
+{id:24,d:"medium",cat:"Routing",q:"Co robi redirect() w Flask?",a:["Renderuje szablon","Wysyła odpowiedź HTTP 302 z przekierowaniem na inny URL","Przeładowuje stronę","Zmienia URL bez przekierowania"],c:1,e:"<code>redirect(url_for('index'))</code> zwraca odpowiedź 302 (lub 301 z <code>code=301</code>). Przeglądarka automatycznie przechodzi pod nowy URL. Typowe po POST (Post/Redirect/Get pattern)."},
+
+// ===== HARD (25-34) =====
+{id:25,d:"hard",cat:"Zaawansowane",q:"Co to jest application factory pattern?",a:["Fabryka widoków","Funkcja create_app() zwracająca instancję Flask — umożliwia różne konfiguracje","Wzorzec fabryki abstrakcyjnej","Generator aplikacji CLI"],c:1,e:"<code>def create_app(config): app = Flask(__name__); app.config.from_object(config); return app</code>. Korzyści: różne konfiguracje (dev/test/prod), łatwiejsze testowanie, unikanie circular imports. Rekomendowany wzorzec."},
+{id:26,d:"hard",cat:"Zaawansowane",q:"Co to jest obiekt g w Flask?",a:["Globalny logger","Per-request storage — obiekt żyjący przez czas jednego request","Obiekt graficzny","Generator odpowiedzi"],c:1,e:"<code>g</code> (flask.g) to obiekt przechowujący dane przez czas <strong>jednego request</strong>. Resetowany po każdym request. Typowe użycie: przechowywanie połączenia DB, zalogowanego usera. Dostępny w application context."},
+{id:27,d:"hard",cat:"API",q:"Jak obsłużyć CORS w Flask?",a:["app.config['CORS'] = True","Flask-CORS: CORS(app)","request.allow_cors()","@app.cors()"],c:1,e:"<code>Flask-CORS</code>: <code>CORS(app)</code> (dla wszystkich routes) lub <code>CORS(app, resources={r'/api/*': {'origins': 'http://localhost:3000'}})</code>. CORS to polityka przeglądarki blokująca requesty cross-origin — backend musi jawnie je zezwolić."},
+{id:28,d:"hard",cat:"Auth",q:"Jak działa sesja w Flask?",a:["Przechowywana w bazie danych","Kryptograficznie podpisany cookie (client-side, signed, nie szyfrowany)","Przechowywana w pliku na serwerze","W pamięci RAM serwera"],c:1,e:"Sesja Flask to <strong>podpisany cookie</strong> (itsdangerous). Dane są serialized + signed z <code>SECRET_KEY</code>. Klient przechowuje cookie, ale nie może go zmodyfikować. Dane NIE są szyfrowane — nie przechowuj wrażliwych danych! Server-side: Flask-Session."},
+{id:29,d:"hard",cat:"Zaawansowane",q:"Co robi @app.before_request?",a:["Dekorator walidacji","Rejestruje funkcję wywoływaną PRZED każdym requestem","Middleware CORS","Cache request"],c:1,e:"<code>@app.before_request</code> — funkcja wywoływana przed każdym requestem. Może zwrócić response (przerywając dalsze przetwarzanie) lub None (kontynuacja). Typowe: sprawdzanie auth, logowanie, ustawianie g.user. Też: <code>@app.after_request</code>, <code>@app.teardown_request</code>."},
+{id:30,d:"hard",cat:"DB",q:"Co to jest db.session.commit() vs db.session.flush()?",a:["To samo","commit = zapisuje na stałe w DB, flush = wysyła SQL ale nie commituje transakcji","flush jest szybszy","commit działa tylko z SQLite"],c:1,e:"<code>flush()</code> wysyła oczekujące SQL do bazy, ale w ramach otwartej transakcji (można rollback). <code>commit()</code> = flush + zatwierdzenie transakcji (trwałe). Flush przydatny gdy potrzebujesz auto-generated ID przed commitem."},
+{id:31,d:"hard",cat:"API",q:"Jak stworzyć custom error handler?",code:'@app.errorhandler(404)\ndef not_found(error):\n    return jsonify({"error": "Not found"}), 404',a:["@app.error(404)","@app.errorhandler(404)","@app.catch(404)","@app.on_error(404)"],c:1,e:"<code>@app.errorhandler(kod)</code> rejestruje handler dla kodu HTTP lub wyjątku. Może obsługiwać: 404, 500, 403, a także custom exceptions. W API zwracaj JSON, w web — render_template z custom error page."},
+{id:32,d:"hard",cat:"Zaawansowane",q:"Jak testować aplikację Flask?",a:["selenium only","app.test_client() — klient testowy do symulowania requestów","pytest-flask auto-testuje","Manualnie w przeglądarce"],c:1,e:"<code>app.test_client()</code> zwraca klienta testowego: <code>client.get('/')</code>, <code>client.post('/api', json={...})</code>. Z pytest: fixture <code>@pytest.fixture def client(): ...</code>. Sprawdzaj <code>response.status_code</code>, <code>response.json</code>."},
+{id:33,d:"hard",cat:"Auth",q:"Co to jest @login_required z Flask-Login?",a:["Dekorator wymagający hasła do API","Dekorator chroniący widok — przekierowuje niezalogowanych do login page","Wymaga tokenu JWT","Blokuje route"],c:1,e:"<code>@login_required</code> sprawdza czy <code>current_user.is_authenticated</code>. Jeśli nie → przekierowuje do <code>login_manager.login_view</code>. Dekorator umieszcza się PO <code>@app.route</code>. Alternatywnie: custom dekorator."},
+{id:34,d:"hard",cat:"Jinja2",q:"Co to jest macro w Jinja2?",a:["Typ zmiennej","Funkcja wielokrotnego użytku definiowana w szablonie (jak funkcja w Pythonie)","Skrót klawiszowy","Typ filtra"],c:1,e:"<code>{% macro input(name, type='text') %}&lt;input type='{{ type }}' name='{{ name }}'&gt;{% endmacro %}</code>. Wywołanie: <code>{{ input('email', 'email') }}</code>. Import: <code>{% from 'macros.html' import input %}</code>. DRY w szablonach."},
+
+// ===== EXPERT (35-40) =====
+{id:35,d:"expert",cat:"Zaawansowane",q:"Co to jest request context vs application context?",a:["To samo","Request ctx = per-request (request, session), App ctx = per-app (current_app, g)","Request jest globalny, App jest lokalny","App jest dla API, Request dla web"],c:1,e:"<strong>Request context</strong>: aktywny podczas request — dostęp do <code>request</code>, <code>session</code>. <strong>App context</strong>: dostęp do <code>current_app</code>, <code>g</code>. Request context automatycznie pushuje app context. Poza requestem: <code>with app.app_context():</code>."},
+{id:36,d:"expert",cat:"Zaawansowane",q:"Jak Flask obsługuje thread safety?",a:["GIL wystarczy","Werkzeug Local (context locals) — każdy wątek ma własny kontekst","Mutex na każdym route","Nie obsługuje"],c:1,e:"Flask używa <code>werkzeug.local.LocalProxy</code> i <code>LocalStack</code> — context locals. Każdy wątek/greenlet ma <strong>własny stos kontekstów</strong>. Dlatego <code>request</code>, <code>g</code>, <code>current_app</code> są „globalne" ale thread-safe."},
+{id:37,d:"expert",cat:"Zaawansowane",q:"Co robi flask.signals (Blinker)?",a:["Sygnały audio","System sygnałów (pub/sub) — powiadamianie o zdarzeniach (request_started, template_rendered)","Logowanie błędów","Komunikacja z frontendem"],c:1,e:"<code>Flask signals</code> (Blinker): <code>request_started</code>, <code>request_finished</code>, <code>template_rendered</code>, <code>before_render_template</code>. Subskrypcja: <code>request_started.connect(callback, app)</code>. Decouple — obserwatorzy bez modyfikacji core. Wymaga <code>pip install blinker</code>."},
+{id:38,d:"expert",cat:"API",q:"Czym jest Flask-RESTful vs Flask-Smorest?",a:["To samo","Flask-RESTful = class-based views, Flask-Smorest = REST + marshmallow + OpenAPI/Swagger","Flask-RESTful to ORM","Flask-Smorest to frontend"],c:1,e:"<code>Flask-RESTful</code>: class-based API (Resource), starszy. <code>Flask-Smorest</code> (dawniej Flask-REST-API): <strong>marshmallow</strong> serialization + <strong>auto-generated OpenAPI/Swagger docs</strong> + Blueprint-based. Nowocześniejsze podejście z walidacją i dokumentacją."},
+{id:39,d:"expert",cat:"Zaawansowane",q:"Jak zaimplementować WebSocket w Flask?",a:["Flask natywnie obsługuje WebSocket","Flask-SocketIO (oparty na python-socketio + eventlet/gevent)","request.websocket()","@app.websocket('/')"],c:1,e:"Flask (WSGI) <strong>nie obsługuje natywnie</strong> WebSocket. <code>Flask-SocketIO</code> dodaje support: <code>@socketio.on('message') def handle(msg): emit('response', data)</code>. Wymaga async serwera (eventlet/gevent). Alternatywa: Quart (ASGI Flask-like)."},
+{id:40,d:"expert",cat:"Zaawansowane",q:"Co to jest Quart i jak się ma do Flask?",a:["Fork Flask z obsługą GraphQL","Async reimplementacja Flask oparta na ASGI (async/await native)","Frontend framework","Starsza wersja Flask"],c:1,e:"<code>Quart</code> to async-native Flask-like framework na ASGI. API prawie identyczne z Flask, ale obsługuje <code>async def</code> views, WebSocket natywnie, HTTP/2. Migracja z Flask jest prosta. Flask 2.0+ obsługuje async views, ale wewnętrznie wciąż WSGI."},
+];
+
+let df='all',cat='all',qs=[],ix=0,ua={},sc=0,sk=0,ms=0,t0=null,tm=null;
+
+(function(){const c=document.getElementById('codeRain');const w='flask route template jinja2 request response jsonify session redirect url_for blueprint model query filter commit render app config debug'.split(' ');for(let i=0;i<16;i++){const d=document.createElement('div');d.className='code-drop';let t='';for(let j=0;j<20;j++)t+=w[Math.random()*w.length|0]+'\n';d.textContent=t;d.style.left=Math.random()*100+'%';d.style.animationDuration=(Math.random()*22+16)+'s';d.style.animationDelay=(Math.random()*14)+'s';c.appendChild(d);}})();
+const ob=new IntersectionObserver(e=>{e.forEach(n=>{if(n.isIntersecting)n.target.classList.add('vis');});},{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>ob.observe(el));
+
+function sw(m){document.getElementById('learnW').classList.toggle('hide',m==='quiz');document.getElementById('quizW').classList.toggle('show',m==='quiz');document.getElementById('mL').classList.toggle('act',m==='learn');document.getElementById('mQ').classList.toggle('act',m==='quiz');document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('act',i===(m==='learn'?0:1)));window.scrollTo({top:0,behavior:'smooth'});}
+function togF(el){const it=el.parentElement;const o=it.classList.contains('open');document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));if(!o)it.classList.add('open');}
+function setCat(c,b){cat=c;document.querySelectorAll('.chip').forEach(x=>x.classList.remove('act'));b.classList.add('act');}
+function setDf(d,b){df=d;document.querySelectorAll('.diff-btn').forEach(x=>x.classList.remove('act'));b.classList.add('act');}
+
+function startQ(){let p=[...QS];if(cat!=='all')p=p.filter(q=>q.cat===cat);if(df==='easy')p=p.filter(q=>q.d==='easy');else if(df==='expert')p=p.filter(q=>q.d==='expert'||q.d==='hard');if(p.length<5){toast('Za mało pytań — rozszerz filtry!','err');return;}qs=p.sort(()=>Math.random()-.5).slice(0,Math.min(30,p.length));ix=0;ua={};sc=0;sk=0;ms=0;document.getElementById('qStart').style.display='none';document.getElementById('qArea').style.display='block';document.getElementById('sBar').style.display='flex';document.getElementById('pSec').style.display='block';hd('resScr');t0=Date.now();tm=setInterval(ti,1000);ren();}
+function ti(){const s=Math.floor((Date.now()-t0)/1000);document.getElementById('sqTm').textContent=`${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`;}
+function el(){const s=Math.floor((Date.now()-t0)/1000);return`${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`;}
+
+function ren(){const q=qs[ix],tot=qs.length;const bg=document.getElementById('qBdg');bg.className='q-badge '+q.d;bg.textContent={easy:'🟢 EASY',medium:'🟠 MEDIUM',hard:'🔴 HARD',expert:'🟣 EXPERT'}[q.d];document.getElementById('qCat').textContent=q.cat;document.getElementById('qTxt').textContent=q.q;const cb=document.getElementById('qCode');if(q.code){cb.style.display='block';cb.textContent=q.code;}else cb.style.display='none';const ls=document.getElementById('ansList');ls.innerHTML='';const L=['A','B','C','D'];q.a.forEach((a,i)=>{const btn=document.createElement('button');btn.className='ans-btn';const lt=document.createElement('div');lt.className='ans-ltr';lt.textContent=L[i];const bd=document.createElement('div');bd.className='ans-body';bd.innerHTML=esc(a);btn.appendChild(lt);btn.appendChild(bd);btn.onclick=()=>sel(i,btn);if(ua[q.id]!==undefined){btn.classList.add('lk');if(i===q.c)btn.classList.add('ok');if(ua[q.id]===i&&i!==q.c)btn.classList.add('no');}ls.appendChild(btn);});const ex=document.getElementById('explB');document.getElementById('explT').innerHTML=q.e;ex.classList.toggle('show',ua[q.id]!==undefined);document.getElementById('sqN').textContent=ix+1;document.getElementById('prL').textContent=`${ix+1}/${tot}`;const pc=Math.round(ix/tot*100);document.getElementById('prP').textContent=pc+'%';document.getElementById('prF').style.width=pc+'%';document.getElementById('bPv').disabled=ix===0;const nx=document.getElementById('bNx');if(ix===tot-1){nx.textContent='🏁 Zakończ';nx.onclick=fin;}else{nx.innerHTML='Następne →';nx.onclick=nextQ;}nx.disabled=ua[q.id]===undefined;const cd=document.getElementById('qCard');cd.style.animation='none';cd.offsetHeight;cd.style.animation='qI .4s ease';}
+
+function sel(i,btn){const q=qs[ix];if(ua[q.id]!==undefined)return;ua[q.id]=i;if(i===q.c){sc++;sk++;if(sk>ms)ms=sk;btn.classList.add('ok');toast('✅ Poprawnie!','ok');}else{sk=0;btn.classList.add('no');document.querySelectorAll('.ans-btn')[q.c].classList.add('ok');toast('❌ Błędna odpowiedź','err');}document.querySelectorAll('.ans-btn').forEach(b=>b.classList.add('lk'));document.getElementById('sqOk').textContent=sc;document.getElementById('sqSt').textContent=sk;document.getElementById('explB').classList.add('show');document.getElementById('bNx').disabled=false;}
+function nextQ(){if(ix<qs.length-1){ix++;ren();}}
+function prevQ(){if(ix>0){ix--;ren();}}
+
+function fin(){clearInterval(tm);const t=el(),tot=qs.length,pc=Math.round(sc/tot*100);document.getElementById('qArea').style.display='none';document.getElementById('sBar').style.display='none';document.getElementById('pSec').style.display='none';const rs=document.getElementById('resScr');rs.style.display='block';rs.classList.add('show');let ic,tt,sb,mg;if(pc===100){ic='👑';tt='PERFEKCYJNIE!';sb='Mistrz Flask!';mg='Bezbłędny wynik! Czas budować produkcyjne API i webowe aplikacje 🚀';conf();}else if(pc>=80){ic='🏆';tt='Świetny wynik!';sb='Senior Flask Developer!';mg='Doskonała znajomość Flask. Gratulacje! 💪';conf();}else if(pc>=60){ic='💪';tt='Dobry wynik!';sb='Solidna wiedza!';mg='Przejrzyj wyjaśnienia i pogłęb wiedzę o Blueprints i SQLAlchemy 📚';}else if(pc>=40){ic='📚';tt='Może być lepiej';sb='Czas na naukę!';mg='Wróć do sekcji edukacyjnej. Skup się na routing, Jinja2 i request/response 🔄';}else{ic='🌱';tt='Początek drogi';sb='Flask czeka na Ciebie!';mg='Zacznij od Flask Mega-Tutorial (Miguel Grinberg) i wróć tu za tydzień 🚀';}document.getElementById('rIco').textContent=ic;document.getElementById('rTtl').textContent=tt;document.getElementById('rSub').textContent=sb;document.getElementById('rMsg').textContent=mg;document.getElementById('rOk').textContent=sc;document.getElementById('rNo').textContent=tot-sc;document.getElementById('rTm').textContent=t;document.getElementById('rMs').textContent=ms;document.getElementById('sPct').textContent=pc+'%';const ci=2*Math.PI*58;setTimeout(()=>{document.getElementById('sRing').style.strokeDashoffset=ci-(pc/100)*ci;},300);}
+
+function togR(){const l=document.getElementById('rvwL');l.classList.toggle('show');if(l.classList.contains('show')){l.innerHTML='<h3 style="color:var(--flask);margin-bottom:10px">📋 Przegląd</h3>';const L=['A','B','C','D'];qs.forEach((q,i)=>{const u=ua[q.id],ok=u===q.c;const d=document.createElement('div');d.className=`rvw-item ${ok?'rok':'rno'}`;d.innerHTML=`<div class="rvw-q">${i+1}. ${esc(q.q)}</div><div class="rvw-a">Twoja: <span class="${ok?'rg':'rr'}">${L[u]}. ${esc(q.a[u])}</span>${!ok?`<br>Poprawna: <span class="rg">${L[q.c]}. ${esc(q.a[q.c])}</span>`:''}</div>`;l.appendChild(d);});}}
+function restQ(){clearInterval(tm);hd('resScr');document.getElementById('rvwL').classList.remove('show');document.getElementById('qStart').style.display='block';document.getElementById('sRing').style.strokeDashoffset=365;document.getElementById('prF').style.width='0%';}
+function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
+function hd(id){const e=document.getElementById(id);e.style.display='none';e.classList.remove('show');}
+function toast(m,t){document.querySelectorAll('.toast').forEach(x=>x.remove());const d=document.createElement('div');d.className=`toast ${t}`;d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),3000);}
+function conf(){const cv=document.getElementById('confetti'),cx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;const ps=[],co=['#44cc88','#3b82f6','#a78bfa','#fbbf24','#f87171','#22d3ee','#fb923c','#f472b6'];for(let i=0;i<140;i++)ps.push({x:Math.random()*cv.width,y:Math.random()*cv.height-cv.height,w:Math.random()*10+4,h:Math.random()*6+3,c:co[Math.random()*co.length|0],vy:Math.random()*3+2,vx:Math.random()*2-1,r:Math.random()*360,rs:Math.random()*10-5});let f=0;(function dr(){cx.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{p.y+=p.vy;p.x+=p.vx;p.r+=p.rs;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r*Math.PI/180);cx.fillStyle=p.c;cx.fillRect(-p.w/2,-p.h/2,p.w,p.h);cx.restore();});if(++f<300)requestAnimationFrame(dr);else cx.clearRect(0,0,cv.width,cv.height);})();}
+document.addEventListener('keydown',e=>{if(document.getElementById('qArea').style.display==='none')return;const q=qs[ix];if('1234'.includes(e.key)&&ua[q.id]===undefined){const i=+e.key-1;const bs=document.querySelectorAll('.ans-btn');if(bs[i])sel(i,bs[i]);}if(e.key==='ArrowRight'||e.key==='Enter'){const b=document.getElementById('bNx');if(!b.disabled)b.click();}if(e.key==='ArrowLeft'){const b=document.getElementById('bPv');if(!b.disabled)b.click();}});
+</script>
+</body>
+</html>
+```
+</html>
