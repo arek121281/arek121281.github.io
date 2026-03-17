@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐼 Test Pandas - Sprawdź swoją wiedzę!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Fira+Code&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #1a1a4e, #24243e);
+            min-height: 100vh;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        .bg-particles {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.15);
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* HEADER */
+        header {
+            text-align: center;
+            padding: 50px 20px 30px;
+        }
+
+        .logo {
+            font-size: 80px;
+            margin-bottom: 10px;
+            animation: bounce 2s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #818cf8, #c084fc, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.15rem;
+            color: #a5b4fc;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* STATS BAR */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 18px 28px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            min-width: 140px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #818cf8;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* PROGRESS BAR */
+        .progress-container {
+            background: rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 20px 25px;
+            margin: 25px 0;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        .progress-header span:first-child {
+            color: #c084fc;
+            font-weight: 600;
+        }
+
+        .progress-header span:last-child {
+            color: #94a3b8;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #818cf8, #c084fc, #f472b6);
+            transition: width 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* DIFFICULTY SELECTOR */
+        .difficulty-selector {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .diff-btn {
+            padding: 10px 24px;
+            border-radius: 12px;
+            border: 2px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.05);
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .diff-btn:hover {
+            border-color: #818cf8;
+            color: #818cf8;
+            transform: translateY(-2px);
+        }
+
+        .diff-btn.active {
+            background: linear-gradient(135deg, #818cf8, #c084fc);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 4px 20px rgba(129, 140, 248, 0.4);
+        }
+
+        .diff-btn .emoji {
+            margin-right: 6px;
+        }
+
+        /* QUESTION CARD */
+        .question-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 35px;
+            margin: 20px 0;
+            backdrop-filter: blur(15px);
+            animation: slideIn 0.5s ease;
+            transition: opacity 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(129,140,248,0.2), rgba(192,132,252,0.2));
+            border: 1px solid rgba(129,140,248,0.3);
+            border-radius: 10px;
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #c084fc;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .code-block {
+            background: #1e1e2e;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            padding: 20px;
+            margin: 18px 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: 'Python';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 0.7rem;
+            color: #64748b;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .code-block .keyword { color: #c084fc; }
+        .code-block .string { color: #86efac; }
+        .code-block .function { color: #818cf8; }
+        .code-block .comment { color: #64748b; font-style: italic; }
+        .code-block .number { color: #f472b6; }
+        .code-block .builtin { color: #fbbf24; }
+
+        /* ANSWERS */
+        .answers-grid {
+            display: grid;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .answer-btn {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 22px;
+            border-radius: 16px;
+            border: 2px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
+            color: #e2e8f0;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+        }
+
+        .answer-btn:hover:not(.disabled) {
+            border-color: #818cf8;
+            background: rgba(129, 140, 248, 0.08);
+            transform: translateX(6px);
+        }
+
+        .answer-letter {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #818cf8;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .answer-btn:hover:not(.disabled) .answer-letter {
+            background: #818cf8;
+            color: white;
+        }
+
+        .answer-btn.correct {
+            border-color: #34d399;
+            background: rgba(52, 211, 153, 0.12);
+            animation: correctPulse 0.5s ease;
+        }
+
+        .answer-btn.correct .answer-letter {
+            background: #34d399;
+            color: white;
+        }
+
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .answer-btn.wrong {
+            border-color: #f87171;
+            background: rgba(248, 113, 113, 0.12);
+            animation: shake 0.5s ease;
+        }
+
+        .answer-btn.wrong .answer-letter {
+            background: #f87171;
+            color: white;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .answer-btn.disabled {
+            cursor: default;
+            opacity: 0.5;
+        }
+
+        .answer-btn.correct.disabled,
+        .answer-btn.wrong.disabled {
+            opacity: 1;
+        }
+
+        /* EXPLANATION */
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 14px;
+            border-left: 4px solid #818cf8;
+            background: rgba(129, 140, 248, 0.08);
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .explanation.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .explanation h4 {
+            color: #818cf8;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .explanation p {
+            color: #a5b4fc;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .explanation code {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #c084fc;
+        }
+
+        /* NAV BUTTONS */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 14px 30px;
+            border-radius: 14px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #818cf8, #c084fc);
+            color: white;
+            box-shadow: 0 4px 20px rgba(129, 140, 248, 0.3);
+        }
+
+        .nav-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(129, 140, 248, 0.5);
+        }
+
+        .nav-btn.secondary {
+            background: rgba(255,255,255,0.08);
+            color: #cbd5e1;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .nav-btn.secondary:hover {
+            background: rgba(255,255,255,0.12);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* RESULTS */
+        .results-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 50px 35px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            animation: slideIn 0.5s ease;
+            display: none;
+        }
+
+        .results-card.show {
+            display: block;
+        }
+
+        .results-emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 2s ease infinite;
+        }
+
+        .results-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .results-subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin: 30px auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .score-circle svg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .score-circle circle {
+            fill: none;
+            stroke-width: 8;
+            cx: 90;
+            cy: 90;
+            r: 82;
+        }
+
+        .score-circle .bg {
+            stroke: rgba(255,255,255,0.08);
+        }
+
+        .score-circle .fg {
+            stroke: url(#scoreGradient);
+            stroke-linecap: round;
+            stroke-dasharray: 515;
+            stroke-dashoffset: 515;
+            transition: stroke-dashoffset 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .score-percent {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            z-index: 1;
+        }
+
+        .score-text {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            z-index: 1;
+        }
+
+        .results-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .result-stat {
+            text-align: center;
+        }
+
+        .result-stat-num {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .result-stat-num.green { color: #34d399; }
+        .result-stat-num.red { color: #f87171; }
+        .result-stat-num.blue { color: #818cf8; }
+
+        .result-stat-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .results-message {
+            background: rgba(129, 140, 248, 0.1);
+            border: 1px solid rgba(129, 140, 248, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 25px 0;
+            font-size: 1.05rem;
+            color: #a5b4fc;
+            line-height: 1.7;
+        }
+
+        .restart-btn {
+            padding: 16px 40px;
+            border-radius: 16px;
+            border: none;
+            background: linear-gradient(135deg, #818cf8, #c084fc);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            margin-top: 15px;
+            box-shadow: 0 4px 20px rgba(129, 140, 248, 0.3);
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 35px rgba(129, 140, 248, 0.5);
+        }
+
+        /* START SCREEN */
+        .start-screen {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .feature-item {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+        }
+
+        .feature-text {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .feature-text strong {
+            color: #e2e8f0;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .start-btn {
+            padding: 18px 50px;
+            border-radius: 16px;
+            border: none;
+            background: linear-gradient(135deg, #818cf8, #c084fc, #f472b6);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 25px rgba(129, 140, 248, 0.4);
+            margin-top: 10px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 40px rgba(129, 140, 248, 0.6);
+        }
+
+        /* TIMER */
+        .timer-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 2px;
+            margin-top: 15px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .timer-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #34d399, #fbbf24, #f87171);
+            border-radius: 2px;
+            transition: width 1s linear;
+            width: 100%;
+        }
+
+        /* REVIEW */
+        .review-section {
+            margin-top: 25px;
+            display: none;
+        }
+
+        .review-section.show {
+            display: block;
+        }
+
+        .review-item {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .review-item.review-correct {
+            border-left: 4px solid #34d399;
+        }
+
+        .review-item.review-wrong {
+            border-left: 4px solid #f87171;
+        }
+
+        .review-question {
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 8px;
+        }
+
+        .review-answer {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .review-answer span {
+            font-weight: 600;
+        }
+
+        .review-answer .correct-ans { color: #34d399; }
+        .review-answer .wrong-ans { color: #f87171; }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            header h1 { font-size: 2rem; }
+            .question-text { font-size: 1.1rem; }
+            .question-card { padding: 22px; }
+            .stats-bar { gap: 12px; }
+            .stat-item { min-width: 100px; padding: 12px 16px; }
+            .results-stats { gap: 20px; }
+            .nav-buttons { flex-direction: column; }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            z-index: 1000;
+            animation: toastIn 0.4s ease, toastOut 0.4s ease 2.6s forwards;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.success {
+            background: rgba(52, 211, 153, 0.95);
+            color: #064e3b;
+        }
+
+        .toast.error {
+            background: rgba(248, 113, 113, 0.95);
+            color: #7f1d1d;
+        }
+
+        @keyframes toastIn {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes toastOut {
+            from { opacity: 1; }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+
+        /* Confetti canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #475569;
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: #818cf8;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background particles -->
+<div class="bg-particles" id="particles"></div>
+
+<!-- Confetti -->
+<canvas id="confetti-canvas"></canvas>
+
+<div class="container">
+    <header>
+        <div class="logo">🐼</div>
+        <h1>Test wiedzy z Pandas</h1>
+        <p>Sprawdź swoją znajomość biblioteki Pandas — od podstaw po zaawansowane operacje na danych!</p>
+    </header>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar" id="statsBar" style="display:none;">
+        <div class="stat-item">
+            <div class="stat-number" id="currentQ">1</div>
+            <div class="stat-label">Pytanie</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" id="correctCount">0</div>
+            <div class="stat-label">Poprawne</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" id="streakCount">0</div>
+            <div class="stat-label">🔥 Seria</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" id="timeDisplay">0:00</div>
+            <div class="stat-label">Czas</div>
+        </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-container" id="progressContainer" style="display:none;">
+        <div class="progress-header">
+            <span id="progressText">Pytanie 1 z 20</span>
+            <span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <!-- START SCREEN -->
+    <div id="startScreen" class="start-screen">
+        <div class="features">
+            <div class="feature-item">
+                <div class="feature-icon">📊</div>
+                <div class="feature-text">
+                    <strong>20 pytań</strong>
+                    Kompleksowy test wiedzy
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-text">
+                    <strong>3 poziomy</strong>
+                    Podstawowy, średni, zaawansowany
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">💡</div>
+                <div class="feature-text">
+                    <strong>Wyjaśnienia</strong>
+                    Ucz się na błędach
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">⏱️</div>
+                <div class="feature-text">
+                    <strong>Śledzenie czasu</strong>
+                    Sprawdź swoją szybkość
+                </div>
+            </div>
+        </div>
+
+        <h3 style="color: #a5b4fc; margin-bottom: 15px;">Wybierz poziom trudności:</h3>
+        <div class="difficulty-selector">
+            <button class="diff-btn" data-diff="easy" onclick="setDifficulty('easy', this)">
+                <span class="emoji">🟢</span> Podstawowy
+            </button>
+            <button class="diff-btn active" data-diff="all" onclick="setDifficulty('all', this)">
+                <span class="emoji">🔵</span> Wszystkie
+            </button>
+            <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard', this)">
+                <span class="emoji">🔴</span> Zaawansowany
+            </button>
+        </div>
+
+        <button class="start-btn" onclick="startQuiz()">
+            🚀 Rozpocznij test
+        </button>
+    </div>
+
+    <!-- QUESTION AREA -->
+    <div id="quizArea" style="display:none;">
+        <div class="question-card" id="questionCard">
+            <div class="question-badge" id="questionBadge">
+                <span>📌</span>
+                <span id="diffLabel">PODSTAWOWY</span>
+            </div>
+            <div class="question-text" id="questionText"></div>
+            <div class="code-block" id="codeBlock" style="display:none;"></div>
+            <div class="answers-grid" id="answersGrid"></div>
+            <div class="explanation" id="explanation">
+                <h4>💡 Wyjaśnienie:</h4>
+                <p id="explanationText"></p>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-btn secondary" id="prevBtn" onclick="prevQuestion()" disabled>
+                ← Poprzednie
+            </button>
+            <button class="nav-btn primary" id="nextBtn" onclick="nextQuestion()" disabled>
+                Następne →
+            </button>
+        </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results-card" id="resultsCard">
+        <div class="results-emoji" id="resultsEmoji">🏆</div>
+        <h2 class="results-title" id="resultsTitle"></h2>
+        <p class="results-subtitle" id="resultsSubtitle"></p>
+
+        <div class="score-circle">
+            <svg viewBox="0 0 180 180">
+                <defs>
+                    <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#818cf8" />
+                        <stop offset="50%" style="stop-color:#c084fc" />
+                        <stop offset="100%" style="stop-color:#f472b6" />
+                    </linearGradient>
+                </defs>
+                <circle class="bg" />
+                <circle class="fg" id="scoreCircle" />
+            </svg>
+            <div class="score-percent" id="scorePercent">0%</div>
+            <div class="score-text">wynik</div>
+        </div>
+
+        <div class="results-stats">
+            <div class="result-stat">
+                <div class="result-stat-num green" id="resCorrect">0</div>
+                <div class="result-stat-label">Poprawne</div>
+            </div>
+            <div class="result-stat">
+                <div class="result-stat-num red" id="resWrong">0</div>
+                <div class="result-stat-label">Błędne</div>
+            </div>
+            <div class="result-stat">
+                <div class="result-stat-num blue" id="resTime">0:00</div>
+                <div class="result-stat-label">Czas</div>
+            </div>
+        </div>
+
+        <div class="results-message" id="resultsMessage"></div>
+
+        <button class="restart-btn" onclick="restartQuiz()">🔄 Spróbuj ponownie</button>
+        <br><br>
+        <button class="nav-btn secondary" onclick="showReview()" style="margin: 0 auto;">
+            📋 Przejrzyj odpowiedzi
+        </button>
+
+        <div class="review-section" id="reviewSection"></div>
+    </div>
+
+    <footer>
+        <p>Stworzono z ❤️ dla społeczności Pythona | <a href="#">Pandas Documentation</a></p>
+    </footer>
+</div>
+
+<script>
+// ==================== QUESTIONS DATABASE ====================
+const allQuestions = [
+    // ===== EASY =====
+    {
+        id: 1,
+        difficulty: "easy",
+        question: "Jak zaimportować bibliotekę Pandas?",
+        code: null,
+        answers: [
+            "import pandas as pd",
+            "from pandas import *",
+            "include pandas",
+            "require('pandas')"
+        ],
+        correct: 0,
+        explanation: "<code>import pandas as pd</code> to standardowa konwencja importu Pandas. Alias <code>pd</code> jest powszechnie używany w społeczności Pythona."
+    },
+    {
+        id: 2,
+        difficulty: "easy",
+        question: "Która struktura danych w Pandas jest jednowymiarowa?",
+        code: null,
+        answers: [
+            "DataFrame",
+            "Series",
+            "Panel",
+            "Array"
+        ],
+        correct: 1,
+        explanation: "<code>Series</code> to jednowymiarowa struktura danych (jak kolumna). <code>DataFrame</code> jest dwuwymiarowy (tabela z wierszami i kolumnami)."
+    },
+    {
+        id: 3,
+        difficulty: "easy",
+        question: "Jak wczytać plik CSV do DataFrame?",
+        code: null,
+        answers: [
+            "pd.load_csv('plik.csv')",
+            "pd.read_csv('plik.csv')",
+            "pd.open_csv('plik.csv')",
+            "pd.import_csv('plik.csv')"
+        ],
+        correct: 1,
+        explanation: "<code>pd.read_csv()</code> to podstawowa funkcja do wczytywania plików CSV. Pandas obsługuje też <code>read_excel()</code>, <code>read_json()</code>, <code>read_sql()</code> i wiele innych formatów."
+    },
+    {
+        id: 4,
+        difficulty: "easy",
+        question: "Co zwraca metoda df.shape?",
+        code: `df = pd.DataFrame({'A': [1, 2, 3], 'B': [4, 5, 6]})
+print(df.shape)`,
+        answers: [
+            "(2, 3)",
+            "(3, 2)",
+            "[3, 2]",
+            "6"
+        ],
+        correct: 1,
+        explanation: "<code>df.shape</code> zwraca krotkę (tuple) — <code>(liczba_wierszy, liczba_kolumn)</code>. DataFrame ma 3 wiersze i 2 kolumny, więc wynik to <code>(3, 2)</code>."
+    },
+    {
+        id: 5,
+        difficulty: "easy",
+        question: "Jak wyświetlić pierwsze 5 wierszy DataFrame?",
+        code: null,
+        answers: [
+            "df.first(5)",
+            "df.top(5)",
+            "df.head()",
+            "df.show(5)"
+        ],
+        correct: 2,
+        explanation: "<code>df.head()</code> domyślnie wyświetla 5 pierwszych wierszy. Możesz podać argument, np. <code>df.head(10)</code> dla 10 wierszy. Analogicznie <code>df.tail()</code> pokazuje ostatnie wiersze."
+    },
+    {
+        id: 6,
+        difficulty: "easy",
+        question: "Jak wybrać kolumnę 'nazwa' z DataFrame?",
+        code: null,
+        answers: [
+            "df.column('nazwa')",
+            "df['nazwa']",
+            "df.get('nazwa')",
+            "df.select('nazwa')"
+        ],
+        correct: 1,
+        explanation: "Kolumnę wybieramy za pomocą <code>df['nazwa']</code> lub <code>df.nazwa</code> (notacja kropkowa). Zwraca to obiekt <code>Series</code>."
+    },
+    {
+        id: 7,
+        difficulty: "easy",
+        question: "Co robi metoda df.describe()?",
+        code: null,
+        answers: [
+            "Opisuje typy danych kolumn",
+            "Generuje statystyki opisowe (mean, std, min, max...)",
+            "Wyświetla nazwy kolumn",
+            "Pokazuje brakujące wartości"
+        ],
+        correct: 1,
+        explanation: "<code>df.describe()</code> generuje statystyki opisowe kolumn numerycznych: count, mean, std, min, 25%, 50%, 75%, max."
+    },
+    {
+        id: 8,
+        difficulty: "easy",
+        question: "Jak sprawdzić typy danych w DataFrame?",
+        code: null,
+        answers: [
+            "df.types()",
+            "df.dtypes",
+            "df.get_types()",
+            "df.columns_type()"
+        ],
+        correct: 1,
+        explanation: "<code>df.dtypes</code> to atrybut (nie metoda!) zwracający typy danych każdej kolumny. <code>df.info()</code> daje bardziej szczegółowe informacje."
+    },
+    {
+        id: 9,
+        difficulty: "easy",
+        question: "Jaki będzie wynik tego kodu?",
+        code: `s = pd.Series([10, 20, 30, 40])
+print(s.mean())`,
+        answers: [
+            "10",
+            "100",
+            "25.0",
+            "30"
+        ],
+        correct: 2,
+        explanation: "Średnia z [10, 20, 30, 40] to (10+20+30+40)/4 = 100/4 = <code>25.0</code>. Metoda <code>.mean()</code> oblicza średnią arytmetyczną."
+    },
+    {
+        id: 10,
+        difficulty: "easy",
+        question: "Jak usunąć wiersze z brakującymi wartościami?",
+        code: null,
+        answers: [
+            "df.remove_null()",
+            "df.dropna()",
+            "df.clean()",
+            "df.delete_missing()"
+        ],
+        correct: 1,
+        explanation: "<code>df.dropna()</code> usuwa wiersze zawierające wartości NaN. Użyj <code>df.fillna(wartość)</code>, aby zamiast tego wypełnić braki wartością."
+    },
+    // ===== MEDIUM =====
+    {
+        id: 11,
+        difficulty: "medium",
+        question: "Jaka jest różnica między loc[] a iloc[]?",
+        code: null,
+        answers: [
+            "loc[] używa etykiet, iloc[] używa pozycji liczbowych",
+            "loc[] jest szybsze niż iloc[]",
+            "iloc[] używa etykiet, loc[] używa pozycji liczbowych",
+            "Nie ma żadnej różnicy"
+        ],
+        correct: 0,
+        explanation: "<code>df.loc[]</code> wybiera dane po etykietach (nazwach indeksu/kolumn), a <code>df.iloc[]</code> po pozycjach liczbowych (integer-based). Np. <code>df.iloc[0]</code> = pierwszy wiersz, <code>df.loc['Jan']</code> = wiersz o etykiecie 'Jan'."
+    },
+    {
+        id: 12,
+        difficulty: "medium",
+        question: "Co zwróci ten kod?",
+        code: `df = pd.DataFrame({'A': [1, 2, 3], 'B': [4, 5, 6]})
+print(df.iloc[1:3, 0].tolist())`,
+        answers: [
+            "[1, 2]",
+            "[2, 3]",
+            "[4, 5]",
+            "[2, 5]"
+        ],
+        correct: 1,
+        explanation: "<code>iloc[1:3, 0]</code> wybiera wiersze od indeksu 1 do 2 (3 jest wyłączone) z kolumny o pozycji 0 (kolumna 'A'). Wartości to [2, 3]."
+    },
+    {
+        id: 13,
+        difficulty: "medium",
+        question: "Jak pogrupować dane i obliczyć średnią?",
+        code: `df = pd.DataFrame({
+    'miasto': ['Kraków', 'Warszawa', 'Kraków', 'Warszawa'],
+    'sprzedaz': [100, 200, 150, 250]
+})`,
+        answers: [
+            "df.group('miasto').avg('sprzedaz')",
+            "df.groupby('miasto')['sprzedaz'].mean()",
+            "df.aggregate('miasto', 'mean')",
+            "df.pivot('miasto').mean()"
+        ],
+        correct: 1,
+        explanation: "<code>df.groupby('miasto')['sprzedaz'].mean()</code> grupuje dane po mieście i oblicza średnią sprzedaży. Wynik: Kraków=125.0, Warszawa=225.0."
+    },
+    {
+        id: 14,
+        difficulty: "medium",
+        question: "Jak połączyć dwa DataFrame'y po wspólnej kolumnie?",
+        code: null,
+        answers: [
+            "pd.concat(df1, df2, on='id')",
+            "df1.join(df2, column='id')",
+            "pd.merge(df1, df2, on='id')",
+            "df1.combine(df2, key='id')"
+        ],
+        correct: 2,
+        explanation: "<code>pd.merge()</code> łączy DataFrame'y podobnie jak SQL JOIN. Parametr <code>on</code> określa kolumnę łączącą, a <code>how</code> typ złączenia ('inner', 'left', 'right', 'outer')."
+    },
+    {
+        id: 15,
+        difficulty: "medium",
+        question: "Co robi metoda df.apply()?",
+        code: `df = pd.DataFrame({'cena': [100, 200, 300]})
+df['z_vatem'] = df['cena'].apply(lambda x: x * 1.23)`,
+        answers: [
+            "Filtruje DataFrame",
+            "Stosuje funkcję do każdego elementu lub wiersza/kolumny",
+            "Sortuje DataFrame",
+            "Łączy kolumny"
+        ],
+        correct: 1,
+        explanation: "<code>.apply()</code> stosuje daną funkcję do każdego elementu (Series) lub wiersza/kolumny (DataFrame). Jest bardzo przydatna do transformacji danych."
+    },
+    {
+        id: 16,
+        difficulty: "medium",
+        question: "Jak posortować DataFrame po kolumnie 'wiek' malejąco?",
+        code: null,
+        answers: [
+            "df.sort('wiek', order='desc')",
+            "df.sort_values(by='wiek', ascending=False)",
+            "df.order_by('wiek', reverse=True)",
+            "df.arrange('wiek', desc=True)"
+        ],
+        correct: 1,
+        explanation: "<code>df.sort_values(by='wiek', ascending=False)</code> sortuje dane malejąco. Domyślnie <code>ascending=True</code> (rosnąco). Można też sortować po wielu kolumnach."
+    },
+    {
+        id: 17,
+        difficulty: "medium",
+        question: "Co zwraca value_counts()?",
+        code: `s = pd.Series(['a', 'b', 'a', 'c', 'a', 'b'])
+print(s.value_counts())`,
+        answers: [
+            "Liczbę unikalnych wartości",
+            "Serię z częstotliwością każdej wartości",
+            "Listę unikalnych wartości",
+            "Procent każdej wartości"
+        ],
+        correct: 1,
+        explanation: "<code>value_counts()</code> zwraca Series z liczbą wystąpień każdej unikalnej wartości, posortowaną malejąco: a=3, b=2, c=1."
+    },
+    {
+        id: 18,
+        difficulty: "medium",
+        question: "Jak wybrać wiersze, gdzie kolumna 'wiek' > 30?",
+        code: null,
+        answers: [
+            "df.filter(wiek > 30)",
+            "df.where('wiek' > 30)",
+            "df[df['wiek'] > 30]",
+            "df.query(wiek > 30)"
+        ],
+        correct: 2,
+        explanation: "<code>df[df['wiek'] > 30]</code> to filtrowanie boolowskie — tworzy maskę True/False i zwraca tylko wiersze spełniające warunek. Alternatywnie: <code>df.query('wiek > 30')</code>."
+    },
+    {
+        id: 19,
+        difficulty: "medium",
+        question: "Co robi pd.concat()?",
+        code: null,
+        answers: [
+            "Łączy DataFrame'y po wspólnej kolumnie (jak SQL JOIN)",
+            "Scala DataFrame'y wzdłuż osi (pionowo lub poziomo)",
+            "Krzyżowo łączy wszystkie wiersze",
+            "Dodaje nową kolumnę"
+        ],
+        correct: 1,
+        explanation: "<code>pd.concat([df1, df2])</code> scala DataFrame'y. Domyślnie <code>axis=0</code> (pionowo — dodaje wiersze). Z <code>axis=1</code> scala poziomo (dodaje kolumny)."
+    },
+    {
+        id: 20,
+        difficulty: "medium",
+        question: "Jak zmienić nazwę kolumny?",
+        code: null,
+        answers: [
+            "df.rename(columns={'stara': 'nowa'})",
+            "df.change_column('stara', 'nowa')",
+            "df.set_column_name('stara', 'nowa')",
+            "df.columns.rename('stara', 'nowa')"
+        ],
+        correct: 0,
+        explanation: "<code>df.rename(columns={'stara': 'nowa'})</code> zmienia nazwy kolumn. Dodaj <code>inplace=True</code> aby zmodyfikować DataFrame w miejscu."
+    },
+    // ===== HARD =====
+    {
+        id: 21,
+        difficulty: "hard",
+        question: "Co zwróci ten kod?",
+        code: `df = pd.DataFrame({'A': [1, 2, None, 4], 'B': [None, 2, 3, 4]})
+print(df.isnull().sum().sum())`,
+        answers: [
+            "1",
+            "2",
+            "0",
+            "4"
+        ],
+        correct: 1,
+        explanation: "Pierwsze <code>.sum()</code> liczy NaN w każdej kolumnie (A=1, B=1). Drugie <code>.sum()</code> sumuje te wartości: 1+1 = <code>2</code>. Łącznie są 2 brakujące wartości."
+    },
+    {
+        id: 22,
+        difficulty: "hard",
+        question: "Co robi metoda pivot_table()?",
+        code: null,
+        answers: [
+            "Tylko obraca kolumny i wiersze",
+            "Tworzy tabelę przestawną z agregacją danych",
+            "Sortuje dane w tabeli",
+            "Konwertuje tabelę do formatu JSON"
+        ],
+        correct: 1,
+        explanation: "<code>df.pivot_table(values='sprzedaz', index='region', columns='rok', aggfunc='sum')</code> tworzy tabelę przestawną z agregacją — jak tabele przestawne w Excelu."
+    },
+    {
+        id: 23,
+        difficulty: "hard",
+        question: "Co zwróci ten kod?",
+        code: `df = pd.DataFrame({'A': [1, 1, 2, 2], 'B': [10, 20, 30, 40]})
+result = df.groupby('A')['B'].transform('sum')
+print(result.tolist())`,
+        answers: [
+            "[30, 70]",
+            "[10, 20, 30, 40]",
+            "[30, 30, 70, 70]",
+            "[1, 1, 2, 2]"
+        ],
+        correct: 2,
+        explanation: "<code>transform()</code> zwraca wynik o tej samej długości co oryginał. Dla grupy A=1: sum=30 (przypisane do obu wierszy). Dla A=2: sum=70. Wynik: [30, 30, 70, 70]."
+    },
+    {
+        id: 24,
+        difficulty: "hard",
+        question: "Jak stworzyć MultiIndex w DataFrame?",
+        code: null,
+        answers: [
+            "df.set_index(['kol1', 'kol2'])",
+            "df.multi_index('kol1', 'kol2')",
+            "pd.MultiIndex(df, ['kol1', 'kol2'])",
+            "df.index = ['kol1', 'kol2']"
+        ],
+        correct: 0,
+        explanation: "<code>df.set_index(['kol1', 'kol2'])</code> tworzy hierarchiczny indeks (MultiIndex) z dwóch kolumn. Pozwala to na zaawansowane operacje z wielopoziomowym indeksowaniem."
+    },
+    {
+        id: 25,
+        difficulty: "hard",
+        question: "Co robi metoda df.melt()?",
+        code: null,
+        answers: [
+            "Usuwa duplikaty",
+            "Przekształca format szeroki na długi (unpivot)",
+            "Łączy DataFrame'y",
+            "Agreguje dane"
+        ],
+        correct: 1,
+        explanation: "<code>df.melt()</code> przekształca DataFrame z formatu szerokiego na długi — odwrotność <code>pivot()</code>. Przydatne do normalizacji danych pod wizualizację."
+    },
+    {
+        id: 26,
+        difficulty: "hard",
+        question: "Jaki typ danych zaoszczędzi pamięć przy kategorycznych kolumnach?",
+        code: null,
+        answers: [
+            "object",
+            "string",
+            "category",
+            "enum"
+        ],
+        correct: 2,
+        explanation: "<code>df['kol'] = df['kol'].astype('category')</code> konwertuje do typu kategorycznego, który zamiast przechowywać powtarzające się stringi, używa kodów liczbowych — oszczędność nawet 90% pamięci."
+    },
+    {
+        id: 27,
+        difficulty: "hard",
+        question: "Co zwróci ten kod?",
+        code: `df = pd.DataFrame({'A': [3, 1, 2]}, index=['x', 'y', 'z'])
+print(df.sort_values('A').index.tolist())`,
+        answers: [
+            "['x', 'y', 'z']",
+            "['y', 'z', 'x']",
+            "[1, 2, 3]",
+            "['z', 'y', 'x']"
+        ],
+        correct: 1,
+        explanation: "Po posortowaniu kolumny A rosnąco (1, 2, 3), indeksy zachowują powiązanie z wartościami: 1→'y', 2→'z', 3→'x'. Wynik: <code>['y', 'z', 'x']</code>."
+    },
+    {
+        id: 28,
+        difficulty: "hard",
+        question: "Jak zastosować wiele funkcji agregujących naraz?",
+        code: null,
+        answers: [
+            "df.groupby('A')['B'].apply(['mean', 'sum'])",
+            "df.groupby('A')['B'].agg(['mean', 'sum'])",
+            "df.groupby('A')['B'].multi_agg('mean', 'sum')",
+            "df.groupby('A')['B'].aggregate_all(['mean', 'sum'])"
+        ],
+        correct: 1,
+        explanation: "<code>.agg()</code> (lub <code>.aggregate()</code>) przyjmuje listę funkcji i zwraca DataFrame z wynikami każdej z nich. Można też podać słownik: <code>.agg({'B': 'mean', 'C': 'sum'})</code>."
+    },
+    {
+        id: 29,
+        difficulty: "hard",
+        question: "Co robi metoda df.pipe()?",
+        code: `def dodaj_kolumne(df, nazwa, wartosc):
+    df[nazwa] = wartosc
+    return df
+
+result = (df.pipe(dodaj_kolumne, 'nowa', 1)
+            .pipe(dodaj_kolumne, 'inna', 2))`,
+        answers: [
+            "Filtruje dane w potoku",
+            "Umożliwia łańcuchowe wywoływanie funkcji na DataFrame",
+            "Tworzy rurociąg danych do bazy",
+            "Konwertuje dane do formatu pipe-separated"
+        ],
+        correct: 1,
+        explanation: "<code>pipe()</code> pozwala na czytelne łańcuchowe (chaining) wywołania funkcji na DataFrame. Funkcja otrzymuje df jako pierwszy argument i musi zwrócić df."
+    },
+    {
+        id: 30,
+        difficulty: "hard",
+        question: "Co zwróci ten kod?",
+        code: `df = pd.DataFrame({'A': [1, 2, 3, 4, 5]})
+print(df['A'].rolling(window=3).mean().dropna().tolist())`,
+        answers: [
+            "[2.0, 3.0, 4.0]",
+            "[1.0, 1.5, 2.0, 3.0, 4.0]",
+            "[3.0, 4.0, 5.0]",
+            "[1.5, 2.5, 3.5]"
+        ],
+        correct: 0,
+        explanation: "<code>rolling(window=3).mean()</code> oblicza średnią kroczącą z oknem 3: (1+2+3)/3=2.0, (2+3+4)/3=3.0, (3+4+5)/3=4.0. Pierwsze 2 wartości to NaN (za mało danych), usuwane przez <code>dropna()</code>."
+    }
+];
+
+// ==================== GAME STATE ====================
+let currentDifficulty = 'all';
+let questions = [];
+let currentIndex = 0;
+let answers = {};
+let correctAnswers = 0;
+let streak = 0;
+let maxStreak = 0;
+let startTime = null;
+let timerInterval = null;
+
+// ==================== PARTICLES ====================
+function createParticles() {
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 30; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 6 + 2;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+        p.style.animationDelay = (Math.random() * 10) + 's';
+        container.appendChild(p);
+    }
+}
+createParticles();
+
+// ==================== DIFFICULTY ====================
+function setDifficulty(diff, btn) {
+    currentDifficulty = diff;
+    document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+// ==================== START QUIZ ====================
+function startQuiz() {
+    if (currentDifficulty === 'easy') {
+        questions = allQuestions.filter(q => q.difficulty === 'easy');
+    } else if (currentDifficulty === 'hard') {
+        questions = allQuestions.filter(q => q.difficulty === 'hard');
+    } else {
+        questions = [...allQuestions];
+    }
+
+    // Shuffle
+    questions = questions.sort(() => Math.random() - 0.5).slice(0, 20);
+
+    currentIndex = 0;
+    answers = {};
+    correctAnswers = 0;
+    streak = 0;
+    maxStreak = 0;
+
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('quizArea').style.display = 'block';
+    document.getElementById('statsBar').style.display = 'flex';
+    document.getElementById('progressContainer').style.display = 'block';
+    document.getElementById('resultsCard').classList.remove('show');
+    document.getElementById('resultsCard').style.display = 'none';
+
+    startTime = Date.now();
+    timerInterval = setInterval(updateTimer, 1000);
+
+    renderQuestion();
+}
+
+// ==================== TIMER ====================
+function updateTimer() {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const min = Math.floor(elapsed / 60);
+    const sec = elapsed % 60;
+    document.getElementById('timeDisplay').textContent = `${min}:${sec.toString().padStart(2, '0')}`;
+}
+
+function getElapsedTime() {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const min = Math.floor(elapsed / 60);
+    const sec = elapsed % 60;
+    return `${min}:${sec.toString().padStart(2, '0')}`;
+}
+
+// ==================== RENDER QUESTION ====================
+function renderQuestion() {
+    const q = questions[currentIndex];
+    const total = questions.length;
+
+    // Badge
+    const diffLabels = { easy: '🟢 PODSTAWOWY', medium: '🟡 ŚREDNI', hard: '🔴 ZAAWANSOWANY' };
+    document.getElementById('diffLabel').textContent = diffLabels[q.difficulty] || q.difficulty;
+
+    // Question text
+    document.getElementById('questionText').textContent = q.question;
+
+    // Code block
+    const codeBlock = document.getElementById('codeBlock');
+    if (q.code) {
+        codeBlock.style.display = 'block';
+        codeBlock.innerHTML = highlightCode(q.code);
+    } else {
+        codeBlock.style.display = 'none';
+    }
+
+    // Answers
+    const grid = document.getElementById('answersGrid');
+    grid.innerHTML = '';
+    const letters = ['A', 'B', 'C', 'D'];
+
+    q.answers.forEach((ans, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'answer-btn';
+        btn.innerHTML = `<div class="answer-letter">${letters[i]}</div><div>${escapeHtml(ans)}</div>`;
+        btn.onclick = () => selectAnswer(i, btn);
+
+        // If already answered
+        if (answers[q.id] !== undefined) {
+            btn.classList.add('disabled');
+            if (i === q.correct) btn.classList.add('correct');
+            if (answers[q.id] === i && i !== q.correct) btn.classList.add('wrong');
+        }
+
+        grid.appendChild(btn);
+    });
+
+    // Explanation
+    const expl = document.getElementById('explanation');
+    document.getElementById('explanationText').innerHTML = q.explanation;
+    if (answers[q.id] !== undefined) {
+        expl.classList.add('show');
+    } else {
+        expl.classList.remove('show');
+    }
+
+    // Progress
+    document.getElementById('currentQ').textContent = currentIndex + 1;
+    document.getElementById('progressText').textContent = `Pytanie ${currentIndex + 1} z ${total}`;
+    const pct = ((currentIndex) / total * 100);
+    document.getElementById('progressPercent').textContent = Math.round(pct) + '%';
+    document.getElementById('progressFill').style.width = pct + '%';
+
+    // Nav buttons
+    document.getElementById('prevBtn').disabled = currentIndex === 0;
+    const nextBtn = document.getElementById('nextBtn');
+    if (currentIndex === total - 1) {
+        nextBtn.textContent = '🏁 Zakończ test';
+        nextBtn.onclick = finishQuiz;
+    } else {
+        nextBtn.innerHTML = 'Następne →';
+        nextBtn.onclick = nextQuestion;
+    }
+    nextBtn.disabled = answers[q.id] === undefined;
+
+    // Animate card
+    const card = document.getElementById('questionCard');
+    card.style.animation = 'none';
+    card.offsetHeight;
+    card.style.animation = 'slideIn 0.5s ease';
+}
+
+// ==================== SELECT ANSWER ====================
+function selectAnswer(index, btn) {
+    const q = questions[currentIndex];
+    if (answers[q.id] !== undefined) return;
+
+    answers[q.id] = index;
+    const isCorrect = index === q.correct;
+
+    if (isCorrect) {
+        correctAnswers++;
+        streak++;
+        if (streak > maxStreak) maxStreak = streak;
+        btn.classList.add('correct');
+        showToast('✅ Poprawna odpowiedź!', 'success');
+    } else {
+        streak = 0;
+        btn.classList.add('wrong');
+        // Show correct
+        const allBtns = document.querySelectorAll('.answer-btn');
+        allBtns[q.correct].classList.add('correct');
+        showToast('❌ Niestety, to nie ta odpowiedź', 'error');
+    }
+
+    // Disable all
+    document.querySelectorAll('.answer-btn').forEach(b => b.classList.add('disabled'));
+
+    // Update stats
+    document.getElementById('correctCount').textContent = correctAnswers;
+    document.getElementById('streakCount').textContent = streak;
+
+    // Show explanation
+    document.getElementById('explanation').classList.add('show');
+
+    // Enable next
+    document.getElementById('nextBtn').disabled = false;
+}
+
+// ==================== NAVIGATION ====================
+function nextQuestion() {
+    if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+    }
+}
+
+function prevQuestion() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+    }
+}
+
+// ==================== FINISH ====================
+function finishQuiz() {
+    clearInterval(timerInterval);
+    const elapsed = getElapsedTime();
+    const total = questions.length;
+    const pct = Math.round((correctAnswers / total) * 100);
+
+    document.getElementById('quizArea').style.display = 'none';
+    document.getElementById('statsBar').style.display = 'none';
+    document.getElementById('progressContainer').style.display = 'none';
+
+    const resultsCard = document.getElementById('resultsCard');
+    resultsCard.style.display = 'block';
+    resultsCard.classList.add('show');
+
+    // Emoji & title
+    let emoji, title, subtitle, message;
+    if (pct === 100) {
+        emoji = '👑'; title = 'PERFEKCYJNIE!'; subtitle = 'Jesteś mistrzem Pandas!';
+        message = 'Bezbłędny wynik! Znasz Pandas na wylot. Czas dzielić się wiedzą z innymi! 🎓';
+        launchConfetti();
+    } else if (pct >= 80) {
+        emoji = '🏆'; title = 'Świetny wynik!'; subtitle = 'Naprawdę dobra robota!';
+        message = 'Doskonała znajomość Pandas! Jeszcze trochę praktyki i będziesz ekspertem. 💪';
+        launchConfetti();
+    } else if (pct >= 60) {
+        emoji = '💪'; title = 'Dobry wynik!'; subtitle = 'Solidna podstawa wiedzy!';
+        message = 'Znasz podstawy Pandas. Przejrzyj błędne odpowiedzi i pogłęb wiedzę w tych obszarach. 📚';
+    } else if (pct >= 40) {
+        emoji = '📚'; title = 'Może być lepiej'; subtitle = 'Czas na naukę!';
+        message = 'Masz podstawową wiedzę, ale warto powtórzyć materiał. Przejrzyj dokumentację Pandas i spróbuj ponownie! 🔄';
+    } else {
+        emoji = '🌱'; title = 'Początek drogi'; subtitle = 'Każdy kiedyś zaczynał!';
+        message = 'Nie przejmuj się! Pandas to potężna biblioteka. Zacznij od tutoriali i wróć tutaj, gdy będziesz gotowy! 🚀';
+    }
+
+    document.getElementById('resultsEmoji').textContent = emoji;
+    document.getElementById('resultsTitle').textContent = title;
+    document.getElementById('resultsSubtitle').textContent = subtitle;
+    document.getElementById('resultsMessage').textContent = message;
+
+    document.getElementById('resCorrect').textContent = correctAnswers;
+    document.getElementById('resWrong').textContent = total - correctAnswers;
+    document.getElementById('resTime').textContent = elapsed;
+
+    // Animated score
+    document.getElementById('scorePercent').textContent = pct + '%';
+    const circumference = 2 * Math.PI * 82; // ~515
+    const offset = circumference - (pct / 100) * circumference;
+    setTimeout(() => {
+        document.getElementById('scoreCircle').style.strokeDashoffset = offset;
+    }, 300);
+
+    // Progress bar to 100%
+    document.getElementById('progressFill').style.width = '100%';
+}
+
+// ==================== REVIEW ====================
+function showReview() {
+    const section = document.getElementById('reviewSection');
+    section.classList.toggle('show');
+
+    if (section.classList.contains('show')) {
+        section.innerHTML = '<h3 style="color: #a5b4fc; margin-bottom: 15px; font-size: 1.2rem;">📋 Przegląd odpowiedzi</h3>';
+        const letters = ['A', 'B', 'C', 'D'];
+
+        questions.forEach((q, i) => {
+            const userAns = answers[q.id];
+            const isCorrect = userAns === q.correct;
+
+            const div = document.createElement('div');
+            div.className = `review-item ${isCorrect ? 'review-correct' : 'review-wrong'}`;
+            div.innerHTML = `
+                <div class="review-question">${i + 1}. ${escapeHtml(q.question)}</div>
+                <div class="review-answer">
+                    Twoja odpowiedź: <span class="${isCorrect ? 'correct-ans' : 'wrong-ans'}">${letters[userAns]}. ${escapeHtml(q.answers[userAns])}</span>
+                    ${!isCorrect ? `<br>Poprawna: <span class="correct-ans">${letters[q.correct]}. ${escapeHtml(q.answers[q.correct])}</span>` : ''}
+                </div>
+            `;
+            section.appendChild(div);
+        });
+    }
+}
+
+// ==================== RESTART ====================
+function restartQuiz() {
+    clearInterval(timerInterval);
+    document.getElementById('resultsCard').style.display = 'none';
+    document.getElementById('resultsCard').classList.remove('show');
+    document.getElementById('reviewSection').classList.remove('show');
+    document.getElementById('startScreen').style.display = 'block';
+    document.getElementById('scoreCircle').style.strokeDashoffset = 515;
+    document.getElementById('progressFill').style.width = '0%';
+}
+
+// ==================== HELPERS ====================
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function highlightCode(code) {
+    let html = escapeHtml(code);
+    // Keywords
+    html = html.replace(/\b(import|from|as|def|return|print|lambda|None|True|False|if|else|for|in)\b/g, '<span class="keyword">$1</span>');
+    // Strings
+    html = html.replace(/(&#39;[^&#]*?&#39;|&quot;[^&]*?&quot;)/g, '<span class="string">$1</span>');
+    // Functions
+    html = html.replace(/\b(pd|df|s|result)\b/g, '<span class="builtin">$1</span>');
+    // Numbers
+    html = html.replace(/\b(\d+\.?\d*)\b/g, '<span class="number">$1</span>');
+    // Comments
+    html = html.replace(/(#.*)$/gm, '<span class="comment">$1</span>');
+    return html;
+}
+
+function showToast(message, type) {
+    const existing = document.querySelector('.toast');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.remove(), 3000);
+}
+
+// ==================== CONFETTI ====================
+function launchConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const pieces = [];
+    const colors = ['#818cf8', '#c084fc', '#f472b6', '#34d399', '#fbbf24', '#fb7185'];
+
+    for (let i = 0; i < 150; i++) {
+        pieces.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height - canvas.height,
+            w: Math.random() * 10 + 5,
+            h: Math.random() * 6 + 3,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            vy: Math.random() * 3 + 2,
+            vx: Math.random() * 2 - 1,
+            rotation: Math.random() * 360,
+            rotSpeed: Math.random() * 10 - 5
+        });
+    }
+
+    let frame = 0;
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+            p.y += p.vy;
+            p.x += p.vx;
+            p.rotation += p.rotSpeed;
+
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation * Math.PI / 180);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+        });
+        frame++;
+        if (frame < 300) requestAnimationFrame(animate);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    animate();
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+    if (document.getElementById('quizArea').style.display === 'none') return;
+
+    const q = questions[currentIndex];
+    if (['1','2','3','4'].includes(e.key) && answers[q.id] === undefined) {
+        const idx = parseInt(e.key) - 1;
+        const btns = document.querySelectorAll('.answer-btn');
+        if (btns[idx]) selectAnswer(idx, btns[idx]);
+    }
+    if (e.key === 'ArrowRight' || e.key === 'Enter') {
+        const nextBtn = document.getElementById('nextBtn');
+        if (!nextBtn.disabled) nextBtn.click();
+    }
+    if (e.key === 'ArrowLeft') {
+        const prevBtn = document.getElementById('prevBtn');
+        if (!prevBtn.disabled) prevBtn.click();
+    }
+});
+</script>
+
+</body>
+</html>
