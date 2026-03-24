@@ -1,0 +1,693 @@
+
+
+```html
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administracja Starożytnego Rzymu — Od Królestwa do Cesarstwa</title>
+    <style>
+        :root {
+            --primary:#1a0a0a;--secondary:#c0392b;--accent:#8e44ad;--gold:#d4a017;--green:#27ae60;--blue:#2980b9;--bronze:#cd7f32;--marble:#f5f0e8;
+            --bg:#faf8f3;--card:#ffffff;--text:#2c1810;--muted:#7f6b5f;--shadow:0 8px 32px rgba(0,0,0,.08);--radius:16px;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth;scroll-padding-top:68px}
+        body{font-family:'Georgia','Times New Roman',serif;background:var(--bg);color:var(--text);line-height:1.82}
+
+        /* NAV */
+        nav{position:fixed;top:0;width:100%;z-index:1000;background:rgba(26,10,10,.97);backdrop-filter:blur(14px);box-shadow:0 2px 24px rgba(0,0,0,.4)}
+        .nav-in{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+        .logo{color:#e8d5b7;font-weight:900;font-size:1.1rem;padding:14px 0;font-family:'Segoe UI',sans-serif;display:flex;align-items:center;gap:8px}
+        .logo span{color:var(--gold)}
+        nav ul{display:flex;list-style:none;flex-wrap:wrap}
+        nav ul li a{display:block;color:#b89e7a;text-decoration:none;padding:16px 14px;font-size:.78rem;font-weight:500;transition:.3s;border-bottom:3px solid transparent;font-family:'Segoe UI',sans-serif;text-transform:uppercase;letter-spacing:.8px}
+        nav ul li a:hover{color:#f0d9a0;border-bottom-color:var(--gold)}
+        .mbtn{display:none;background:none;border:none;color:#e8d5b7;font-size:1.4rem;cursor:pointer}
+
+        /* HERO */
+        .hero{background:linear-gradient(135deg,#1a0a0a 0%,#2c1810 30%,#3d1f10 60%,#1a0a0a 100%);color:#e8d5b7;text-align:center;padding:145px 20px 105px;position:relative;overflow:hidden}
+        .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 45%,rgba(212,160,23,.1),transparent 60%),radial-gradient(ellipse at 70% 55%,rgba(192,57,43,.08),transparent 55%);animation:hbg 14s ease-in-out infinite alternate}
+        @keyframes hbg{0%{transform:scale(1)}100%{transform:scale(1.06) rotate(.5deg)}}
+        .hero>*{position:relative;z-index:1}
+        .hero-ic{font-size:5rem;margin-bottom:14px;animation:hfl 4.5s ease-in-out infinite}
+        @keyframes hfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        .hero h1{font-size:3rem;font-weight:900;margin-bottom:14px;letter-spacing:-1px;font-family:'Georgia',serif}
+        .hero h1 .h1{color:var(--gold)}
+        .hero h1 .h2{color:var(--secondary)}
+        .hero>p{font-size:1.12rem;color:#a08b6e;max-width:720px;margin:0 auto 28px;font-style:italic}
+        .hero-tags{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+        .htag{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:10px 22px;border-radius:12px;font-size:.82rem;color:#c0a87a;font-family:'Segoe UI',sans-serif}
+        .htag b{color:var(--gold)}
+
+        /* UTILS */
+        .container{max-width:1100px;margin:0 auto;padding:0 20px}
+        section{padding:80px 0}
+        .stitle{text-align:center;margin-bottom:50px}
+        .stitle h2{font-size:2.3rem;font-weight:800}
+        .stitle .line{width:65px;height:4px;margin:12px auto;background:linear-gradient(90deg,var(--gold),var(--secondary));border-radius:2px}
+        .stitle p{color:var(--muted);font-size:1.02rem;max-width:640px;margin:0 auto}
+        .alt{background:#efe8da}
+
+        /* CARDS */
+        .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:34px;margin-bottom:24px;border:1px solid rgba(0,0,0,.05);transition:transform .3s}
+        .card:hover{transform:translateY(-2px)}
+        .card h3{font-size:1.4rem;margin-bottom:12px;color:var(--primary);display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:'Georgia',serif}
+        .card h3 .ic{font-size:1.6rem}
+        .card p,.card li{color:#4a3728;font-size:1rem}
+        .card ul,.card ol{padding-left:20px;margin:10px 0}
+        .card li{margin-bottom:6px}
+
+        /* GRIDS */
+        .g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+        .g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px}
+        .g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+
+        /* ERA CARDS */
+        .era-card{background:var(--card);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);border-top:6px solid;transition:.3s;text-align:center}
+        .era-card:hover{transform:translateY(-5px);box-shadow:0 18px 45px rgba(0,0,0,.12)}
+        .era-card .ei{font-size:3rem;margin-bottom:10px}
+        .era-card h4{font-size:1.15rem;margin-bottom:4px}
+        .era-card .dates{font-size:.85rem;color:var(--muted);font-style:italic;margin-bottom:8px}
+        .era-card p{color:var(--muted);font-size:.88rem}
+
+        /* INFO BOXES */
+        .ib{border-radius:0 12px 12px 0;padding:20px 24px;margin:18px 0;border-left:5px solid}
+        .ib.gold{background:#fdf6e3;border-color:var(--gold)}
+        .ib.red{background:#fef0ee;border-color:var(--secondary)}
+        .ib.green{background:#eafaf1;border-color:var(--green)}
+        .ib.blue{background:#eaf2fb;border-color:var(--blue)}
+        .ib.purple{background:#f5eef8;border-color:var(--accent)}
+        .ib h4{margin-bottom:4px;display:flex;align-items:center;gap:8px}
+
+        /* TERMINAL / SCROLL STYLE */
+        .scroll-box{background:linear-gradient(135deg,#f5f0e8,#ebe3d1);border:3px double var(--gold);border-radius:14px;padding:28px 30px;margin:18px 0;font-size:.95rem;line-height:1.9;color:#3d2b1f;position:relative}
+        .scroll-box::before{content:'📜';position:absolute;top:-14px;left:20px;font-size:1.5rem;background:var(--bg);padding:0 8px}
+        .scroll-box .lat{font-style:italic;color:var(--secondary);font-weight:700}
+        .scroll-box .role{color:var(--accent);font-weight:700}
+        .scroll-box .imp{color:var(--gold);font-weight:700}
+
+        /* TABLES */
+        .tw{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow);margin:22px 0}
+        table{width:100%;border-collapse:collapse;background:var(--card)}
+        th{background:linear-gradient(135deg,#2c1810,#3d1f10);color:#e8d5b7;padding:14px 15px;text-align:center;font-size:.82rem;text-transform:uppercase;letter-spacing:1px;font-family:'Segoe UI',sans-serif}
+        td{padding:12px 15px;text-align:center;border-bottom:1px solid #f0ebe3;font-size:.92rem}
+        td:first-child{text-align:left;font-weight:700}
+        tr:nth-child(even){background:#faf6ef}
+        tr:hover{background:#f0e8d5}
+
+        /* TIMELINE */
+        .tl{position:relative;padding-left:50px}
+        .tl::before{content:'';position:absolute;left:20px;top:0;bottom:0;width:4px;background:linear-gradient(to bottom,var(--gold),var(--secondary),var(--accent),var(--green))}
+        .tli{position:relative;margin-bottom:24px;background:var(--card);padding:24px 28px;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,.05);border-left:4px solid}
+        .tli::before{content:attr(data-y);position:absolute;left:-54px;top:22px;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.5rem;font-family:'Segoe UI',sans-serif;letter-spacing:0}
+        .tli h4{font-size:1.08rem;margin-bottom:4px}
+        .tli p{color:var(--muted);font-size:.9rem}
+
+        /* ERA SPECIFIC COLORS */
+        .king-color{color:#d4a017;border-color:#d4a017}
+        .rep-color{color:#c0392b;border-color:#c0392b}
+        .princ-color{color:#8e44ad;border-color:#8e44ad}
+        .dom-color{color:#2c3e50;border-color:#2c3e50}
+
+        .king-bg::before{background:#d4a017;color:#1a0a0a}
+        .rep-bg::before{background:#c0392b;color:#fff}
+        .princ-bg::before{background:#8e44ad;color:#fff}
+        .dom-bg::before{background:#2c3e50;color:#fff}
+
+        /* ACCORDION */
+        .acc-i{margin-bottom:8px}
+        .acc-h{background:var(--card);border:1px solid #e8dfd1;padding:16px 22px;border-radius:12px;cursor:pointer;font-weight:700;font-size:.98rem;display:flex;justify-content:space-between;align-items:center;transition:.3s}
+        .acc-h:hover{background:#f5f0e8}
+        .acc-h .aw{transition:transform .3s;font-size:1.1rem}
+        .acc-i.open .acc-h .aw{transform:rotate(180deg)}
+        .acc-b{max-height:0;overflow:hidden;transition:max-height .4s ease;background:#faf6ef;border-radius:0 0 12px 12px}
+        .acc-bi{padding:18px 22px;color:#4a3728;line-height:1.9;font-size:.95rem}
+
+        /* QUIZ */
+        .qbox{background:var(--card);border-radius:var(--radius);padding:34px;box-shadow:var(--shadow);max-width:700px;margin:0 auto}
+        .qq{font-size:1.2rem;font-weight:700;color:var(--primary);margin-bottom:16px}
+        .qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .qopt{padding:14px 16px;border:2px solid #e8dfd1;border-radius:12px;cursor:pointer;transition:.3s;font-size:.95rem;text-align:center;font-weight:500}
+        .qopt:hover{border-color:var(--gold);background:#fdf6e3}
+        .qopt.ok{border-color:var(--green);background:#d5f5e3;color:#1e8449}
+        .qopt.no{border-color:var(--secondary);background:#fadbd8;color:#922b21}
+        .qfb{padding:14px;border-radius:10px;margin-top:12px;font-weight:600;display:none;font-size:.93rem}
+        .qfb.show{display:block}
+        .qmeta{color:var(--muted);margin-bottom:10px;font-size:.9rem;font-family:'Segoe UI',sans-serif}
+        .qnav{display:flex;justify-content:space-between;margin-top:14px}
+        .qb{padding:10px 24px;border:none;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:700;transition:.3s;font-family:'Segoe UI',sans-serif}
+        .qb.nxt{background:var(--gold);color:var(--primary)}
+        .qb.res{background:var(--secondary);color:#fff;display:none}
+        .qb:hover{transform:scale(1.04)}
+        .qb:disabled{opacity:.35;cursor:not-allowed}
+
+        footer{background:linear-gradient(135deg,#1a0a0a,#2c1810);color:#a08b6e;text-align:center;padding:44px 20px}
+        footer h3{color:#e8d5b7;margin-bottom:6px}
+        footer a{color:var(--gold);text-decoration:none}
+
+        .fin{opacity:0;transform:translateY(28px);transition:all .7s cubic-bezier(.16,1,.3,1)}
+        .fin.vis{opacity:1;transform:translateY(0)}
+
+        @media(max-width:768px){
+            .hero h1{font-size:2rem}
+            .stitle h2{font-size:1.7rem}
+            .card{padding:20px}
+            nav ul{display:none}
+            nav ul.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(26,10,10,.98)}
+            .mbtn{display:block}
+            .qopts{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-in">
+        <div class="logo">🏛️ <span>ROMA</span></div>
+        <button class="mbtn" onclick="document.querySelector('nav ul').classList.toggle('open')">☰</button>
+        <ul>
+            <li><a href="#overview">Przegląd</a></li>
+            <li><a href="#kingdom">Królestwo</a></li>
+            <li><a href="#republic">Republika</a></li>
+            <li><a href="#principate">Pryncypat</a></li>
+            <li><a href="#dominate">Dominat</a></li>
+            <li><a href="#offices">Urzędy</a></li>
+            <li><a href="#provinces">Prowincje</a></li>
+            <li><a href="#law">Prawo</a></li>
+            <li><a href="#timeline">Oś czasu</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+        </ul>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="hero-ic">🏛️</div>
+    <h1>Administracja <span class="h1">Starożytnego</span> <span class="h2">Rzymu</span></h1>
+    <p>„Senatus Populusque Romanus" — Od monarchii przez republikę do cesarstwa. Jak Rzymianie rządzili imperium obejmującym trzy kontynenty.</p>
+    <div class="hero-tags">
+        <div class="htag"><b>753 p.n.e.</b> — Założenie Rzymu</div>
+        <div class="htag"><b>509 p.n.e.</b> — Republika</div>
+        <div class="htag"><b>27 p.n.e.</b> — Pryncypat</div>
+        <div class="htag"><b>284 n.e.</b> — Dominat</div>
+        <div class="htag"><b>476 n.e.</b> — Upadek Zachodu</div>
+    </div>
+</header>
+
+<!-- PRZEGLĄD -->
+<section id="overview">
+    <div class="container">
+        <div class="stitle fin"><h2>🔍 Cztery epoki administracji</h2><div class="line"></div><p>Ewolucja systemu rządzenia od VII w. p.n.e. do V w. n.e.</p></div>
+
+        <div class="g4 fin">
+            <div class="era-card" style="border-top-color:var(--gold)">
+                <div class="ei">👑</div>
+                <h4 class="king-color">Królestwo</h4>
+                <div class="dates">753 – 509 p.n.e.</div>
+                <p>Monarchia elekcyjna. Król (rex) z władzą dożywotnią, Senat doradczy, Zgromadzenie Kurialne</p>
+            </div>
+            <div class="era-card" style="border-top-color:var(--secondary)">
+                <div class="ei">⚖️</div>
+                <h4 class="rep-color">Republika</h4>
+                <div class="dates">509 – 27 p.n.e.</div>
+                <p>Władza kolegialna urzędników (magistratus), Senat jako organ kierowniczy, zgromadzenia ludowe</p>
+            </div>
+            <div class="era-card" style="border-top-color:var(--accent)">
+                <div class="ei">🏛️</div>
+                <h4 class="princ-color">Pryncypat</h4>
+                <div class="dates">27 p.n.e. – 284 n.e.</div>
+                <p>Princeps — „pierwszy wśród równych". Fasada republiki z rzeczywistą władzą cesarza</p>
+            </div>
+            <div class="era-card" style="border-top-color:#2c3e50">
+                <div class="ei">👁️</div>
+                <h4 class="dom-color">Dominat</h4>
+                <div class="dates">284 – 476 n.e.</div>
+                <p>Absolutna monarchia. Cesarz jako dominus et deus. Rozbudowana biurokracja, tetrarchia</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- KRÓLESTWO -->
+<section id="kingdom" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>👑 Królestwo Rzymskie</h2><div class="line"></div><p>753 – 509 p.n.e. | Monarchia elekcyjna siedmiu królów</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">👑</span> Władza królewska (Rex)</h3>
+            <p>Król (<span style="color:var(--secondary);font-style:italic">rex</span>) był najwyższym władcą, ale <strong>nie dziedzicznym</strong> — wybierany przez Senat w procedurze zwanej <em>interregnum</em>. Łączył w sobie funkcje:</p>
+            <ul>
+                <li><strong>Naczelny wódz</strong> (<em>imperium militiae</em>) — dowodzenie armią</li>
+                <li><strong>Najwyższy kapłan</strong> — nadzór nad kultem religijnym</li>
+                <li><strong>Sędzia najwyższy</strong> — rozstrzyganie sporów, prawo życia i śmierci</li>
+                <li><strong>Prawodawca</strong> — wydawanie edyktów (leges regiae)</li>
+            </ul>
+            <div class="ib gold">
+                <h4>📜 Insygnia władzy królewskiej</h4>
+                <p><strong>Fasces</strong> (rózgi liktorskie z toporem) — symbol imperium; <strong>toga purpurowa</strong> (toga praetexta); <strong>tron z kości słoniowej</strong> (sella curulis); <strong>12 liktorów</strong> jako eskorta.</p>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🏛️</span> Organy doradcze</h3>
+            <div class="g2">
+                <div style="background:#fdf6e3;padding:22px;border-radius:14px;border-left:4px solid var(--gold)">
+                    <h4>Senat (Senatus)</h4>
+                    <p>Rada starszyzny — początkowo <strong>100 patres</strong> (ojcowie rodów patrycjuszowskich), potem 300. Organ <strong>doradczy</strong> króla — formalnie bez mocy prawnej, ale z ogromnym autorytetem moralnym (<em>auctoritas</em>). Zatwierdzał nowego króla.</p>
+                </div>
+                <div style="background:#fef0ee;padding:22px;border-radius:14px;border-left:4px solid var(--secondary)">
+                    <h4>Zgromadzenie Kurialne (Comitia Curiata)</h4>
+                    <p>Najstarsze zgromadzenie ludowe. Lud podzielony na <strong>30 kurii</strong> (po 10 z każdego z 3 plemion). Zatwierdzało prawa królewskie (<em>lex curiata de imperio</em>), decyzje o wojnie i pokoju, adopcje.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">📋</span> Siedmiu królów Rzymu</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Król</th><th>Lata panowania</th><th>Pochodzenie</th><th>Główne dokonania</th></tr></thead>
+                    <tbody>
+                        <tr><td>Romulus</td><td>753–716 p.n.e.</td><td>Latyński</td><td>Założyciel Rzymu, Senat, kurie, azyl</td></tr>
+                        <tr><td>Numa Pompiliusz</td><td>716–673</td><td>Sabiński</td><td>Kalendarz, kulty religijne, westalki</td></tr>
+                        <tr><td>Tullus Hostiliusz</td><td>673–642</td><td>Latyński</td><td>Zniszczenie Alba Longa, ekspansja</td></tr>
+                        <tr><td>Ankus Marcjusz</td><td>642–617</td><td>Sabiński</td><td>Port w Ostii, Most Sublicjański</td></tr>
+                        <tr><td>Tarkwiniusz Stary</td><td>617–579</td><td>Etruski</td><td>Circus Maximus, Cloaca Maxima</td></tr>
+                        <tr><td>Serwiusz Tuliusz</td><td>579–535</td><td>Etruski</td><td>Mury Serwiańskie, cenzus, centurie</td></tr>
+                        <tr><td>Tarkwiniusz Pyszny</td><td>535–509</td><td>Etruski</td><td>Tyrania → obalony, koniec królestwa</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- REPUBLIKA -->
+<section id="republic">
+    <div class="container">
+        <div class="stitle fin"><h2>⚖️ Republika Rzymska</h2><div class="line"></div><p>509 – 27 p.n.e. | SPQR — Senatus Populusque Romanus</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">⚖️</span> Zasady ustrojowe Republiki</h3>
+            <div class="scroll-box">
+                <span class="imp">KOLEGIALNOŚĆ</span> — Każdy urząd (poza dyktaturą) pełniony przez <strong>minimum 2 osoby</strong> z prawem wzajemnego weta (<span class="lat">intercessio</span>).<br><br>
+                <span class="imp">KADENCYJNOŚĆ</span> — Urzędy <strong>roczne</strong> (z wyjątkiem cenzora — 18 mies., dyktator — 6 mies.).<br><br>
+                <span class="imp">BEZPŁATNOŚĆ</span> — Urzędy pełnione <span class="lat">honores</span> — bez wynagrodzenia (wymóg majątku).<br><br>
+                <span class="imp">ODPOWIEDZIALNOŚĆ</span> — Po kadencji urzędnik odpowiadał za swoje czyny.<br><br>
+                <span class="imp">CURSUS HONORUM</span> — Ścieżka kariery: <span class="role">kwestor → edyl → pretor → konsul → cenzor</span>. Wymagany minimalny wiek i przerwy między urzędami.
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🏛️</span> Urzędy republikańskie (Magistratus)</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Urząd</th><th>Liczba</th><th>Kadencja</th><th>Funkcje</th><th>Uwagi</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Konsul</strong></td><td>2</td><td>1 rok</td><td>Najwyższa władza cywilna i wojskowa, zwoływanie Senatu</td><td>Imperium; 12 liktorów; eponimiczny rok</td></tr>
+                        <tr><td><strong>Pretor</strong></td><td>2→8</td><td>1 rok</td><td>Sądownictwo, zarządzanie prowincjami</td><td>Praetor urbanus (Rzymianie), peregrinus (cudzoziemcy)</td></tr>
+                        <tr><td><strong>Cenzor</strong></td><td>2</td><td>18 mies.</td><td>Spis ludności, nadzór obyczajów, kontrakty publiczne</td><td>Najwyższy prestiż; lectio senatus</td></tr>
+                        <tr><td><strong>Edyl</strong></td><td>4</td><td>1 rok</td><td>Porządek w mieście, zaopatrzenie, igrzyska</td><td>2 kurulnych + 2 plebejskich</td></tr>
+                        <tr><td><strong>Kwestor</strong></td><td>2→20</td><td>1 rok</td><td>Skarbiec (aerarium), finanse armii</td><td>Pierwszy urząd w cursus honorum</td></tr>
+                        <tr><td><strong>Trybun ludowy</strong></td><td>10</td><td>1 rok</td><td>Ochrona plebejuszy, prawo weta (intercessio), sacrosanctitas</td><td>Tylko plebejusze; nietykalność osobista</td></tr>
+                        <tr><td><strong>Dyktator</strong></td><td>1</td><td>6 mies.</td><td>Pełnia władzy w sytuacji kryzysowej</td><td>Nominowany przez konsula; 24 liktorów</td></tr>
+                        <tr><td><strong>Magister Equitum</strong></td><td>1</td><td>6 mies.</td><td>Zastępca dyktatora, dowódca kawalerii</td><td>Mianowany przez dyktatora</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🗳️</span> Zgromadzenia ludowe Republiki</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Zgromadzenie</th><th>Skład</th><th>Kompetencje</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Comitia Centuriata</strong></td><td>193 centurie (podział majątkowy)</td><td>Wybór konsulów, pretorów, cenzorów; wypowiadanie wojny; procesy o zdradę stanu</td></tr>
+                        <tr><td><strong>Comitia Tributa</strong></td><td>35 tribus (okręgi terytorialne)</td><td>Wybór edylów, kwestorów; ustawy (leges)</td></tr>
+                        <tr><td><strong>Concilium Plebis</strong></td><td>Tylko plebejusze</td><td>Wybór trybunów ludowych; plebiscyta (od 287 p.n.e. = ustawy)</td></tr>
+                        <tr><td><strong>Comitia Curiata</strong></td><td>30 kurii (archaiczne)</td><td>Formalne zatwierdzanie imperium (lex curiata)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🏛️</span> Senat Republiki</h3>
+            <p>Senat — formalnie organ <strong>doradczy</strong>, faktycznie <strong>najważniejsze ciało polityczne</strong> Republiki:</p>
+            <ul>
+                <li><strong>300 członków</strong> (za Sulli 600, za Cezara 900) — byli urzędnicy</li>
+                <li><strong>Senatus consultum</strong> — uchwały Senatu (formalnie opinie, faktycznie wiążące)</li>
+                <li><strong>Polityka zagraniczna</strong> — traktaty, przyjmowanie posłów, przydzielanie prowincji</li>
+                <li><strong>Finanse</strong> — budżet, podatki, wydatki</li>
+                <li><strong>Senatus consultum ultimum</strong> — „stan wyjątkowy" — upoważnienie konsulów do użycia siły</li>
+                <li><strong>Princeps Senatus</strong> — pierwszy senator, zabierał głos jako pierwszy</li>
+            </ul>
+            <div class="ib red">
+                <h4>🔥 Konflikty stanów (patrycjusze vs plebejusze)</h4>
+                <p>V–III w. p.n.e.: plebejusze wywalczyli dostęp do urzędów: trybun ludowy (494), konsulat (367 — lex Licinia Sextia), kapłaństwo (300). Kluczowe: <strong>Lex Hortensia</strong> (287 p.n.e.) — plebiscyta obowiązują <em>wszystkich</em> obywateli.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PRYNCYPAT -->
+<section id="principate" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🏛️ Pryncypat</h2><div class="line"></div><p>27 p.n.e. – 284 n.e. | Princeps — „pierwszy obywatel"</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">🏛️</span> Istota pryncypatu</h3>
+            <p><strong>Oktawian August</strong> (27 p.n.e.) stworzył system, w którym <strong>fasada republikańska</strong> ukrywała faktyczną władzę jednego człowieka — <em>princepsa</em>:</p>
+            <div class="scroll-box">
+                <span class="imp">PRINCEPS</span> = „pierwszy wśród równych" (nie „król" — Rzymianie nienawidzili tego tytułu)<br><br>
+                <span class="role">Tytuły Augusta:</span><br>
+                • <span class="lat">Imperator</span> — zwierzchnik wojskowy (praenomen)<br>
+                • <span class="lat">Augustus</span> — „wzniosły" / „wywyższony przez bogów"<br>
+                • <span class="lat">Princeps Senatus</span> — pierwszy w Senacie<br>
+                • <span class="lat">Pontifex Maximus</span> — najwyższy kapłan<br>
+                • <span class="lat">Tribunicia Potestas</span> — władza trybuna (na stałe, corocznie odnawiana)<br>
+                • <span class="lat">Imperium Proconsulare Maius</span> — władza nad prowincjami<br>
+                • <span class="lat">Pater Patriae</span> — „Ojciec Ojczyzny"<br><br>
+                <span class="imp">KLUCZ:</span> August nie stworzył nowego urzędu — <strong>skumulował istniejące</strong> republikańskie uprawnienia w jednej osobie.
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">⚖️</span> Dyarchia — podwójna administracja</h3>
+            <p>Pryncypat stworzył <strong>dwa równoległe aparaty</strong>:</p>
+            <div class="g2">
+                <div style="background:#fef0ee;padding:22px;border-radius:14px;border-left:4px solid var(--secondary)">
+                    <h4 style="color:var(--secondary)">Administracja senacka (stara)</h4>
+                    <ul style="font-size:.9rem">
+                        <li><strong>Prowincje senackie</strong> — spokojne, bez legionów</li>
+                        <li>Zarządzane przez <strong>prokonsulów</strong> (byli konsulowie/pretorzy)</li>
+                        <li><strong>Aerarium Saturni</strong> — skarbiec senacki</li>
+                        <li>Senat formalnie uchwala ustawy</li>
+                        <li>Tradycyjne urzędy republikańskie (z ograniczoną władzą)</li>
+                    </ul>
+                </div>
+                <div style="background:#f5eef8;padding:22px;border-radius:14px;border-left:4px solid var(--accent)">
+                    <h4 style="color:var(--accent)">Administracja cesarska (nowa)</h4>
+                    <ul style="font-size:.9rem">
+                        <li><strong>Prowincje cesarskie</strong> — graniczne, z legionami</li>
+                        <li>Zarządzane przez <strong>legatów cesarza</strong> (legati Augusti)</li>
+                        <li><strong>Fiscus</strong> — skarbiec cesarski (prywatny)</li>
+                        <li>Cesarz wydaje <strong>edykty, mandaty, reskrypty</strong></li>
+                        <li>Nowa biurokracja: <strong>praefecti, procuratores</strong> (ekwici i wyzwoleńcy)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">📋</span> Nowe urzędy pryncypatu</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Urząd</th><th>Mianowany przez</th><th>Funkcje</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Praefectus Praetorio</strong></td><td>Cesarza</td><td>Dowódca gwardii pretoriańskiej → de facto „premier"</td></tr>
+                        <tr><td><strong>Praefectus Urbi</strong></td><td>Cesarza</td><td>Prefekt Miasta Rzymu — porządek, sądownictwo</td></tr>
+                        <tr><td><strong>Praefectus Annonae</strong></td><td>Cesarza</td><td>Zaopatrzenie Rzymu w zboże</td></tr>
+                        <tr><td><strong>Praefectus Vigilum</strong></td><td>Cesarza</td><td>Straż pożarna i nocna policja (7000 ludzi)</td></tr>
+                        <tr><td><strong>Praefectus Aegypti</strong></td><td>Cesarza</td><td>Namiestnik Egiptu (prowincja osobista cesarza)</td></tr>
+                        <tr><td><strong>Procuratores</strong></td><td>Cesarza</td><td>Zarząd finansów, mniejszych prowincji (ekwici)</td></tr>
+                        <tr><td><strong>Legati Augusti</strong></td><td>Cesarza</td><td>Namiestnicy prowincji cesarskich (senatorowie)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="ib purple">
+                <h4>👥 Kancelaria cesarska</h4>
+                <p>Cesarz Klaudiusz (41–54 n.e.) stworzył biurokrację centralną prowadzoną przez <strong>wyzwoleńców cesarskich</strong>: <em>ab epistulis</em> (korespondencja), <em>a rationibus</em> (finanse), <em>a libellis</em> (petycje), <em>a cognitionibus</em> (sądownictwo). Za Hadriana zastąpieni ekwitami.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DOMINAT -->
+<section id="dominate">
+    <div class="container">
+        <div class="stitle fin"><h2>👁️ Dominat</h2><div class="line"></div><p>284 – 476 n.e. | Dominus et Deus — „Pan i Bóg"</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">👁️</span> Reformy Dioklecjana (284–305)</h3>
+            <p>Dioklecjan dokonał <strong>rewolucji administracyjnej</strong> — koniec fikcji republikańskiej:</p>
+            <div class="scroll-box">
+                <span class="imp">TETRARCHIA</span> — podział władzy między <strong>4 cesarzy</strong>:<br>
+                • 2 × <span class="role">Augustus</span> (wschód + zachód) — władza najwyższa<br>
+                • 2 × <span class="role">Caesar</span> — następcy i pomocnicy Augustów<br><br>
+
+                <span class="imp">PODZIAŁ PROWINCJI</span>:<br>
+                • Dawne ~50 prowincji → <strong>~100 mniejszych prowincji</strong><br>
+                • Prowincje zgrupowane w <strong>12 diecezji</strong> (zarządzane przez <span class="role">vicarius</span>)<br>
+                • Diecezje w <strong>4 prefektury pretoriańskie</strong> (zarządzane przez <span class="role">praefectus praetorio</span>)<br><br>
+
+                <span class="imp">SEPARACJA WŁADZY</span>:<br>
+                • <strong>Cywilna</strong> (namiestnicy prowincji) oddzielona od <strong>wojskowej</strong> (duces, comites)<br>
+                • Cel: uniemożliwienie buntów namiestników z legionami<br><br>
+
+                <span class="imp">CEREMONIAŁ</span>:<br>
+                • Cesarz = <span class="lat">Dominus et Deus</span> (Pan i Bóg)<br>
+                • Adoratio — padanie na twarz przed cesarzem<br>
+                • Purpura, diadem, złoty tron, zamknięty pałac
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🏗️</span> Hierarchia administracji dominatu</h3>
+            <div class="scroll-box">
+                <span class="imp">CESARZ</span> (Dominus / Augustus)<br>
+                &nbsp;&nbsp;└── <span class="role">Praefectus Praetorio</span> (×4 — po 1 na prefekturę)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="lat">Gallia</span> (Galja, Brytania, Hispania)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="lat">Italia</span> (Italia, Afryka)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="lat">Illyricum</span> (Bałkany, Grecja)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="lat">Oriens</span> (Wschód, Egipt)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="role">Vicarius</span> (zarządca diecezji, ×12)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="role">Praeses / Consularis</span> (namiestnik prowincji, ~100)<br><br>
+
+                <span class="imp">OSOBNO — HIERARCHIA WOJSKOWA:</span><br>
+                &nbsp;&nbsp;└── <span class="role">Magister Militum</span> (naczelny wódz)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="role">Dux</span> (dowódca wojsk prowincjonalnych)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="role">Comes</span> (dowódca armii polowej)
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🏛️</span> Reformy Konstantyna Wielkiego (306–337)</h3>
+            <ul>
+                <li><strong>Konstantynopol</strong> (330 n.e.) — nowa stolica na Wschodzie</li>
+                <li><strong>Edykt mediolański</strong> (313) — tolerancja chrześcijaństwa</li>
+                <li><strong>Consistorium</strong> — rada cesarska (zamiast dawnego consilium principis)</li>
+                <li><strong>Magister Officiorum</strong> — szef kancelarii cesarskiej, wywiadu, poczty</li>
+                <li><strong>Comes Sacrarum Largitionum</strong> — minister finansów</li>
+                <li><strong>Comes Rerum Privatarum</strong> — zarząd majątku cesarskiego</li>
+                <li><strong>Quaestor Sacri Palatii</strong> — minister sprawiedliwości, redagowanie ustaw</li>
+                <li><strong>Solidus</strong> — stabilna złota moneta (fundament gospodarki do XI w.)</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- URZĘDY — PORÓWNANIE -->
+<section id="offices" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>📊 Porównanie systemów administracji</h2><div class="line"></div><p>Jak zmieniała się władza przez 1200 lat</p></div>
+
+        <div class="card fin">
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Element</th><th>👑 Królestwo</th><th>⚖️ Republika</th><th>🏛️ Pryncypat</th><th>👁️ Dominat</th></tr></thead>
+                    <tbody>
+                        <tr><td>Głowa państwa</td><td>Rex (król)</td><td>2 Konsulowie</td><td>Princeps (cesarz)</td><td>Dominus (cesarz-bóg)</td></tr>
+                        <tr><td>Źródło władzy</td><td>Elekcja + bogowie</td><td>Lud + Senat</td><td>Armia + Senat (fasada)</td><td>Bóg / prawo boskie</td></tr>
+                        <tr><td>Kadencja</td><td>Dożywotnia</td><td>Roczna</td><td>Dożywotnia (de facto)</td><td>Dożywotnia</td></tr>
+                        <tr><td>Senat</td><td>Doradczy (100)</td><td>Kierowniczy (300-900)</td><td>Malejąca rola</td><td>Ceremonialna</td></tr>
+                        <tr><td>Zgromadzenia</td><td>Comitia Curiata</td><td>Centuriata + Tributa</td><td>Zanikają</td><td>Brak</td></tr>
+                        <tr><td>Biurokracja</td><td>Minimalna</td><td>Urzędy elekcyjne</td><td>Dyarchia (senat + cesarz)</td><td>Rozbudowana hierarchia</td></tr>
+                        <tr><td>Wojsko ↔ cywile</td><td>Połączone</td><td>Połączone</td><td>Częściowo oddzielone</td><td>Całkowicie oddzielone</td></tr>
+                        <tr><td>Prowincje</td><td>Brak (miasto-państwo)</td><td>~50 (namiestnik = dowódca)</td><td>Senackie + cesarskie</td><td>~100 (cywilne, bez wojska)</td></tr>
+                        <tr><td>Ceremoniał</td><td>Umiarkowany</td><td>Surowa prostota</td><td>Pozorna skromność</td><td>Wschodni przepych</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PROWINCJE -->
+<section id="provinces">
+    <div class="container">
+        <div class="stitle fin"><h2>🗺️ Zarządzanie prowincjami</h2><div class="line"></div><p>Jak Rzym administrował imperium na trzech kontynentach</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">🗺️</span> Ewolucja zarządzania prowincjami</h3>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">⚖️ Republika — prowincje jako „łup"<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">
+                <ul>
+                    <li><strong>Namiestnik</strong> (prokonsul lub propretor) — pełna władza cywilna, wojskowa, sądowa</li>
+                    <li><strong>Kadencja:</strong> 1 rok (potem przedłużana — prorogatio)</li>
+                    <li><strong>Podatki:</strong> zbierane przez <em>publicani</em> (prywatnych poborców podatkowych) — korupcja i wyzysk</li>
+                    <li><strong>Problem:</strong> brak kontroli nad namiestnikami → nadużycia (np. Werres na Sycylii)</li>
+                    <li><strong>Lex Repetundarum</strong> — prawo umożliwiające prowincjuszom pozywanie namiestników</li>
+                </ul>
+            </div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">🏛️ Pryncypat — dyarchia prowincjonalna<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">
+                <ul>
+                    <li><strong>Prowincje senackie</strong> (pacatae): spokojne, bez legionów → prokonsulowie losowani przez Senat</li>
+                    <li><strong>Prowincje cesarskie</strong> (Caesaris): graniczne, z garnizonami → legaci cesarza</li>
+                    <li><strong>Egipt:</strong> specjalny status — osobista domena cesarza (prefekt ekwicki)</li>
+                    <li>Publicani zastąpieni <strong>prokuratoriami cesarskimi</strong> → sprawiedliwsze podatki</li>
+                    <li>Miasta prowincjonalne: samorząd (ordo decurionum — rada miejska)</li>
+                </ul>
+            </div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">👁️ Dominat — biurokratyczna piramida<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">
+                <ul>
+                    <li><strong>~100 małych prowincji</strong> → trudniej o bunt namiestnika</li>
+                    <li><strong>12 diecezji</strong> (vicarius) → nadzór nad prowincjami</li>
+                    <li><strong>4 prefektury pretoriańskie</strong> → najwyższy szczebel administracji terytorialnej</li>
+                    <li>Namiestnik: <strong>tylko cywilny</strong> — nie ma wojska (osobny dux)</li>
+                    <li><strong>Notitia Dignitatum</strong> (~400 n.e.) — dokument opisujący całą strukturę imperium</li>
+                </ul>
+            </div></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- PRAWO -->
+<section id="law" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>📜 Prawo rzymskie</h2><div class="line"></div><p>Fundament europejskiego systemu prawnego</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">📜</span> Źródła prawa w kolejnych epokach</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Źródło</th><th>Epoka</th><th>Opis</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Leges Regiae</strong></td><td>Królestwo</td><td>Prawa królewskie — zwyczajowe, ustne</td></tr>
+                        <tr><td><strong>Lex XII Tabularum</strong></td><td>Republika (451 p.n.e.)</td><td>Prawo Dwunastu Tablic — pierwszy spisany kodeks</td></tr>
+                        <tr><td><strong>Leges</strong></td><td>Republika</td><td>Ustawy uchwalane przez zgromadzenia ludowe</td></tr>
+                        <tr><td><strong>Plebiscita</strong></td><td>Republika</td><td>Uchwały zgromadzenia plebejskiego (od 287 = lex)</td></tr>
+                        <tr><td><strong>Senatus Consulta</strong></td><td>Republika / Pryncypat</td><td>Uchwały Senatu — rosnące znaczenie za pryncypatu</td></tr>
+                        <tr><td><strong>Edykty pretorskie</strong></td><td>Republika / Pryncypat</td><td>Prawo tworzone przez pretorów (ius praetorium / honorarium)</td></tr>
+                        <tr><td><strong>Constitutiones Principum</strong></td><td>Pryncypat</td><td>Akty cesarskie: edicta, mandata, rescripta, decreta</td></tr>
+                        <tr><td><strong>Responsa prudentium</strong></td><td>Pryncypat</td><td>Opinie prawników (ius respondendi — prawo udzielania odpowiedzi)</td></tr>
+                        <tr><td><strong>Leges imperatoriae</strong></td><td>Dominat</td><td>Ustawy cesarskie — jedyne źródło prawa</td></tr>
+                        <tr><td><strong>Codex Theodosianus</strong></td><td>438 n.e.</td><td>Kodyfikacja Teodozjusza II</td></tr>
+                        <tr><td><strong>Corpus Iuris Civilis</strong></td><td>529–534 n.e.</td><td>Kodyfikacja Justyniana — fundament prawa europejskiego</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- OŚ CZASU -->
+<section id="timeline">
+    <div class="container">
+        <div class="stitle fin"><h2>📅 Oś czasu</h2><div class="line"></div><p>Kluczowe daty i przemiany ustrojowe</p></div>
+
+        <div class="tl fin">
+            <div class="tli king-color king-bg" data-y="753"><h4>Założenie Rzymu</h4><p>Romulus zakłada miasto na Palatynie. Początek monarchii.</p></div>
+            <div class="tli king-color king-bg" data-y="509"><h4>Obalenie Tarkwiniusza — Republika</h4><p>Brutus wypędza ostatniego króla. Pierwsi konsulowie.</p></div>
+            <div class="tli rep-color rep-bg" data-y="494"><h4>Secesja plebejuszy</h4><p>Pierwsza secesja na Świętą Górę. Powstanie trybunatu ludowego.</p></div>
+            <div class="tli rep-color rep-bg" data-y="451"><h4>Prawo XII Tablic</h4><p>Pierwszy spisany kodeks prawa — fundament ius civile.</p></div>
+            <div class="tli rep-color rep-bg" data-y="287"><h4>Lex Hortensia</h4><p>Plebiscyta uzyskują moc ustawy. Koniec walk stanowych.</p></div>
+            <div class="tli rep-color rep-bg" data-y="133"><h4>Reformy Grakchów</h4><p>Początek kryzysu Republiki. Trybuni reformatorzy zamordowani.</p></div>
+            <div class="tli rep-color rep-bg" data-y="82"><h4>Dyktatura Sulli</h4><p>Pierwsza długotrwała dyktatura. Proskrypcje. Reforma Senatu.</p></div>
+            <div class="tli rep-color rep-bg" data-y="49"><h4>Cezar przekracza Rubikon</h4><p>Wojna domowa. Cezar dyktatorem perpetuo. Zamordowany w 44 p.n.e.</p></div>
+            <div class="tli princ-color princ-bg" data-y="27 pne"><h4>August — początek pryncypatu</h4><p>Oktawian otrzymuje tytuł Augustus. Fasada republikańska.</p></div>
+            <div class="tli princ-color princ-bg" data-y="14 ne"><h4>Śmierć Augusta</h4><p>Tyberiusz przejmuje władzę. Utrwalenie systemu dynastycznego.</p></div>
+            <div class="tli princ-color princ-bg" data-y="212"><h4>Constitutio Antoniniana</h4><p>Karakalla nadaje obywatelstwo wszystkim wolnym mieszkańcom Imperium.</p></div>
+            <div class="tli dom-color dom-bg" data-y="284"><h4>Dioklecjan — początek dominatu</h4><p>Tetrarchia, podział na 100 prowincji, ceremonializacja władzy.</p></div>
+            <div class="tli dom-color dom-bg" data-y="313"><h4>Edykt mediolański</h4><p>Konstantyn i Licyniusz — tolerancja chrześcijaństwa.</p></div>
+            <div class="tli dom-color dom-bg" data-y="330"><h4>Konstantynopol</h4><p>Nowa stolica na Wschodzie. Przesunięcie centrum imperium.</p></div>
+            <div class="tli dom-color dom-bg" data-y="395"><h4>Podział imperium</h4><p>Po śmierci Teodozjusza — trwały podział na Zachód i Wschód.</p></div>
+            <div class="tli dom-color dom-bg" data-y="476"><h4>Upadek Cesarstwa Zachodniego</h4><p>Odoaker detronizuje Romulusa Augustulusa. Koniec Rzymu na Zachodzie.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🧠 Quiz — Administracja Rzymu</h2><div class="line"></div><p>Sprawdź swoją wiedzę!</p></div>
+        <div class="qbox fin">
+            <div class="qmeta">Pytanie <span id="qN">1</span>/<span id="qT">15</span> | Wynik: <span id="qS">0</span></div>
+            <div class="qq" id="qQ"></div>
+            <div class="qopts" id="qO"></div>
+            <div class="qfb" id="qFb"></div>
+            <div class="qnav">
+                <button class="qb nxt" id="qNxt" onclick="qNx()" disabled>Następne →</button>
+                <button class="qb res" id="qRst" onclick="qRe()">Od nowa 🔄</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <h3>🏛️ Administracja Starożytnego Rzymu</h3>
+    <p style="font-style:italic">"Civis Romanus sum" — Jestem obywatelem rzymskim</p>
+    <p style="margin-top:10px"><a href="#overview">Przegląd</a> • <a href="#kingdom">Królestwo</a> • <a href="#republic">Republika</a> • <a href="#principate">Pryncypat</a> • <a href="#dominate">Dominat</a> • <a href="#quiz">Quiz</a></p>
+    <p style="font-size:.72rem;opacity:.5;margin-top:14px">© MMXXIV</p>
+</footer>
+
+<script>
+function togAcc(h){const i=h.parentElement;const b=i.querySelector('.acc-b');const o=i.classList.contains('open');document.querySelectorAll('.acc-i').forEach(x=>{x.classList.remove('open');const xb=x.querySelector('.acc-b');if(xb)xb.style.maxHeight=null});if(!o){i.classList.add('open');b.style.maxHeight=b.scrollHeight+'px';}}
+
+const qD=[
+    {q:"W jakim roku tradycja datuje założenie Rzymu?",o:["509 p.n.e.","753 p.n.e.","27 p.n.e.","476 n.e."],a:1,e:"Według tradycji Romulus założył Rzym w 753 r. p.n.e. na wzgórzu Palatyn."},
+    {q:"Ilu królów rządziło Rzymem w okresie królestwa?",o:["5","6","7","12"],a:2,e:"Tradycja wymienia siedmiu królów: od Romulusa do Tarkwiniusza Pysznego."},
+    {q:"Co oznacza zasada kolegialności w Republice?",o:["Każdy urząd pełniło minimum 2 osoby","Senat liczył 100 członków","Kadencja trwała 2 lata","Król miał 2 doradców"],a:0,e:"Kolegialność = minimum 2 urzędników na stanowisku z prawem wzajemnego weta (intercessio)."},
+    {q:"Który urząd dawał prawo weta (intercessio) i nietykalność osobistą?",o:["Konsul","Pretor","Trybun ludowy","Cenzor"],a:2,e:"Trybun ludowy (tribunus plebis) miał sacrosanctitas (nietykalność) i prawo veta wobec każdego urzędnika i ustawy."},
+    {q:"Co to cursus honorum?",o:["Wyścig rydwanów","Ścieżka kariery urzędniczej","Prawo karne","Obrzęd religijny"],a:1,e:"Cursus honorum = ścieżka kariery: kwestor → edyl → pretor → konsul → cenzor, z wymaganymi przerwami i minimalnym wiekiem."},
+    {q:"Które zgromadzenie wybierało konsulów?",o:["Comitia Curiata","Comitia Tributa","Comitia Centuriata","Concilium Plebis"],a:2,e:"Comitia Centuriata (zgromadzenie centurialne) — podzielone wg majątku — wybierało konsulów, pretorów i cenzorów."},
+    {q:"Kto stworzył system pryncypatu?",o:["Juliusz Cezar","Oktawian August","Dioklecjan","Konstantyn"],a:1,e:"Oktawian August w 27 p.n.e. stworzył pryncypat — system jedynowładztwa ukryty za fasadą republikańską."},
+    {q:"Co oznaczał tytuł 'Princeps'?",o:["Pan i Bóg","Pierwszy wśród równych","Najwyższy kapłan","Naczelny wódz"],a:1,e:"Princeps = 'pierwszy obywatel' / 'pierwszy wśród równych' — celowo unikając tytułu króla (rex)."},
+    {q:"Czym była dyarchia w pryncypacie?",o:["Rządy dwóch konsulów","Podwójna administracja: senacka i cesarska","Podział na Wschód i Zachód","System dwóch armii"],a:1,e:"Dyarchia = dwa równoległe aparaty administracyjne: tradycyjny senacki i nowy cesarski (prowincje, skarb, urzędy)."},
+    {q:"Kto rozpoczął dominat reformami w 284 n.e.?",o:["Konstantyn","Teodozjusz","Dioklecjan","Justynian"],a:2,e:"Dioklecjan (284–305) — tetrarchia, podział na ~100 prowincji, separacja władzy cywilnej od wojskowej."},
+    {q:"Co to tetrarchia?",o:["System 4 współrządzących cesarzy","4 prowincje","4 legiony","4 zgromadzenia"],a:0,e:"Tetrarchia = 2 Augustów + 2 Cezarów rządzących czterema częściami imperium. Wprowadzona przez Dioklecjana."},
+    {q:"'Dominus et Deus' oznacza:",o:["Pierwszy obywatel","Ojciec Ojczyzny","Pan i Bóg","Najwyższy kapłan"],a:2,e:"Dominus et Deus (Pan i Bóg) — tytuł cesarzy dominatu, podkreślający ich boski, absolutny charakter władzy."},
+    {q:"Kiedy przeniesiono stolicę do Konstantynopola?",o:["284 n.e.","313 n.e.","330 n.e.","395 n.e."],a:2,e:"Konstantyn Wielki inaugurował Konstantynopol (Nowy Rzym) jako stolicę w 330 n.e."},
+    {q:"Co to Corpus Iuris Civilis?",o:["Armia cesarza","Kodyfikacja prawa Justyniana","Mapa imperium","Kalendarz rzymski"],a:1,e:"Corpus Iuris Civilis (529-534) — wielka kodyfikacja prawa za cesarza Justyniana. Fundament europejskiego systemu prawnego."},
+    {q:"W którym roku upadło Cesarstwo Zachodniorzymskie?",o:["395 n.e.","410 n.e.","455 n.e.","476 n.e."],a:3,e:"476 n.e. — Odoaker, wódz germański, detronizuje ostatniego cesarza zachodniego Romulusa Augustulusa."}
+];
+
+let qi=0,qs=0,qa=false;
+function qRn(){if(qi>=qD.length){qEn();return}const q=qD[qi];document.getElementById('qN').textContent=qi+1;document.getElementById('qT').textContent=qD.length;document.getElementById('qQ').textContent=q.q;const o=document.getElementById('qO');o.innerHTML='';q.o.forEach((t,i)=>{const d=document.createElement('div');d.className='qopt';d.textContent=t;d.onclick=()=>qAn(i);o.appendChild(d)});document.getElementById('qFb').className='qfb';document.getElementById('qNxt').disabled=true;document.getElementById('qNxt').style.display='';document.getElementById('qRst').style.display='none';qa=false}
+function qAn(i){if(qa)return;qa=true;const q=qD[qi],os=document.querySelectorAll('.qopt'),fb=document.getElementById('qFb');os[q.a].classList.add('ok');if(i===q.a){qs++;fb.textContent='✅ Recte! '+q.e;fb.style.background='#d5f5e3';fb.style.color='#1e8449'}else{os[i].classList.add('no');fb.textContent='❌ Erras! '+q.e;fb.style.background='#fadbd8';fb.style.color='#922b21'}fb.className='qfb show';document.getElementById('qS').textContent=qs;document.getElementById('qNxt').disabled=false;os.forEach(o=>o.style.pointerEvents='none')}
+function qNx(){qi++;qRn()}
+function qEn(){const p=Math.round(qs/qD.length*100);let e=p===100?'🏆':p>=80?'🏛️':p>=60?'⚖️':p>=40?'📜':'📚';let m=p===100?'Perfecte! Godny senatora!':p>=80?'Optime! Świetna wiedza!':p>=60?'Bene! Dobry wynik.':p>=40?'Satis. Warto powtórzyć.':'Powtórz materiał i spróbuj ponownie!';document.getElementById('qQ').innerHTML=`${e} Wynik: <strong>${qs}/${qD.length}</strong> (${p}%)`;document.getElementById('qO').innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:16px;color:var(--muted);font-style:italic">${m}</div>`;document.getElementById('qFb').className='qfb';document.getElementById('qNxt').style.display='none';document.getElementById('qRst').style.display=''}
+function qRe(){qi=0;qs=0;document.getElementById('qS').textContent=0;qRn()}
+qRn();
+
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')})},{threshold:.06});
+document.querySelectorAll('.fin').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
+```
+
+## Zawartość strony — podsumowanie:
+
+### 📖 10 rozdziałów edukacyjnych:
+
+| Sekcja | Zawartość |
+|---|---|
+| **Przegląd** | 4 epoki w kartach: Królestwo, Republika, Pryncypat, Dominat z datami |
+| **👑 Królestwo** | Władza króla (rex), insygnia, Senat (100 patres), Comitia Curiata, tabela 7 królów |
+| **⚖️ Republika** | 5 zasad ustrojowych (kolegialność, kadencyjność, cursus honorum), tabela 8 urzędów (konsul→dyktator), 4 zgromadzenia ludowe, Senat, walka stanów |
+| **🏛️ Pryncypat** | Tytuły Augusta (6), dyarchia (senacka vs cesarska), 7 nowych urzędów (praefecti), kancelaria cesarska |
+| **👁️ Dominat** | Reformy Dioklecjana (tetrarchia, 100 prowincji, 12 diecezji, 4 prefektury), hierarchia ASCII, reformy Konstantyna (8 reform) |
+| **📊 Porównanie** | Tabela 9 cech × 4 epoki (głowa państwa, źródło władzy, senat, zgromadzenia, biurokracja...) |
+| **🗺️ Prowincje** | 3 akordeonowe sekcje: zarządzanie w Republice, Pryncypacie i Dominacie |
+| **📜 Prawo** | Tabela 11 źródeł prawa od Leges Regiae do Corpus Iuris Civilis |
+| **📅 Oś czasu** | 17 kluczowych dat od 753 p.n.e. do 476 n.e. z kolorowymi epokami |
+| **🧠 Quiz** | 15 pytań z wyjaśnieniami |
+
+### 🎨 Design:
+- Styl antyczny (Georgia, kolory złota/purpury/marmuru)
+- „Pergaminowe" bloki z terminologią łacińską
+- Kolorowe oznaczenie epok (złoty=królestwo, czerwony=republika, fioletowy=pryncypat, ciemny=dominat)
+- Oś czasu z kolorowymi kulkami
+- Responsywny, animacje fade-in
