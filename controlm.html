@@ -1,0 +1,831 @@
+
+
+```html
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control-M — Kompletny Przewodnik | Workload Automation BMC</title>
+    <style>
+        :root{
+            --primary:#0a0e1a;--secondary:#00a3e0;--accent:#ff6900;--green:#00c853;--purple:#7c4dff;--gold:#ffab00;--red:#ff1744;--pink:#e91e63;--cyan:#00bcd4;--teal:#009688;
+            --bg:#f0f3f7;--card:#fff;--text:#1a202c;--muted:#5a6a7a;--shadow:0 8px 30px rgba(0,0,0,.07);--radius:16px;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth;scroll-padding-top:68px}
+        body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.78}
+        nav{position:fixed;top:0;width:100%;z-index:1000;background:rgba(10,14,26,.97);backdrop-filter:blur(14px);box-shadow:0 2px 24px rgba(0,0,0,.4)}
+        .nav-in{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+        .logo{color:#fff;font-weight:900;font-size:1.15rem;padding:14px 0;display:flex;align-items:center;gap:8px}
+        .logo span{color:var(--secondary)}
+        .logo .sub{color:var(--accent);font-size:.72rem;font-weight:600}
+        nav ul{display:flex;list-style:none;flex-wrap:wrap}
+        nav ul li a{display:block;color:#8a9ab5;text-decoration:none;padding:16px 13px;font-size:.76rem;font-weight:500;transition:.3s;border-bottom:3px solid transparent;text-transform:uppercase;letter-spacing:.5px}
+        nav ul li a:hover{color:#fff;border-bottom-color:var(--secondary)}
+        .mbtn{display:none;background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer}
+        .hero{background:linear-gradient(135deg,#0a0e1a 0%,#0d1a30 30%,#14294a 60%,#0a0e1a 100%);color:#fff;text-align:center;padding:145px 20px 105px;position:relative;overflow:hidden}
+        .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 45%,rgba(0,163,224,.12),transparent 60%),radial-gradient(ellipse at 70% 55%,rgba(255,105,0,.08),transparent 55%)}
+        .hero>*{position:relative;z-index:1}
+        .hero-ic{font-size:5rem;margin-bottom:14px;animation:hfl 4s ease-in-out infinite}
+        @keyframes hfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        .hero h1{font-size:3.2rem;font-weight:900;margin-bottom:12px;letter-spacing:-1px}
+        .hero h1 .h1{color:var(--secondary)}
+        .hero h1 .h2{color:var(--accent)}
+        .hero>p{font-size:1.12rem;color:#7a8faa;max-width:740px;margin:0 auto 28px}
+        .hero-tags{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+        .htag{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);padding:10px 20px;border-radius:12px;font-size:.8rem;color:#a0b4cc}
+        .htag b{color:var(--secondary)}
+        .container{max-width:1100px;margin:0 auto;padding:0 20px}
+        section{padding:80px 0}
+        .stitle{text-align:center;margin-bottom:48px}
+        .stitle h2{font-size:2.3rem;font-weight:800;letter-spacing:-.5px}
+        .stitle .line{width:65px;height:4px;margin:12px auto;background:linear-gradient(90deg,var(--secondary),var(--accent));border-radius:2px}
+        .stitle p{color:var(--muted);font-size:1.03rem;max-width:650px;margin:0 auto}
+        .alt{background:#e4e9f0}
+        .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:32px;margin-bottom:22px;border:1px solid rgba(0,0,0,.04);transition:transform .3s}
+        .card:hover{transform:translateY(-2px)}
+        .card h3{font-size:1.35rem;margin-bottom:11px;color:var(--primary);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .card h3 .ic{font-size:1.5rem}
+        .card p,.card li{color:#475569;font-size:.98rem}
+        .card ul,.card ol{padding-left:20px;margin:10px 0}
+        .card li{margin-bottom:5px}
+        .g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+        .g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+        .g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
+        .fc{background:var(--card);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);border-top:5px solid var(--secondary);transition:.3s;text-align:center}
+        .fc:nth-child(2){border-top-color:var(--accent)}.fc:nth-child(3){border-top-color:var(--green)}.fc:nth-child(4){border-top-color:var(--purple)}.fc:nth-child(5){border-top-color:var(--gold)}.fc:nth-child(6){border-top-color:var(--red)}.fc:nth-child(7){border-top-color:var(--pink)}.fc:nth-child(8){border-top-color:var(--cyan)}
+        .fc:hover{transform:translateY(-5px);box-shadow:0 16px 42px rgba(0,0,0,.1)}
+        .fc .fi{font-size:2.3rem;margin-bottom:8px}
+        .fc h4{font-size:1rem;margin-bottom:5px;color:var(--primary)}
+        .fc p{color:var(--muted);font-size:.84rem}
+        .ib{border-radius:0 12px 12px 0;padding:18px 22px;margin:16px 0;border-left:5px solid}
+        .ib.blue{background:#e0f4fb;border-color:var(--secondary)}
+        .ib.green{background:#e8faf3;border-color:var(--green)}
+        .ib.yellow{background:#fff8e0;border-color:var(--gold)}
+        .ib.red{background:#fde8ec;border-color:var(--red)}
+        .ib.purple{background:#f0e8ff;border-color:var(--purple)}
+        .ib.orange{background:#fff3e0;border-color:var(--accent)}
+        .ib h4{margin-bottom:4px;display:flex;align-items:center;gap:8px}
+        .term{background:linear-gradient(135deg,#0a0e1a,#111b2e);color:#4ade80;border-radius:14px;padding:28px;margin:16px 0;font-family:'Courier New',monospace;font-size:.86rem;line-height:1.9;overflow-x:auto;border-left:5px solid #4ade80;position:relative;white-space:pre}
+        .term::before{content:'● ● ●';position:absolute;top:8px;left:14px;font-size:.55rem;letter-spacing:4px;color:#2a3a4e}
+        .term{padding-top:30px}
+        .c{color:#3a4e68}.r{color:#f87171;font-weight:700}.y{color:#fbbf24;font-weight:700}.b{color:#60a5fa;font-weight:700}.g{color:#4ade80;font-weight:700}.p{color:#c084fc;font-weight:700}.w{color:#e2e8f0;font-weight:700}.o{color:#fb923c;font-weight:700}.cy{color:#22d3ee;font-weight:700}
+        .tw{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow);margin:20px 0}
+        table{width:100%;border-collapse:collapse;background:var(--card)}
+        th{background:linear-gradient(135deg,var(--primary),#1e2e44);color:#fff;padding:13px 14px;text-align:center;font-size:.8rem;text-transform:uppercase;letter-spacing:1px}
+        td{padding:11px 14px;text-align:center;border-bottom:1px solid #f0f3f7;font-size:.9rem}
+        td:first-child{text-align:left;font-weight:600}
+        tr:nth-child(even){background:#f8fafc}
+        tr:hover{background:#eef2ff}
+        .pflow{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;margin:26px 0}
+        .pfs{background:var(--card);border-radius:14px;padding:16px 18px;text-align:center;box-shadow:var(--shadow);min-width:105px;max-width:145px}
+        .pfs .pfi{font-size:1.6rem;margin-bottom:3px}
+        .pfs h5{font-size:.78rem;color:var(--primary)}
+        .pfs p{font-size:.66rem;color:var(--muted)}
+        .pfa{font-size:1.2rem;color:var(--secondary);padding:0 4px;font-weight:900}
+        .acc-i{margin-bottom:8px}
+        .acc-h{background:var(--card);border:1px solid #e0e5ec;padding:15px 20px;border-radius:12px;cursor:pointer;font-weight:700;font-size:.95rem;display:flex;justify-content:space-between;align-items:center;transition:.3s}
+        .acc-h:hover{background:#f0f3f7}
+        .acc-h .aw{transition:transform .3s;font-size:1.1rem}
+        .acc-i.open .acc-h .aw{transform:rotate(180deg)}
+        .acc-b{max-height:0;overflow:hidden;transition:max-height .4s ease;background:#f8fafc;border-radius:0 0 12px 12px}
+        .acc-bi{padding:16px 20px;color:#475569;line-height:1.85;font-size:.92rem}
+        /* PARAM CARDS */
+        .param-section{margin-bottom:30px}
+        .param-section h4{font-size:1.15rem;margin-bottom:14px;color:var(--primary);padding-left:10px;border-left:4px solid var(--secondary);display:flex;align-items:center;gap:8px}
+        .param-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+        .param-card{background:var(--card);border:1px solid #e0e5ec;border-radius:12px;padding:16px 18px;transition:.3s}
+        .param-card:hover{border-color:var(--secondary);box-shadow:0 4px 16px rgba(0,163,224,.12)}
+        .param-card .pname{font-family:'Courier New',monospace;font-weight:700;font-size:.92rem;color:var(--secondary);margin-bottom:3px}
+        .param-card .pdesc{font-size:.85rem;color:#475569;margin-bottom:4px}
+        .param-card .pvals{font-size:.78rem;color:var(--muted);font-family:'Courier New',monospace;background:#f0f3f7;padding:4px 10px;border-radius:6px;display:inline-block;margin-top:2px}
+        .param-card .preq{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+        .param-card .preq.req{color:var(--red)}
+        .param-card .preq.opt{color:var(--green)}
+        /* SEARCH */
+        .search-bar{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center;justify-content:center}
+        .search-bar input{padding:12px 20px;border:2px solid #d0d8e4;border-radius:12px;font-size:1rem;width:350px;transition:.3s}
+        .search-bar input:focus{outline:none;border-color:var(--secondary);box-shadow:0 0 0 3px rgba(0,163,224,.15)}
+        .search-bar select{padding:12px 16px;border:2px solid #d0d8e4;border-radius:12px;font-size:.9rem;background:#fff}
+        .search-bar .cnt{color:var(--muted);font-size:.85rem;font-weight:600}
+        .qbox{background:var(--card);border-radius:var(--radius);padding:32px;box-shadow:var(--shadow);max-width:700px;margin:0 auto}
+        .qq{font-size:1.15rem;font-weight:700;color:var(--primary);margin-bottom:14px}
+        .qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .qopt{padding:13px 14px;border:2px solid #e0e5ec;border-radius:12px;cursor:pointer;transition:.3s;font-size:.92rem;text-align:center;font-weight:500}
+        .qopt:hover{border-color:var(--secondary);background:#e0f4fb}
+        .qopt.ok{border-color:var(--green);background:#d1fae5;color:#065f46}
+        .qopt.no{border-color:var(--red);background:#fee2e2;color:#991b1b}
+        .qfb{padding:13px;border-radius:10px;margin-top:12px;font-weight:600;display:none;font-size:.88rem}
+        .qfb.show{display:block}
+        .qmeta{color:var(--muted);margin-bottom:8px;font-size:.85rem}
+        .qnav{display:flex;justify-content:space-between;margin-top:12px}
+        .qb{padding:10px 22px;border:none;border-radius:10px;cursor:pointer;font-size:.88rem;font-weight:700;transition:.3s}
+        .qb.nxt{background:var(--secondary);color:#fff}
+        .qb.res{background:var(--accent);color:#fff;display:none}
+        .qb:hover{transform:scale(1.04)}
+        .qb:disabled{opacity:.35;cursor:not-allowed}
+        footer{background:linear-gradient(135deg,#0a0e1a,#0d1a30);color:#6a80a0;text-align:center;padding:42px 20px}
+        footer h3{color:#fff;margin-bottom:6px}
+        footer a{color:var(--secondary);text-decoration:none}
+        .fin{opacity:0;transform:translateY(28px);transition:all .7s cubic-bezier(.16,1,.3,1)}
+        .fin.vis{opacity:1;transform:translateY(0)}
+        @media(max-width:768px){
+            .hero h1{font-size:2rem}
+            .stitle h2{font-size:1.6rem}
+            .card{padding:18px}
+            nav ul{display:none}
+            nav ul.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(10,14,26,.98)}
+            .mbtn{display:block}
+            .qopts{grid-template-columns:1fr}
+            .pfa{transform:rotate(90deg)}
+            .pflow{flex-direction:column;align-items:center}
+            .search-bar input{width:100%}
+            .param-grid{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-in">
+        <div class="logo">⚙️ <span>Control-M</span> <span class="sub">BMC</span></div>
+        <button class="mbtn" onclick="document.querySelector('nav ul').classList.toggle('open')">☰</button>
+        <ul>
+            <li><a href="#what">Co to</a></li>
+            <li><a href="#arch">Architektura</a></li>
+            <li><a href="#concepts">Koncepcje</a></li>
+            <li><a href="#params">Parametry Jobów</a></li>
+            <li><a href="#scheduling">Scheduling</a></li>
+            <li><a href="#conditions">Warunki</a></li>
+            <li><a href="#resources">Zasoby</a></li>
+            <li><a href="#alerts">Alerty</a></li>
+            <li><a href="#api">API/CLI</a></li>
+            <li><a href="#plugins">Pluginy</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+        </ul>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="hero-ic">⚙️</div>
+    <h1><span class="h1">Control-M</span> <span class="h2">Parametry & Opis</span></h1>
+    <p>Kompletny przewodnik po BMC Control-M — architektura, parametry jobów, scheduling, warunki, zasoby, alerty, API i integracje</p>
+    <div class="hero-tags">
+        <div class="htag"><b>Control-M</b> — Workload Automation</div>
+        <div class="htag"><b>BMC</b> Software</div>
+        <div class="htag"><b>Batch</b> & Real-time</div>
+        <div class="htag"><b>Multi-platform</b> — z/OS, Linux, Cloud</div>
+    </div>
+</header>
+
+<!-- CO TO -->
+<section id="what">
+    <div class="container">
+        <div class="stitle fin"><h2>🔍 Czym jest Control-M?</h2><div class="line"></div><p>Enterprise Workload Automation — orkiestracja zadań w skali korporacyjnej</p></div>
+        <div class="card fin">
+            <h3><span class="ic">📋</span> Definicja</h3>
+            <p><strong>Control-M</strong> (BMC Software) to wiodąca platforma <strong>Workload Automation (WLA)</strong> służąca do harmonogramowania, orkiestracji, monitorowania i zarządzania zadaniami batch oraz procesami biznesowymi w środowiskach heterogenicznych — mainframe, distributed, cloud.</p>
+            <div class="ib blue">
+                <h4>💡 Po co Control-M?</h4>
+                <p>Nowoczesne organizacje uruchamiają <strong>tysiące jobów dziennie</strong> z zależnościami, harmonogramami, warunkami, alertami. Control-M automatyzuje to wszystko — zamiast ręcznego submisji JCL czy crontabów.</p>
+            </div>
+        </div>
+        <div class="g4 fin">
+            <div class="fc"><div class="fi">📅</div><h4>Scheduling</h4><p>Kalendarze, harmonogramy, okna czasowe</p></div>
+            <div class="fc"><div class="fi">🔗</div><h4>Dependencies</h4><p>Warunki IN/OUT, łańcuchy jobów</p></div>
+            <div class="fc"><div class="fi">📊</div><h4>Monitoring</h4><p>Real-time dashboard, SLA, history</p></div>
+            <div class="fc"><div class="fi">🔔</div><h4>Alerting</h4><p>Email, SNMP, shout, ticketing</p></div>
+            <div class="fc"><div class="fi">📁</div><h4>File Transfer</h4><p>MFT — Managed File Transfer</p></div>
+            <div class="fc"><div class="fi">☁️</div><h4>Cloud</h4><p>AWS, Azure, GCP natywnie</p></div>
+            <div class="fc"><div class="fi">🔄</div><h4>CI/CD</h4><p>Jobs-as-Code, Git, Jenkins</p></div>
+            <div class="fc"><div class="fi">🌐</div><h4>REST API</h4><p>Automation API — pełne sterowanie</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- ARCHITEKTURA -->
+<section id="arch" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🏗️ Architektura Control-M</h2><div class="line"></div><p>Komponenty systemu i ich role</p></div>
+        <div class="card fin">
+            <h3><span class="ic">🏗️</span> Główne komponenty</h3>
+            <div class="term"><span class="c">// Architektura Control-M:</span>
+
+┌──────────────────────────────────────────────────┐
+│              <span class="w">Control-M Enterprise Manager (EM)</span>       │
+│    Centralny punkt zarządzania, Web GUI, API     │
+│    ┌─────────────┐  ┌──────────────┐             │
+│    │ <span class="b">Web Server</span>  │  │ <span class="b">GUI Server</span>   │             │
+│    │ (Tomcat)    │  │ (Java)       │             │
+│    └─────────────┘  └──────────────┘             │
+│    ┌─────────────────────────────────┐           │
+│    │    <span class="p">EM Database</span> (PostgreSQL/Oracle) │           │
+│    └─────────────────────────────────┘           │
+├──────────────────────────────────────────────────┤
+│              <span class="y">Control-M/Server</span>                    │
+│    Scheduling engine — zarządza kolejką jobów    │
+│    ┌───────────────────────────┐                 │
+│    │ <span class="g">Active Jobs Database</span>      │                 │
+│    │ (New Day processing)      │                 │
+│    └───────────────────────────┘                 │
+├──────────────────────────────────────────────────┤
+│              <span class="o">Control-M/Agent</span>                     │
+│    Wykonuje joby na docelowej maszynie           │
+│    ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐  │
+│    │<span class="r">Linux</span>   │ │<span class="b">Windows</span> │ │<span class="cy">z/OS</span>   │ │<span class="g">Cloud</span>  │  │
+│    │Agent   │ │Agent   │ │Agent   │ │Agent   │  │
+│    └────────┘ └────────┘ └────────┘ └────────┘  │
+└──────────────────────────────────────────────────┘</div>
+        </div>
+        <div class="card fin">
+            <h3><span class="ic">📋</span> Opis komponentów</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Komponent</th><th>Rola</th><th>Uwagi</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Enterprise Manager (EM)</strong></td><td>Centralny dashboard, konfiguracja, monitoring, API</td><td>Web-based; łączy wiele Serverów</td></tr>
+                        <tr><td><strong>Control-M/Server</strong></td><td>Silnik schedulingu — przetwarza definicje, zarządza kolejką</td><td>New Day Processing; Active Jobs DB</td></tr>
+                        <tr><td><strong>Control-M/Agent</strong></td><td>Wykonuje joby na docelowej maszynie (Linux/Win/z/OS)</td><td>Lekki agent; komunikacja z Serverem</td></tr>
+                        <tr><td><strong>Control-M Automation API</strong></td><td>REST API do zarządzania (Jobs-as-Code)</td><td>JSON; CLI (ctm); CI/CD integration</td></tr>
+                        <tr><td><strong>Control-M Web</strong></td><td>Nowoczesny web interface</td><td>Monitoring, self-service, SLA</td></tr>
+                        <tr><td><strong>Control-M/MFT</strong></td><td>Managed File Transfer</td><td>SFTP, FTP, S3, AS2</td></tr>
+                        <tr><td><strong>BIM (Batch Impact Manager)</strong></td><td>SLA management — śledzenie krytycznych ścieżek</td><td>Alerty jeśli SLA zagrożone</td></tr>
+                        <tr><td><strong>Forecast</strong></td><td>Symulacja planowania — „co-jeśli"</td><td>Testowanie zmian offline</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- KONCEPCJE -->
+<section id="concepts">
+    <div class="container">
+        <div class="stitle fin"><h2>🧱 Koncepcje Control-M</h2><div class="line"></div><p>Słownik pojęć i hierarchia obiektów</p></div>
+        <div class="card fin">
+            <h3><span class="ic">📦</span> Hierarchia obiektów</h3>
+            <div class="term"><span class="c">// Hierarchia definicji w Control-M:</span>
+
+<span class="y">Folder</span> (SMART Folder / Table)
+  └── <span class="b">Sub-Folder</span> (opcjonalnie)
+       └── <span class="g">Job</span>
+            ├── <span class="p">Scheduling criteria</span> (kiedy)
+            ├── <span class="o">Conditions (IN/OUT)</span> (zależności)
+            ├── <span class="r">Resources</span> (zasoby)
+            ├── <span class="cy">Actions (ON/DO)</span> (reakcje)
+            └── <span class="w">Parameters</span> (parametry jobowe)</div>
+        </div>
+        <div class="card fin">
+            <h3><span class="ic">📖</span> Słownik Control-M</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Pojęcie</th><th>Opis</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Folder / Table</strong></td><td>Kontener grupujący joby (SMART Folder z własnymi kryteriami schedulingowymi)</td></tr>
+                        <tr><td><strong>Job</strong></td><td>Pojedyncze zadanie (skrypt, program, komenda) do wykonania</td></tr>
+                        <tr><td><strong>ODAT (Order Date)</strong></td><td>Data planowania — dzień, na który job jest zaplanowany</td></tr>
+                        <tr><td><strong>New Day Processing</strong></td><td>Codzienny proces — ładowanie jobów z definicji do Active Jobs</td></tr>
+                        <tr><td><strong>Active Jobs (AJF)</strong></td><td>Baza aktywnych jobów — instancje czekające na wykonanie lub wykonane</td></tr>
+                        <tr><td><strong>Condition (IN/OUT)</strong></td><td>Warunek wstępny (IN) lub generowany po zakończeniu (OUT) — łańcuchowanie</td></tr>
+                        <tr><td><strong>Resource (Quantitative/Control)</strong></td><td>Zasób ograniczający współbieżność (np. max 5 jobów jednocześnie)</td></tr>
+                        <tr><td><strong>ON/DO Action</strong></td><td>Akcja warunkowa: „jeśli RC=X to wyślij alert / rerun / skip"</td></tr>
+                        <tr><td><strong>Shout</strong></td><td>Wiadomość alarmowa (email, SNMP, Shout Destination)</td></tr>
+                        <tr><td><strong>RunAs</strong></td><td>Użytkownik OS, pod którym job się wykonuje</td></tr>
+                        <tr><td><strong>CMDLINE / MEMNAME</strong></td><td>Komenda do wykonania / nazwa JCL membera (z/OS)</td></tr>
+                        <tr><td><strong>AutoEdit</strong></td><td>Zmienne systemowe i użytkownika (%%ODAT, %%JOBNAME, itd.)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PARAMETRY JOBÓW -->
+<section id="params" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>📋 Parametry jobów Control-M</h2><div class="line"></div><p>Kompletna lista parametrów z opisami i wartościami</p></div>
+
+        <div class="search-bar fin">
+            <input type="text" id="paramSearch" placeholder="🔍 Szukaj parametru..." oninput="filterParams()">
+            <select id="paramCatFilter" onchange="filterParams()">
+                <option value="all">Wszystkie kategorie</option>
+                <option value="basic">Podstawowe</option>
+                <option value="scheduling">Scheduling</option>
+                <option value="execution">Wykonanie</option>
+                <option value="conditions">Warunki (IN/OUT)</option>
+                <option value="actions">Akcje (ON/DO)</option>
+                <option value="resources">Zasoby</option>
+                <option value="notifications">Powiadomienia</option>
+                <option value="advanced">Zaawansowane</option>
+            </select>
+            <span class="cnt" id="paramCount"></span>
+        </div>
+
+        <div id="paramsContainer" class="fin"></div>
+    </div>
+</section>
+
+<!-- SCHEDULING -->
+<section id="scheduling">
+    <div class="container">
+        <div class="stitle fin"><h2>📅 Scheduling — harmonogramowanie</h2><div class="line"></div><p>Kiedy job ma się uruchomić</p></div>
+        <div class="card fin">
+            <h3><span class="ic">📅</span> Kryteria schedulingowe</h3>
+            <div class="term"><span class="c">// Przykłady harmonogramowania w Control-M:</span>
+
+<span class="y">DAYS:</span>        <span class="g">ALL</span>               <span class="c">// Codziennie</span>
+<span class="y">DAYS:</span>        <span class="g">1,15</span>              <span class="c">// 1. i 15. dzień miesiąca</span>
+<span class="y">WEEKDAYS:</span>    <span class="g">MON,TUE,WED,THU,FRI</span> <span class="c">// Pon-Pt</span>
+<span class="y">WEEKDAYS:</span>    <span class="g">SUN</span>               <span class="c">// Tylko niedziela</span>
+
+<span class="y">FROM TIME:</span>   <span class="b">0200</span>              <span class="c">// Najwcześniej o 2:00</span>
+<span class="y">UNTIL TIME:</span>  <span class="b">0600</span>              <span class="c">// Najpóźniej o 6:00</span>
+
+<span class="y">CALENDAR:</span>    <span class="p">BUSINESS-DAYS</span>     <span class="c">// Tylko dni robocze</span>
+<span class="y">CALENDAR:</span>    <span class="p">MONTH-END</span>         <span class="c">// Ostatni dzień miesiąca</span>
+
+<span class="y">CONF CAL:</span>    <span class="r">HOLIDAYS-2024</span>     <span class="c">// Wyklucz święta</span>
+
+<span class="y">SHIFT:</span>       <span class="o">PREVWORKDAY</span>       <span class="c">// Przesuń na poprzedni dzień roboczy</span>
+<span class="y">SHIFT:</span>       <span class="o">NEXTWORKDAY</span>       <span class="c">// Przesuń na następny dzień roboczy</span>
+
+<span class="c">// CYCLIC — powtarzanie co X minut:</span>
+<span class="y">CYCLIC:</span>      <span class="g">Y</span>
+<span class="y">INTERVAL:</span>   <span class="b">00:30</span>             <span class="c">// Co 30 minut</span>
+<span class="y">FROM:</span>        <span class="b">0800</span>
+<span class="y">UNTIL:</span>       <span class="b">2200</span>              <span class="c">// Od 8:00 do 22:00</span></div>
+        </div>
+        <div class="card fin">
+            <h3><span class="ic">📅</span> Typy kalendarzy</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Typ</th><th>Opis</th><th>Przykład</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Regular Calendar</strong></td><td>Lista konkretnych dat</td><td>Dni robocze 2024, święta PL</td></tr>
+                        <tr><td><strong>Rule-Based Calendar</strong></td><td>Reguły (np. ostatni piątek miesiąca)</td><td>LAST FRI OF MONTH</td></tr>
+                        <tr><td><strong>Periodic Calendar</strong></td><td>Co N dni od daty startowej</td><td>Co 14 dni od 01.01.2024</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CONDITIONS -->
+<section id="conditions" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🔗 Warunki (Conditions) — IN/OUT</h2><div class="line"></div><p>Łańcuchowanie jobów i zależności</p></div>
+        <div class="card fin">
+            <h3><span class="ic">🔗</span> Jak działają warunki</h3>
+            <div class="term"><span class="c">// Job A generuje warunek OUT po zakończeniu</span>
+<span class="c">// Job B czeka na ten warunek jako IN</span>
+
+<span class="y">JOB-A:</span>
+  OUT Condition: <span class="g">JOB-A-OK</span>  (dodawane gdy RC=0)
+
+<span class="y">JOB-B:</span>
+  IN Condition:  <span class="g">JOB-A-OK</span>  (czeka aż pojawi się)
+  IN Condition:  <span class="b">FILE-READY</span> (czeka też na plik)
+
+<span class="c">// Job B uruchomi się DOPIERO gdy OBA warunki spełnione</span>
+
+<span class="c">// Wariant z datą ODAT:</span>
+  IN Condition:  <span class="g">JOB-A-OK</span> ODAT <span class="p">ODAT</span>    <span class="c">// ta sama data</span>
+  IN Condition:  <span class="g">JOB-A-OK</span> ODAT <span class="r">PREV</span>    <span class="c">// poprzedni dzień</span>
+
+<span class="c">// AND/OR logic:</span>
+  <span class="y">AND</span> (domyślnie) — wszystkie warunki muszą być spełnione
+  <span class="y">OR</span>              — wystarczy jeden warunek</div>
+            <div class="ib blue">
+                <h4>💡 Warunki vs Zależności (Dependencies)</h4>
+                <p><strong>Conditions</strong> to stringi (nazwy) umieszczane w globalnej tablicy. <strong>Flow Dependencies</strong> (w GUI) to uproszczony widok — za kulisami generują conditions. Conditions mogą być cross-folder i cross-server!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- RESOURCES -->
+<section id="resources">
+    <div class="container">
+        <div class="stitle fin"><h2>🔒 Zasoby (Resources)</h2><div class="line"></div><p>Kontrola współbieżności i wzajemnych wykluczeń</p></div>
+        <div class="card fin">
+            <h3><span class="ic">🔒</span> Typy zasobów</h3>
+            <div class="g2">
+                <div style="background:#e0f4fb;padding:22px;border-radius:14px;border-left:4px solid var(--secondary)">
+                    <h4>🔢 Quantitative Resource</h4>
+                    <p>Zasób z <strong>liczbą dostępnych jednostek</strong>. Job rezerwuje N jednostek — gdy brak wolnych, czeka.</p>
+                    <p style="margin-top:8px;font-family:'Courier New',monospace;font-size:.85rem;color:var(--secondary)">
+                        Resource: DB-CONNECTIONS<br>Max: 10<br>Job requests: 2 → 8 remaining
+                    </p>
+                </div>
+                <div style="background:#f0e8ff;padding:22px;border-radius:14px;border-left:4px solid var(--purple)">
+                    <h4>🚫 Control Resource (Mutex)</h4>
+                    <p>Wzajemne wykluczenie — <strong>Shared</strong> (wiele naraz) lub <strong>Exclusive</strong> (tylko jeden).</p>
+                    <p style="margin-top:8px;font-family:'Courier New',monospace;font-size:.85rem;color:var(--purple)">
+                        Resource: TAPE-DRIVE<br>Type: Exclusive<br>→ tylko 1 job naraz
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ALERTY -->
+<section id="alerts" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🔔 Alerty i akcje (ON/DO)</h2><div class="line"></div><p>Reakcje na zdarzenia — co robić gdy job się zakończy</p></div>
+        <div class="card fin">
+            <h3><span class="ic">⚡</span> Mechanizm ON/DO</h3>
+            <div class="term"><span class="c">// ON (warunek) → DO (akcja)</span>
+
+<span class="y">ON</span> stmt: <span class="r">NOTOK</span>              <span class="c">// Gdy job się nie powiedzie</span>
+  <span class="b">DO</span> Shout                    <span class="c">// Wyślij alert</span>
+     Dest:   <span class="g">ops-team@company.com</span>
+     Msg:    <span class="g">"Job %%JOBNAME FAILED RC=%%COMPSTAT"</span>
+  <span class="b">DO</span> Rerun                    <span class="c">// Ponów uruchomienie</span>
+
+<span class="y">ON</span> stmt: <span class="r">COMP CODE > 4</span>       <span class="c">// Gdy return code > 4</span>
+  <span class="b">DO</span> Mail                     <span class="c">// Wyślij email</span>
+     To:     <span class="g">dev-lead@company.com</span>
+     Subject:<span class="g">"Job %%JOBNAME RC=%%COMPSTAT"</span>
+  <span class="b">DO</span> Set Variable              <span class="c">// Ustaw zmienną</span>
+     Name:   <span class="p">%%JOB_STATUS</span>
+     Value:  <span class="r">FAILED</span>
+
+<span class="y">ON</span> stmt: <span class="g">OK</span>                  <span class="c">// Gdy job OK</span>
+  <span class="b">DO</span> Add Condition             <span class="c">// Dodaj warunek</span>
+     Name:   <span class="g">STEP1-DONE</span>
+     Date:   <span class="p">ODAT</span>
+
+<span class="c">// Inne ON statementy:</span>
+<span class="y">ON</span> DO NOT START (job nie wystartował w oknie)
+<span class="y">ON</span> LATE (job się spóźnia vs SLA)
+<span class="y">ON</span> LONG (job trwa dłużej niż zwykle)</div>
+        </div>
+        <div class="card fin">
+            <h3><span class="ic">📋</span> Dostępne akcje DO</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Akcja DO</th><th>Opis</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>DO Shout</strong></td><td>Wyślij komunikat (email, SNMP, Shout Destination)</td></tr>
+                        <tr><td><strong>DO Mail</strong></td><td>Wyślij email z załącznikiem (output)</td></tr>
+                        <tr><td><strong>DO Rerun</strong></td><td>Ponów uruchomienie joba (retry)</td></tr>
+                        <tr><td><strong>DO Set to OK</strong></td><td>Oznacz job jako zakończony pomyślnie</td></tr>
+                        <tr><td><strong>DO Stop/Skip Cyclic</strong></td><td>Zatrzymaj/pomiń cykl (dla jobów cyklicznych)</td></tr>
+                        <tr><td><strong>DO Add/Delete Condition</strong></td><td>Dodaj lub usuń warunek</td></tr>
+                        <tr><td><strong>DO Set Variable</strong></td><td>Ustaw zmienną AutoEdit</td></tr>
+                        <tr><td><strong>DO Remedy</strong></td><td>Utwórz ticket w BMC Remedy</td></tr>
+                        <tr><td><strong>DO Run Job</strong></td><td>Uruchom inny job</td></tr>
+                        <tr><td><strong>DO Output Handling</strong></td><td>Analizuj output joba (grep pattern)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- API / CLI -->
+<section id="api">
+    <div class="container">
+        <div class="stitle fin"><h2>💻 Automation API & CLI</h2><div class="line"></div><p>Jobs-as-Code — definicje w JSON, zarządzanie przez API</p></div>
+        <div class="card fin">
+            <h3><span class="ic">📝</span> Job-as-Code (JSON)</h3>
+            <div class="term"><span class="c">// Definicja joba w JSON (Automation API):</span>
+{
+  "<span class="y">PAYROLL-FOLDER</span>": {
+    "Type": "Folder",
+    "ControlmServer": "<span class="b">ctm-prod</span>",
+    "OrderMethod": "Manual",
+
+    "<span class="g">Extract-Data</span>": {
+      "Type": "Job:Command",
+      "Command": "<span class="w">/opt/scripts/extract.sh</span>",
+      "RunAs": "<span class="p">batchuser</span>",
+      "Host": "<span class="b">linux-srv-01</span>",
+      "When": {
+        "WeekDays": ["MON","TUE","WED","THU","FRI"],
+        "FromTime": "0200",
+        "ToTime": "0600"
+      },
+      "ActionIfFailure": {
+        "Type": "If",
+        "CompletionStatus": "NOTOK",
+        "Mail": {
+          "To": "<span class="r">ops@company.com</span>",
+          "Subject": "Extract FAILED"
+        },
+        "Rerun": { "Every": "5m", "Times": 3 }
+      }
+    },
+
+    "<span class="g">Calculate-Payroll</span>": {
+      "Type": "Job:Command",
+      "Command": "<span class="w">/opt/scripts/payroll.sh %%ODAT</span>",
+      "RunAs": "<span class="p">batchuser</span>",
+      "Host": "<span class="b">linux-srv-01</span>",
+      "Flow": {
+        "Type": "Flow",
+        "Sequence": ["<span class="g">Extract-Data</span>"]
+      }
+    }
+  }
+}</div>
+        </div>
+        <div class="card fin">
+            <h3><span class="ic">⌨️</span> CLI — ctm command</h3>
+            <div class="term"><span class="c"># Deploy definicji:</span>
+<span class="b">ctm</span> deploy <span class="g">jobs.json</span>
+
+<span class="c"># Uruchomienie (order) folderu:</span>
+<span class="b">ctm</span> run order <span class="y">ctm-prod</span> <span class="g">PAYROLL-FOLDER</span>
+
+<span class="c"># Status jobów:</span>
+<span class="b">ctm</span> run jobs:status::get -s "<span class="p">jobname=Extract*&status=Ended Not OK</span>"
+
+<span class="c"># Hold / Free / Rerun / Kill:</span>
+<span class="b">ctm</span> run job::hold <span class="r">job-id</span>
+<span class="b">ctm</span> run job::free <span class="r">job-id</span>
+<span class="b">ctm</span> run job::rerun <span class="r">job-id</span>
+<span class="b">ctm</span> run job::kill <span class="r">job-id</span>
+
+<span class="c"># Dodaj warunek:</span>
+<span class="b">ctm</span> run resource::condition add <span class="y">ctm-prod</span> <span class="g">JOB-A-DONE</span> <span class="p">0101</span>
+
+<span class="c"># Monitoring alertów:</span>
+<span class="b">ctm</span> run alerts::get -s "<span class="p">severity=Critical</span>"
+
+<span class="c"># Budowanie i walidacja:</span>
+<span class="b">ctm</span> build <span class="g">jobs.json</span>       <span class="c"># Waliduj składnię</span>
+<span class="b">ctm</span> deploy <span class="g">jobs.json</span>      <span class="c"># Wdrożenie</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- PLUGINY -->
+<section id="plugins" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🔌 Pluginy i integracje</h2><div class="line"></div><p>Control-M integruje się z setkami technologii</p></div>
+        <div class="g4 fin">
+            <div class="fc"><div class="fi">🗄️</div><h4>Database</h4><p>Oracle, SQL Server, DB2, PostgreSQL, MySQL</p></div>
+            <div class="fc"><div class="fi">☁️</div><h4>AWS</h4><p>Lambda, Step Functions, Glue, ECS, S3, EMR</p></div>
+            <div class="fc"><div class="fi">🔷</div><h4>Azure</h4><p>Functions, Data Factory, Databricks, Logic Apps</p></div>
+            <div class="fc"><div class="fi">🌐</div><h4>GCP</h4><p>Cloud Functions, Dataflow, BigQuery</p></div>
+            <div class="fc"><div class="fi">📊</div><h4>Hadoop/Spark</h4><p>HDFS, Hive, Spark, Oozie</p></div>
+            <div class="fc"><div class="fi">📁</div><h4>MFT</h4><p>SFTP, FTP, S3, AS2, Connect:Direct</p></div>
+            <div class="fc"><div class="fi">🐳</div><h4>Containers</h4><p>Kubernetes, Docker, OpenShift</p></div>
+            <div class="fc"><div class="fi">📨</div><h4>Messaging</h4><p>Kafka, MQ, RabbitMQ, SQS</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+    <div class="container">
+        <div class="stitle fin"><h2>❓ FAQ</h2><div class="line"></div></div>
+        <div class="fin">
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Co to New Day Processing?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi"><strong>New Day Processing</strong> to codzienny proces (zwykle o północy lub w konfigurowalnej godzinie), w którym Control-M/Server: 1) czyści warunki z poprzedniego dnia, 2) ładuje definicje jobów do Active Jobs File (AJF) na nowy dzień, 3) sprawdza kryteria schedulingowe, 4) ustawia ODAT. To „serce" cyklu dziennego Control-M.</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Czym różni się ODAT od daty systemowej?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi"><strong>ODAT (Order Date)</strong> to data planowania — „na kiedy" job jest zaplanowany. Nie musi być równa dacie systemowej. Np. job zaplanowany na ODAT=0115 może fizycznie wykonać się 16 stycznia o 2:00 w nocy (następnego dnia kalendarzowego), ale logicznie należy do dnia 15 stycznia. ODAT jest kluczem w warunkach i zasobach.</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Jak działa AutoEdit (%%zmienne)?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi"><strong>AutoEdit</strong> to zmienne rozwijane w runtime. Predefiniowane: <code>%%ODAT</code>, <code>%%JOBNAME</code>, <code>%%COMPSTAT</code>, <code>%%ORDERID</code>, <code>%%$DATE</code>, <code>%%OYEAR</code>, <code>%%OMONTH</code>, <code>%%ODAY</code>. Własne: <code>%%MYVAR</code> — definiowane na poziomie joba, folderu lub globalnie. Używane w CMDLINE, ścieżkach, warunkach.</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Jak obsługiwać ABEND / RC≠0?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">Przez mechanizm <strong>ON/DO</strong>: <code>ON COMP CODE &gt; 0 DO Shout + DO Rerun</code>. Można definiować: retry z interwałem, eskalację do innego zespołu, automatyczny ticket w ServiceNow/Remedy, warunkowe pomijanie (Set to OK jeśli RC=4), uruchomienie joba awaryjnego (DO Run Job). W BIM (Batch Impact Manager) można śledzić wpływ awarii na SLA.</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Czym jest Jobs-as-Code?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi"><strong>Jobs-as-Code</strong> to podejście, w którym definicje jobów są zapisane w <strong>JSON</strong> (lub Python/Go templates) i zarządzane w <strong>Git</strong>. Control-M Automation API pozwala na: <code>ctm build</code> (walidacja), <code>ctm deploy</code> (wdrożenie). Integracja z Jenkins/GitHub Actions → pełne CI/CD dla jobów batch.</div></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🧠 Quiz — Control-M</h2><div class="line"></div></div>
+        <div class="qbox fin">
+            <div class="qmeta">Pytanie <span id="qN">1</span>/<span id="qT">10</span> | Wynik: <span id="qS">0</span></div>
+            <div class="qq" id="qQ"></div>
+            <div class="qopts" id="qO"></div>
+            <div class="qfb" id="qFb"></div>
+            <div class="qnav">
+                <button class="qb nxt" id="qNxt" onclick="qNx()" disabled>Następne →</button>
+                <button class="qb res" id="qRst" onclick="qRe()">Od nowa 🔄</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <h3>⚙️ Control-M — Kompletny Przewodnik</h3>
+    <p>Workload Automation — BMC Software</p>
+    <p style="margin-top:10px"><a href="#what">Co to</a> • <a href="#params">Parametry</a> • <a href="#scheduling">Scheduling</a> • <a href="#conditions">Warunki</a> • <a href="#api">API</a></p>
+    <p style="font-size:.72rem;opacity:.5;margin-top:14px">© 2024</p>
+</footer>
+
+<script>
+// ═══════════════════════════
+// PARAMETRY JOBÓW
+// ═══════════════════════════
+const PARAMS = [
+    // BASIC
+    {name:"JOBNAME",desc:"Unikalna nazwa joba (do 64 znaków)",vals:"String, max 64",req:true,cat:"basic"},
+    {name:"FOLDER / TABLE",desc:"Nazwa folderu (SMART Folder) grupującego joby",vals:"String, max 64",req:true,cat:"basic"},
+    {name:"APPLICATION",desc:"Nazwa aplikacji biznesowej (logiczne grupowanie)",vals:"String — np. PAYROLL, BILLING",req:false,cat:"basic"},
+    {name:"SUB-APPLICATION",desc:"Pod-aplikacja (dodatkowy poziom grupowania)",vals:"String",req:false,cat:"basic"},
+    {name:"DESCRIPTION",desc:"Opis joba — cel, co robi, kontakt",vals:"Free text, max 4000",req:false,cat:"basic"},
+    {name:"JOBTYPE / TYPE",desc:"Typ joba — Command, Script, Dummy, File Transfer...",vals:"Command | Script | Dummy | FileTransfer | Database | ...",req:true,cat:"basic"},
+    {name:"HOST / NODEID",desc:"Agent (maszyna) na której job się wykonuje",vals:"Hostname lub Agent name",req:true,cat:"basic"},
+    {name:"RUN AS / OWNER",desc:"Użytkownik OS pod którym job się uruchomi",vals:"Username — np. batchuser, root",req:true,cat:"basic"},
+    {name:"CONTROL-M SERVER",desc:"Nazwa Control-M/Server zarządzającego jobem",vals:"Server name",req:true,cat:"basic"},
+    {name:"PRIORITY",desc:"Priorytet wykonania (wewnątrz Control-M)",vals:"00 (najwyższy) — 99 (najniższy)",req:false,cat:"basic"},
+    {name:"CRITICAL",desc:"Czy job jest krytyczny (widoczny w BIM/SLA)",vals:"Y / N",req:false,cat:"basic"},
+    {name:"TASKTYPE",desc:"Typ zadania (z/OS: JOB, STC, DUMMY)",vals:"JOB | STC | CMD | DUMMY",req:false,cat:"basic"},
+
+    // EXECUTION
+    {name:"CMDLINE / COMMAND",desc:"Komenda lub skrypt do wykonania",vals:"Ścieżka do skryptu lub komenda shell",req:true,cat:"execution"},
+    {name:"MEMNAME (z/OS)",desc:"Nazwa membera JCL w PDS",vals:"Member name, max 8 chars",req:false,cat:"execution"},
+    {name:"MEMLIB (z/OS)",desc:"Biblioteka (PDS) zawierająca JCL member",vals:"DSN — np. PROD.JCL.LIB",req:false,cat:"execution"},
+    {name:"FILE PATH",desc:"Ścieżka do pliku skryptu (distributed)",vals:"/opt/scripts/myjob.sh",req:false,cat:"execution"},
+    {name:"ARGUMENTS",desc:"Argumenty przekazywane do skryptu/komendy",vals:"String — parametry uruchomieniowe",req:false,cat:"execution"},
+    {name:"HOST GROUP",desc:"Grupa agentów — load balancing (job na dowolnym z grupy)",vals:"Host Group name",req:false,cat:"execution"},
+    {name:"MAX RERUN",desc:"Maksymalna liczba automatycznych ponowień",vals:"0-99",req:false,cat:"execution"},
+    {name:"RERUN INTERVAL",desc:"Interwał między ponowieniami",vals:"MM (minuty) — np. 05",req:false,cat:"execution"},
+    {name:"MAX WAIT",desc:"Maksymalny czas oczekiwania na warunki (minuty)",vals:"Minuty — 0 = bez limitu",req:false,cat:"execution"},
+    {name:"CONFIRM",desc:"Czy wymagane ręczne potwierdzenie przed startem",vals:"Y / N",req:false,cat:"execution"},
+    {name:"OUTPUT",desc:"Ścieżka do zapisania outputu joba",vals:"File path",req:false,cat:"execution"},
+
+    // SCHEDULING
+    {name:"DAYS",desc:"Dni miesiąca, w które job ma się uruchomić",vals:"ALL | 1-31 | LAST | L1-L5 (od końca)",req:false,cat:"scheduling"},
+    {name:"WEEKDAYS",desc:"Dni tygodnia",vals:"MON,TUE,WED,THU,FRI,SAT,SUN | ALL",req:false,cat:"scheduling"},
+    {name:"MONTHS",desc:"Miesiące, w które job jest aktywny",vals:"JAN-DEC | ALL",req:false,cat:"scheduling"},
+    {name:"FROM DATE / TO DATE",desc:"Zakres dat aktywności definicji",vals:"MMDD | ODAT format",req:false,cat:"scheduling"},
+    {name:"FROM TIME",desc:"Najwcześniejszy czas startu (okno startowe — początek)",vals:"HHMM — np. 0200",req:false,cat:"scheduling"},
+    {name:"UNTIL TIME / TO TIME",desc:"Najpóźniejszy czas startu (okno startowe — koniec)",vals:"HHMM — np. 0600 | >",req:false,cat:"scheduling"},
+    {name:"CALENDAR",desc:"Nazwa kalendarza (dni, w które job ma się uruchomić)",vals:"Calendar name — np. BUSINESS-DAYS",req:false,cat:"scheduling"},
+    {name:"CONF CALENDAR",desc:"Kalendarz wykluczeń (dni, w które NIE uruchamiać)",vals:"Calendar name — np. HOLIDAYS-PL",req:false,cat:"scheduling"},
+    {name:"SHIFT",desc:"Przesunięcie jeśli dzień wypada w wykluczonej dacie",vals:"NOCONFCAL | PREVWORKDAY | NEXTWORKDAY | IGNORE",req:false,cat:"scheduling"},
+    {name:"CYCLIC",desc:"Czy job jest cykliczny (powtarza się w ciągu dnia)",vals:"Y / N",req:false,cat:"scheduling"},
+    {name:"INTERVAL",desc:"Interwał powtarzania (dla CYCLIC=Y)",vals:"HHMM — np. 0030 (co 30 min)",req:false,cat:"scheduling"},
+    {name:"MINIMUM",desc:"Minimalny czas między uruchomieniami (cyclic)",vals:"HHMM",req:false,cat:"scheduling"},
+    {name:"RETROACTIVITY",desc:"Czy uruchamiać zaległe joby (jeśli system był niedostępny)",vals:"0 (nie) — 99 (dni wstecz)",req:false,cat:"scheduling"},
+    {name:"ACTIVE FROM / UNTIL",desc:"Okres aktywności definicji joba",vals:"YYYYMMDD",req:false,cat:"scheduling"},
+
+    // CONDITIONS
+    {name:"IN CONDITION",desc:"Warunek wstępny — job czeka aż będzie spełniony",vals:"condition-name ODAT [AND/OR]",req:false,cat:"conditions"},
+    {name:"OUT CONDITION (+)",desc:"Warunek dodawany po pomyślnym zakończeniu",vals:"condition-name ODAT — dodawany",req:false,cat:"conditions"},
+    {name:"OUT CONDITION (-)",desc:"Warunek usuwany po pomyślnym zakończeniu",vals:"condition-name ODAT — usuwany",req:false,cat:"conditions"},
+    {name:"CONDITION ODAT",desc:"Data warunku — ODAT (bieżąca), PREV, NEXT, konkretna",vals:"ODAT | PREV | NEXT | MMDD",req:false,cat:"conditions"},
+    {name:"AND/OR",desc:"Logika łączenia warunków IN",vals:"AND (domyślnie, wszystkie) | OR (dowolny)",req:false,cat:"conditions"},
+    {name:"PIPE",desc:"Przekazywanie outputu między jobami (distributed)",vals:"Y / N",req:false,cat:"conditions"},
+
+    // ACTIONS
+    {name:"ON statement",desc:"Warunek triggera akcji (NOTOK, OK, COMP CODE, LATE...)",vals:"OK | NOTOK | COMP CODE oper val | LATE | LONG",req:false,cat:"actions"},
+    {name:"DO SHOUT",desc:"Wyślij komunikat alarmowy",vals:"Destination + Message (z AutoEdit)",req:false,cat:"actions"},
+    {name:"DO MAIL",desc:"Wyślij email z outputem joba",vals:"To, CC, Subject, Body, Attachment",req:false,cat:"actions"},
+    {name:"DO RERUN",desc:"Ponów uruchomienie joba",vals:"From step (z/OS), interval, max times",req:false,cat:"actions"},
+    {name:"DO SET TO OK",desc:"Oznacz job jako pomyślny mimo błędu",vals:"(bez parametrów)",req:false,cat:"actions"},
+    {name:"DO ADD/DEL CONDITION",desc:"Dodaj lub usuń warunek z tablicy",vals:"condition-name, ODAT",req:false,cat:"actions"},
+    {name:"DO STOP CYCLIC",desc:"Zatrzymaj cykliczne uruchamianie",vals:"(dla CYCLIC jobs)",req:false,cat:"actions"},
+    {name:"DO REMEDY / SERVICENOW",desc:"Utwórz automatyczny ticket",vals:"Template + fields",req:false,cat:"actions"},
+    {name:"DO RUN JOB",desc:"Uruchom inny job jako reakcję",vals:"Job name, folder, server",req:false,cat:"actions"},
+    {name:"DO OUTPUT",desc:"Analiza outputu (grep pattern)",vals:"Pattern, statement search",req:false,cat:"actions"},
+
+    // RESOURCES
+    {name:"QUANTITATIVE RESOURCE",desc:"Zasób ilościowy — job rezerwuje N jednostek",vals:"Resource name, quantity (1-999)",req:false,cat:"resources"},
+    {name:"CONTROL RESOURCE",desc:"Zasób wzajemnego wykluczenia",vals:"Resource name, Shared | Exclusive",req:false,cat:"resources"},
+    {name:"MUTEX / SEMAPHORE",desc:"Blokada wzajemna — tylko 1 job naraz z daną etykietą",vals:"Mutex name",req:false,cat:"resources"},
+
+    // NOTIFICATIONS
+    {name:"SHOUT DESTINATION",desc:"Cel alertu (email, SNMP, zewnętrzny system)",vals:"Email, SNMP trap, Program, Script",req:false,cat:"notifications"},
+    {name:"SHOUT WHEN",desc:"Kiedy wysłać alert (OK, NOTOK, LATE, LONG...)",vals:"OK | NOTOK | STARTED | LATE | SUB | ENDED",req:false,cat:"notifications"},
+    {name:"SHOUT MESSAGE",desc:"Treść komunikatu (z AutoEdit variables %%)",vals:"Free text z %%JOBNAME, %%COMPSTAT...",req:false,cat:"notifications"},
+    {name:"NOTIFICATION",desc:"Powiadomienie (alerting w Control-M Web)",vals:"Destination, urgency, message",req:false,cat:"notifications"},
+    {name:"SLA / BIM",desc:"Definicja Service Level Agreement",vals:"Target time, priority, critical path",req:false,cat:"notifications"},
+
+    // ADVANCED
+    {name:"AUTOEDIT (%% variables)",desc:"Zmienne rozwijane w runtime — systemowe i użytkownika",vals:"%%ODAT, %%JOBNAME, %%$DATE, %%MYVAR...",req:false,cat:"advanced"},
+    {name:"ADJUST CONDITIONS",desc:"Dostosuj warunki na koniec dnia (clean/keep)",vals:"Y / N / S (selective)",req:false,cat:"advanced"},
+    {name:"MAXRC / COMP CODE OK",desc:"Maksymalny return code uznawany za OK",vals:"0-4095 — np. 4 (RC ≤ 4 = OK)",req:false,cat:"advanced"},
+    {name:"PREVENTIVE NCT2",desc:"Zapobieganie podwójnemu uruchomieniu",vals:"Y / N — prevent concurrent",req:false,cat:"advanced"},
+    {name:"DOCLIB / DOCMEM",desc:"Biblioteka i member dokumentacji joba (z/OS)",vals:"DSN(MEMBER)",req:false,cat:"advanced"},
+    {name:"OVERLIB",desc:"Alternatywna biblioteka JCL (override)",vals:"DSN",req:false,cat:"advanced"},
+    {name:"SYSDB",desc:"Baza danych systemowa (z/OS scheduling table)",vals:"Table name",req:false,cat:"advanced"},
+    {name:"AUTHOR",desc:"Autor/właściciel definicji joba",vals:"Username",req:false,cat:"advanced"},
+    {name:"CREATED / MODIFIED",desc:"Data utworzenia / modyfikacji definicji",vals:"Automatyczne — timestamp",req:false,cat:"advanced"},
+    {name:"SITE STANDARD",desc:"Standard nazewnictwa (walidacja wzorca nazwy joba)",vals:"Pattern — np. APP-ENV-TYPE-NNN",req:false,cat:"advanced"},
+];
+
+const CAT_LABELS = {
+    basic:"📦 Podstawowe", scheduling:"📅 Scheduling", execution:"⚡ Wykonanie",
+    conditions:"🔗 Warunki (IN/OUT)", actions:"⚡ Akcje (ON/DO)", resources:"🔒 Zasoby",
+    notifications:"🔔 Powiadomienia", advanced:"🔧 Zaawansowane"
+};
+const CAT_ORDER = ["basic","scheduling","execution","conditions","actions","resources","notifications","advanced"];
+
+function renderParams(list){
+    const container = document.getElementById('paramsContainer');
+    container.innerHTML = '';
+    let count = 0;
+    CAT_ORDER.forEach(cat => {
+        const items = list.filter(p => p.cat === cat);
+        if(items.length === 0) return;
+        const section = document.createElement('div');
+        section.className = 'param-section';
+        section.innerHTML = `<h4>${CAT_LABELS[cat]} (${items.length})</h4>`;
+        const grid = document.createElement('div');
+        grid.className = 'param-grid';
+        items.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'param-card';
+            card.innerHTML = `
+                <div class="pname">${p.name}</div>
+                <div class="pdesc">${p.desc}</div>
+                <div class="pvals">${p.vals}</div>
+                <div class="preq ${p.req?'req':'opt'}">${p.req?'⚠️ Wymagane':'✅ Opcjonalne'}</div>
+            `;
+            grid.appendChild(card);
+            count++;
+        });
+        section.appendChild(grid);
+        container.appendChild(section);
+    });
+    document.getElementById('paramCount').textContent = `Wyświetlono: ${count} parametrów`;
+}
+
+function filterParams(){
+    const search = document.getElementById('paramSearch').value.toLowerCase();
+    const cat = document.getElementById('paramCatFilter').value;
+    const filtered = PARAMS.filter(p => {
+        const matchSearch = p.name.toLowerCase().includes(search) || p.desc.toLowerCase().includes(search);
+        const matchCat = cat === 'all' || p.cat === cat;
+        return matchSearch && matchCat;
+    });
+    renderParams(filtered);
+}
+
+renderParams(PARAMS);
+
+// ACCORDION
+function togAcc(h){const i=h.parentElement;const b=i.querySelector('.acc-b');const o=i.classList.contains('open');document.querySelectorAll('.acc-i').forEach(x=>{x.classList.remove('open');const xb=x.querySelector('.acc-b');if(xb)xb.style.maxHeight=null});if(!o){i.classList.add('open');b.style.maxHeight=b.scrollHeight+'px';}}
+
+// QUIZ
+const qD=[
+    {q:"Co to Control-M?",o:["Baza danych","Kompilator COBOL","Platforma Workload Automation (scheduler)","System operacyjny"],a:2,e:"Control-M to wiodąca platforma WLA firmy BMC — harmonogramowanie, orkiestracja i monitoring jobów."},
+    {q:"Który komponent wykonuje joby na docelowej maszynie?",o:["Enterprise Manager","Control-M/Server","Control-M/Agent","BIM"],a:2,e:"Control-M/Agent jest instalowany na maszynie docelowej (Linux/Windows/z/OS) i fizycznie wykonuje joby."},
+    {q:"Co to ODAT?",o:["Nazwa serwera","Order Date — data planowania joba","Output Data","Opcja kompilacji"],a:1,e:"ODAT (Order Date) to data, na którą job jest zaplanowany — kluczowa w warunkach i logice łańcuchowania."},
+    {q:"Co to warunek IN (IN Condition)?",o:["Wyjście joba","Warunek wstępny — job czeka na jego spełnienie","Input data","Nazwa pliku"],a:1,e:"IN Condition to prerequisit — job nie ruszy dopóki warunek (generowany przez inny job lub ręcznie) nie pojawi się."},
+    {q:"Co robi akcja DO RERUN?",o:["Usuwa joba","Ponownie uruchamia joba po błędzie","Zmienia nazwę","Wysyła email"],a:1,e:"DO RERUN automatycznie ponawia uruchomienie joba — z opcjonalnym interwałem i limitem prób (retry)."},
+    {q:"Co to CYCLIC job?",o:["Job uruchamiany raz","Job powtarzany co N minut w ciągu dnia","Job z wieloma krokami","Job na wielu serwerach"],a:1,e:"CYCLIC=Y oznacza, że job powtarza się co zadany interwał (np. co 30 min) w zdefiniowanym oknie czasowym."},
+    {q:"Czym jest Quantitative Resource?",o:["Typ serwera","Zasób z ograniczoną liczbą jednostek (kontrola współbieżności)","Format pliku","Typ kalendarza"],a:1,e:"Quantitative Resource ma pulę jednostek (np. 10). Każdy job rezerwuje N — gdy brak wolnych, kolejne czekają."},
+    {q:"Co to Jobs-as-Code?",o:["Programowanie w COBOL","Definicje jobów w JSON zarządzane w Git","Manualne tworzenie w GUI","Kompilacja jobów"],a:1,e:"Jobs-as-Code = definicje jako JSON + Git + CI/CD. Automation API: ctm build (walidacja), ctm deploy (wdrożenie)."},
+    {q:"Co to New Day Processing?",o:["Restart serwera","Codzienny proces ładowania jobów do Active Jobs","Backup nocny","Usuwanie logów"],a:1,e:"New Day Processing codziennie ładuje definicje jobów do Active Jobs File (AJF), czyści warunki i ustawia ODAT."},
+    {q:"Jak Control-M obsługuje SLA?",o:["Nie obsługuje","Przez BIM (Batch Impact Manager) — monitoring krytycznych ścieżek","Przez crontab","Przez email"],a:1,e:"BIM (Batch Impact Manager) monitoruje krytyczne joby i alarmuje gdy SLA jest zagrożone (LATE, LONG)."}
+];
+let qi=0,qs=0,qa=false;
+function qRn(){if(qi>=qD.length){qEn();return}const q=qD[qi];document.getElementById('qN').textContent=qi+1;document.getElementById('qT').textContent=qD.length;document.getElementById('qQ').textContent=q.q;const o=document.getElementById('qO');o.innerHTML='';q.o.forEach((t,i)=>{const d=document.createElement('div');d.className='qopt';d.textContent=t;d.onclick=()=>qAn(i);o.appendChild(d)});document.getElementById('qFb').className='qfb';document.getElementById('qNxt').disabled=true;document.getElementById('qNxt').style.display='';document.getElementById('qRst').style.display='none';qa=false}
+function qAn(i){if(qa)return;qa=true;const q=qD[qi],os=document.querySelectorAll('.qopt'),fb=document.getElementById('qFb');os[q.a].classList.add('ok');if(i===q.a){qs++;fb.textContent='✅ Brawo! '+q.e;fb.style.background='#d1fae5';fb.style.color='#065f46'}else{os[i].classList.add('no');fb.textContent='❌ Źle. '+q.e;fb.style.background='#fee2e2';fb.style.color='#991b1b'}fb.className='qfb show';document.getElementById('qS').textContent=qs;document.getElementById('qNxt').disabled=false;os.forEach(o=>o.style.pointerEvents='none')}
+function qNx(){qi++;qRn()}
+function qEn(){const p=Math.round(qs/qD.length*100);let e=p===100?'🏆':p>=70?'🌟':p>=40?'👍':'📚';let m=p===100?'Perfekcyjnie!':p>=70?'Świetnie!':p>=40?'Nieźle!':'Powtórz materiał!';document.getElementById('qQ').innerHTML=`${e} <strong>${qs}/${qD.length}</strong> (${p}%)`;document.getElementById('qO').innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:14px;color:var(--muted)">${m}</div>`;document.getElementById('qFb').className='qfb';document.getElementById('qNxt').style.display='none';document.getElementById('qRst').style.display=''}
+function qRe(){qi=0;qs=0;document.getElementById('qS').textContent=0;qRn()}
+qRn();
+
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')})},{threshold:.06});
+document.querySelectorAll('.fin').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
+```
+
+## Zawartość strony — podsumowanie:
+
+### 📖 12 sekcji edukacyjnych:
+
+| Sekcja | Zawartość |
+|---|---|
+| **Co to Control-M** | Definicja WLA, 8 kluczowych funkcji |
+| **Architektura** | ASCII diagram (EM → Server → Agent), tabela 8 komponentów (EM, Server, Agent, API, Web, MFT, BIM, Forecast) |
+| **Koncepcje** | Hierarchia (Folder→Job→Conditions→Resources), słownik 12 pojęć (ODAT, AJF, AutoEdit, ON/DO...) |
+| **📋 Parametry jobów** | ⭐ **~65 parametrów** w 8 kategoriach z wyszukiwarką i filtrem |
+| **Scheduling** | Przykłady DAYS/WEEKDAYS/FROM TIME/CYCLIC, 3 typy kalendarzy |
+| **Warunki IN/OUT** | Mechanizm conditions, AND/OR, ODAT/PREV, cross-folder |
+| **Zasoby** | Quantitative vs Control Resource (Mutex), przykłady |
+| **Alerty ON/DO** | Pełna składnia ON/DO, 10 akcji DO (Shout, Mail, Rerun, Set to OK, Remedy...) |
+| **API/CLI** | Jobs-as-Code (JSON), 8 komend CLI (deploy, order, hold, rerun, kill...) |
+| **Pluginy** | 8 kategorii: Database, AWS, Azure, GCP, Hadoop, MFT, Containers, Messaging |
+| **FAQ** | 5 pytań (New Day, ODAT, AutoEdit, ABEND handling, Jobs-as-Code) |
+| **Quiz** | 10 pytań z wyjaśnieniami |
+
+### 🛠️ Główna sekcja — **65 parametrów** w 8 kategoriach:
+
+| Kategoria | Liczba | Przykłady |
+|---|---|---|
+| 📦 Podstawowe | 12 | JOBNAME, HOST, RUN AS, PRIORITY, CRITICAL |
+| 📅 Scheduling | 14 | DAYS, WEEKDAYS, FROM TIME, CALENDAR, CYCLIC, INTERVAL, SHIFT |
+| ⚡ Wykonanie | 11 | CMDLINE, MEMNAME, ARGUMENTS, MAX RERUN, CONFIRM |
+| 🔗 Warunki | 6 | IN CONDITION, OUT CONDITION +/-, AND/OR, PIPE |
+| ⚡ Akcje ON/DO | 10 | DO SHOUT, DO MAIL, DO RERUN, DO SET TO OK, DO REMEDY |
+| 🔒 Zasoby | 3 | QUANTITATIVE, CONTROL, MUTEX |
+| 🔔 Powiadomienia | 5 | SHOUT DEST/WHEN/MSG, NOTIFICATION, SLA/BIM |
+| 🔧 Zaawansowane | 10 | AUTOEDIT, MAXRC, ADJUST CONDITIONS, SITE STANDARD |
+
+### 🔍 Interaktywna wyszukiwarka parametrów:
+- Filtr po nazwie/opisie
+- Filtr po kategorii
+- Karty z nazwą, opisem, wartościami, oznaczeniem wymagane/opcjonalne
