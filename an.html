@@ -1,0 +1,840 @@
+
+
+```html
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automate NOW & Raincode — Kompletny Przewodnik | Mainframe Modernization</title>
+    <style>
+        :root{
+            --primary:#0a0f1e;--secondary:#00c2ff;--accent:#ff5722;--green:#00e676;--purple:#b388ff;--gold:#ffd740;--red:#ff5252;--pink:#ff4081;--cyan:#18ffff;--teal:#1de9b6;
+            --bg:#f0f2f8;--card:#fff;--text:#1a202c;--muted:#64748b;--shadow:0 8px 30px rgba(0,0,0,.07);--radius:16px;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth;scroll-padding-top:68px}
+        body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.78}
+
+        /* NAV */
+        nav{position:fixed;top:0;width:100%;z-index:1000;background:rgba(10,15,30,.97);backdrop-filter:blur(14px);box-shadow:0 2px 24px rgba(0,0,0,.4)}
+        .nav-in{max-width:1440px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+        .logo{color:#fff;font-weight:900;font-size:1.1rem;padding:14px 0;display:flex;align-items:center;gap:8px}
+        .logo .l1{color:var(--secondary)}
+        .logo .l2{color:var(--accent)}
+        nav ul{display:flex;list-style:none;flex-wrap:wrap}
+        nav ul li a{display:block;color:#8ea4be;text-decoration:none;padding:16px 12px;font-size:.76rem;font-weight:500;transition:.3s;border-bottom:3px solid transparent;text-transform:uppercase;letter-spacing:.5px}
+        nav ul li a:hover{color:#fff;border-bottom-color:var(--secondary);background:rgba(0,194,255,.07)}
+        .mbtn{display:none;background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer}
+
+        /* HERO */
+        .hero{background:linear-gradient(135deg,#0a0f1e 0%,#0d1f3c 30%,#142952 60%,#0a0f1e 100%);color:#fff;text-align:center;padding:145px 20px 105px;position:relative;overflow:hidden}
+        .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 40%,rgba(0,194,255,.13),transparent 60%),radial-gradient(ellipse at 75% 55%,rgba(255,87,34,.09),transparent 55%);animation:hbg 12s ease-in-out infinite alternate}
+        @keyframes hbg{0%{transform:scale(1)}100%{transform:scale(1.08) rotate(1deg)}}
+        .hero>*{position:relative;z-index:1}
+        .hero-icons{display:flex;justify-content:center;gap:20px;margin-bottom:18px}
+        .hero-icons span{font-size:3.8rem;animation:hfl 4s ease-in-out infinite}
+        .hero-icons span:nth-child(2){animation-delay:.5s}
+        @keyframes hfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        .hero h1{font-size:3.2rem;font-weight:900;margin-bottom:12px;letter-spacing:-1px}
+        .hero h1 .h1{color:var(--secondary)}
+        .hero h1 .h2{color:var(--accent)}
+        .hero>p{font-size:1.15rem;color:#8ea4be;max-width:770px;margin:0 auto 28px}
+        .hero-tags{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+        .htag{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:10px 20px;border-radius:12px;font-size:.8rem;color:#b0c4de}
+        .htag b{color:var(--secondary)}
+        .htag b.or{color:var(--accent)}
+
+        /* UTILS */
+        .container{max-width:1100px;margin:0 auto;padding:0 20px}
+        section{padding:80px 0}
+        .stitle{text-align:center;margin-bottom:48px}
+        .stitle h2{font-size:2.3rem;font-weight:800;letter-spacing:-.5px}
+        .stitle .line{width:65px;height:4px;margin:12px auto;background:linear-gradient(90deg,var(--secondary),var(--accent));border-radius:2px}
+        .stitle p{color:var(--muted);font-size:1.03rem;max-width:660px;margin:0 auto}
+        .alt{background:#e2e8f0}
+
+        /* CARDS */
+        .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:32px;margin-bottom:22px;border:1px solid rgba(0,0,0,.04);transition:transform .3s}
+        .card:hover{transform:translateY(-2px)}
+        .card h3{font-size:1.35rem;margin-bottom:11px;color:var(--primary);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .card h3 .ic{font-size:1.5rem}
+        .card p,.card li{color:#475569;font-size:.98rem}
+        .card ul,.card ol{padding-left:20px;margin:10px 0}
+        .card li{margin-bottom:5px}
+
+        /* GRIDS */
+        .g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+        .g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+        .g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
+
+        /* FEATURE CARDS */
+        .fc{background:var(--card);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);border-top:5px solid var(--secondary);transition:.3s;text-align:center}
+        .fc:nth-child(2){border-top-color:var(--accent)}.fc:nth-child(3){border-top-color:var(--green)}.fc:nth-child(4){border-top-color:var(--purple)}.fc:nth-child(5){border-top-color:var(--gold)}.fc:nth-child(6){border-top-color:var(--red)}.fc:nth-child(7){border-top-color:var(--pink)}.fc:nth-child(8){border-top-color:var(--cyan)}
+        .fc:hover{transform:translateY(-5px);box-shadow:0 16px 42px rgba(0,0,0,.1)}
+        .fc .fi{font-size:2.3rem;margin-bottom:8px}
+        .fc h4{font-size:1.02rem;margin-bottom:5px;color:var(--primary)}
+        .fc p{color:var(--muted);font-size:.84rem}
+
+        /* INFO BOXES */
+        .ib{border-radius:0 12px 12px 0;padding:18px 22px;margin:16px 0;border-left:5px solid}
+        .ib.blue{background:#e0f7fa;border-color:var(--secondary)}
+        .ib.green{background:#e8faf3;border-color:var(--green)}
+        .ib.yellow{background:#fff9e0;border-color:var(--gold)}
+        .ib.red{background:#fde8ee;border-color:var(--red)}
+        .ib.purple{background:#f3e8ff;border-color:var(--purple)}
+        .ib.orange{background:#fff3e0;border-color:var(--accent)}
+        .ib h4{margin-bottom:4px;display:flex;align-items:center;gap:8px}
+
+        /* TERMINAL */
+        .term{background:linear-gradient(135deg,#0a0f1e,#121e36);color:#4ade80;border-radius:14px;padding:28px;margin:16px 0;font-family:'Courier New',monospace;font-size:.86rem;line-height:1.9;overflow-x:auto;border-left:5px solid #4ade80;position:relative;white-space:pre}
+        .term::before{content:'● ● ●';position:absolute;top:8px;left:14px;font-size:.55rem;letter-spacing:4px;color:#2a3a50}
+        .term{padding-top:30px}
+        .c{color:#3a4e68}.r{color:#f87171;font-weight:700}.y{color:#fbbf24;font-weight:700}.b{color:#60a5fa;font-weight:700}.g{color:#4ade80;font-weight:700}.p{color:#c084fc;font-weight:700}.w{color:#e2e8f0;font-weight:700}.o{color:#fb923c;font-weight:700}.cy{color:#22d3ee;font-weight:700}
+
+        /* TABLES */
+        .tw{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow);margin:20px 0}
+        table{width:100%;border-collapse:collapse;background:var(--card)}
+        th{background:linear-gradient(135deg,var(--primary),#1e3050);color:#fff;padding:13px 14px;text-align:center;font-size:.8rem;text-transform:uppercase;letter-spacing:1px}
+        td{padding:11px 14px;text-align:center;border-bottom:1px solid #f1f5f9;font-size:.9rem}
+        td:first-child{text-align:left;font-weight:600}
+        tr:nth-child(even){background:#f8fafc}
+        tr:hover{background:#eef2ff}
+
+        /* PROCESS FLOW */
+        .pflow{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;margin:26px 0}
+        .pfs{background:var(--card);border-radius:14px;padding:16px 18px;text-align:center;box-shadow:var(--shadow);min-width:105px;max-width:150px}
+        .pfs .pfi{font-size:1.6rem;margin-bottom:3px}
+        .pfs h5{font-size:.8rem;color:var(--primary)}
+        .pfs p{font-size:.66rem;color:var(--muted)}
+        .pfa{font-size:1.2rem;color:var(--secondary);padding:0 4px;font-weight:900}
+
+        /* TABS */
+        .tab-btns{display:flex;gap:0;border-bottom:3px solid #e2e8f0;flex-wrap:wrap;margin-bottom:0}
+        .tab-btn{padding:12px 22px;background:none;border:none;cursor:pointer;font-size:.9rem;font-weight:700;color:var(--muted);transition:.3s;border-bottom:3px solid transparent;margin-bottom:-3px}
+        .tab-btn.active{color:var(--secondary);border-bottom-color:var(--secondary);background:#e0f7fa}
+        .tab-btn:hover{color:var(--text)}
+        .tab-content{display:none;padding:22px 0}
+        .tab-content.active{display:block}
+
+        /* ACCORDION */
+        .acc-i{margin-bottom:8px}
+        .acc-h{background:var(--card);border:1px solid #e2e8f0;padding:15px 20px;border-radius:12px;cursor:pointer;font-weight:700;font-size:.95rem;display:flex;justify-content:space-between;align-items:center;transition:.3s}
+        .acc-h:hover{background:#f1f5f9}
+        .acc-h .aw{transition:transform .3s;font-size:1.1rem}
+        .acc-i.open .acc-h .aw{transform:rotate(180deg)}
+        .acc-b{max-height:0;overflow:hidden;transition:max-height .4s ease;background:#f8fafc;border-radius:0 0 12px 12px}
+        .acc-bi{padding:16px 20px;color:#475569;line-height:1.85;font-size:.92rem}
+
+        /* COMPARISON BOXES */
+        .vs-box{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:start;margin:20px 0}
+        .vs-side{background:var(--card);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
+        .vs-mid{display:flex;align-items:center;justify-content:center;padding:20px 10px;font-size:2rem;font-weight:900;color:var(--muted)}
+
+        /* INTERACTIVE MIGRATION SIM */
+        .sim-wrap{background:linear-gradient(135deg,#0d1f3c,#142952);border-radius:var(--radius);padding:34px;color:#fff;box-shadow:var(--shadow)}
+        .sim-wrap h3{text-align:center;font-size:1.4rem;margin-bottom:6px}
+        .sim-sub{text-align:center;color:#6ea4d4;margin-bottom:20px;font-size:.88rem}
+        .sim-steps{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
+        .sim-step{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:16px;min-width:140px;text-align:center;transition:.4s;cursor:pointer}
+        .sim-step.done{background:rgba(0,230,118,.15);border-color:var(--green)}
+        .sim-step.active{background:rgba(0,194,255,.2);border-color:var(--secondary);box-shadow:0 0 20px rgba(0,194,255,.3)}
+        .sim-step.pending{opacity:.5}
+        .sim-step .s-num{font-size:1.8rem;margin-bottom:4px}
+        .sim-step h5{font-size:.82rem;color:#e2e8f0}
+        .sim-step p{font-size:.68rem;color:#6ea4d4}
+        .sim-progress{background:rgba(0,0,0,.3);border-radius:10px;height:18px;overflow:hidden;margin:16px 0}
+        .sim-bar{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--secondary),var(--green));transition:width .8s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:.7rem;font-weight:700;color:var(--primary)}
+        .sim-log{background:rgba(0,0,0,.3);border-radius:10px;padding:14px;font-family:'Courier New',monospace;font-size:.78rem;max-height:150px;overflow-y:auto;color:#94a3b8;margin-top:12px}
+        .sim-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+        .sim-btn{padding:10px 22px;border:none;border-radius:10px;font-size:.86rem;font-weight:700;cursor:pointer;transition:.3s;text-transform:uppercase;letter-spacing:.5px}
+        .sim-btn:hover{transform:scale(1.05);box-shadow:0 5px 18px rgba(0,0,0,.3)}
+        .sim-btn.next{background:var(--secondary);color:#fff}
+        .sim-btn.auto{background:var(--green);color:var(--primary)}
+        .sim-btn.rst{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+
+        /* QUIZ */
+        .qbox{background:var(--card);border-radius:var(--radius);padding:32px;box-shadow:var(--shadow)}
+        .qq{font-size:1.15rem;font-weight:700;color:var(--primary);margin-bottom:14px}
+        .qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .qopt{padding:13px 14px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;transition:.3s;font-size:.92rem;text-align:center;font-weight:500}
+        .qopt:hover{border-color:var(--secondary);background:#e0f7fa}
+        .qopt.ok{border-color:var(--green);background:#d1fae5;color:#065f46}
+        .qopt.no{border-color:var(--red);background:#fee2e2;color:#991b1b}
+        .qfb{padding:13px;border-radius:10px;margin-top:12px;font-weight:600;display:none;font-size:.9rem}
+        .qfb.show{display:block}
+        .qmeta{color:var(--muted);margin-bottom:8px;font-size:.88rem}
+        .qnav{display:flex;justify-content:space-between;margin-top:12px}
+        .qb{padding:10px 22px;border:none;border-radius:10px;cursor:pointer;font-size:.88rem;font-weight:700;transition:.3s}
+        .qb.nxt{background:var(--secondary);color:#fff}
+        .qb.res{background:var(--accent);color:#fff;display:none}
+        .qb:hover{transform:scale(1.04)}
+        .qb:disabled{opacity:.35;cursor:not-allowed}
+
+        footer{background:linear-gradient(135deg,#0a0f1e,#0d1f3c);color:#6ea4d4;text-align:center;padding:42px 20px}
+        footer h3{color:#fff;margin-bottom:6px}
+        footer a{color:var(--secondary);text-decoration:none}
+
+        .fin{opacity:0;transform:translateY(28px);transition:all .7s cubic-bezier(.16,1,.3,1)}
+        .fin.vis{opacity:1;transform:translateY(0)}
+
+        .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+        .badge.an{background:#e0f7fa;color:#006064}
+        .badge.rc{background:#fff3e0;color:#e65100}
+        .badge.both{background:#f3e8ff;color:#6a1b9a}
+
+        @media(max-width:768px){
+            .hero h1{font-size:1.9rem}
+            .stitle h2{font-size:1.6rem}
+            .card{padding:18px}
+            nav ul{display:none}
+            nav ul.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(10,15,30,.98)}
+            .mbtn{display:block}
+            .qopts{grid-template-columns:1fr}
+            .pfa{transform:rotate(90deg)}
+            .pflow{flex-direction:column;align-items:center}
+            .vs-box{grid-template-columns:1fr}
+            .vs-mid{padding:10px;font-size:1.5rem}
+            .tab-btn{padding:9px 14px;font-size:.8rem}
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-in">
+        <div class="logo">🔄 <span class="l1">Automate</span> <span class="l2">NOW</span> + Raincode</div>
+        <button class="mbtn" onclick="document.querySelector('nav ul').classList.toggle('open')">☰</button>
+        <ul>
+            <li><a href="#overview">Przegląd</a></li>
+            <li><a href="#an">Automate NOW</a></li>
+            <li><a href="#rc">Raincode</a></li>
+            <li><a href="#rcstack">Raincode Stack</a></li>
+            <li><a href="#compile">Kompilacja</a></li>
+            <li><a href="#migration">Migracja</a></li>
+            <li><a href="#sim">Symulacja</a></li>
+            <li><a href="#arch">Architektura</a></li>
+            <li><a href="#vs">Porównania</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+        </ul>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="hero-icons"><span>🔄</span><span>🌧️</span></div>
+    <h1><span class="h1">Automate NOW</span> & <span class="h2">Raincode</span></h1>
+    <p>Kompletny przewodnik po modernizacji mainframe — Automate NOW jako platforma automatyzacji workload i Raincode jako kompilator umożliwiający migrację COBOL/PL/I/JCL z z/OS na .NET/Azure/AWS</p>
+    <div class="hero-tags">
+        <div class="htag"><b>Automate NOW</b> — Workload Automation</div>
+        <div class="htag"><b class="or">Raincode</b> — Mainframe Compilers for .NET</div>
+        <div class="htag"><b>Replatforming</b> z/OS → Cloud</div>
+        <div class="htag"><b class="or">Zero rewrite</b> — kompilacja, nie przepisywanie</div>
+    </div>
+</header>
+
+<!-- OVERVIEW -->
+<section id="overview">
+    <div class="container">
+        <div class="stitle fin"><h2>🔍 Przegląd — dwa narzędzia, jeden cel</h2><div class="line"></div><p>Modernizacja mainframe bez ryzyka przepisywania kodu</p></div>
+
+        <div class="g2 fin">
+            <div class="card" style="border-top:5px solid var(--secondary)">
+                <h3><span class="ic">🔄</span> Automate NOW <span class="badge an">Workload</span></h3>
+                <p><strong>Automate NOW</strong> (BMC Helix / Broadcom) to platforma <strong>Workload Automation (WLA)</strong> nowej generacji, zastępująca tradycyjne schedulery mainframe (CA-7, Control-M, TWS). Zarządza harmonogramowaniem i orkiestracją zadań batch i realtime — zarówno na mainframe, jak i w chmurze.</p>
+                <div class="ib blue">
+                    <h4>💡 Po co?</h4>
+                    <p>Zastąpienie starych schedulerów z/OS nowoczesnym narzędziem, które działa cross-platform: mainframe + Linux + cloud + kontenerach.</p>
+                </div>
+            </div>
+            <div class="card" style="border-top:5px solid var(--accent)">
+                <h3><span class="ic">🌧️</span> Raincode <span class="badge rc">Compiler</span></h3>
+                <p><strong>Raincode</strong> to rodzina kompilatorów, która <strong>kompiluje istniejący kod COBOL, PL/I i JCL</strong> do natywnego kodu <strong>.NET (CLR)</strong>, umożliwiając uruchomienie aplikacji mainframe na Windows, Linux, Azure, AWS — <strong>bez przepisywania ani jednej linii kodu źródłowego</strong>.</p>
+                <div class="ib orange">
+                    <h4>🔥 Kluczowa idea</h4>
+                    <p>Replatforming, nie rewriting! Raincode kompiluje Twój COBOL tak jak IGYCRCTL, ale target to .NET zamiast S/390 machine code.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- AUTOMATE NOW -->
+<section id="an" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🔄 Automate NOW — Workload Automation</h2><div class="line"></div><p>Nowoczesny scheduler zastępujący mainframowe joby</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">📋</span> Co to Workload Automation?</h3>
+            <p><strong>Workload Automation (WLA)</strong> to orkiestracja i harmonogramowanie zadań — batch jobów, procesów ETL, transferów plików, skryptów — w odpowiedniej kolejności, z zależnościami i monitoringiem. Na mainframe tę rolę pełniły CA-7, TWS (Tivoli), Control-M. Automate NOW to ich nowoczesny odpowiednik.</p>
+        </div>
+
+        <div class="g4 fin">
+            <div class="fc"><div class="fi">📅</div><h4>Scheduling</h4><p>Harmonogramy: cron-like, event-driven, kalendarze biznesowe</p></div>
+            <div class="fc"><div class="fi">🔗</div><h4>Dependencies</h4><p>Łańcuchy zależności między jobami, plikami, zdarzeniami</p></div>
+            <div class="fc"><div class="fi">☁️</div><h4>Multi-Platform</h4><p>z/OS, Linux, Windows, AWS, Azure, GCP, Kubernetes</p></div>
+            <div class="fc"><div class="fi">📊</div><h4>Monitoring</h4><p>Dashboard real-time, SLA tracking, alerting</p></div>
+            <div class="fc"><div class="fi">🔁</div><h4>Self-Healing</h4><p>Automatyczny restart, eskalacja, alternatywne ścieżki</p></div>
+            <div class="fc"><div class="fi">📁</div><h4>File Triggers</h4><p>Uruchomienie joba po pojawieniu się pliku</p></div>
+            <div class="fc"><div class="fi">🌐</div><h4>REST API</h4><p>Pełna automatyzacja przez API, webhooks</p></div>
+            <div class="fc"><div class="fi">📋</div><h4>Audit Trail</h4><p>Pełna historia: kto, co, kiedy, wynik, logi</p></div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🔀</span> Automate NOW vs tradycyjne schedulery</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Cecha</th><th>CA-7 / TWS / Control-M</th><th>Automate NOW</th></tr></thead>
+                    <tbody>
+                        <tr><td>Platforma</td><td>Głównie z/OS</td><td>Multi-platform (z/OS + cloud)</td></tr>
+                        <tr><td>UI</td><td>ISPF / green screen</td><td>Web dashboard</td></tr>
+                        <tr><td>API</td><td>Ograniczone / brak</td><td>REST API natywnie</td></tr>
+                        <tr><td>Cloud</td><td>Brak / addon</td><td>Natywna obsługa AWS/Azure/GCP</td></tr>
+                        <tr><td>Konteneryzacja</td><td>Nie</td><td>Kubernetes / Docker</td></tr>
+                        <tr><td>Event-driven</td><td>Ograniczone</td><td>Pełne (pliki, API, message queue)</td></tr>
+                        <tr><td>Self-healing</td><td>Manualne restarts</td><td>Automatyczne z regułami</td></tr>
+                        <tr><td>Licencja</td><td>Per MIPS (drogie)</td><td>Per job / subscription</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">⚙️</span> Przykład: definicja joba w Automate NOW</h3>
+            <div class="term"><span class="c"># Automate NOW — definicja workflow (YAML/JSON)</span>
+
+<span class="b">workflow:</span>
+  <span class="y">name:</span> "Nightly-Payroll-Batch"
+  <span class="y">schedule:</span> "0 2 * * MON-FRI"  <span class="c"># Codziennie o 2:00 pon-pt</span>
+  <span class="y">calendar:</span> "BUSINESS-DAYS-2024"
+
+  <span class="b">jobs:</span>
+    - <span class="y">name:</span> "Extract-Employee-Data"
+      <span class="y">type:</span> <span class="g">mainframe-batch</span>
+      <span class="y">program:</span> "EMPEXTRT"
+      <span class="y">jcl:</span> "PROD.JCL.LIB(EMPEXJCL)"
+      <span class="y">on-failure:</span> <span class="r">alert</span> + <span class="r">retry(3)</span>
+
+    - <span class="y">name:</span> "Calculate-Payroll"
+      <span class="y">type:</span> <span class="g">mainframe-batch</span>
+      <span class="y">program:</span> "PAYCALC"
+      <span class="y">depends-on:</span> <span class="p">"Extract-Employee-Data"</span>
+
+    - <span class="y">name:</span> "Generate-Reports"
+      <span class="y">type:</span> <span class="cy">linux-script</span>
+      <span class="y">script:</span> "/opt/reports/gen_payroll.sh"
+      <span class="y">depends-on:</span> <span class="p">"Calculate-Payroll"</span>
+      <span class="y">agent:</span> "linux-report-srv"
+
+    - <span class="y">name:</span> "Upload-to-S3"
+      <span class="y">type:</span> <span class="o">aws-s3-upload</span>
+      <span class="y">bucket:</span> "payroll-reports-2024"
+      <span class="y">depends-on:</span> <span class="p">"Generate-Reports"</span>
+
+    - <span class="y">name:</span> "Notify-HR"
+      <span class="y">type:</span> <span class="w">email</span>
+      <span class="y">to:</span> "hr-team@company.com"
+      <span class="y">depends-on:</span> <span class="p">"Upload-to-S3"</span>
+      <span class="y">on-success:</span> <span class="g">"Payroll complete ✅"</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- RAINCODE -->
+<section id="rc">
+    <div class="container">
+        <div class="stitle fin"><h2>🌧️ Raincode — Kompilatory Mainframe dla .NET</h2><div class="line"></div><p>Kompiluj COBOL, PL/I i JCL na platformę .NET — bez zmian w kodzie</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">🎯</span> Czym jest Raincode?</h3>
+            <p><strong>Raincode</strong> to belgijska firma oferująca kompilatory, które potrafią skompilować <strong>natywny mainframowy kod źródłowy</strong> (COBOL, PL/I, Assembler, JCL) do kodu wykonywalnego na platformie <strong>.NET / .NET Core</strong>. Oznacza to, że aplikacje mainframe mogą działać na Windows Server, Linux lub w chmurze (Azure, AWS) — <strong>bez przepisywania kodu</strong>.</p>
+            <div class="ib green">
+                <h4>✅ Kluczowa przewaga</h4>
+                <p>Tradycyjna „modernizacja" mainframe = przepisanie milionów linii kodu (ryzyko, koszt, lata pracy). Raincode = <strong>rekompilacja</strong> — ten sam sprawdzony kod, nowa platforma. Czas migracji: miesiące zamiast lat.</p>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🔄</span> Jak to działa? Kompilacja krzyżowa</h3>
+            <div class="pflow">
+                <div class="pfs" style="border:2px solid var(--accent)"><div class="pfi">📝</div><h5>Kod COBOL</h5><p>Istniejący mainframe source</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--secondary)"><div class="pfi">🌧️</div><h5>Raincode Compiler</h5><p>COBOL → IL (.NET)</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--purple)"><div class="pfi">⚙️</div><h5>.NET Assembly</h5><p>DLL / EXE</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--green)"><div class="pfi">☁️</div><h5>Azure / AWS / Linux</h5><p>Produkcja w chmurze</p></div>
+            </div>
+            <div class="term"><span class="c">// Porównanie kompilacji:</span>
+
+<span class="y">TRADYCYJNE (z/OS):</span>
+  COBOL Source → <span class="b">IGYCRCTL</span> → Object Module → <span class="b">IEWL</span> → Load Module
+  Target: <span class="r">S/390 machine code</span> → Runs on z/OS only
+
+<span class="g">RAINCODE:</span>
+  COBOL Source → <span class="cy">Raincode COBOL Compiler</span> → <span class="p">.NET IL (CIL)</span> → .NET Assembly
+  Target: <span class="g">.NET CLR</span> → Runs on Windows, Linux, Azure, AWS
+
+<span class="c">// Ten sam kod źródłowy COBOL!</span>
+<span class="c">// Raincode rozumie dialekt IBM Enterprise COBOL</span>
+<span class="c">// Obsługuje: EXEC SQL, EXEC CICS, COPY, COMP-3, etc.</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- RAINCODE STACK -->
+<section id="rcstack" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🧱 Raincode Stack — komponenty</h2><div class="line"></div><p>Pełny ekosystem do uruchomienia mainframe na .NET</p></div>
+
+        <div class="g3 fin">
+            <div class="fc" style="border-top-color:var(--secondary)"><div class="fi">📘</div><h4>COBOL Compiler</h4><p>Kompiluje IBM Enterprise COBOL do .NET. Obsługa EXEC SQL, COPY, COMP-3, EBCDIC</p></div>
+            <div class="fc" style="border-top-color:var(--accent)"><div class="fi">📙</div><h4>PL/I Compiler</h4><p>Kompiluje IBM PL/I do .NET z pełną obsługą typów mainframe</p></div>
+            <div class="fc" style="border-top-color:var(--green)"><div class="fi">📜</div><h4>JCL Interpreter</h4><p>Interpretuje/wykonuje JCL na platformie .NET — EXEC PGM, DD, PROC, IF/THEN</p></div>
+            <div class="fc" style="border-top-color:var(--purple)"><div class="fi">🔤</div><h4>ASM370 Compiler</h4><p>Kompiluje podzbiór S/370-S/390 Assemblera do .NET</p></div>
+            <div class="fc" style="border-top-color:var(--gold)"><div class="fi">🗄️</div><h4>VSAM Runtime</h4><p>Emulacja VSAM (KSDS, ESDS, RRDS) na systemie plików lub SQL DB</p></div>
+            <div class="fc" style="border-top-color:var(--red)"><div class="fi">💾</div><h4>CICS Runtime</h4><p>Emulacja CICS transakcji — SEND MAP, RECEIVE, READ FILE</p></div>
+            <div class="fc" style="border-top-color:var(--pink)"><div class="fi">🗃️</div><h4>DB2 → SQL Server / PostgreSQL</h4><p>Mapowanie SQL z/OS na relacyjne bazy cloud</p></div>
+            <div class="fc" style="border-top-color:var(--cyan)"><div class="fi">📊</div><h4>IMS Runtime</h4><p>Emulacja IMS DB/DC dla programów DL/I</p></div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🏗️</span> Architektura Raincode Stack</h3>
+            <div class="term"><span class="c">// Raincode Stack — warstwa po warstwie:</span>
+
+┌─────────────────────────────────────────────┐
+│          <span class="w">Aplikacje COBOL / PL/I</span>              │
+│       (istniejący kod mainframe)             │
+├─────────────────────────────────────────────┤
+│       <span class="cy">Raincode Compilers</span>                     │
+│    COBOL → .NET │ PL/I → .NET │ ASM → .NET  │
+├─────────────────────────────────────────────┤
+│       <span class="p">Raincode Runtime Libraries</span>              │
+│  VSAM Emu │ CICS Emu │ IMS Emu │ JCL Engine │
+├─────────────────────────────────────────────┤
+│       <span class="b">.NET Runtime (CLR / CoreCLR)</span>             │
+├─────────────────────────────────────────────┤
+│       <span class="y">Database Layer</span>                          │
+│  SQL Server │ PostgreSQL │ Oracle │ DB2 LUW  │
+├─────────────────────────────────────────────┤
+│       <span class="g">Infrastructure</span>                          │
+│  Windows │ Linux │ Azure │ AWS │ Kubernetes  │
+└─────────────────────────────────────────────┘</div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🔧</span> Co Raincode obsługuje z COBOL</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Feature</th><th>Obsługa</th><th>Uwagi</th></tr></thead>
+                    <tbody>
+                        <tr><td>COBOL 85 / 2002 / IBM Extensions</td><td>✅ Pełna</td><td>Dialekt IBM Enterprise COBOL</td></tr>
+                        <tr><td>COPY / REPLACE</td><td>✅</td><td>Standardowe copybooki</td></tr>
+                        <tr><td>COMP-3 (Packed Decimal)</td><td>✅</td><td>Identyczna arytmetyka</td></tr>
+                        <tr><td>EBCDIC ↔ ASCII</td><td>✅</td><td>Automatyczna konwersja code page</td></tr>
+                        <tr><td>EXEC SQL (DB2)</td><td>✅</td><td>Mapowane na SQL Server / PostgreSQL</td></tr>
+                        <tr><td>EXEC CICS</td><td>✅</td><td>Raincode CICS Runtime</td></tr>
+                        <tr><td>Pliki sekwencyjne / VSAM</td><td>✅</td><td>Emulacja na file system lub DB</td></tr>
+                        <tr><td>CALL podprogramów</td><td>✅</td><td>Static / dynamic CALL</td></tr>
+                        <tr><td>STRING / UNSTRING / INSPECT</td><td>✅</td><td>Pełna obsługa</td></tr>
+                        <tr><td>Intrinsic Functions</td><td>✅</td><td>FUNCTION CURRENT-DATE, LENGTH, etc.</td></tr>
+                        <tr><td>Report Writer</td><td>⚠️ Częściowa</td><td>Zależnie od wersji</td></tr>
+                        <tr><td>Nested Programs</td><td>✅</td><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- KOMPILACJA -->
+<section id="compile">
+    <div class="container">
+        <div class="stitle fin"><h2>⚙️ Kompilacja z Raincode</h2><div class="line"></div><p>Jak wygląda proces budowania w praktyce</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">💻</span> Kompilacja COBOL — linia komend</h3>
+            <div class="term"><span class="c"># Kompilacja pojedynczego programu COBOL:</span>
+<span class="b">rccobol</span> <span class="g">PAYROLL.cbl</span> \
+    --copypath <span class="y">./copybooks</span> \
+    --output <span class="p">PAYROLL.dll</span> \
+    --dialect <span class="cy">IBM-Enterprise</span> \
+    --codepage <span class="o">EBCDIC-1047</span> \
+    --sql-target <span class="r">SqlServer</span>
+
+<span class="c"># Opcje kompilatora:</span>
+  <span class="y">--copypath</span>       Ścieżka do copybooków
+  <span class="y">--output</span>         Nazwa wynikowego assembly (.dll)
+  <span class="y">--dialect</span>        IBM-Enterprise | COBOL85 | MicroFocus
+  <span class="y">--codepage</span>       EBCDIC code page (np. 1047, 037)
+  <span class="y">--sql-target</span>     SqlServer | PostgreSQL | Oracle
+  <span class="y">--cics</span>           Włącz obsługę EXEC CICS
+  <span class="y">--debug</span>          Generuj symbole debugowania
+  <span class="y">--list</span>           Generuj listing kompilacji
+  <span class="y">--optimize</span>       Poziom optymalizacji
+
+<span class="c"># Wynik:</span>
+  <span class="g">PAYROLL.dll</span> — .NET Assembly (DLL)
+  <span class="g">PAYROLL.pdb</span> — symbole debugowania (opcjonalnie)
+
+<span class="c"># Uruchomienie skompilowanego programu:</span>
+<span class="b">dotnet</span> <span class="g">PAYROLL.dll</span>
+
+<span class="c"># Lub przez JCL Interpreter:</span>
+<span class="b">rcjcl</span> <span class="g">RUNPAY.jcl</span></div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">📜</span> JCL Interpreter — uruchamianie JCL na .NET</h3>
+            <div class="term"><span class="c">// Oryginalny JCL (z/OS):</span>
+<span class="y">//PAYROLL  JOB (ACCT),'PAY RUN'</span>
+<span class="y">//STEP1    EXEC PGM=PAYROLL</span>
+<span class="y">//INFILE   DD DSN=PROD.EMPLOYEE.DATA,DISP=SHR</span>
+<span class="y">//OUTFILE  DD DSN=PROD.PAYROLL.REPORT,</span>
+<span class="y">//         DISP=(NEW,CATLG),SPACE=(CYL,(5,2))</span>
+<span class="y">//SYSOUT   DD SYSOUT=*</span>
+
+<span class="c">// Raincode JCL Interpreter mapuje:</span>
+  <span class="b">PGM=PAYROLL</span>    → wywołuje <span class="g">PAYROLL.dll</span> (.NET Assembly)
+  <span class="b">DSN=PROD.EMPLOYEE.DATA</span> → <span class="g">./data/PROD.EMPLOYEE.DATA</span>
+  <span class="b">SYSOUT=*</span>       → <span class="g">stdout / plik logu</span>
+  <span class="b">DISP, SPACE</span>    → mapowane na filesystem
+  <span class="b">COND</span>           → logika warunkowa zachowana
+  <span class="b">PROC/INCLUDE</span>   → zagnieżdżane procesy JCL
+
+<span class="c">// Uruchomienie:</span>
+<span class="b">rcjcl</span> PAYROLL.jcl --data-dir <span class="p">./datasets</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- MIGRACJA -->
+<section id="migration" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🚀 Proces migracji z z/OS</h2><div class="line"></div><p>Krok po kroku — od mainframe do cloud</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">🗺️</span> 7 faz migracji</h3>
+            <div class="pflow">
+                <div class="pfs" style="border:2px solid var(--secondary)"><div class="pfi">🔍</div><h5>1. Discovery</h5><p>Inwentaryzacja</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--accent)"><div class="pfi">📊</div><h5>2. Assessment</h5><p>Analiza złożoności</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--green)"><div class="pfi">⚙️</div><h5>3. Compile</h5><p>Rekompilacja Raincode</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--purple)"><div class="pfi">🗄️</div><h5>4. Data</h5><p>Migracja danych DB2→SQL</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--gold)"><div class="pfi">🧪</div><h5>5. Test</h5><p>Testy porównawcze</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--red)"><div class="pfi">🚀</div><h5>6. Deploy</h5><p>Wdrożenie cloud</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--teal)"><div class="pfi">📈</div><h5>7. Optimize</h5><p>Tuning i modernizacja</p></div>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">📋</span> Szczegóły każdej fazy</h3>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">🔍 Faza 1: Discovery — Inwentaryzacja<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">
+                <ul>
+                    <li>Skan wszystkich źródeł: COBOL, PL/I, ASM, JCL, copybooków</li>
+                    <li>Identyfikacja zależności (CALL, COPY, EXEC SQL, EXEC CICS)</li>
+                    <li>Mapowanie baz danych (DB2 tablice, IMS segmenty)</li>
+                    <li>Inwentaryzacja VSAM datasetów, GDG, plików sekwencyjnych</li>
+                    <li>Narzędzie: Raincode Discovery Tool / manualna analiza</li>
+                </ul>
+            </div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">📊 Faza 2: Assessment — Ocena złożoności<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">
+                <ul>
+                    <li>Ocena kompatybilności każdego programu z Raincode</li>
+                    <li>Identyfikacja „problem areas": assembler inline, specyficzne CICS, IMS</li>
+                    <li>Estymacja nakładu pracy (LOE — Level of Effort)</li>
+                    <li>Raport: co migruje automatycznie (80-95%), co wymaga adaptacji (5-20%)</li>
+                    <li>Plan migracji falistycznej (wave planning)</li>
+                </ul>
+            </div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">⚙️ Faza 3: Compile — Rekompilacja<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">
+                <ul>
+                    <li>Kompilacja COBOL/PL/I za pomocą Raincode Compiler → .NET assemblies</li>
+                    <li>Konwersja JCL → Raincode JCL Interpreter skrypty</li>
+                    <li>Konfiguracja runtime: VSAM emulacja, CICS runtime, code pages</li>
+                    <li>Rozwiązywanie błędów kompilacji (zwykle 2-5% źródeł wymaga drobnych poprawek)</li>
+                </ul>
+            </div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">🗄️ Faza 4: Data Migration<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">
+                <ul>
+                    <li>DB2 → SQL Server / PostgreSQL (DDL + DML)</li>
+                    <li>VSAM → pliki lokalne lub tablice SQL</li>
+                    <li>EBCDIC → ASCII konwersja danych</li>
+                    <li>Packed Decimal (COMP-3) → natywne typy bazy</li>
+                    <li>ETL tools: SSIS, Azure Data Factory, custom scripts</li>
+                </ul>
+            </div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">🧪 Faza 5: Testing — Testy porównawcze<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">
+                <ul>
+                    <li><strong>Byte-for-byte comparison</strong> — porównanie wyników: mainframe vs Raincode</li>
+                    <li>Testy regresyjne na pełnych danych produkcyjnych</li>
+                    <li>Performance benchmarking</li>
+                    <li>Testy CICS (jeśli online)</li>
+                    <li>UAT z użytkownikami biznesowymi</li>
+                </ul>
+            </div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">🚀 Faza 6: Deployment<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">
+                <ul>
+                    <li>Wdrożenie na docelową infrastrukturę (Azure VMs, AWS EC2, on-prem)</li>
+                    <li>Konfiguracja Automate NOW jako schedulera (zamiast JES2/CA-7)</li>
+                    <li>Cutover plan — przełączenie z mainframe na nową platformę</li>
+                    <li>Okres równoległy (parallel run) — oba systemy działają jednocześnie</li>
+                </ul>
+            </div></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- SYMULACJA -->
+<section id="sim">
+    <div class="container">
+        <div class="stitle fin"><h2>🎮 Symulacja migracji</h2><div class="line"></div><p>Krok po kroku — obserwuj postęp migracji</p></div>
+
+        <div class="sim-wrap fin">
+            <h3>📦 Migration Dashboard</h3>
+            <p class="sim-sub">Aplikacja: <strong>PAYROLL SYSTEM</strong> — 450 programów COBOL, 120 copybooków, 80 JCL</p>
+
+            <div class="sim-steps" id="simSteps"></div>
+
+            <div class="sim-progress"><div class="sim-bar" id="simBar" style="width:0%">0%</div></div>
+
+            <div class="sim-btns">
+                <button class="sim-btn next" onclick="simNext()">⏭️ Next Step</button>
+                <button class="sim-btn auto" onclick="simAuto()">▶️ Auto Run</button>
+                <button class="sim-btn rst" onclick="simReset()">🔄 Reset</button>
+            </div>
+
+            <div class="sim-log" id="simLog"><div style="color:#4ade80">✅ Migration project initialized — 650 components identified</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ARCHITEKTURA -->
+<section id="arch" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🏗️ Architektura docelowa</h2><div class="line"></div><p>Jak wygląda system po migracji z mainframe</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">☁️</span> Przed i po migracji</h3>
+            <div class="g2">
+                <div style="background:#fef2f2;padding:22px;border-radius:14px;border-left:4px solid var(--red)">
+                    <h4 style="color:var(--red)">❌ PRZED (Mainframe z/OS)</h4>
+                    <ul style="font-size:.9rem;color:#475569">
+                        <li>IBM z15/z16 hardware</li>
+                        <li>z/OS + JES2 + RACF</li>
+                        <li>COBOL → IGYCRCTL → Load Module</li>
+                        <li>DB2 for z/OS</li>
+                        <li>CICS Transaction Server</li>
+                        <li>VSAM datasets</li>
+                        <li>CA-7 / TWS scheduler</li>
+                        <li>TSO/ISPF / 3270 terminal</li>
+                        <li>Koszt: $$$$ per MIPS</li>
+                    </ul>
+                </div>
+                <div style="background:#e8faf3;padding:22px;border-radius:14px;border-left:4px solid var(--green)">
+                    <h4 style="color:#065f46">✅ PO (Cloud / .NET)</h4>
+                    <ul style="font-size:.9rem;color:#475569">
+                        <li>Azure VMs / AWS EC2 / on-prem servers</li>
+                        <li>Windows Server / Linux</li>
+                        <li>COBOL → Raincode → .NET Assembly</li>
+                        <li>SQL Server / PostgreSQL</li>
+                        <li>Raincode CICS Runtime</li>
+                        <li>Raincode VSAM Emulation</li>
+                        <li>Automate NOW scheduler</li>
+                        <li>Web UI / modern interfaces</li>
+                        <li>Koszt: $$ subscription</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PORÓWNANIA -->
+<section id="vs">
+    <div class="container">
+        <div class="stitle fin"><h2>⚖️ Porównania — strategie modernizacji</h2><div class="line"></div><p>Raincode vs inne podejścia</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">📊</span> 4 strategie modernizacji mainframe</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Strategia</th><th>Opis</th><th>Ryzyko</th><th>Czas</th><th>Koszt</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Rewrite</strong></td><td>Przepisanie na Java/.NET od zera</td><td>🔴 Bardzo wysokie</td><td>3-7 lat</td><td>💰💰💰💰</td></tr>
+                        <tr><td><strong>Replatform (Raincode)</strong></td><td>Rekompilacja na .NET, bez zmian kodu</td><td>🟢 Niskie</td><td>6-18 mies.</td><td>💰💰</td></tr>
+                        <tr><td><strong>Refactor</strong></td><td>Częściowe przepisanie + modernizacja</td><td>🟡 Średnie</td><td>1-3 lata</td><td>💰💰💰</td></tr>
+                        <tr><td><strong>Encapsulate</strong></td><td>API wrapper na istniejący mainframe</td><td>🟢 Niskie</td><td>3-6 mies.</td><td>💰</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🔀</span> Raincode vs Micro Focus vs inne</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Cecha</th><th>Raincode</th><th>Micro Focus</th><th>AWS Blu Age</th></tr></thead>
+                    <tbody>
+                        <tr><td>Podejście</td><td>Recompile → .NET</td><td>Recompile → JVM / native</td><td>Automated refactor → Java</td></tr>
+                        <tr><td>Target</td><td>.NET / .NET Core</td><td>JVM / Windows / Linux</td><td>Java on AWS</td></tr>
+                        <tr><td>Zmiana kodu?</td><td>❌ Minimalna</td><td>❌ Minimalna</td><td>⚠️ Generowany Java</td></tr>
+                        <tr><td>CICS support</td><td>✅ Runtime</td><td>✅ Enterprise Server</td><td>⚠️ Custom</td></tr>
+                        <tr><td>JCL</td><td>✅ Interpreter</td><td>✅ JCL Engine</td><td>⚠️ Konwersja</td></tr>
+                        <tr><td>DB2</td><td>✅ → SQL Server/PG</td><td>✅ → różne</td><td>✅ → Aurora/PG</td></tr>
+                        <tr><td>Cloud native</td><td>Azure / AWS</td><td>Azure / AWS / GCP</td><td>AWS only</td></tr>
+                        <tr><td>Utrzymanie COBOL?</td><td>✅ Tak (ten sam kod)</td><td>✅ Tak</td><td>❌ Nowy kod Java</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>❓ FAQ</h2><div class="line"></div></div>
+        <div class="fin">
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Czy Raincode obsługuje 100% kodu COBOL z mainframe?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">Raincode obsługuje <strong>95-99% typowego kodu COBOL</strong>. Nieobsługiwane mogą być: inline Assembler macros, bardzo specyficzne rozszerzenia IBM, niektóre zaawansowane IMS DL/I patterns. Te 1-5% zwykle wymagają drobnych adaptacji — nie przepisywania od zera.</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Co z wydajnością? Czy .NET jest wolniejszy niż mainframe?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">Zależy od workloadu. Dla batch processing .NET na nowoczesnych serwerach x86 jest <strong>porównywalny lub szybszy</strong> niż mainframe per-transaction (choć mainframe wygrywa w I/O-intensive workloads i skalowalności). Kluczowa korzyść: <strong>koszt</strong> — MIPS mainframe to $1000-3000/MIPS/rok, chmura to ułamek tej kwoty.</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Jak Automate NOW zastępuje CA-7 / TWS?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">Automate NOW importuje definicje jobów z CA-7/TWS (konwertery), zachowuje łańcuchy zależności i harmonogramy. Oferuje modern web UI zamiast ISPF, REST API do automatyzacji, i natywną obsługę cross-platform (mainframe + cloud w jednym workflow).</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Czy można migrować stopniowo (falami)?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi"><strong>Tak — i to jest zalecane!</strong> Migracja falista (wave-based): 1) najpierw mniej krytyczne systemy, 2) potem core systemy. Mainframe i nowa platforma mogą działać równolegle. Raincode/Automate NOW obsługują hybrydowe scenariusze, gdzie część jobów nadal działa na z/OS, a część na cloud.</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Co z EBCDIC?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">Raincode automatycznie zarządza konwersją <strong>EBCDIC ↔ ASCII</strong>. Dane w pamięci mogą być przetwarzane w EBCDIC (dla zachowania kompatybilności sortowania, COMP-3 itp.), a konwersja na ASCII/UTF-8 następuje przy I/O. Code page jest konfigurowalna per aplikację.</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Jak debugować skompilowane programy COBOL na .NET?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">Raincode generuje symbole debugowania (.pdb) mapujące .NET IL na oryginalny kod COBOL. Można debugować w <strong>Visual Studio</strong> — stawia breakpointy w kodzie COBOL, podgląda zmienne COBOL (PIC, COMP-3) w natywnym formacie. To ogromna przewaga nad debugowaniem na mainframe (XPEDITER/Debug Tool).</div></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz">
+    <div class="container">
+        <div class="stitle fin"><h2>🧠 Quiz</h2><div class="line"></div><p>Sprawdź swoją wiedzę o Automate NOW i Raincode!</p></div>
+        <div class="qbox fin">
+            <div class="qmeta">Pytanie <span id="qN">1</span>/<span id="qT">10</span> | Wynik: <span id="qS">0</span></div>
+            <div class="qq" id="qQ"></div>
+            <div class="qopts" id="qO"></div>
+            <div class="qfb" id="qFb"></div>
+            <div class="qnav">
+                <button class="qb nxt" id="qNxt" onclick="qNx()" disabled>Następne →</button>
+                <button class="qb res" id="qRst" onclick="qRe()">Od nowa 🔄</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <h3>🔄 Automate NOW & 🌧️ Raincode</h3>
+    <p>Interaktywny przewodnik po modernizacji mainframe</p>
+    <p style="margin-top:10px"><a href="#overview">Przegląd</a> • <a href="#an">Automate NOW</a> • <a href="#rc">Raincode</a> • <a href="#migration">Migracja</a> • <a href="#quiz">Quiz</a></p>
+    <p style="font-size:.72rem;opacity:.5;margin-top:14px">© 2024</p>
+</footer>
+
+<script>
+// ACCORDION
+function togAcc(h){const i=h.parentElement;const b=i.querySelector('.acc-b');const o=i.classList.contains('open');document.querySelectorAll('.acc-i').forEach(x=>{x.classList.remove('open');const xb=x.querySelector('.acc-b');if(xb)xb.style.maxHeight=null});if(!o){i.classList.add('open');b.style.maxHeight=b.scrollHeight+'px'}}
+
+// MIGRATION SIM
+const mSteps=[
+    {icon:'🔍',name:'Discovery',desc:'Scanning 650 components...',logs:['Scanned 450 COBOL programs','Found 120 copybooks','Identified 80 JCL procedures','Mapped 35 DB2 tables','Found 28 VSAM datasets']},
+    {icon:'📊',name:'Assessment',desc:'Analyzing compatibility...',logs:['95% auto-compatible (428 programs)','3% minor changes needed (14 programs)','2% requires adaptation (8 programs, ASM macros)','Estimated effort: 12 weeks','Risk level: LOW']},
+    {icon:'⚙️',name:'Compile',desc:'Raincode compiling...',logs:['Compiling COBOL sources → .NET assemblies...','PAYROLL.cbl → PAYROLL.dll ✅ RC=0','TAXCALC.cbl → TAXCALC.dll ✅ RC=0','EMPMAINT.cbl → EMPMAINT.dll ⚠️ RC=4 (warnings)','428/450 programs compiled successfully','JCL conversion: 80/80 complete']},
+    {icon:'🗄️',name:'Data Migration',desc:'DB2 → SQL Server...',logs:['Migrating DB2 tables → SQL Server...','EMPLOYEE table: 2.4M rows → migrated ✅','PAYROLL_HIST: 15M rows → migrated ✅','VSAM KSDS EMPFILE → SQL table ✅','EBCDIC→ASCII conversion complete','Data validation: 100% match']},
+    {icon:'🧪',name:'Testing',desc:'Byte comparison...',logs:['Running parallel tests (mainframe vs Raincode)...','Batch payroll: output MATCH ✅','Tax calculation: output MATCH ✅','Report generation: output MATCH ✅','CICS transactions: 98.5% pass rate ✅','3 minor formatting differences → fixed']},
+    {icon:'🚀',name:'Deploy',desc:'Cloud deployment...',logs:['Deploying to Azure VMs...','Configuring Automate NOW scheduler...','42 workflows migrated from CA-7','CICS runtime configured on Azure','SSL/TLS configured','Health checks: ALL GREEN ✅']},
+    {icon:'📈',name:'Optimize',desc:'Tuning & monitoring...',logs:['Performance tuning complete','Batch window: 4h → 2.5h (37% faster!)','Cost reduction: 72% vs mainframe MIPS','Monitoring dashboards configured','Mainframe decommission plan approved','Migration COMPLETE 🎉']}
+];
+let mCur=-1;
+function renderMSteps(){
+    const c=document.getElementById('simSteps');c.innerHTML='';
+    mSteps.forEach((s,i)=>{
+        const d=document.createElement('div');
+        d.className='sim-step '+(i<mCur?'done':i===mCur?'active':'pending');
+        d.innerHTML=`<div class="s-num">${s.icon}</div><h5>${s.name}</h5><p>${i<=mCur?'✅ Done':'Pending'}</p>`;
+        c.appendChild(d);
+    });
+    const pct=mCur<0?0:Math.round(((mCur+1)/mSteps.length)*100);
+    const bar=document.getElementById('simBar');
+    bar.style.width=pct+'%';bar.textContent=pct+'%';
+}
+function simLog(msg,color){
+    const l=document.getElementById('simLog');
+    const d=document.createElement('div');d.style.color=color||'#94a3b8';d.textContent=msg;
+    l.prepend(d);if(l.children.length>40)l.removeChild(l.lastChild);
+}
+function simNext(){
+    if(mCur>=mSteps.length-1)return;
+    mCur++;
+    const s=mSteps[mCur];
+    simLog(`\n═══ PHASE ${mCur+1}: ${s.name.toUpperCase()} ═══`,'#60a5fa');
+    s.logs.forEach((log,i)=>{setTimeout(()=>simLog('  '+log,'#4ade80'),i*200)});
+    renderMSteps();
+}
+function simAuto(){
+    if(mCur>=mSteps.length-1){simReset();}
+    const iv=setInterval(()=>{
+        if(mCur>=mSteps.length-1){clearInterval(iv);return}
+        simNext();
+    },2000);
+}
+function simReset(){mCur=-1;renderMSteps();document.getElementById('simLog').innerHTML='<div style="color:#4ade80">✅ Migration project initialized — 650 components identified</div>';}
+renderMSteps();
+
+// QUIZ
+const qD=[
+    {q:"Co to jest Raincode?",o:["System operacyjny","Kompilator COBOL/PL/I → .NET","Baza danych","Język programowania"],a:1,e:"Raincode to rodzina kompilatorów kompilujących mainframowy COBOL, PL/I i JCL do .NET — bez zmian kodu źródłowego."},
+    {q:"Co to jest Automate NOW?",o:["Kompilator COBOL","Platforma Workload Automation (scheduler)","IDE do programowania","System backupu"],a:1,e:"Automate NOW to nowoczesna platforma Workload Automation, zastępująca mainframowe schedulery (CA-7, TWS, Control-M)."},
+    {q:"Na jaką platformę Raincode kompiluje COBOL?",o:["Java / JVM","Python","Na .NET (CLR)","Na kod maszynowy x86 bezpośrednio"],a:2,e:"Raincode kompiluje COBOL do .NET IL (CIL), które jest wykonywane przez .NET CLR na Windows/Linux/cloud."},
+    {q:"Jaka jest kluczowa przewaga Raincode nad rewrite?",o:["Jest droższy","Nie wymaga zmian kodu źródłowego (rekompilacja zamiast przepisywania)","Działa tylko na mainframe","Jest wolniejszy"],a:1,e:"Raincode = replatforming (rekompilacja). Ten sam sprawdzony kod, nowa platforma. Rewrite = lata pracy i ogromne ryzyko."},
+    {q:"Co robi Raincode JCL Interpreter?",o:["Kompiluje COBOL","Wykonuje JCL na .NET (mapuje PGM, DD na pliki/DLL)","Tworzy bazy danych","Zarządza siecią"],a:1,e:"JCL Interpreter uruchamia joby JCL na .NET: PGM= wywołuje .NET assemblies, DD mapuje na pliki, COND zachowuje logikę."},
+    {q:"Ile procent kodu COBOL Raincode typowo obsługuje?",o:["50-60%","70-80%","95-99%","100% zawsze"],a:2,e:"Typowo 95-99% kodu migruje automatycznie. 1-5% może wymagać drobnych adaptacji (assembler macros, specyficzne rozszerzenia IBM)."},
+    {q:"Czym Automate NOW różni się od CA-7?",o:["Niczym","Multi-platform, web UI, REST API, cloud-native vs ISPF/z/OS-only","Jest starszy","Nie obsługuje batch"],a:1,e:"Automate NOW to nowoczesny, multi-platform scheduler z web UI i REST API. CA-7 to tradycyjny mainframe scheduler z ISPF."},
+    {q:"Co to replatforming?",o:["Przepisanie kodu od zera","Przeniesienie aplikacji na nową platformę bez zmian kodu","Upgrade hardware mainframe","Zmiana języka programowania"],a:1,e:"Replatforming = przeniesienie na nową platformę (np. z/OS → Azure) bez przepisywania kodu. Raincode umożliwia to przez rekompilację."},
+    {q:"Na co Raincode mapuje DB2?",o:["MongoDB","SQL Server / PostgreSQL / Oracle","Pliki CSV","Redis"],a:1,e:"Embedded SQL z DB2 jest mapowany na SQL Server, PostgreSQL lub Oracle — zachowując kompatybilność zapytań SQL."},
+    {q:"Jak debugować COBOL skompilowany przez Raincode?",o:["Nie da się","W Visual Studio z breakpointami w kodzie COBOL","Tylko na mainframe","W Notepadzie"],a:1,e:"Raincode generuje symbole PDB mapujące .NET IL na oryginalny COBOL. Visual Studio pokazuje breakpointy i zmienne w kodzie COBOL!"}
+];
+let qi=0,qs=0,qa=false;
+function qRn(){if(qi>=qD.length){qEn();return}const q=qD[qi];document.getElementById('qN').textContent=qi+1;document.getElementById('qT').textContent=qD.length;document.getElementById('qQ').textContent=q.q;const o=document.getElementById('qO');o.innerHTML='';q.o.forEach((t,i)=>{const d=document.createElement('div');d.className='qopt';d.textContent=t;d.onclick=()=>qAn(i);o.appendChild(d)});document.getElementById('qFb').className='qfb';document.getElementById('qNxt').disabled=true;document.getElementById('qNxt').style.display='';document.getElementById('qRst').style.display='none';qa=false}
+function qAn(i){if(qa)return;qa=true;const q=qD[qi],os=document.querySelectorAll('.qopt'),fb=document.getElementById('qFb');os[q.a].classList.add('ok');if(i===q.a){qs++;fb.textContent='✅ Brawo! '+q.e;fb.style.background='#d1fae5';fb.style.color='#065f46'}else{os[i].classList.add('no');fb.textContent='❌ Źle. '+q.e;fb.style.background='#fee2e2';fb.style.color='#991b1b'}fb.className='qfb show';document.getElementById('qS').textContent=qs;document.getElementById('qNxt').disabled=false;os.forEach(o=>o.style.pointerEvents='none')}
+function qNx(){qi++;qRn()}
+function qEn(){const p=Math.round(qs/qD.length*100);let e=p===100?'🏆':p>=70?'🌟':p>=40?'👍':'📚';let m=p===100?'Perfekcyjnie!':p>=70?'Świetnie!':p>=40?'Nieźle!':'Powtórz materiał!';document.getElementById('qQ').innerHTML=`${e} <strong>${qs}/${qD.length}</strong> (${p}%)`;document.getElementById('qO').innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:14px;color:var(--muted)">${m}</div>`;document.getElementById('qFb').className='qfb';document.getElementById('qNxt').style.display='none';document.getElementById('qRst').style.display=''}
+function qRe(){qi=0;qs=0;document.getElementById('qS').textContent=0;qRn()}
+qRn();
+
+// SCROLL ANIM
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')})},{threshold:.06});
+document.querySelectorAll('.fin').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
+```
+
+## Zawartość strony — podsumowanie:
+
+### 📖 12 sekcji edukacyjnych:
+
+| Sekcja | Zawartość |
+|---|---|
+| **Przegląd** | Dwa narzędzia, jeden cel — Automate NOW (WLA) vs Raincode (Compiler), analogie |
+| **Automate NOW** | Definicja WLA, 8 funkcji, porównanie z CA-7/TWS/Control-M, przykład YAML workflow (5 jobów: mainframe→Linux→AWS→email) |
+| **Raincode** | Definicja, idea replatformingu, schemat kompilacji krzyżowej (COBOL→.NET IL→Azure) |
+| **Raincode Stack** | 8 komponentów (COBOL/PL/I/ASM/JCL Compiler, VSAM/CICS/IMS/DB2 Runtime), architektura warstwowa ASCII |
+| **Kompilacja** | Polecenia CLI `rccobol`, opcje kompilatora, JCL Interpreter mapowania (PGM→DLL, DSN→filepath) |
+| **Migracja** | 7 faz (Discovery→Assessment→Compile→Data→Test→Deploy→Optimize), każda w akordeonach ze szczegółami |
+| **Symulacja** | 🎮 **Interaktywna symulacja migracji** — 7 kroków z progress barem, logami i auto-run |
+| **Architektura** | PRZED (mainframe) vs PO (cloud) — side-by-side porównanie 9 komponentów |
+| **Porównania** | 4 strategie modernizacji (Rewrite/Replatform/Refactor/Encapsulate), Raincode vs Micro Focus vs AWS Blu Age |
+| **FAQ** | 6 pytań (kompatybilność, wydajność, Automate NOW vs CA-7, migracja falista, EBCDIC, debugowanie w VS) |
+| **Quiz** | 10 pytań z wyjaśnieniami |
+
+### 🛠️ Narzędzia interaktywne:
+1. **🎮 Migration Dashboard** — 7-krokowa symulacja z ikonami statusu (done/active/pending), progress bar, szczegółowe logi, auto-run
+2. **🧠 Quiz 10 pytań**
+3. **Akordeonowe FAQ i fazy migracji**
+4. **Fade-in animacje**
+5. **Responsywny design**
