@@ -1,0 +1,1188 @@
+
+
+```html
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COBOL & z/OS — Kompletny Przewodnik</title>
+    <style>
+        :root {
+            --primary: #0a1628;
+            --secondary: #00b4d8;
+            --accent: #ff6b35;
+            --green: #06d6a0;
+            --purple: #7b2cbf;
+            --gold: #ffd60a;
+            --red: #ef476f;
+            --bg: #f0f4f8;
+            --card: #ffffff;
+            --text: #1a202c;
+            --muted: #64748b;
+            --shadow: 0 8px 32px rgba(0,0,0,0.07);
+            --radius: 16px;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth;scroll-padding-top:68px}
+        body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.78}
+
+        /* NAV */
+        nav{position:fixed;top:0;width:100%;z-index:1000;background:rgba(10,22,40,.97);backdrop-filter:blur(14px);box-shadow:0 2px 24px rgba(0,0,0,.4)}
+        .nav-in{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+        .logo{color:#fff;font-weight:900;font-size:1.1rem;padding:14px 0;display:flex;align-items:center;gap:8px}
+        .logo span{color:var(--secondary)}
+        .logo .sub{color:var(--gold);font-size:.75rem;font-weight:600;margin-left:4px}
+        nav ul{display:flex;list-style:none;flex-wrap:wrap}
+        nav ul li a{display:block;color:#9fb3c8;text-decoration:none;padding:16px 12px;font-size:.78rem;font-weight:500;transition:.3s;border-bottom:3px solid transparent;text-transform:uppercase;letter-spacing:.5px}
+        nav ul li a:hover{color:#fff;border-bottom-color:var(--secondary);background:rgba(0,180,216,.08)}
+        .mbtn{display:none;background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer}
+
+        /* HERO */
+        .hero{background:linear-gradient(135deg,#0a1628 0%,#0d253f 30%,#1b3a5c 60%,#0a1628 100%);color:#fff;text-align:center;padding:140px 20px 100px;position:relative;overflow:hidden}
+        .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(0,180,216,.12),transparent 60%),radial-gradient(ellipse at 70% 40%,rgba(255,107,53,.08),transparent 55%);animation:hbg 12s ease-in-out infinite alternate}
+        @keyframes hbg{0%{transform:scale(1)}100%{transform:scale(1.08) rotate(1deg)}}
+        .hero>*{position:relative;z-index:1}
+        .hero-ic{font-size:4.5rem;margin-bottom:14px;animation:hfl 4s ease-in-out infinite}
+        @keyframes hfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        .hero h1{font-size:3.2rem;font-weight:900;margin-bottom:12px;letter-spacing:-1px}
+        .hero h1 .h1{color:var(--secondary)}
+        .hero h1 .h2{color:var(--gold)}
+        .hero>p{font-size:1.15rem;color:#8faabe;max-width:720px;margin:0 auto 28px}
+        .hero-tags{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+        .htag{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:10px 22px;border-radius:12px;font-size:.82rem;color:#b8cfe0}
+        .htag b{color:var(--secondary)}
+
+        /* UTILS */
+        .container{max-width:1100px;margin:0 auto;padding:0 20px}
+        section{padding:80px 0}
+        .stitle{text-align:center;margin-bottom:50px}
+        .stitle h2{font-size:2.3rem;font-weight:800;letter-spacing:-.5px}
+        .stitle .line{width:65px;height:4px;margin:12px auto;background:linear-gradient(90deg,var(--secondary),var(--accent));border-radius:2px}
+        .stitle p{color:var(--muted);font-size:1.05rem;max-width:620px;margin:0 auto}
+        .alt{background:#e2e8f0}
+
+        /* CARDS */
+        .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:34px;margin-bottom:24px;border:1px solid rgba(0,0,0,.04);transition:transform .3s}
+        .card:hover{transform:translateY(-2px)}
+        .card h3{font-size:1.4rem;margin-bottom:12px;color:var(--primary);display:flex;align-items:center;gap:10px}
+        .card h3 .ic{font-size:1.6rem}
+        .card p,.card li{color:#475569;font-size:1rem}
+        .card ul,.card ol{padding-left:20px;margin:10px 0}
+        .card li{margin-bottom:6px}
+
+        /* GRIDS */
+        .g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+        .g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px}
+        .g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+
+        /* FEATURE CARDS */
+        .fc{background:var(--card);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);border-top:5px solid var(--secondary);transition:.3s;text-align:center}
+        .fc:nth-child(2){border-top-color:var(--accent)}
+        .fc:nth-child(3){border-top-color:var(--green)}
+        .fc:nth-child(4){border-top-color:var(--purple)}
+        .fc:nth-child(5){border-top-color:var(--gold)}
+        .fc:nth-child(6){border-top-color:var(--red)}
+        .fc:hover{transform:translateY(-5px);box-shadow:0 18px 45px rgba(0,0,0,.1)}
+        .fc .fi{font-size:2.5rem;margin-bottom:10px}
+        .fc h4{font-size:1.1rem;margin-bottom:6px;color:var(--primary)}
+        .fc p{color:var(--muted);font-size:.88rem}
+
+        /* INFO BOXES */
+        .ib{border-radius:0 12px 12px 0;padding:20px 24px;margin:18px 0;border-left:5px solid}
+        .ib.blue{background:#e0f7fa;border-color:var(--secondary)}
+        .ib.green{background:#e8faf3;border-color:var(--green)}
+        .ib.yellow{background:#fff9e0;border-color:var(--gold)}
+        .ib.red{background:#fde8ee;border-color:var(--red)}
+        .ib.purple{background:#f3e8ff;border-color:var(--purple)}
+        .ib.orange{background:#fff3e0;border-color:var(--accent)}
+        .ib h4{margin-bottom:4px;display:flex;align-items:center;gap:8px}
+
+        /* TERMINAL / CODE */
+        .term{background:linear-gradient(135deg,#0a1628,#132238);color:#4ade80;border-radius:14px;padding:28px;margin:18px 0;font-family:'Courier New',monospace;font-size:.88rem;line-height:1.95;overflow-x:auto;border-left:5px solid #4ade80;position:relative;white-space:pre;tab-size:4}
+        .term::before{content:'● ● ●';position:absolute;top:8px;left:14px;font-size:.55rem;letter-spacing:4px;color:#3a4a5c}
+        .term{padding-top:32px}
+        .c{color:#4a5c70}
+        .r{color:#f87171;font-weight:700}
+        .y{color:#fbbf24;font-weight:700}
+        .b{color:#60a5fa;font-weight:700}
+        .g{color:#4ade80;font-weight:700}
+        .p{color:#c084fc;font-weight:700}
+        .w{color:#e2e8f0;font-weight:700}
+        .o{color:#fb923c;font-weight:700}
+        .cy{color:#22d3ee;font-weight:700}
+
+        /* COBOL CODE — kolumny */
+        .cobol-code{background:linear-gradient(135deg,#0a1628,#0d253f);border-radius:14px;padding:0;margin:18px 0;overflow-x:auto;border:2px solid #1e3a5f;position:relative}
+        .cobol-header{background:#1e3a5f;color:#8faabe;padding:8px 16px;font-family:'Courier New',monospace;font-size:.72rem;display:flex;letter-spacing:1px}
+        .cobol-header span{flex:1;text-align:center}
+        .cobol-body{padding:16px 20px;font-family:'Courier New',monospace;font-size:.88rem;line-height:1.9;color:#4ade80}
+        .cobol-body .kw{color:#60a5fa;font-weight:700}
+        .cobol-body .div{color:#fbbf24;font-weight:700}
+        .cobol-body .str{color:#fb923c}
+        .cobol-body .num{color:#f87171}
+        .cobol-body .pic{color:#22d3ee}
+        .cobol-body .cmt{color:#4a5c70;font-style:italic}
+        .cobol-body .lvl{color:#c084fc;font-weight:700}
+
+        /* TABLES */
+        .tw{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow);margin:22px 0}
+        table{width:100%;border-collapse:collapse;background:var(--card)}
+        th{background:linear-gradient(135deg,var(--primary),#1e3a5f);color:#fff;padding:14px 15px;text-align:center;font-size:.82rem;text-transform:uppercase;letter-spacing:1px}
+        td{padding:12px 15px;text-align:center;border-bottom:1px solid #f1f5f9;font-size:.92rem}
+        td:first-child{text-align:left;font-weight:600}
+        tr:nth-child(even){background:#f8fafc}
+        tr:hover{background:#eef2ff}
+
+        /* PROCESS FLOW */
+        .pflow{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;margin:28px 0}
+        .pfs{background:var(--card);border-radius:14px;padding:18px 20px;text-align:center;box-shadow:var(--shadow);min-width:120px;max-width:160px}
+        .pfs .pfi{font-size:1.8rem;margin-bottom:4px}
+        .pfs h5{font-size:.85rem;color:var(--primary)}
+        .pfs p{font-size:.7rem;color:var(--muted)}
+        .pfa{font-size:1.3rem;color:var(--secondary);padding:0 5px;font-weight:900}
+
+        /* TIMELINE */
+        .tl{position:relative;padding-left:48px}
+        .tl::before{content:'';position:absolute;left:18px;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--secondary),var(--accent),var(--green))}
+        .tli{position:relative;margin-bottom:22px;background:var(--card);padding:22px 26px;border-radius:14px;box-shadow:0 3px 14px rgba(0,0,0,.05)}
+        .tli::before{content:attr(data-y);position:absolute;left:-50px;top:22px;width:40px;height:40px;background:var(--secondary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.58rem}
+        .tli h4{color:var(--primary);margin-bottom:3px;font-size:1rem}
+        .tli p{color:var(--muted);font-size:.88rem}
+
+        /* ACCORDION */
+        .acc-i{margin-bottom:8px}
+        .acc-h{background:var(--card);border:1px solid #e2e8f0;padding:16px 22px;border-radius:12px;cursor:pointer;font-weight:700;font-size:.98rem;display:flex;justify-content:space-between;align-items:center;transition:.3s}
+        .acc-h:hover{background:#f1f5f9}
+        .acc-h .aw{transition:transform .3s;font-size:1.1rem}
+        .acc-i.open .acc-h .aw{transform:rotate(180deg)}
+        .acc-b{max-height:0;overflow:hidden;transition:max-height .4s ease;background:#f8fafc;border-radius:0 0 12px 12px}
+        .acc-bi{padding:18px 22px;color:#475569;line-height:1.85;font-size:.95rem}
+
+        /* TABS */
+        .tabs{margin:20px 0}
+        .tab-btns{display:flex;gap:0;border-bottom:3px solid #e2e8f0;flex-wrap:wrap}
+        .tab-btn{padding:12px 24px;background:none;border:none;cursor:pointer;font-size:.92rem;font-weight:700;color:var(--muted);transition:.3s;border-bottom:3px solid transparent;margin-bottom:-3px}
+        .tab-btn.active{color:var(--secondary);border-bottom-color:var(--secondary);background:#e0f7fa}
+        .tab-content{display:none;padding:24px 0}
+        .tab-content.active{display:block}
+
+        /* QUIZ */
+        .qbox{background:var(--card);border-radius:var(--radius);padding:34px;box-shadow:var(--shadow)}
+        .qq{font-size:1.2rem;font-weight:700;color:var(--primary);margin-bottom:16px}
+        .qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .qopt{padding:14px 16px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;transition:.3s;font-size:.95rem;text-align:center;font-weight:500}
+        .qopt:hover{border-color:var(--secondary);background:#e0f7fa}
+        .qopt.ok{border-color:var(--green);background:#d1fae5;color:#065f46}
+        .qopt.no{border-color:var(--red);background:#fee2e2;color:#991b1b}
+        .qfb{padding:14px;border-radius:10px;margin-top:12px;font-weight:600;display:none;font-size:.93rem}
+        .qfb.show{display:block}
+        .qmeta{color:var(--muted);margin-bottom:10px;font-size:.9rem}
+        .qnav{display:flex;justify-content:space-between;margin-top:14px}
+        .qb{padding:10px 24px;border:none;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:700;transition:.3s}
+        .qb.nxt{background:var(--secondary);color:#fff}
+        .qb.res{background:var(--accent);color:#fff;display:none}
+        .qb:hover{transform:scale(1.04)}
+        .qb:disabled{opacity:.35;cursor:not-allowed}
+
+        /* JCL BUILDER */
+        .jcl-builder{background:linear-gradient(135deg,#1b3a5c,#0d253f);border-radius:var(--radius);padding:34px;color:#fff}
+        .jcl-builder h3{text-align:center;margin-bottom:6px}
+        .jcl-sub{text-align:center;color:#8faabe;margin-bottom:20px;font-size:.92rem}
+        .jcl-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:16px;align-items:flex-end}
+        .jcl-field{display:flex;flex-direction:column}
+        .jcl-field label{font-size:.75rem;color:#8faabe;margin-bottom:3px;text-transform:uppercase;letter-spacing:1px}
+        .jcl-field input,.jcl-field select{padding:10px 14px;border-radius:8px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;font-size:.95rem;font-family:'Courier New',monospace}
+        .jcl-field input:focus,.jcl-field select:focus{outline:none;border-color:var(--secondary)}
+        .jcl-field select option{background:#0d253f}
+        .jcl-output{background:rgba(0,0,0,.35);border-radius:10px;padding:18px;font-family:'Courier New',monospace;font-size:.85rem;color:#4ade80;line-height:1.8;margin-top:14px;min-height:120px;white-space:pre;overflow-x:auto}
+        .jcl-btn{padding:10px 26px;border:none;border-radius:10px;background:var(--gold);color:var(--primary);font-weight:700;cursor:pointer;font-size:.92rem;transition:.3s}
+        .jcl-btn:hover{transform:scale(1.05);box-shadow:0 5px 20px rgba(0,0,0,.3)}
+
+        /* BUILT-IN FUNCTIONS TABLE */
+        .func-cat{background:var(--card);border-radius:14px;padding:20px;box-shadow:var(--shadow);margin-bottom:14px}
+        .func-cat h4{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:1.05rem;color:var(--primary);cursor:pointer}
+        .func-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+        .func-item{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;transition:.3s}
+        .func-item:hover{border-color:var(--secondary);background:#e0f7fa}
+        .func-item code{font-family:'Courier New',monospace;font-size:.88rem;font-weight:700;color:var(--purple);display:block;margin-bottom:4px}
+        .func-item p{font-size:.82rem;color:var(--muted);margin:0}
+        .func-item .ex{font-family:'Courier New',monospace;font-size:.8rem;color:var(--secondary);margin-top:4px;display:block}
+
+        /* FOOTER */
+        footer{background:linear-gradient(135deg,#0a1628,#0d253f);color:#8faabe;text-align:center;padding:44px 20px}
+        footer h3{color:#fff;margin-bottom:6px}
+        footer a{color:var(--secondary);text-decoration:none}
+        footer a:hover{text-decoration:underline}
+
+        /* ANIM */
+        .fin{opacity:0;transform:translateY(28px);transition:all .7s cubic-bezier(.16,1,.3,1)}
+        .fin.vis{opacity:1;transform:translateY(0)}
+
+        /* RESPONSIVE */
+        @media(max-width:768px){
+            .hero h1{font-size:2rem}
+            .stitle h2{font-size:1.7rem}
+            .card{padding:20px}
+            nav ul{display:none}
+            nav ul.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(10,22,40,.98)}
+            .mbtn{display:block}
+            .qopts{grid-template-columns:1fr}
+            .pfa{transform:rotate(90deg)}
+            .pflow{flex-direction:column}
+            .sim-cpu{grid-template-columns:1fr}
+            .tab-btn{padding:10px 14px;font-size:.82rem}
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <div class="nav-in">
+        <div class="logo">🖥️ <span>COBOL</span> <span class="sub">& z/OS</span></div>
+        <button class="mbtn" onclick="document.querySelector('nav ul').classList.toggle('open')">☰</button>
+        <ul>
+            <li><a href="#what">Co to COBOL</a></li>
+            <li><a href="#structure">Struktura</a></li>
+            <li><a href="#divisions">Divisions</a></li>
+            <li><a href="#data">Typy danych</a></li>
+            <li><a href="#verbs">Instrukcje</a></li>
+            <li><a href="#funcs">Funkcje</a></li>
+            <li><a href="#compile">Kompilacja</a></li>
+            <li><a href="#zos">z/OS</a></li>
+            <li><a href="#jcl">JCL</a></li>
+            <li><a href="#files">Pliki</a></li>
+            <li><a href="#db2">DB2/CICS</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+    <div class="hero-ic">🖥️</div>
+    <h1><span class="h1">COBOL</span> & <span class="h2">z/OS</span></h1>
+    <p>Kompletny przewodnik po języku COBOL, kompilacji, JCL, funkcjach wbudowanych i środowisku mainframe z/OS — od podstaw do zaawansowanych koncepcji</p>
+    <div class="hero-tags">
+        <div class="htag"><b>COBOL</b> — 65+ lat w produkcji</div>
+        <div class="htag"><b>z/OS</b> — system mainframe IBM</div>
+        <div class="htag"><b>95%</b> transakcji ATM</div>
+        <div class="htag"><b>220 mld</b> linii kodu w użyciu</div>
+    </div>
+</header>
+
+<!-- CO TO COBOL -->
+<section id="what">
+    <div class="container">
+        <div class="stitle fin"><h2>📖 Czym jest COBOL?</h2><div class="line"></div><p>Język, który napędza światowe finanse od 1959 roku</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">📋</span> Definicja</h3>
+            <p><strong>COBOL (COmmon Business-Oriented Language)</strong> — język programowania zorientowany na zastosowania biznesowe, stworzony w 1959 roku. Jest jednym z najstarszych języków programowania wciąż aktywnie używanych w produkcji.</p>
+            <div class="ib blue">
+                <h4>💡 Dlaczego COBOL wciąż żyje?</h4>
+                <p>Szacuje się, że <strong>220 miliardów linii</strong> kodu COBOL jest nadal w użyciu. Obsługuje <strong>95% transakcji ATM</strong>, <strong>80% transakcji biznesowych</strong> w USA i większość systemów bankowych, ubezpieczeniowych i rządowych na świecie. Przepisanie tego kodu byłoby zbyt kosztowne i ryzykowne.</p>
+            </div>
+        </div>
+
+        <div class="g3 fin">
+            <div class="fc"><div class="fi">💼</div><h4>Biznesowy</h4><p>Zaprojektowany do przetwarzania danych biznesowych, raportów i transakcji</p></div>
+            <div class="fc"><div class="fi">📝</div><h4>Czytelny</h4><p>Składnia zbliżona do angielskiego — łatwy do czytania nawet dla nie-programistów</p></div>
+            <div class="fc"><div class="fi">🏦</div><h4>Niezawodny</h4><p>Dekady sprawdzonej pracy w krytycznych systemach finansowych</p></div>
+            <div class="fc"><div class="fi">📊</div><h4>Precyzja dziesiętna</h4><p>Wbudowana arytmetyka stałoprzecinkowa — bez błędów zaokrągleń</p></div>
+            <div class="fc"><div class="fi">📁</div><h4>Przetwarzanie plików</h4><p>Potężne mechanizmy obsługi plików sekwencyjnych, indeksowych i VSAM</p></div>
+            <div class="fc"><div class="fi">🖥️</div><h4>Mainframe</h4><p>Główne środowisko: IBM z/OS, ale działa też na Linux, Windows</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- STRUKTURA PROGRAMU -->
+<section id="structure" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🏗️ Struktura programu COBOL</h2><div class="line"></div><p>Format kolumnowy i cztery Division</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">📏</span> Format kolumnowy (Fixed Format)</h3>
+            <p>Tradycyjny COBOL ma ścisły format kolumnowy — dziedzictwo kart perforowanych:</p>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Kolumny</th><th>Nazwa</th><th>Przeznaczenie</th></tr></thead>
+                    <tbody>
+                        <tr><td>1–6</td><td>Sequence Number</td><td>Numery sekwencji (opcjonalne, ignorowane przez kompilator)</td></tr>
+                        <tr><td>7</td><td>Indicator</td><td><strong>*</strong> = komentarz, <strong>-</strong> = kontynuacja, <strong>D</strong> = debug, <strong>/</strong> = nowa strona</td></tr>
+                        <tr><td>8–11</td><td>Area A</td><td>Division, Section, nagłówki akapitów, numery poziomów 01/77</td></tr>
+                        <tr><td>12–72</td><td>Area B</td><td>Instrukcje, zdania, klauzule, podrzędne definicje danych</td></tr>
+                        <tr><td>73–80</td><td>Identification</td><td>Ignorowane — dawniej identyfikacja programu na kartach</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="ib yellow">
+                <h4>⚠️ Free Format (COBOL 2002+)</h4>
+                <p>Nowoczesne kompilatory obsługują też <strong>format swobodny</strong> (bez ograniczeń kolumnowych). W IBM Enterprise COBOL włączany opcją <code>SOURCEFORMAT(FREE)</code>.</p>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">📂</span> Cztery DIVISION</h3>
+            <p>Każdy program COBOL składa się z <strong>czterech głównych sekcji (DIVISION)</strong>:</p>
+            <div class="pflow">
+                <div class="pfs" style="border:2px solid var(--secondary)"><div class="pfi">🏷️</div><h5>IDENTIFICATION</h5><p>Kim jestem?</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--accent)"><div class="pfi">🌍</div><h5>ENVIRONMENT</h5><p>Gdzie działam?</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--green)"><div class="pfi">📊</div><h5>DATA</h5><p>Jakie mam dane?</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--purple)"><div class="pfi">⚡</div><h5>PROCEDURE</h5><p>Co robię?</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DIVISIONS SZCZEGÓŁY -->
+<section id="divisions">
+    <div class="container">
+        <div class="stitle fin"><h2>📑 Divisions — szczegóły</h2><div class="line"></div><p>Co zawiera każda sekcja programu</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">🏷️</span> IDENTIFICATION DIVISION</h3>
+            <p>Jedyna <strong>obowiązkowa</strong> pozycja to <code>PROGRAM-ID</code>:</p>
+            <div class="cobol-code">
+                <div class="cobol-header"><span>Kol.1-6</span><span>7</span><span>8-11 (Area A)</span><span>12-72 (Area B)</span></div>
+                <div class="cobol-body">       <span class="div">IDENTIFICATION DIVISION.</span>
+       <span class="kw">PROGRAM-ID.</span> MYPROGRAM.
+       <span class="kw">AUTHOR.</span> Jan Kowalski.
+       <span class="kw">DATE-WRITTEN.</span> 2024-01-15.
+       <span class="kw">DATE-COMPILED.</span>
+      <span class="cmt">* Opcjonalne: INSTALLATION, SECURITY, REMARKS</span></div>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🌍</span> ENVIRONMENT DIVISION</h3>
+            <p>Konfiguracja środowiska — mapowanie plików logicznych na fizyczne:</p>
+            <div class="cobol-code">
+                <div class="cobol-body">       <span class="div">ENVIRONMENT DIVISION.</span>
+       <span class="kw">CONFIGURATION SECTION.</span>
+       <span class="kw">SOURCE-COMPUTER.</span> IBM-ZOS.
+       <span class="kw">OBJECT-COMPUTER.</span> IBM-ZOS.
+       <span class="kw">SPECIAL-NAMES.</span>
+           <span class="kw">DECIMAL-POINT IS COMMA</span>.
+
+       <span class="kw">INPUT-OUTPUT SECTION.</span>
+       <span class="kw">FILE-CONTROL.</span>
+           <span class="kw">SELECT</span> EMPLOYEE-FILE
+               <span class="kw">ASSIGN TO</span> EMPFILE
+               <span class="kw">ORGANIZATION IS</span> INDEXED
+               <span class="kw">ACCESS MODE IS</span> DYNAMIC
+               <span class="kw">RECORD KEY IS</span> EMP-ID
+               <span class="kw">FILE STATUS IS</span> WS-FILE-STATUS.</div>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">📊</span> DATA DIVISION</h3>
+            <p>Definicje zmiennych, rekordów, buforów — COBOL wymaga jawnej deklaracji:</p>
+            <div class="cobol-code">
+                <div class="cobol-body">       <span class="div">DATA DIVISION.</span>
+       <span class="kw">FILE SECTION.</span>
+       <span class="kw">FD</span> EMPLOYEE-FILE.
+       <span class="lvl">01</span> EMPLOYEE-RECORD.
+          <span class="lvl">05</span> EMP-ID          <span class="pic">PIC 9(6)</span>.
+          <span class="lvl">05</span> EMP-NAME        <span class="pic">PIC X(30)</span>.
+          <span class="lvl">05</span> EMP-SALARY      <span class="pic">PIC 9(7)V99</span>.
+          <span class="lvl">05</span> EMP-DEPT        <span class="pic">PIC X(10)</span>.
+
+       <span class="kw">WORKING-STORAGE SECTION.</span>
+       <span class="lvl">01</span> WS-FILE-STATUS   <span class="pic">PIC XX</span>.
+       <span class="lvl">01</span> WS-EOF           <span class="pic">PIC 9</span>    <span class="kw">VALUE</span> <span class="num">0</span>.
+       <span class="lvl">01</span> WS-TOTAL-SAL     <span class="pic">PIC 9(9)V99</span> <span class="kw">VALUE ZEROS</span>.
+       <span class="lvl">01</span> WS-COUNT         <span class="pic">PIC 9(5)</span>  <span class="kw">VALUE ZEROS</span>.
+       <span class="lvl">01</span> WS-CURRENT-DATE.
+          <span class="lvl">05</span> WS-YEAR       <span class="pic">PIC 9(4)</span>.
+          <span class="lvl">05</span> WS-MONTH      <span class="pic">PIC 99</span>.
+          <span class="lvl">05</span> WS-DAY        <span class="pic">PIC 99</span>.
+
+       <span class="kw">LINKAGE SECTION.</span>
+      <span class="cmt">* Dane otrzymywane z programu wywołującego (CALL)</span>
+       <span class="lvl">01</span> LS-PARAM         <span class="pic">PIC X(100)</span>.</div>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">⚡</span> PROCEDURE DIVISION</h3>
+            <p>Logika programu — instrukcje wykonywane sekwencyjnie:</p>
+            <div class="cobol-code">
+                <div class="cobol-body">       <span class="div">PROCEDURE DIVISION.</span>
+       <span class="kw">0000-MAIN-LOGIC.</span>
+           <span class="kw">PERFORM</span> 1000-INITIALIZE
+           <span class="kw">PERFORM</span> 2000-PROCESS
+               <span class="kw">UNTIL</span> WS-EOF = <span class="num">1</span>
+           <span class="kw">PERFORM</span> 3000-FINALIZE
+           <span class="kw">STOP RUN</span>.
+
+       <span class="kw">1000-INITIALIZE.</span>
+           <span class="kw">OPEN INPUT</span> EMPLOYEE-FILE
+           <span class="kw">READ</span> EMPLOYEE-FILE
+               <span class="kw">AT END MOVE</span> <span class="num">1</span> <span class="kw">TO</span> WS-EOF
+           <span class="kw">END-READ</span>.
+
+       <span class="kw">2000-PROCESS.</span>
+           <span class="kw">ADD</span> EMP-SALARY <span class="kw">TO</span> WS-TOTAL-SAL
+           <span class="kw">ADD</span> <span class="num">1</span> <span class="kw">TO</span> WS-COUNT
+           <span class="kw">DISPLAY</span> <span class="str">"Pracownik: "</span> EMP-NAME
+                   <span class="str">" Pensja: "</span> EMP-SALARY
+           <span class="kw">READ</span> EMPLOYEE-FILE
+               <span class="kw">AT END MOVE</span> <span class="num">1</span> <span class="kw">TO</span> WS-EOF
+           <span class="kw">END-READ</span>.
+
+       <span class="kw">3000-FINALIZE.</span>
+           <span class="kw">DISPLAY</span> <span class="str">"Razem: "</span> WS-TOTAL-SAL
+           <span class="kw">DISPLAY</span> <span class="str">"Liczba: "</span> WS-COUNT
+           <span class="kw">CLOSE</span> EMPLOYEE-FILE.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TYPY DANYCH / PIC -->
+<section id="data" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>📊 Typy danych i PIC clause</h2><div class="line"></div><p>System PICTURE — serce definicji danych COBOL</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">🔤</span> Klauzula PICTURE (PIC)</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Symbol PIC</th><th>Znaczenie</th><th>Przykład</th><th>Wartość przykładowa</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>9</code></td><td>Cyfra numeryczna</td><td>PIC 9(5)</td><td>00042</td></tr>
+                        <tr><td><code>X</code></td><td>Dowolny znak (alfanumeryczny)</td><td>PIC X(10)</td><td>HELLO     </td></tr>
+                        <tr><td><code>A</code></td><td>Tylko litera</td><td>PIC A(5)</td><td>ABCDE</td></tr>
+                        <tr><td><code>V</code></td><td>Domyślny punkt dziesiętny</td><td>PIC 9(5)V99</td><td>01234.56 (przechowywane jako 0123456)</td></tr>
+                        <tr><td><code>S</code></td><td>Znak +/- (signed)</td><td>PIC S9(4)</td><td>-0042</td></tr>
+                        <tr><td><code>Z</code></td><td>Zero zastąpione spacją (edycja)</td><td>PIC Z(4)9</td><td>   42</td></tr>
+                        <tr><td><code>.</code></td><td>Punkt dziesiętny (edycja)</td><td>PIC ZZ9.99</td><td> 42.50</td></tr>
+                        <tr><td><code>,</code></td><td>Przecinek (edycja)</td><td>PIC Z,ZZ9</td><td> 1,234</td></tr>
+                        <tr><td><code>$</code></td><td>Znak dolara (edycja)</td><td>PIC $$,$$9.99</td><td>$1,234.56</td></tr>
+                        <tr><td><code>-</code> / <code>+</code></td><td>Znak minus/plus (edycja)</td><td>PIC -(4)9</td><td>  -42</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🔢</span> Numery poziomów (Level Numbers)</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Poziom</th><th>Zastosowanie</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>01</strong></td><td>Rekord najwyższego poziomu / samodzielna zmienna</td></tr>
+                        <tr><td><strong>02-49</strong></td><td>Pola podrzędne (hierarchia struktury danych)</td></tr>
+                        <tr><td><strong>66</strong></td><td>RENAMES — alternatywne grupowanie pól</td></tr>
+                        <tr><td><strong>77</strong></td><td>Samodzielna zmienna (nie może mieć podpól)</td></tr>
+                        <tr><td><strong>88</strong></td><td>Warunek nazwy (condition name / boolean)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="cobol-code">
+                <div class="cobol-body">      <span class="cmt">* Przykład poziomu 88 — warunki</span>
+       <span class="lvl">01</span> WS-STATUS         <span class="pic">PIC X</span>.
+          <span class="lvl">88</span> STATUS-ACTIVE   <span class="kw">VALUE</span> <span class="str">'A'</span>.
+          <span class="lvl">88</span> STATUS-INACTIVE <span class="kw">VALUE</span> <span class="str">'I'</span>.
+          <span class="lvl">88</span> STATUS-VALID    <span class="kw">VALUE</span> <span class="str">'A' 'I' 'P'</span>.
+
+      <span class="cmt">* Użycie w PROCEDURE DIVISION:</span>
+           <span class="kw">IF</span> STATUS-ACTIVE
+               <span class="kw">DISPLAY</span> <span class="str">"Pracownik aktywny"</span>
+           <span class="kw">END-IF</span>
+           <span class="kw">SET</span> STATUS-INACTIVE <span class="kw">TO TRUE</span></div>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">💾</span> Klauzula USAGE — format przechowywania</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>USAGE</th><th>Opis</th><th>Bajty</th><th>Zastosowanie</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>DISPLAY</strong></td><td>Znakowy (domyślny) — 1 bajt/cyfra</td><td>n</td><td>Dane do wyświetlenia/plików</td></tr>
+                        <tr><td><strong>COMP / BINARY</strong></td><td>Binarny pełnosłowowy</td><td>2/4/8</td><td>Liczniki, obliczenia</td></tr>
+                        <tr><td><strong>COMP-3 / PACKED-DECIMAL</strong></td><td>BCD spakowany (2 cyfry/bajt)</td><td>(n+1)/2</td><td>Kwoty pieniężne, arytmetyka</td></tr>
+                        <tr><td><strong>COMP-1</strong></td><td>Zmiennoprzecinkowy (float)</td><td>4</td><td>Obliczenia naukowe</td></tr>
+                        <tr><td><strong>COMP-2</strong></td><td>Zmiennoprzecinkowy (double)</td><td>8</td><td>Obliczenia naukowe</td></tr>
+                        <tr><td><strong>COMP-5</strong></td><td>Binarny natywny (platform-native)</td><td>1/2/4/8</td><td>Interfejsy systemowe</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="ib green">
+                <h4>💰 Dlaczego COMP-3 do pieniędzy?</h4>
+                <p><strong>COMP-3 (Packed Decimal)</strong> przechowuje dokładne wartości dziesiętne bez błędów zaokrągleń float. Dlatego banki używają COBOL — <code>PIC S9(13)V99 COMP-3</code> precyzyjnie zapisze kwotę do bilionów z dokładnością do grosza.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INSTRUKCJE (VERBS) -->
+<section id="verbs">
+    <div class="container">
+        <div class="stitle fin"><h2>⚡ Główne instrukcje COBOL (Verbs)</h2><div class="line"></div><p>Komendy tworzące logikę programu</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">📝</span> Przegląd instrukcji</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Instrukcja</th><th>Opis</th><th>Przykład</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>MOVE</strong></td><td>Kopiuje dane</td><td>MOVE 'HELLO' TO WS-NAME</td></tr>
+                        <tr><td><strong>ADD</strong></td><td>Dodawanie</td><td>ADD AMT TO TOTAL</td></tr>
+                        <tr><td><strong>SUBTRACT</strong></td><td>Odejmowanie</td><td>SUBTRACT TAX FROM GROSS</td></tr>
+                        <tr><td><strong>MULTIPLY</strong></td><td>Mnożenie</td><td>MULTIPLY QTY BY PRICE GIVING TOTAL</td></tr>
+                        <tr><td><strong>DIVIDE</strong></td><td>Dzielenie</td><td>DIVIDE TOTAL BY COUNT GIVING AVG</td></tr>
+                        <tr><td><strong>COMPUTE</strong></td><td>Wyrażenie arytmetyczne</td><td>COMPUTE X = (A + B) * C / D</td></tr>
+                        <tr><td><strong>IF / EVALUATE</strong></td><td>Warunki / switch-case</td><td>IF X > 10 ... END-IF</td></tr>
+                        <tr><td><strong>PERFORM</strong></td><td>Wywołanie akapitu/pętla</td><td>PERFORM 2000-PROC UNTIL EOF</td></tr>
+                        <tr><td><strong>DISPLAY</strong></td><td>Wypisz na konsolę</td><td>DISPLAY "Hello: " WS-VAR</td></tr>
+                        <tr><td><strong>ACCEPT</strong></td><td>Pobierz dane / datę</td><td>ACCEPT WS-DATE FROM DATE YYYYMMDD</td></tr>
+                        <tr><td><strong>STRING</strong></td><td>Łączenie napisów</td><td>STRING A DELIMITED SIZE B ...</td></tr>
+                        <tr><td><strong>UNSTRING</strong></td><td>Rozdzielanie napisów</td><td>UNSTRING REC DELIMITED ',' INTO ...</td></tr>
+                        <tr><td><strong>INSPECT</strong></td><td>Zliczanie / zamiana znaków</td><td>INSPECT WS-STR TALLYING ...</td></tr>
+                        <tr><td><strong>CALL</strong></td><td>Wywołanie podprogramu</td><td>CALL 'SUBPROG' USING WS-PARAM</td></tr>
+                        <tr><td><strong>READ / WRITE</strong></td><td>Operacje na plikach</td><td>READ INFILE AT END ...</td></tr>
+                        <tr><td><strong>OPEN / CLOSE</strong></td><td>Otwieranie / zamykanie plików</td><td>OPEN INPUT INFILE</td></tr>
+                        <tr><td><strong>STOP RUN</strong></td><td>Zakończenie programu</td><td>STOP RUN</td></tr>
+                        <tr><td><strong>GOBACK</strong></td><td>Powrót do wywołującego</td><td>GOBACK (preferowane nad STOP RUN)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🔀</span> EVALUATE — odpowiednik switch/case</h3>
+            <div class="cobol-code">
+                <div class="cobol-body">           <span class="kw">EVALUATE TRUE</span>
+               <span class="kw">WHEN</span> EMP-SALARY > <span class="num">100000</span>
+                   <span class="kw">MOVE</span> <span class="str">'EXECUTIVE'</span>   <span class="kw">TO</span> EMP-LEVEL
+               <span class="kw">WHEN</span> EMP-SALARY > <span class="num">50000</span>
+                   <span class="kw">MOVE</span> <span class="str">'SENIOR'</span>      <span class="kw">TO</span> EMP-LEVEL
+               <span class="kw">WHEN</span> EMP-SALARY > <span class="num">25000</span>
+                   <span class="kw">MOVE</span> <span class="str">'JUNIOR'</span>      <span class="kw">TO</span> EMP-LEVEL
+               <span class="kw">WHEN OTHER</span>
+                   <span class="kw">MOVE</span> <span class="str">'TRAINEE'</span>     <span class="kw">TO</span> EMP-LEVEL
+           <span class="kw">END-EVALUATE</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FUNKCJE WBUDOWANE -->
+<section id="funcs" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🔧 Funkcje wbudowane (Intrinsic Functions)</h2><div class="line"></div><p>FUNCTION — gotowe narzędzia do obliczeń i manipulacji danymi</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">📋</span> Składnia: FUNCTION nazwa(argumenty)</h3>
+            <div class="ib blue"><p>Funkcje wbudowane wywołuje się przez <code>FUNCTION nazwa(arg)</code>. Zwracają wartość, którą można użyć w MOVE, COMPUTE, DISPLAY, IF itp.</p></div>
+        </div>
+
+        <!-- Kategorie funkcji -->
+        <div class="func-cat fin">
+            <h4>🔢 Funkcje matematyczne</h4>
+            <div class="func-list">
+                <div class="func-item"><code>FUNCTION ABS(x)</code><p>Wartość bezwzględna</p><span class="ex">COMPUTE Y = FUNCTION ABS(-42)  → 42</span></div>
+                <div class="func-item"><code>FUNCTION INTEGER(x)</code><p>Zaokrąglenie w dół do integer</p><span class="ex">FUNCTION INTEGER(3.7) → 3</span></div>
+                <div class="func-item"><code>FUNCTION INTEGER-PART(x)</code><p>Część całkowita</p><span class="ex">FUNCTION INTEGER-PART(-3.7) → -3</span></div>
+                <div class="func-item"><code>FUNCTION MOD(x, y)</code><p>Reszta z dzielenia (modulo)</p><span class="ex">FUNCTION MOD(17, 5) → 2</span></div>
+                <div class="func-item"><code>FUNCTION FACTORIAL(n)</code><p>Silnia (n!)</p><span class="ex">FUNCTION FACTORIAL(5) → 120</span></div>
+                <div class="func-item"><code>FUNCTION SQRT(x)</code><p>Pierwiastek kwadratowy</p><span class="ex">FUNCTION SQRT(144) → 12</span></div>
+                <div class="func-item"><code>FUNCTION LOG(x)</code><p>Logarytm naturalny (ln)</p><span class="ex">FUNCTION LOG(2.718) → ~1</span></div>
+                <div class="func-item"><code>FUNCTION LOG10(x)</code><p>Logarytm dziesiętny</p><span class="ex">FUNCTION LOG10(100) → 2</span></div>
+                <div class="func-item"><code>FUNCTION REM(x, y)</code><p>Reszta (IEEE remainder)</p><span class="ex">FUNCTION REM(10, 3) → 1</span></div>
+                <div class="func-item"><code>FUNCTION RANDOM(seed)</code><p>Liczba pseudolosowa 0–1</p><span class="ex">FUNCTION RANDOM(12345) → 0.xxxx</span></div>
+                <div class="func-item"><code>FUNCTION NUMVAL(str)</code><p>Konwersja stringa na liczbę</p><span class="ex">FUNCTION NUMVAL("123.45") → 123.45</span></div>
+                <div class="func-item"><code>FUNCTION NUMVAL-C(str)</code><p>Konwersja z walutą</p><span class="ex">FUNCTION NUMVAL-C("$1,234") → 1234</span></div>
+            </div>
+        </div>
+
+        <div class="func-cat fin">
+            <h4>📊 Funkcje statystyczne</h4>
+            <div class="func-list">
+                <div class="func-item"><code>FUNCTION MAX(a b c ...)</code><p>Wartość maksymalna</p><span class="ex">FUNCTION MAX(10 25 7) → 25</span></div>
+                <div class="func-item"><code>FUNCTION MIN(a b c ...)</code><p>Wartość minimalna</p><span class="ex">FUNCTION MIN(10 25 7) → 7</span></div>
+                <div class="func-item"><code>FUNCTION MEAN(a b c ...)</code><p>Średnia arytmetyczna</p><span class="ex">FUNCTION MEAN(10 20 30) → 20</span></div>
+                <div class="func-item"><code>FUNCTION MEDIAN(a b c ...)</code><p>Mediana</p><span class="ex">FUNCTION MEDIAN(1 5 9) → 5</span></div>
+                <div class="func-item"><code>FUNCTION RANGE(a b ...)</code><p>Zakres (max - min)</p><span class="ex">FUNCTION RANGE(5 20 8) → 15</span></div>
+                <div class="func-item"><code>FUNCTION SUM(a b c ...)</code><p>Suma</p><span class="ex">FUNCTION SUM(10 20 30) → 60</span></div>
+                <div class="func-item"><code>FUNCTION VARIANCE(a b ...)</code><p>Wariancja</p></div>
+                <div class="func-item"><code>FUNCTION STANDARD-DEVIATION(...)</code><p>Odchylenie standardowe</p></div>
+                <div class="func-item"><code>FUNCTION ORD-MAX(a b ...)</code><p>Pozycja maksimum</p><span class="ex">FUNCTION ORD-MAX(10 25 7) → 2</span></div>
+                <div class="func-item"><code>FUNCTION ORD-MIN(a b ...)</code><p>Pozycja minimum</p></div>
+            </div>
+        </div>
+
+        <div class="func-cat fin">
+            <h4>🔤 Funkcje tekstowe (String)</h4>
+            <div class="func-list">
+                <div class="func-item"><code>FUNCTION LENGTH(str)</code><p>Długość stringa</p><span class="ex">FUNCTION LENGTH("HELLO") → 5</span></div>
+                <div class="func-item"><code>FUNCTION REVERSE(str)</code><p>Odwrócenie stringa</p><span class="ex">FUNCTION REVERSE("ABC") → "CBA"</span></div>
+                <div class="func-item"><code>FUNCTION UPPER-CASE(str)</code><p>Na wielkie litery</p><span class="ex">FUNCTION UPPER-CASE("hello") → "HELLO"</span></div>
+                <div class="func-item"><code>FUNCTION LOWER-CASE(str)</code><p>Na małe litery</p><span class="ex">FUNCTION LOWER-CASE("HELLO") → "hello"</span></div>
+                <div class="func-item"><code>FUNCTION TRIM(str)</code><p>Usunięcie spacji (COBOL 6.3+)</p><span class="ex">FUNCTION TRIM("  HI  ") → "HI"</span></div>
+                <div class="func-item"><code>FUNCTION CONCATENATE(a b ...)</code><p>Łączenie stringów</p><span class="ex">FUNCTION CONCATENATE("A" "B") → "AB"</span></div>
+                <div class="func-item"><code>FUNCTION SUBSTITUTE(str a b ...)</code><p>Zamiana podstringów</p><span class="ex">FUNCTION SUBSTITUTE(X "A" "B") → zamienia A→B</span></div>
+                <div class="func-item"><code>FUNCTION ORD(char)</code><p>Pozycja znaku w zestawie</p><span class="ex">FUNCTION ORD("A") → 66 (EBCDIC)</span></div>
+                <div class="func-item"><code>FUNCTION CHAR(n)</code><p>Znak na pozycji n</p><span class="ex">FUNCTION CHAR(66) → "A" (EBCDIC)</span></div>
+            </div>
+        </div>
+
+        <div class="func-cat fin">
+            <h4>📅 Funkcje daty i czasu</h4>
+            <div class="func-list">
+                <div class="func-item"><code>FUNCTION CURRENT-DATE</code><p>Aktualna data/czas (21 znaków)</p><span class="ex">→ "2024011512300000+0100"</span></div>
+                <div class="func-item"><code>FUNCTION DATE-OF-INTEGER(n)</code><p>Dzień Juliański → YYYYMMDD</p></div>
+                <div class="func-item"><code>FUNCTION INTEGER-OF-DATE(d)</code><p>YYYYMMDD → dzień Juliański</p></div>
+                <div class="func-item"><code>FUNCTION INTEGER-OF-DAY(d)</code><p>YYYYDDD → dzień Juliański</p></div>
+                <div class="func-item"><code>FUNCTION DAY-OF-INTEGER(n)</code><p>Dzień Juliański → YYYYDDD</p></div>
+                <div class="func-item"><code>FUNCTION WHEN-COMPILED</code><p>Data/czas kompilacji</p></div>
+            </div>
+        </div>
+
+        <div class="func-cat fin">
+            <h4>🔀 Funkcje finansowe i inne</h4>
+            <div class="func-list">
+                <div class="func-item"><code>FUNCTION ANNUITY(rate, n)</code><p>Rata renty/kredytu</p></div>
+                <div class="func-item"><code>FUNCTION PRESENT-VALUE(rate, a...)</code><p>Wartość bieżąca netto</p></div>
+                <div class="func-item"><code>FUNCTION DISPLAY-OF(nat, cp)</code><p>Konwersja z NATIONAL na DISPLAY</p></div>
+                <div class="func-item"><code>FUNCTION NATIONAL-OF(alph, cp)</code><p>Konwersja na NATIONAL (Unicode)</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- KOMPILACJA -->
+<section id="compile">
+    <div class="container">
+        <div class="stitle fin"><h2>⚙️ Kompilacja i procesy na z/OS</h2><div class="line"></div><p>Od kodu źródłowego do wykonywalnego modułu ładowalnego</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">🔄</span> Etapy kompilacji COBOL na z/OS</h3>
+            <div class="pflow">
+                <div class="pfs" style="border:2px solid var(--secondary)"><div class="pfi">📝</div><h5>Kod źródłowy</h5><p>.cbl / SYSIN</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--accent)"><div class="pfi">🔍</div><h5>Preprocesor</h5><p>COPY, REPLACE, SQL precompile</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--green)"><div class="pfi">⚙️</div><h5>Kompilator</h5><p>IGYCRCTL</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--purple)"><div class="pfi">📦</div><h5>Object Module</h5><p>.obj / SYSLIN</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--gold)"><div class="pfi">🔗</div><h5>Linker (Binder)</h5><p>IEWL / IEWBLINK</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--red)"><div class="pfi">🚀</div><h5>Load Module</h5><p>Gotowy do uruchomienia</p></div>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">📋</span> Szczegóły każdego etapu</h3>
+
+            <div class="term"><span class="c">// ═══ ETAP 1: PREPROCESOR ═══</span>
+<span class="y">COPY</span> — dołącza copybooki (reużywalne definicje danych)
+   <span class="b">COPY EMPREC.</span>  →  wstawia zawartość członka EMPREC z biblioteki
+
+<span class="y">REPLACE</span> — zamiana tekstu w kodzie źródłowym
+   <span class="b">REPLACE ==:PREFIX:== BY ==WS-==.</span>
+
+<span class="y">SQL Precompile</span> — jeśli embedded SQL (DB2):
+   Zamienia <span class="r">EXEC SQL ... END-EXEC</span> na wywołania CALL do DB2
+   Generuje DBRM (Database Request Module)
+
+<span class="c">// ═══ ETAP 2: KOMPILACJA (IGYCRCTL) ═══</span>
+Kompilator IBM Enterprise COBOL:
+  • Analiza leksykalna i składniowa
+  • Generowanie kodu pośredniego
+  • Optymalizacja (poziomy OPT(0), OPT(1), OPT(2))
+  • Generowanie <span class="g">Object Module</span> (kod maszynowy S/390)
+  • Generowanie listingu (SYSPRINT)
+    - Mapa danych (Data Map)
+    - Cross-reference
+    - Statystyki kompilacji
+
+<span class="c">// ═══ ETAP 3: LINK-EDIT / BIND (IEWL) ═══</span>
+Binder łączy:
+  • Object module z kompilacji
+  • Moduły z bibliotek (podprogramy CALL)
+  • Stubs dla DB2, CICS, MQ
+  Wynik: <span class="r">Load Module</span> w bibliotece ładowalnej (LOADLIB)
+
+<span class="c">// ═══ ETAP 4: RUN (wykonanie) ═══</span>
+  • Language Environment (LE) inicjalizuje runtime
+  • Program wykonuje się pod kontrolą z/OS
+  • Alokacja plików przez JCL DD statements</div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🛠️</span> Ważne opcje kompilatora</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Opcja</th><th>Opis</th><th>Przykład</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>OPT(0/1/2)</strong></td><td>Poziom optymalizacji</td><td>OPT(2) — maksymalna wydajność</td></tr>
+                        <tr><td><strong>TEST</strong></td><td>Informacje debugowania</td><td>TEST(DWARF,SOURCE) — dla IBM Debug Tool</td></tr>
+                        <tr><td><strong>LIST</strong></td><td>Generuj listing assemblera</td><td>LIST — pokaż wygenerowany kod maszynowy</td></tr>
+                        <tr><td><strong>MAP</strong></td><td>Mapa danych (adresy zmiennych)</td><td>MAP — offset i długość każdego pola</td></tr>
+                        <tr><td><strong>XREF</strong></td><td>Cross-reference zmiennych</td><td>XREF — gdzie każda zmienna jest używana</td></tr>
+                        <tr><td><strong>SSRANGE</strong></td><td>Sprawdzanie indeksów tablic</td><td>SSRANGE — runtime error przy out-of-bounds</td></tr>
+                        <tr><td><strong>SQL</strong></td><td>Preprocesor DB2</td><td>SQL("DB2") — embedded SQL</td></tr>
+                        <tr><td><strong>CICS</strong></td><td>Preprocesor CICS</td><td>CICS("SP") — EXEC CICS</td></tr>
+                        <tr><td><strong>RENT</strong></td><td>Program reentrant</td><td>RENT — wymagane dla CICS/DB2</td></tr>
+                        <tr><td><strong>APOST / QUOTE</strong></td><td>Delimiter stringów</td><td>APOST = apostrofy, QUOTE = cudzysłowy</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- z/OS -->
+<section id="zos" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🖥️ z/OS — Środowisko Mainframe</h2><div class="line"></div><p>System operacyjny IBM dla mainframe'ów</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">🏢</span> Co to z/OS?</h3>
+            <p><strong>z/OS</strong> to flagowy system operacyjny IBM dla komputerów mainframe z serii IBM Z. Zaprojektowany do przetwarzania ogromnych wolumenów transakcji z niezawodnością <strong>99.999%</strong> (5 minut przestoju/rok).</p>
+            <div class="g3" style="margin-top:16px">
+                <div class="fc"><div class="fi">🔒</div><h4>RACF</h4><p>Resource Access Control Facility — bezpieczeństwo i autoryzacja</p></div>
+                <div class="fc"><div class="fi">📁</div><h4>DFSMS</h4><p>Data Facility SMS — zarządzanie storage i datasetami</p></div>
+                <div class="fc"><div class="fi">🔄</div><h4>JES2/JES3</h4><p>Job Entry Subsystem — kolejkowanie i zarządzanie zadaniami (job)</p></div>
+                <div class="fc"><div class="fi">📊</div><h4>WLM</h4><p>Workload Manager — priorytetyzacja obciążeń</p></div>
+                <div class="fc"><div class="fi">💻</div><h4>TSO/ISPF</h4><p>Terminal — interakcja z systemem, edycja, submisja JOBów</p></div>
+                <div class="fc"><div class="fi">🗄️</div><h4>VSAM/Catalog</h4><p>Virtual Storage Access Method — system plików mainframe</p></div>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">📁</span> Datasety z/OS (pliki)</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Typ datasetu</th><th>Organizacja</th><th>Zastosowanie</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>PS (Sequential)</strong></td><td>Sekwencyjny</td><td>Pliki wejściowe/wyjściowe, logi, raporty</td></tr>
+                        <tr><td><strong>PO (PDS/PDSE)</strong></td><td>Partitioned (biblioteka)</td><td>Źródła, copybooki, load modules, JCL</td></tr>
+                        <tr><td><strong>VSAM KSDS</strong></td><td>Key-Sequenced</td><td>Pliki indeksowe (dostęp po kluczu)</td></tr>
+                        <tr><td><strong>VSAM ESDS</strong></td><td>Entry-Sequenced</td><td>Pliki sekwencyjne VSAM (jak log)</td></tr>
+                        <tr><td><strong>VSAM RRDS</strong></td><td>Relative Record</td><td>Dostęp po numerze rekordu</td></tr>
+                        <tr><td><strong>GDG</strong></td><td>Generation Data Group</td><td>Wersjonowane datasety (backup, historia)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="ib blue">
+                <h4>📛 Nazewnictwo datasetów</h4>
+                <p>Format: <code>HLQ.QUALIFIER1.QUALIFIER2...</code> (max 44 znaki, każdy segment max 8).<br>
+                Np. <code>PROD.PAYROLL.MASTER.DATA</code> lub <code>USER01.COBOL.SOURCE(MYPROG)</code> (członek PDS).</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- JCL -->
+<section id="jcl">
+    <div class="container">
+        <div class="stitle fin"><h2>📜 JCL — Job Control Language</h2><div class="line"></div><p>Język sterowania zadaniami na z/OS</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">📋</span> Podstawowe instrukcje JCL</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Instrukcja</th><th>Format</th><th>Opis</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>JOB</strong></td><td>//JOBNAME JOB ...</td><td>Nagłówek zadania — identyfikacja, parametry</td></tr>
+                        <tr><td><strong>EXEC</strong></td><td>//stepname EXEC PGM=...</td><td>Krok — uruchomienie programu lub procedury</td></tr>
+                        <tr><td><strong>DD</strong></td><td>//ddname DD ...</td><td>Data Definition — alokacja plików/urządzeń</td></tr>
+                        <tr><td><strong>PROC / PEND</strong></td><td>//name PROC</td><td>Definicja procedury (reużywalny JCL)</td></tr>
+                        <tr><td><strong>IF/THEN/ELSE</strong></td><td>//name IF ...</td><td>Warunkowe wykonanie kroków</td></tr>
+                        <tr><td><strong>INCLUDE</strong></td><td>// INCLUDE MEMBER=...</td><td>Włączenie członka z biblioteki PROCLIB</td></tr>
+                        <tr><td><strong>SET</strong></td><td>// SET VAR=value</td><td>Definicja zmiennej symbolicznej</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">📦</span> Kompletny JCL: kompilacja + link + run</h3>
+            <div class="cobol-code">
+                <div class="cobol-body"><span class="div">//COBCOMP  JOB (ACCT),'COBOL COMPILE',CLASS=A,</span>
+<span class="div">//         MSGCLASS=H,MSGLEVEL=(1,1),NOTIFY=&SYSUID</span>
+<span class="cmt">//*-------------------------------------------</span>
+<span class="cmt">//* STEP 1: COMPILE</span>
+<span class="cmt">//*-------------------------------------------</span>
+<span class="div">//COMPILE  EXEC PGM=IGYCRCTL,</span>
+<span class="div">//         PARM='RENT,MAP,XREF,OPT(1),SSRANGE'</span>
+<span class="kw">//STEPLIB  DD DSN=IGY.V6R4M0.SIGYCOMP,DISP=SHR</span>
+<span class="kw">//SYSIN    DD DSN=USER01.COBOL.SOURCE(MYPROG),DISP=SHR</span>
+<span class="kw">//SYSLIB   DD DSN=USER01.COBOL.COPYBOOK,DISP=SHR</span>
+<span class="kw">//SYSLIN   DD DSN=&&OBJ,DISP=(NEW,PASS),</span>
+<span class="kw">//         UNIT=SYSDA,SPACE=(TRK,(5,5))</span>
+<span class="kw">//SYSPRINT DD SYSOUT=*</span>
+<span class="kw">//SYSUT1   DD UNIT=SYSDA,SPACE=(CYL,(1,1))</span>
+<span class="kw">//SYSUT5   DD UNIT=SYSDA,SPACE=(CYL,(1,1))</span>
+<span class="kw">//SYSUT6   DD UNIT=SYSDA,SPACE=(CYL,(1,1))</span>
+<span class="kw">//SYSUT7   DD UNIT=SYSDA,SPACE=(CYL,(1,1))</span>
+<span class="cmt">//*-------------------------------------------</span>
+<span class="cmt">//* STEP 2: LINK-EDIT (BIND)</span>
+<span class="cmt">//*-------------------------------------------</span>
+<span class="div">//LKED     EXEC PGM=IEWL,COND=(8,LT,COMPILE),</span>
+<span class="div">//         PARM='LIST,MAP,RENT'</span>
+<span class="kw">//SYSLIN   DD DSN=&&OBJ,DISP=(OLD,DELETE)</span>
+<span class="kw">//SYSLMOD  DD DSN=USER01.COBOL.LOADLIB(MYPROG),</span>
+<span class="kw">//         DISP=SHR</span>
+<span class="kw">//SYSLIB   DD DSN=CEE.SCEELKED,DISP=SHR</span>
+<span class="kw">//SYSPRINT DD SYSOUT=*</span>
+<span class="cmt">//*-------------------------------------------</span>
+<span class="cmt">//* STEP 3: RUN</span>
+<span class="cmt">//*-------------------------------------------</span>
+<span class="div">//RUN      EXEC PGM=MYPROG,COND=(8,LT)</span>
+<span class="kw">//STEPLIB  DD DSN=USER01.COBOL.LOADLIB,DISP=SHR</span>
+<span class="kw">//EMPFILE  DD DSN=PROD.EMPLOYEE.MASTER,DISP=SHR</span>
+<span class="kw">//SYSOUT   DD SYSOUT=*</span>
+<span class="kw">//SYSPRINT DD SYSOUT=*</span></div>
+            </div>
+        </div>
+
+        <!-- JCL GENERATOR -->
+        <div class="jcl-builder fin">
+            <h3>🛠️ Generator JCL</h3>
+            <p class="jcl-sub">Wygeneruj JCL dla kompilacji COBOL</p>
+            <div class="jcl-row">
+                <div class="jcl-field"><label>Job Name</label><input type="text" id="jclJob" value="MYCOBJOB" maxlength="8"></div>
+                <div class="jcl-field"><label>Program</label><input type="text" id="jclPgm" value="MYPROG" maxlength="8"></div>
+                <div class="jcl-field"><label>Source PDS</label><input type="text" id="jclSrc" value="USER01.COBOL.SOURCE"></div>
+                <div class="jcl-field"><label>Copybook PDS</label><input type="text" id="jclCpy" value="USER01.COBOL.COPYBOOK"></div>
+            </div>
+            <div class="jcl-row">
+                <div class="jcl-field"><label>Load PDS</label><input type="text" id="jclLoad" value="USER01.COBOL.LOADLIB"></div>
+                <div class="jcl-field">
+                    <label>Opcje kompilatora</label>
+                    <select id="jclOpts">
+                        <option value="RENT,MAP,XREF,OPT(1)">Standard (OPT(1))</option>
+                        <option value="RENT,MAP,XREF,OPT(0),TEST,SSRANGE">Debug</option>
+                        <option value="RENT,MAP,XREF,OPT(2)">Performance (OPT(2))</option>
+                        <option value="RENT,MAP,XREF,OPT(1),SQL">z DB2 (SQL)</option>
+                        <option value="RENT,MAP,XREF,OPT(1),CICS">z CICS</option>
+                    </select>
+                </div>
+                <button class="jcl-btn" onclick="genJCL()">⚡ Generuj JCL</button>
+            </div>
+            <div class="jcl-output" id="jclOutput">// Kliknij "Generuj JCL" aby wygenerować kod...</div>
+        </div>
+    </div>
+</section>
+
+<!-- PLIKI -->
+<section id="files" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>📁 Obsługa plików w COBOL</h2><div class="line"></div><p>Otwieranie, czytanie, pisanie, zamykanie</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">📄</span> Plik sekwencyjny — typowy wzorzec</h3>
+            <div class="cobol-code">
+                <div class="cobol-body">      <span class="cmt">* ENVIRONMENT DIVISION:</span>
+       <span class="kw">SELECT</span> INPUT-FILE
+           <span class="kw">ASSIGN TO</span> INFILE
+           <span class="kw">ORGANIZATION IS</span> SEQUENTIAL
+           <span class="kw">FILE STATUS IS</span> WS-FS.
+
+      <span class="cmt">* DATA DIVISION — FILE SECTION:</span>
+       <span class="kw">FD</span> INPUT-FILE
+           <span class="kw">RECORDING MODE IS</span> FB
+           <span class="kw">RECORD CONTAINS</span> <span class="num">80</span> <span class="kw">CHARACTERS</span>.
+       <span class="lvl">01</span> INPUT-REC         <span class="pic">PIC X(80)</span>.
+
+      <span class="cmt">* WORKING-STORAGE:</span>
+       <span class="lvl">01</span> WS-FS            <span class="pic">PIC XX</span>.
+          <span class="lvl">88</span> FS-OK          <span class="kw">VALUE</span> <span class="str">'00'</span>.
+          <span class="lvl">88</span> FS-EOF         <span class="kw">VALUE</span> <span class="str">'10'</span>.
+
+      <span class="cmt">* PROCEDURE DIVISION:</span>
+           <span class="kw">OPEN INPUT</span> INPUT-FILE
+           <span class="kw">IF NOT</span> FS-OK
+               <span class="kw">DISPLAY</span> <span class="str">'OPEN ERROR: '</span> WS-FS
+               <span class="kw">STOP RUN</span>
+           <span class="kw">END-IF</span>
+           <span class="kw">PERFORM UNTIL</span> FS-EOF
+               <span class="kw">READ</span> INPUT-FILE
+                   <span class="kw">AT END CONTINUE</span>
+                   <span class="kw">NOT AT END</span>
+                       <span class="kw">PERFORM</span> PROCESS-RECORD
+               <span class="kw">END-READ</span>
+           <span class="kw">END-PERFORM</span>
+           <span class="kw">CLOSE</span> INPUT-FILE</div>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">📊</span> File Status — kody powrotu</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Kod</th><th>Znaczenie</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>00</strong></td><td>Sukces</td></tr>
+                        <tr><td><strong>10</strong></td><td>Koniec pliku (EOF)</td></tr>
+                        <tr><td><strong>22</strong></td><td>Duplikat klucza (KSDS)</td></tr>
+                        <tr><td><strong>23</strong></td><td>Rekord nie znaleziony (READ klucz)</td></tr>
+                        <tr><td><strong>35</strong></td><td>Plik nie istnieje</td></tr>
+                        <tr><td><strong>39</strong></td><td>Niezgodność atrybutów pliku</td></tr>
+                        <tr><td><strong>41</strong></td><td>Plik już otwarty</td></tr>
+                        <tr><td><strong>42</strong></td><td>Plik nie otwarty (CLOSE)</td></tr>
+                        <tr><td><strong>46/47/48/49</strong></td><td>Błędy odczytu/zapisu sekwencyjnego</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DB2 / CICS -->
+<section id="db2">
+    <div class="container">
+        <div class="stitle fin"><h2>🗄️ DB2 i CICS z COBOL</h2><div class="line"></div><p>Bazy danych i przetwarzanie transakcyjne online</p></div>
+
+        <div class="g2 fin">
+            <div class="card" style="border-top:5px solid var(--blue)">
+                <h3><span class="ic">🗄️</span> Embedded SQL (DB2)</h3>
+                <div class="cobol-code" style="font-size:.82rem">
+                    <div class="cobol-body">       <span class="kw">EXEC SQL</span>
+           <span class="r">SELECT</span> EMP_NAME, SALARY
+           <span class="r">INTO</span> :WS-NAME, :WS-SALARY
+           <span class="r">FROM</span> EMPLOYEE
+           <span class="r">WHERE</span> EMP_ID = :WS-EMP-ID
+       <span class="kw">END-EXEC</span>
+
+       <span class="kw">EVALUATE</span> SQLCODE
+           <span class="kw">WHEN</span> <span class="num">0</span>
+               <span class="kw">DISPLAY</span> <span class="str">'Found: '</span> WS-NAME
+           <span class="kw">WHEN</span> <span class="num">100</span>
+               <span class="kw">DISPLAY</span> <span class="str">'Not found'</span>
+           <span class="kw">WHEN OTHER</span>
+               <span class="kw">DISPLAY</span> <span class="str">'SQL Error: '</span>
+                       SQLCODE
+       <span class="kw">END-EVALUATE</span>
+
+      <span class="cmt">* CURSOR do wielu wierszy:</span>
+       <span class="kw">EXEC SQL</span>
+           <span class="r">DECLARE</span> EMP_CUR <span class="r">CURSOR FOR</span>
+           <span class="r">SELECT</span> * <span class="r">FROM</span> EMPLOYEE
+           <span class="r">WHERE</span> DEPT = :WS-DEPT
+       <span class="kw">END-EXEC</span></div>
+                </div>
+            </div>
+
+            <div class="card" style="border-top:5px solid var(--green)">
+                <h3><span class="ic">🌐</span> CICS (online)</h3>
+                <div class="cobol-code" style="font-size:.82rem">
+                    <div class="cobol-body">      <span class="cmt">* Wysłanie mapy (ekranu) do terminala:</span>
+       <span class="kw">EXEC CICS</span>
+           <span class="g">SEND MAP</span>(<span class="str">'EMPMAP'</span>)
+                <span class="g">MAPSET</span>(<span class="str">'EMPSET'</span>)
+                <span class="g">FROM</span>(EMPMAPO)
+                <span class="g">ERASE</span>
+       <span class="kw">END-EXEC</span>
+
+      <span class="cmt">* Odbiór danych z ekranu:</span>
+       <span class="kw">EXEC CICS</span>
+           <span class="g">RECEIVE MAP</span>(<span class="str">'EMPMAP'</span>)
+                   <span class="g">MAPSET</span>(<span class="str">'EMPSET'</span>)
+                   <span class="g">INTO</span>(EMPMAPI)
+       <span class="kw">END-EXEC</span>
+
+      <span class="cmt">* Odczyt z VSAM:</span>
+       <span class="kw">EXEC CICS</span>
+           <span class="g">READ FILE</span>(<span class="str">'EMPFILE'</span>)
+                <span class="g">INTO</span>(WS-EMP-REC)
+                <span class="g">RIDFLD</span>(WS-EMP-KEY)
+       <span class="kw">END-EXEC</span>
+
+      <span class="cmt">* Obsługa błędów:</span>
+       <span class="kw">EXEC CICS</span>
+           <span class="g">HANDLE CONDITION</span>
+                <span class="g">NOTFND</span>(NOT-FOUND-PARA)
+                <span class="g">ERROR</span>(ERROR-PARA)
+       <span class="kw">END-EXEC</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">⚡</span> Batch vs Online</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Cecha</th><th>Batch (JCL)</th><th>Online (CICS)</th></tr></thead>
+                    <tbody>
+                        <tr><td>Tryb</td><td>Przetwarzanie wsadowe</td><td>Interaktywne (terminal/web)</td></tr>
+                        <tr><td>Czas</td><td>Nocne/weekendowe okna</td><td>Czas rzeczywisty 24/7</td></tr>
+                        <tr><td>Dane</td><td>Pliki sekwencyjne, VSAM</td><td>VSAM, DB2, mapy BMS</td></tr>
+                        <tr><td>Wolumen</td><td>Miliony rekordów na job</td><td>Pojedyncze transakcje</td></tr>
+                        <tr><td>Pliki</td><td>OPEN/CLOSE/READ/WRITE</td><td>EXEC CICS READ/WRITE</td></tr>
+                        <tr><td>Zakończenie</td><td>STOP RUN / GOBACK</td><td>EXEC CICS RETURN</td></tr>
+                        <tr><td>Przykłady</td><td>Naliczanie odsetek, raporty</td><td>Bankomaty, helpdesk</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🧠 Quiz — COBOL & z/OS</h2><div class="line"></div><p>Sprawdź swoją wiedzę!</p></div>
+        <div class="qbox fin">
+            <div class="qmeta">Pytanie <span id="qN">1</span>/<span id="qT">10</span> | Wynik: <span id="qS">0</span></div>
+            <div class="qq" id="qQ"></div>
+            <div class="qopts" id="qO"></div>
+            <div class="qfb" id="qFb"></div>
+            <div class="qnav">
+                <button class="qb nxt" id="qNxt" onclick="qNx()" disabled>Następne →</button>
+                <button class="qb res" id="qRst" onclick="qRe()">Od nowa 🔄</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <h3>🖥️ COBOL & z/OS — Kompletny Przewodnik</h3>
+    <p>Interaktywny przewodnik edukacyjny</p>
+    <p style="margin-top:10px"><a href="#what">COBOL</a> • <a href="#divisions">Divisions</a> • <a href="#funcs">Funkcje</a> • <a href="#compile">Kompilacja</a> • <a href="#zos">z/OS</a> • <a href="#jcl">JCL</a></p>
+    <p style="font-size:.75rem;opacity:.5;margin-top:16px">© 2024 — Projekt edukacyjny</p>
+</footer>
+
+<script>
+// JCL GENERATOR
+function genJCL(){
+    const job=document.getElementById('jclJob').value.toUpperCase();
+    const pgm=document.getElementById('jclPgm').value.toUpperCase();
+    const src=document.getElementById('jclSrc').value.toUpperCase();
+    const cpy=document.getElementById('jclCpy').value.toUpperCase();
+    const load=document.getElementById('jclLoad').value.toUpperCase();
+    const opts=document.getElementById('jclOpts').value;
+    const hasSQL=opts.includes('SQL');
+    const hasCICS=opts.includes('CICS');
+
+    let jcl=`//${job.padEnd(8)} JOB (ACCT),'COBOL COMPILE',CLASS=A,
+//         MSGCLASS=H,MSGLEVEL=(1,1),NOTIFY=&SYSUID
+//*=============================================
+//* GENERATED JCL — COMPILE, LINK, RUN
+//*=============================================`;
+
+    if(hasSQL){
+        jcl+=`
+//*--- STEP 1: DB2 PRECOMPILE ---
+//DBPRC    EXEC PGM=DSNHPC,
+//         PARM='HOST(COBOL),APOST'
+//STEPLIB  DD DSN=DSNC10.SDSNLOAD,DISP=SHR
+//SYSCIN   DD DSN=&&PCOUT,DISP=(NEW,PASS),
+//         UNIT=SYSDA,SPACE=(TRK,(5,5))
+//DBRMLIB  DD DSN=${load.replace('LOADLIB','DBRMLIB')}(${pgm}),
+//         DISP=SHR
+//SYSIN    DD DSN=${src}(${pgm}),DISP=SHR
+//SYSLIB   DD DSN=${cpy},DISP=SHR
+//SYSPRINT DD SYSOUT=*
+//SYSUT1   DD UNIT=SYSDA,SPACE=(CYL,(1,1))
+//SYSUT2   DD UNIT=SYSDA,SPACE=(CYL,(1,1))`;
+    }
+
+    const srcDD = hasSQL ? '&&PCOUT' : `${src}(${pgm})`;
+    const srcDISP = hasSQL ? '(OLD,DELETE)' : 'SHR';
+
+    jcl+=`
+//*--- COMPILE ---
+//COMPILE  EXEC PGM=IGYCRCTL,
+//         PARM='${opts}'
+//STEPLIB  DD DSN=IGY.V6R4M0.SIGYCOMP,DISP=SHR
+//SYSIN    DD DSN=${srcDD},DISP=${srcDISP}
+//SYSLIB   DD DSN=${cpy},DISP=SHR
+//SYSLIN   DD DSN=&&OBJ,DISP=(NEW,PASS),
+//         UNIT=SYSDA,SPACE=(TRK,(5,5))
+//SYSPRINT DD SYSOUT=*
+//SYSUT1   DD UNIT=SYSDA,SPACE=(CYL,(1,1))
+//SYSUT5   DD UNIT=SYSDA,SPACE=(CYL,(1,1))
+//SYSUT6   DD UNIT=SYSDA,SPACE=(CYL,(1,1))
+//SYSUT7   DD UNIT=SYSDA,SPACE=(CYL,(1,1))
+//*--- LINK-EDIT ---
+//LKED     EXEC PGM=IEWL,COND=(8,LT,COMPILE),
+//         PARM='LIST,MAP,RENT'
+//SYSLIN   DD DSN=&&OBJ,DISP=(OLD,DELETE)
+//SYSLMOD  DD DSN=${load}(${pgm}),
+//         DISP=SHR
+//SYSLIB   DD DSN=CEE.SCEELKED,DISP=SHR`;
+
+    if(hasSQL) jcl+=`\n//         DD DSN=DSNC10.SDSNLOAD,DISP=SHR`;
+    if(hasCICS) jcl+=`\n//         DD DSN=CICSTS.SDFHLOAD,DISP=SHR`;
+
+    jcl+=`
+//SYSPRINT DD SYSOUT=*
+//*--- RUN ---
+//RUN      EXEC PGM=${pgm},COND=(8,LT)
+//STEPLIB  DD DSN=${load},DISP=SHR
+//SYSOUT   DD SYSOUT=*
+//SYSPRINT DD SYSOUT=*
+//`;
+
+    document.getElementById('jclOutput').textContent = jcl;
+}
+
+// ACCORDION
+function togAcc(h){const i=h.parentElement;const b=i.querySelector('.acc-b');const o=i.classList.contains('open');document.querySelectorAll('.acc-i').forEach(x=>{x.classList.remove('open');x.querySelector('.acc-b').style.maxHeight=null});if(!o){i.classList.add('open');b.style.maxHeight=b.scrollHeight+'px'}}
+
+// QUIZ
+const qD=[
+    {q:"Co oznacza skrót COBOL?",o:["Common Business-Oriented Language","Computer Binary Object Language","Compiled Basic Online Language","Core Business Operation Logic"],a:0,e:"COBOL = COmmon Business-Oriented Language — język programowania zorientowany na biznes."},
+    {q:"Ile DIVISION ma program COBOL?",o:["2","3","4","5"],a:2,e:"4 divisions: IDENTIFICATION, ENVIRONMENT, DATA, PROCEDURE."},
+    {q:"Co oznacza PIC 9(5)V99?",o:["5 cyfr + 2 po przecinku","99 znaków","Binarny integer","7 cyfr bez separatora"],a:0,e:"PIC 9(5)V99 = 5 cyfr całkowitych + domyślny punkt dziesiętny + 2 cyfry po przecinku (np. 12345.67)."},
+    {q:"Jaki program jest kompilatorem COBOL na z/OS?",o:["IEFBR14","IGYCRCTL","IEWL","IKJEFT01"],a:1,e:"IGYCRCTL to kompilator IBM Enterprise COBOL for z/OS."},
+    {q:"Co robi Binder (IEWL)?",o:["Kompiluje źródło","Łączy object modules w load module","Uruchamia program","Zarządza plikami"],a:1,e:"IEWL (Binder) łączy skompilowane moduły obiektowe i biblioteki w gotowy do uruchomienia load module."},
+    {q:"Co oznacza COMP-3?",o:["Binarny integer","Floating point","Packed Decimal (BCD)","Display format"],a:2,e:"COMP-3 = Packed Decimal — przechowuje 2 cyfry na bajt. Idealny do precyzyjnych obliczeń finansowych."},
+    {q:"Jaki File Status oznacza koniec pliku (EOF)?",o:["00","10","23","35"],a:1,e:"File Status 10 = End of File (AT END). 00 = sukces, 23 = nie znaleziono, 35 = plik nie istnieje."},
+    {q:"Czym jest COPYBOOK w COBOL?",o:["Typ pliku VSAM","Reużywalna definicja danych (COPY)","Procedura JCL","Format raportu"],a:1,e:"COPYBOOK to plik z definicjami danych (poziomy 01-49), włączany instrukcją COPY. Zapewnia spójność struktur między programami."},
+    {q:"Co robi FUNCTION CURRENT-DATE?",o:["Ustawia datę systemową","Zwraca aktualną datę i czas (21 znaków)","Formatuje datę","Konwertuje datę Juliańską"],a:1,e:"FUNCTION CURRENT-DATE zwraca 21-znakowy string: YYYYMMDDHHMMSSFFFFFFF±HHMM (data + czas + strefa)."},
+    {q:"Jaka instrukcja JCL alokuje plik/dataset?",o:["JOB","EXEC","DD","SET"],a:2,e:"DD (Data Definition) — przypisuje nazwę logiczną (ddname) do fizycznego datasetu, urządzenia lub strumienia wyjściowego."}
+];
+let qi=0,qs=0,qa=false;
+function qRn(){if(qi>=qD.length){qEn();return}const q=qD[qi];document.getElementById('qN').textContent=qi+1;document.getElementById('qT').textContent=qD.length;document.getElementById('qQ').textContent=q.q;const o=document.getElementById('qO');o.innerHTML='';q.o.forEach((t,i)=>{const d=document.createElement('div');d.className='qopt';d.textContent=t;d.onclick=()=>qAn(i);o.appendChild(d)});document.getElementById('qFb').className='qfb';document.getElementById('qNxt').disabled=true;document.getElementById('qNxt').style.display='';document.getElementById('qRst').style.display='none';qa=false}
+function qAn(i){if(qa)return;qa=true;const q=qD[qi],os=document.querySelectorAll('.qopt'),fb=document.getElementById('qFb');os[q.a].classList.add('ok');if(i===q.a){qs++;fb.textContent='✅ Brawo! '+q.e;fb.style.background='#d1fae5';fb.style.color='#065f46'}else{os[i].classList.add('no');fb.textContent='❌ Źle. '+q.e;fb.style.background='#fee2e2';fb.style.color='#991b1b'}fb.className='qfb show';document.getElementById('qS').textContent=qs;document.getElementById('qNxt').disabled=false;os.forEach(o=>o.style.pointerEvents='none')}
+function qNx(){qi++;qRn()}
+function qEn(){const p=Math.round(qs/qD.length*100);let e=p===100?'🏆':p>=70?'🌟':p>=40?'👍':'📚';let m=p===100?'Perfekcyjnie!':p>=70?'Świetnie!':p>=40?'Nieźle!':'Powtórz materiał!';document.getElementById('qQ').innerHTML=`${e} Wynik: <strong>${qs}/${qD.length}</strong> (${p}%)`;document.getElementById('qO').innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:16px;color:var(--muted)">${m}</div>`;document.getElementById('qFb').className='qfb';document.getElementById('qNxt').style.display='none';document.getElementById('qRst').style.display=''}
+function qRe(){qi=0;qs=0;document.getElementById('qS').textContent=0;qRn()}
+qRn();
+
+// SCROLL ANIM
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')})},{threshold:.06});
+document.querySelectorAll('.fin').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
+```
+
+## Zawartość strony — podsumowanie:
+
+### 📖 12 rozdziałów edukacyjnych:
+
+| Sekcja | Zawartość |
+|---|---|
+| **Co to COBOL** | Historia, definicja, 220 mld linii kodu, 6 cech |
+| **Struktura** | Format kolumnowy (Area A/B), cztery DIVISION |
+| **Divisions** | IDENTIFICATION, ENVIRONMENT, DATA, PROCEDURE — pełne przykłady kodu |
+| **Typy danych / PIC** | Tabela symboli PIC (9,X,V,S,Z,$...), poziomy 01-88, klauzula USAGE (DISPLAY, COMP, COMP-3) |
+| **Instrukcje (Verbs)** | 18+ instrukcji: MOVE, ADD, COMPUTE, PERFORM, IF, EVALUATE, STRING, CALL... |
+| **Funkcje wbudowane** | **40+ funkcji** w 5 kategoriach: matematyczne, statystyczne, tekstowe, daty, finansowe — z przykładami |
+| **Kompilacja** | 4 etapy (Preprocesor → IGYCRCTL → IEWL → Load Module), opcje kompilatora |
+| **z/OS** | Komponenty (RACF, JES2, WLM, TSO/ISPF, VSAM), typy datasetów |
+| **JCL** | Instrukcje JOB/EXEC/DD, kompletny 3-krokowy JCL (compile+link+run) |
+| **Pliki** | Wzorzec odczytu sekwencyjnego, File Status codes |
+| **DB2 & CICS** | Embedded SQL, CURSOR, EXEC CICS, Batch vs Online |
+| **Quiz** | 10 pytań z wyjaśnieniami |
+
+### 🛠️ Narzędzia interaktywne:
+1. **🛠️ Generator JCL** — wybierz opcje (Standard/Debug/DB2/CICS), wpisz nazwy datasetów → gotowy JCL
+2. **🧠 Quiz 10 pytań** — z wyjaśnieniami i punktacją
+3. **Fade-in animacje**
+4. **Responsywny design**
