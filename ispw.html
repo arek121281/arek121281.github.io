@@ -1,0 +1,944 @@
+
+
+```html
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISPW — Kompletny Przewodnik | BMC/Compuware DevOps for Mainframe</title>
+    <style>
+        :root {
+            --primary: #0b1426;
+            --secondary: #0ea5e9;
+            --accent: #f97316;
+            --green: #22c55e;
+            --purple: #a855f7;
+            --red: #ef4444;
+            --gold: #eab308;
+            --pink: #ec4899;
+            --cyan: #06b6d4;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --shadow: 0 8px 30px rgba(0,0,0,0.07);
+            --radius: 16px;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth;scroll-padding-top:68px}
+        body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.78}
+
+        /* NAV */
+        nav{position:fixed;top:0;width:100%;z-index:1000;background:rgba(11,20,38,.97);backdrop-filter:blur(14px);box-shadow:0 2px 24px rgba(0,0,0,.4)}
+        .nav-in{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+        .logo{color:#fff;font-weight:900;font-size:1.15rem;padding:14px 0;display:flex;align-items:center;gap:8px}
+        .logo span{color:var(--secondary)}
+        .logo .sub{color:var(--gold);font-size:.72rem;font-weight:600}
+        nav ul{display:flex;list-style:none;flex-wrap:wrap}
+        nav ul li a{display:block;color:#9fb3c8;text-decoration:none;padding:16px 13px;font-size:.78rem;font-weight:500;transition:.3s;border-bottom:3px solid transparent;text-transform:uppercase;letter-spacing:.5px}
+        nav ul li a:hover{color:#fff;border-bottom-color:var(--secondary);background:rgba(14,165,233,.08)}
+        .mbtn{display:none;background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer}
+
+        /* HERO */
+        .hero{background:linear-gradient(135deg,#0b1426 0%,#0c2340 30%,#1a3a6c 60%,#0b1426 100%);color:#fff;text-align:center;padding:145px 20px 105px;position:relative;overflow:hidden}
+        .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 45%,rgba(14,165,233,.14),transparent 60%),radial-gradient(ellipse at 75% 55%,rgba(249,115,22,.09),transparent 55%);animation:hbg 12s ease-in-out infinite alternate}
+        @keyframes hbg{0%{transform:scale(1)}100%{transform:scale(1.08) rotate(1deg)}}
+        .hero>*{position:relative;z-index:1}
+        .hero-ic{font-size:5rem;margin-bottom:16px;animation:hfl 4s ease-in-out infinite}
+        @keyframes hfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+        .hero h1{font-size:3.4rem;font-weight:900;margin-bottom:14px;letter-spacing:-1px}
+        .hero h1 .h1{color:var(--secondary)}
+        .hero h1 .h2{color:var(--gold)}
+        .hero>p{font-size:1.18rem;color:#8faabe;max-width:750px;margin:0 auto 30px}
+        .hero-tags{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+        .htag{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:11px 22px;border-radius:12px;font-size:.82rem;color:#b8cfe0}
+        .htag b{color:var(--secondary)}
+
+        /* UTILS */
+        .container{max-width:1100px;margin:0 auto;padding:0 20px}
+        section{padding:80px 0}
+        .stitle{text-align:center;margin-bottom:50px}
+        .stitle h2{font-size:2.3rem;font-weight:800;letter-spacing:-.5px}
+        .stitle .line{width:65px;height:4px;margin:12px auto;background:linear-gradient(90deg,var(--secondary),var(--accent));border-radius:2px}
+        .stitle p{color:var(--muted);font-size:1.05rem;max-width:640px;margin:0 auto}
+        .alt{background:#e2e8f0}
+
+        /* CARDS */
+        .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:34px;margin-bottom:24px;border:1px solid rgba(0,0,0,.04);transition:transform .3s}
+        .card:hover{transform:translateY(-2px)}
+        .card h3{font-size:1.4rem;margin-bottom:12px;color:var(--primary);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .card h3 .ic{font-size:1.6rem}
+        .card p,.card li{color:#475569;font-size:1rem}
+        .card ul,.card ol{padding-left:20px;margin:10px 0}
+        .card li{margin-bottom:6px}
+
+        /* GRIDS */
+        .g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+        .g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px}
+        .g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+
+        /* FEATURE CARDS */
+        .fc{background:var(--card);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);border-top:5px solid var(--secondary);transition:.3s;text-align:center}
+        .fc:nth-child(2){border-top-color:var(--accent)}
+        .fc:nth-child(3){border-top-color:var(--green)}
+        .fc:nth-child(4){border-top-color:var(--purple)}
+        .fc:nth-child(5){border-top-color:var(--gold)}
+        .fc:nth-child(6){border-top-color:var(--red)}
+        .fc:nth-child(7){border-top-color:var(--pink)}
+        .fc:nth-child(8){border-top-color:var(--cyan)}
+        .fc:hover{transform:translateY(-5px);box-shadow:0 18px 45px rgba(0,0,0,.1)}
+        .fc .fi{font-size:2.5rem;margin-bottom:10px}
+        .fc h4{font-size:1.08rem;margin-bottom:6px;color:var(--primary)}
+        .fc p{color:var(--muted);font-size:.86rem}
+
+        /* INFO BOXES */
+        .ib{border-radius:0 12px 12px 0;padding:20px 24px;margin:18px 0;border-left:5px solid}
+        .ib.blue{background:#e0f7fa;border-color:var(--secondary)}
+        .ib.green{background:#e8faf3;border-color:var(--green)}
+        .ib.yellow{background:#fff9e0;border-color:var(--gold)}
+        .ib.red{background:#fde8ee;border-color:var(--red)}
+        .ib.purple{background:#f3e8ff;border-color:var(--purple)}
+        .ib.orange{background:#fff3e0;border-color:var(--accent)}
+        .ib h4{margin-bottom:4px;display:flex;align-items:center;gap:8px}
+
+        /* TERMINAL */
+        .term{background:linear-gradient(135deg,#0b1426,#132238);color:#4ade80;border-radius:14px;padding:28px;margin:18px 0;font-family:'Courier New',monospace;font-size:.88rem;line-height:1.95;overflow-x:auto;border-left:5px solid #4ade80;position:relative;white-space:pre}
+        .term::before{content:'● ● ●';position:absolute;top:8px;left:14px;font-size:.55rem;letter-spacing:4px;color:#3a4a5c}
+        .term{padding-top:32px}
+        .c{color:#4a5c70}.r{color:#f87171;font-weight:700}.y{color:#fbbf24;font-weight:700}.b{color:#60a5fa;font-weight:700}.g{color:#4ade80;font-weight:700}.p{color:#c084fc;font-weight:700}.w{color:#e2e8f0;font-weight:700}.o{color:#fb923c;font-weight:700}.cy{color:#22d3ee;font-weight:700}
+
+        /* TABLES */
+        .tw{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow);margin:22px 0}
+        table{width:100%;border-collapse:collapse;background:var(--card)}
+        th{background:linear-gradient(135deg,var(--primary),#1e3a5f);color:#fff;padding:14px 15px;text-align:center;font-size:.82rem;text-transform:uppercase;letter-spacing:1px}
+        td{padding:12px 15px;text-align:center;border-bottom:1px solid #f1f5f9;font-size:.92rem}
+        td:first-child{text-align:left;font-weight:600}
+        tr:nth-child(even){background:#f8fafc}
+        tr:hover{background:#eef2ff}
+
+        /* PROCESS FLOW */
+        .pflow{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;margin:28px 0}
+        .pfs{background:var(--card);border-radius:14px;padding:18px 20px;text-align:center;box-shadow:var(--shadow);min-width:110px;max-width:155px}
+        .pfs .pfi{font-size:1.8rem;margin-bottom:4px}
+        .pfs h5{font-size:.82rem;color:var(--primary)}
+        .pfs p{font-size:.68rem;color:var(--muted)}
+        .pfa{font-size:1.3rem;color:var(--secondary);padding:0 5px;font-weight:900}
+
+        /* LIFECYCLE VISUAL */
+        .lifecycle{display:flex;justify-content:center;flex-wrap:wrap;gap:0;margin:30px 0;position:relative}
+        .lc-step{width:140px;text-align:center;position:relative;padding:16px 10px}
+        .lc-circle{width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 8px;border:4px solid;transition:.3s;cursor:pointer}
+        .lc-circle:hover{transform:scale(1.12);box-shadow:0 0 20px rgba(14,165,233,.4)}
+        .lc-step h5{font-size:.82rem;font-weight:700;color:var(--primary)}
+        .lc-step p{font-size:.7rem;color:var(--muted)}
+        .lc-arrow{font-size:1.2rem;color:var(--secondary);display:flex;align-items:center;font-weight:900}
+
+        /* ACCORDION */
+        .acc-i{margin-bottom:8px}
+        .acc-h{background:var(--card);border:1px solid #e2e8f0;padding:16px 22px;border-radius:12px;cursor:pointer;font-weight:700;font-size:.98rem;display:flex;justify-content:space-between;align-items:center;transition:.3s}
+        .acc-h:hover{background:#f1f5f9}
+        .acc-h .aw{transition:transform .3s;font-size:1.1rem}
+        .acc-i.open .acc-h .aw{transform:rotate(180deg)}
+        .acc-b{max-height:0;overflow:hidden;transition:max-height .4s ease;background:#f8fafc;border-radius:0 0 12px 12px}
+        .acc-bi{padding:18px 22px;color:#475569;line-height:1.85;font-size:.95rem}
+
+        /* STATUS BADGES */
+        .badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+        .badge.dev{background:#dbeafe;color:#1d4ed8}
+        .badge.qa{background:#fef3c7;color:#92400e}
+        .badge.stg{background:#e0e7ff;color:#4338ca}
+        .badge.prd{background:#d1fae5;color:#065f46}
+        .badge.fail{background:#fee2e2;color:#991b1b}
+        .badge.lock{background:#f3e8ff;color:#7c3aed}
+
+        /* INTERACTIVE WORKFLOW */
+        .wf-container{background:linear-gradient(135deg,#0c2340,#1a3a6c);border-radius:var(--radius);padding:36px;color:#fff;box-shadow:var(--shadow)}
+        .wf-container h3{text-align:center;font-size:1.5rem;margin-bottom:6px}
+        .wf-sub{text-align:center;color:#7da8d4;margin-bottom:22px;font-size:.9rem}
+        .wf-board{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:18px}
+        .wf-col{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;min-height:180px}
+        .wf-col-title{text-align:center;font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid}
+        .wf-task{background:rgba(255,255,255,.08);border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:.82rem;cursor:grab;transition:.3s;border-left:3px solid var(--secondary)}
+        .wf-task:hover{background:rgba(255,255,255,.15);transform:translateX(3px)}
+        .wf-task .wf-id{font-family:'Courier New',monospace;font-weight:700;color:var(--secondary);font-size:.75rem}
+        .wf-task .wf-name{color:#e2e8f0;margin-top:2px}
+        .wf-task .wf-type{font-size:.68rem;color:#7da8d4}
+        .wf-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+        .wf-btn{padding:10px 22px;border:none;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;transition:.3s;text-transform:uppercase;letter-spacing:.5px}
+        .wf-btn:hover{transform:scale(1.05);box-shadow:0 5px 18px rgba(0,0,0,.3)}
+        .wf-btn.promote{background:var(--green);color:#fff}
+        .wf-btn.demote{background:var(--red);color:#fff}
+        .wf-btn.generate{background:var(--secondary);color:#fff}
+        .wf-btn.deploy{background:var(--gold);color:var(--primary)}
+        .wf-btn.reset{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+        .wf-log{background:rgba(0,0,0,.3);border-radius:10px;padding:14px;margin-top:14px;font-family:'Courier New',monospace;font-size:.8rem;max-height:150px;overflow-y:auto;color:#94a3b8}
+
+        /* QUIZ */
+        .qbox{background:var(--card);border-radius:var(--radius);padding:34px;box-shadow:var(--shadow)}
+        .qq{font-size:1.2rem;font-weight:700;color:var(--primary);margin-bottom:16px}
+        .qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .qopt{padding:14px 16px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;transition:.3s;font-size:.95rem;text-align:center;font-weight:500}
+        .qopt:hover{border-color:var(--secondary);background:#e0f7fa}
+        .qopt.ok{border-color:var(--green);background:#d1fae5;color:#065f46}
+        .qopt.no{border-color:var(--red);background:#fee2e2;color:#991b1b}
+        .qfb{padding:14px;border-radius:10px;margin-top:12px;font-weight:600;display:none;font-size:.93rem}
+        .qfb.show{display:block}
+        .qmeta{color:var(--muted);margin-bottom:10px;font-size:.9rem}
+        .qnav{display:flex;justify-content:space-between;margin-top:14px}
+        .qb{padding:10px 24px;border:none;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:700;transition:.3s}
+        .qb.nxt{background:var(--secondary);color:#fff}
+        .qb.res{background:var(--accent);color:#fff;display:none}
+        .qb:hover{transform:scale(1.04)}
+        .qb:disabled{opacity:.35;cursor:not-allowed}
+
+        footer{background:linear-gradient(135deg,#0b1426,#0c2340);color:#7da8d4;text-align:center;padding:44px 20px}
+        footer h3{color:#fff;margin-bottom:6px}
+        footer a{color:var(--secondary);text-decoration:none}
+
+        .fin{opacity:0;transform:translateY(28px);transition:all .7s cubic-bezier(.16,1,.3,1)}
+        .fin.vis{opacity:1;transform:translateY(0)}
+
+        @media(max-width:768px){
+            .hero h1{font-size:2rem}
+            .stitle h2{font-size:1.7rem}
+            .card{padding:20px}
+            nav ul{display:none}
+            nav ul.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(11,20,38,.98)}
+            .mbtn{display:block}
+            .qopts{grid-template-columns:1fr}
+            .pfa,.lc-arrow{transform:rotate(90deg)}
+            .pflow,.lifecycle{flex-direction:column;align-items:center}
+            .wf-board{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-in">
+        <div class="logo">🚀 <span>ISPW</span> <span class="sub">DevOps Mainframe</span></div>
+        <button class="mbtn" onclick="document.querySelector('nav ul').classList.toggle('open')">☰</button>
+        <ul>
+            <li><a href="#what">Co to ISPW</a></li>
+            <li><a href="#concepts">Koncepcje</a></li>
+            <li><a href="#lifecycle">Lifecycle</a></li>
+            <li><a href="#workflow">Workflow</a></li>
+            <li><a href="#operations">Operacje</a></li>
+            <li><a href="#generate">Generate/Deploy</a></li>
+            <li><a href="#integration">Integracje</a></li>
+            <li><a href="#cli">CLI/API</a></li>
+            <li><a href="#vs">ISPW vs Endevor</a></li>
+            <li><a href="#best">Best Practices</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+        </ul>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="hero-ic">🚀</div>
+    <h1><span class="h1">ISPW</span> — <span class="h2">DevOps</span> for Mainframe</h1>
+    <p>Kompletny przewodnik po ISPW (BMC AMI DevX Source Code Management) — zarządzanie kodem źródłowym, lifecycle, deploy i integracja CI/CD na z/OS</p>
+    <div class="hero-tags">
+        <div class="htag"><b>SCM</b> — Source Code Management</div>
+        <div class="htag"><b>Lifecycle</b> — DEV → QA → STG → PRD</div>
+        <div class="htag"><b>CI/CD</b> — Jenkins, Git, Jira</div>
+        <div class="htag"><b>z/OS</b> — Mainframe DevOps</div>
+    </div>
+</header>
+
+<!-- CO TO ISPW -->
+<section id="what">
+    <div class="container">
+        <div class="stitle fin"><h2>🔍 Czym jest ISPW?</h2><div class="line"></div><p>Zarządzanie kodem źródłowym i release management na mainframe</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">📋</span> Definicja</h3>
+            <p><strong>ISPW</strong> (dawniej <strong>Compuware ISPW</strong>, obecnie <strong>BMC AMI DevX Source Code Management</strong>) to narzędzie do zarządzania kodem źródłowym (SCM), build i deploy na platformie mainframe z/OS. Jest odpowiednikiem Git + Jenkins + Release Manager, ale dla świata mainframe.</p>
+            <div class="ib blue">
+                <h4>💡 Analogia</h4>
+                <p>Jeśli <strong>Git</strong> zarządza kodem w świecie distributed, a <strong>Jenkins</strong> automatyzuje build i deploy, to <strong>ISPW</strong> robi to samo na mainframe — ale w jednym zintegrowanym pakiecie, ściśle powiązanym z cyklem życia komponentów COBOL, PL/I, Assembler i innych.</p>
+            </div>
+        </div>
+
+        <div class="g4 fin">
+            <div class="fc"><div class="fi">📦</div><h4>Source Control</h4><p>Wersjonowanie kodu COBOL, copybooków, JCL, map BMS</p></div>
+            <div class="fc"><div class="fi">🔄</div><h4>Lifecycle Management</h4><p>Kontrolowane promowanie DEV → QA → STG → PRD</p></div>
+            <div class="fc"><div class="fi">🏗️</div><h4>Build (Generate)</h4><p>Kompilacja, link-edit, DB2 bind — automatycznie</p></div>
+            <div class="fc"><div class="fi">🚀</div><h4>Deploy</h4><p>Kontrolowane wdrożenie na środowiska produkcyjne</p></div>
+            <div class="fc"><div class="fi">🔒</div><h4>Locking</h4><p>Blokady edycji — zapobieganie konfliktom</p></div>
+            <div class="fc"><div class="fi">📊</div><h4>Audyt / Compliance</h4><p>Pełna historia zmian — kto, co, kiedy, dlaczego</p></div>
+            <div class="fc"><div class="fi">🔗</div><h4>CI/CD Integration</h4><p>Jenkins, Git, Jira, SonarQube, Topaz</p></div>
+            <div class="fc"><div class="fi">📋</div><h4>Release Management</h4><p>Grupowanie zmian w release'y i assignment'y</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- KONCEPCJE -->
+<section id="concepts" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🧱 Kluczowe koncepcje ISPW</h2><div class="line"></div><p>Słownik pojęć — fundament pracy z ISPW</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">📦</span> Hierarchia obiektów</h3>
+            <div class="term"><span class="c">// Hierarchia ISPW — od ogółu do szczegółu:</span>
+
+<span class="y">Application</span>
+  └── <span class="b">Stream</span>
+       └── <span class="g">Assignment</span> (lub Release)
+            └── <span class="p">Task</span>
+                 └── <span class="r">Component</span> (plik źródłowy)
+                      └── <span class="cy">Level</span> (DEV, QA, STG, PRD)</div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">📖</span> Słownik ISPW</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Pojęcie</th><th>Opis</th><th>Analogia (Git/świat dist.)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Application</strong></td><td>Zbiór powiązanych komponentów (np. system payroll). Definiuje konfigurację, lifecycle, uprawnienia.</td><td>Repository / Projekt</td></tr>
+                        <tr><td><strong>Stream</strong></td><td>Ścieżka rozwoju w ramach aplikacji (np. MAINLINE, RELEASE-2024). Izoluje zmiany.</td><td>Branch (main, release/*)</td></tr>
+                        <tr><td><strong>Assignment</strong></td><td>Kontener grupujący powiązane taski/zmiany. Ma własny lifecycle (DEV→PRD).</td><td>Pull Request / Feature branch</td></tr>
+                        <tr><td><strong>Release</strong></td><td>Zbiór assignmentów wdrażanych razem. Koordynacja dużych zmian.</td><td>Release / Milestone</td></tr>
+                        <tr><td><strong>Task</strong></td><td>Pojedyncza zmiana w jednym komponencie w ramach assignmentu. Jednostka pracy.</td><td>Commit</td></tr>
+                        <tr><td><strong>Component</strong></td><td>Plik źródłowy: COBOL, copybook, JCL, BMS map, itp. Wersjonowany w ISPW.</td><td>File w repo</td></tr>
+                        <tr><td><strong>Level</strong></td><td>Środowisko w lifecycle: DEV, QA, STG, PRD. Komponent promowany przez kolejne levels.</td><td>Environment (dev/staging/prod)</td></tr>
+                        <tr><td><strong>Generate</strong></td><td>Kompilacja + link-edit + bind. ISPW automatyzuje cały proces buildu.</td><td>Build / Compile</td></tr>
+                        <tr><td><strong>Promote</strong></td><td>Przeniesienie komponentu na wyższy level (np. DEV→QA)</td><td>Deploy to staging / Merge</td></tr>
+                        <tr><td><strong>Demote</strong></td><td>Cofnięcie komponentu na niższy level (np. QA→DEV)</td><td>Rollback / Revert</td></tr>
+                        <tr><td><strong>Deploy</strong></td><td>Wdrożenie na produkcję (ostatni level)</td><td>Deploy to production</td></tr>
+                        <tr><td><strong>Regress</strong></td><td>Wycofanie ze środowiska produkcyjnego (przywrócenie poprzedniej wersji)</td><td>Rollback in production</td></tr>
+                        <tr><td><strong>Lock / Unlock</strong></td><td>Blokada edycji komponentu — zapobiega równoczesnym zmianom</td><td>File lock (pessimistic locking)</td></tr>
+                        <tr><td><strong>Checkout / Edit</strong></td><td>Pobranie komponentu do edycji → tworzy Task + Lock</td><td>git checkout / edit</td></tr>
+                        <tr><td><strong>Container</strong></td><td>Assignment lub Release — kontener grupujący taski</td><td>PR / Release</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🗂️</span> Typy komponentów</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Typ</th><th>Rozszerzenie</th><th>Opis</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>COBOL</strong></td><td>COB</td><td>Program źródłowy COBOL</td></tr>
+                        <tr><td><strong>Copybook</strong></td><td>COPY</td><td>Reużywalne definicje danych (COPY member)</td></tr>
+                        <tr><td><strong>JCL</strong></td><td>JCL</td><td>Job Control Language — definicje batch jobów</td></tr>
+                        <tr><td><strong>BMS Map</strong></td><td>BMS</td><td>Definicje ekranów CICS (Basic Mapping Support)</td></tr>
+                        <tr><td><strong>PL/I</strong></td><td>PLI</td><td>Program źródłowy PL/I</td></tr>
+                        <tr><td><strong>Assembler</strong></td><td>ASM</td><td>Program w asemblerze S/390</td></tr>
+                        <tr><td><strong>DBRM</strong></td><td>DBRM</td><td>Database Request Module (DB2)</td></tr>
+                        <tr><td><strong>Load Module</strong></td><td>LOAD</td><td>Skompilowany moduł wykonywalny</td></tr>
+                        <tr><td><strong>Listing</strong></td><td>LST</td><td>Listing kompilacji (output)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- LIFECYCLE -->
+<section id="lifecycle">
+    <div class="container">
+        <div class="stitle fin"><h2>🔄 Lifecycle — cykl życia komponentu</h2><div class="line"></div><p>Droga kodu od developmentu do produkcji</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">🛤️</span> Typowy lifecycle ISPW</h3>
+            <div class="lifecycle">
+                <div class="lc-step"><div class="lc-circle" style="border-color:var(--secondary);background:#dbeafe;color:var(--secondary)">📝</div><h5>DEV</h5><p>Development — edycja, kodowanie</p></div>
+                <div class="lc-arrow">→</div>
+                <div class="lc-step"><div class="lc-circle" style="border-color:var(--gold);background:#fef3c7;color:#92400e">🧪</div><h5>QA</h5><p>Quality Assurance — testy</p></div>
+                <div class="lc-arrow">→</div>
+                <div class="lc-step"><div class="lc-circle" style="border-color:var(--purple);background:#ede9fe;color:var(--purple)">🔬</div><h5>STG</h5><p>Staging — pre-produkcja</p></div>
+                <div class="lc-arrow">→</div>
+                <div class="lc-step"><div class="lc-circle" style="border-color:var(--green);background:#d1fae5;color:#065f46">🚀</div><h5>PRD</h5><p>Production — live!</p></div>
+            </div>
+
+            <div class="term"><span class="c">// Co dzieje się na każdym poziomie:</span>
+
+<span class="b">DEV (Development)</span>
+  • Developer wykonuje CHECKOUT (tworzy Task)
+  • Edytuje kod w Topaz / ISPF
+  • Wykonuje GENERATE (kompilacja)
+  • Testuje jednostkowo
+
+<span class="y">QA (Quality Assurance)</span>
+  • PROMOTE DEV → QA
+  • Automatyczne / manualne testy
+  • Code review, statyczna analiza
+  • Regresja (np. Topaz for Total Test)
+
+<span class="p">STG (Staging / Pre-Production)</span>
+  • PROMOTE QA → STG
+  • Testy integracyjne
+  • Performance testing
+  • User Acceptance Testing (UAT)
+
+<span class="g">PRD (Production)</span>
+  • DEPLOY STG → PRD
+  • Zatwierdzenie przez Change Management
+  • Wdrożenie w oknie serwisowym
+  • Monitoring po wdrożeniu</div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">⚙️</span> Konfigurowalność lifecycle</h3>
+            <p>ISPW pozwala definiować <strong>niestandardowe lifecycle</strong> per aplikacja:</p>
+            <ul>
+                <li>Różna liczba poziomów (2-7+)</li>
+                <li>Bramki jakości (quality gates) między poziomami</li>
+                <li>Wymagane zatwierdzenia (approvals) przed promote</li>
+                <li>Automatyczny generate na promote</li>
+                <li>Webhook/event na każdą akcję (CI/CD trigger)</li>
+                <li>Oddzielne lifecycle dla emergency fixes (hotfix path)</li>
+            </ul>
+            <div class="ib orange">
+                <h4>🔥 Emergency Fix Path</h4>
+                <p>Dla krytycznych poprawek produkcyjnych ISPW oferuje <strong>skrócony lifecycle</strong>: DEV → PRD (z pominięciem QA/STG), z pełnym audytem i opcjonalnym zatwierdzeniem.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INTERACTIVE WORKFLOW -->
+<section id="workflow" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🎮 Interaktywny Workflow ISPW</h2><div class="line"></div><p>Symulacja zarządzania zadaniami — promuj, cofaj, generuj</p></div>
+
+        <div class="wf-container fin" id="wfContainer">
+            <h3>📋 Assignment Board</h3>
+            <p class="wf-sub">Assignment: <strong>A000012345</strong> — "Payroll Tax Update" | Stream: MAINLINE</p>
+
+            <div class="wf-board" id="wfBoard"></div>
+
+            <div class="wf-btns">
+                <button class="wf-btn promote" onclick="wfPromote()">⬆️ Promote</button>
+                <button class="wf-btn demote" onclick="wfDemote()">⬇️ Demote</button>
+                <button class="wf-btn generate" onclick="wfGenerate()">⚙️ Generate</button>
+                <button class="wf-btn deploy" onclick="wfDeploy()">🚀 Deploy</button>
+                <button class="wf-btn reset" onclick="wfReset()">🔄 Reset</button>
+            </div>
+            <div class="wf-log" id="wfLog"><div style="color:#4ade80">✅ Assignment A000012345 loaded — 4 tasks at DEV level</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- OPERATIONS -->
+<section id="operations">
+    <div class="container">
+        <div class="stitle fin"><h2>⚡ Operacje ISPW — szczegółowo</h2><div class="line"></div><p>Kluczowe akcje w codziennej pracy</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">📥</span> CHECKOUT (Pobranie do edycji)</h3>
+            <div class="term"><span class="c">// Co się dzieje przy CHECKOUT:</span>
+
+1. Developer wybiera komponent (np. PAYROLL.COB)
+2. ISPW tworzy <span class="y">Task</span> w <span class="b">Assignment</span>
+3. Komponent jest <span class="r">LOCKED</span> (inni nie mogą edytować)
+4. Kopia trafia na level <span class="b">DEV</span>
+5. Developer edytuje w <span class="g">Topaz for Eclipse</span> lub <span class="g">ISPF</span>
+
+<span class="c">// ISPW przechowuje:</span>
+ • Kto wykonał checkout
+ • Kiedy
+ • Z jakiego poziomu (baseline)
+ • Numer Assignmentu
+ • Powiązany ticket (Jira, ServiceNow)</div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">⚙️</span> GENERATE (Build)</h3>
+            <p>Generate to zautomatyzowany proces kompilacji. ISPW wie, jak skompilować każdy typ komponentu:</p>
+            <div class="pflow">
+                <div class="pfs" style="border:2px solid var(--secondary)"><div class="pfi">📝</div><h5>Source</h5><p>COBOL/PLI</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--accent)"><div class="pfi">🔍</div><h5>Preprocess</h5><p>COPY, SQL, CICS</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--green)"><div class="pfi">⚙️</div><h5>Compile</h5><p>IGYCRCTL</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--purple)"><div class="pfi">🔗</div><h5>Link-Edit</h5><p>IEWL</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--gold)"><div class="pfi">🗄️</div><h5>DB2 Bind</h5><p>(jeśli SQL)</p></div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--green)"><div class="pfi">✅</div><h5>Load Module</h5><p>Gotowy</p></div>
+            </div>
+            <div class="ib green">
+                <h4>✅ Inteligentny Generate</h4>
+                <p>ISPW analizuje <strong>zależności</strong> — jeśli zmienisz copybook, automatycznie wygeneruje (przekompiluje) <strong>wszystkie programy</strong>, które go używają (impact analysis).</p>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">⬆️</span> PROMOTE</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Krok</th><th>Co się dzieje</th></tr></thead>
+                    <tbody>
+                        <tr><td>1. Walidacja</td><td>Sprawdzenie: czy generate się powiódł? Czy wszystkie wymagania spełnione?</td></tr>
+                        <tr><td>2. Approval</td><td>Jeśli wymagane — czeka na zatwierdzenie (np. QA lead)</td></tr>
+                        <tr><td>3. Copy</td><td>Kopiowanie source + load module na wyższy level</td></tr>
+                        <tr><td>4. Re-generate</td><td>Opcjonalnie: ponowna kompilacja na docelowym poziomie</td></tr>
+                        <tr><td>5. Hook / Event</td><td>Webhook do Jenkins/pipeline — trigger następnych kroków</td></tr>
+                        <tr><td>6. Audit</td><td>Zapis w historii: kto, kiedy, co, z jakiego na jaki level</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">⬇️</span> DEMOTE i REGRESS</h3>
+            <div class="g2">
+                <div style="background:#fef2f2;padding:22px;border-radius:14px;border-left:4px solid var(--red)">
+                    <h4>⬇️ DEMOTE</h4>
+                    <p>Cofnięcie na <strong>niższy level</strong> (np. QA→DEV). Używane gdy testy wykazały błędy. Komponent wraca do dewelopera do poprawy.</p>
+                </div>
+                <div style="background:#fff9e0;padding:22px;border-radius:14px;border-left:4px solid var(--gold)">
+                    <h4>🔙 REGRESS</h4>
+                    <p>Wycofanie z <strong>produkcji</strong> — przywraca poprzednią wersję load module'u. Krytyczna operacja z pełnym audytem.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- GENERATE / DEPLOY SZCZEGÓŁY -->
+<section id="generate" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🏗️ Generate & Deploy — szczegóły</h2><div class="line"></div><p>Jak ISPW automatyzuje budowanie i wdrażanie</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">🔧</span> Build Process — pod maską</h3>
+            <div class="term"><span class="c">// ISPW Generate uruchamia JCL automatycznie:</span>
+
+<span class="c">// 1. Dla programu COBOL z DB2:</span>
+<span class="y">STEP 1:</span> DB2 Precompile (DSNHPC)
+  → wyodrębnia SQL, tworzy DBRM
+<span class="y">STEP 2:</span> COBOL Compile (IGYCRCTL)
+  → generuje object module
+  → opcje: RENT, OPT(1), MAP, XREF
+<span class="y">STEP 3:</span> Link-Edit (IEWL)
+  → tworzy load module w docelowej LOADLIB
+<span class="y">STEP 4:</span> DB2 BIND PLAN / PACKAGE
+  → wiąże DBRM z planem DB2
+
+<span class="c">// ISPW automatycznie:</span>
+ • Wybiera odpowiedni JCL skeleton per typ
+ • Ustawia biblioteki per level (DEV/QA/STG/PRD)
+ • Zachowuje listing kompilacji
+ • Raportuje Return Code
+ • RC 0-4: <span class="g">SUCCESS</span>
+ • RC 8+:  <span class="r">FAILURE</span> (task zatrzymany)</div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🚀</span> Deploy Process</h3>
+            <p>Deploy w ISPW to kontrolowane przeniesienie na produkcję:</p>
+            <ol>
+                <li><strong>Pre-deploy validation</strong> — czy wszystkie taski w assignment mają status GENERATED?</li>
+                <li><strong>Impact analysis</strong> — co jest zmieniane? Jakie programy są dotknięte?</li>
+                <li><strong>Approval workflow</strong> — zatwierdzenie przez Change Management, Release Manager</li>
+                <li><strong>Backup</strong> — automatyczna kopia aktualnych load modules (do regress)</li>
+                <li><strong>Deployment</strong> — kopiowanie nowych load modules do PROD LOADLIB</li>
+                <li><strong>DB2 BIND</strong> — bind nowych DBRM (jeśli zmieniony SQL)</li>
+                <li><strong>CICS NEWCOPY</strong> — odświeżenie programu w regionie CICS (jeśli online)</li>
+                <li><strong>Verification</strong> — smoke test, monitoring</li>
+                <li><strong>Close</strong> — zamknięcie assignmentu, aktualizacja ticketów</li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<!-- INTEGRACJE -->
+<section id="integration">
+    <div class="container">
+        <div class="stitle fin"><h2>🔗 Integracje ISPW</h2><div class="line"></div><p>ISPW jako element pipeline CI/CD</p></div>
+
+        <div class="g3 fin">
+            <div class="fc"><div class="fi">🔧</div><h4>Jenkins</h4><p>BMC AMI DevX Plugin — trigger pipeline na promote/deploy, automatyczne testy</p></div>
+            <div class="fc"><div class="fi">🐙</div><h4>Git / GitHub</h4><p>Synchronizacja kodu mainframe z Git (ISPW-Git bridge). Branching model.</p></div>
+            <div class="fc"><div class="fi">📋</div><h4>Jira / ServiceNow</h4><p>Automatyczne linkowanie tasków do ticketów. Traceability.</p></div>
+            <div class="fc"><div class="fi">🔍</div><h4>SonarQube</h4><p>Statyczna analiza kodu COBOL. Quality gates w pipeline.</p></div>
+            <div class="fc"><div class="fi">🧪</div><h4>Topaz Total Test</h4><p>Automatyczne testy jednostkowe i funkcjonalne COBOL</p></div>
+            <div class="fc"><div class="fi">📊</div><h4>XL Release</h4><p>Orkiestracja release'ów cross-platform (mainframe + distributed)</p></div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🔄</span> Typowy CI/CD Pipeline z ISPW</h3>
+            <div class="term"><span class="c">// Jenkins Pipeline z ISPW — typowy flow:</span>
+
+<span class="b">1. TRIGGER</span>
+   Developer robi PROMOTE DEV → QA w ISPW
+   → ISPW wysyła <span class="y">webhook</span> do Jenkins
+
+<span class="b">2. JENKINS PIPELINE</span>
+   stage('Checkout') {
+       <span class="g">// Pobierz source z ISPW do workspace</span>
+       ispwOperation operation: 'GetAssignmentTaskList'
+   }
+   stage('Static Analysis') {
+       <span class="g">// Wyślij kod do SonarQube</span>
+       sonarScan language: 'cobol'
+   }
+   stage('Unit Tests') {
+       <span class="g">// Uruchom Topaz Total Test</span>
+       totaltest environment: 'QA', suite: 'regression'
+   }
+   stage('Quality Gate') {
+       <span class="g">// Sprawdź wynik SonarQube</span>
+       waitForQualityGate abortPipeline: true
+   }
+
+<span class="b">3. WYNIK</span>
+   ✅ PASS → assignment może przejść na STG
+   ❌ FAIL → automatyczny <span class="r">DEMOTE</span> QA → DEV
+            + komentarz w Jira z logiem błędów</div>
+        </div>
+    </div>
+</section>
+
+<!-- CLI / API -->
+<section id="cli" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>💻 ISPW CLI & REST API</h2><div class="line"></div><p>Automatyzacja i skryptowanie operacji ISPW</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">🌐</span> REST API — przykłady</h3>
+            <div class="term"><span class="c">// Pobranie listy tasków z assignmentu:</span>
+<span class="b">GET</span> /ispw/{srid}/assignments/{assignmentId}/tasks
+<span class="y">Authorization: Basic {token}</span>
+
+<span class="c">// Odpowiedź (JSON):</span>
+{
+  "tasks": [
+    {
+      "taskId": "<span class="g">7E54321</span>",
+      "componentName": "<span class="r">PAYROLL</span>",
+      "componentType": "COB",
+      "level": "<span class="b">DEV</span>",
+      "status": "<span class="y">CHECKED OUT</span>",
+      "owner": "DEVUSER1",
+      "generateStatus": "NONE"
+    }
+  ]
+}
+
+<span class="c">// Promote assignmentu:</span>
+<span class="b">POST</span> /ispw/{srid}/assignments/{assignmentId}/tasks/promote
+<span class="y">Content-Type: application/json</span>
+{
+  "level": "QA",
+  "runtimeConfiguration": "TPZP",
+  "changeType": "S",
+  "executionStatus": "I"
+}
+
+<span class="c">// Generate komponentu:</span>
+<span class="b">POST</span> /ispw/{srid}/assignments/{assignmentId}/tasks/generate
+{
+  "level": "DEV",
+  "runtimeConfiguration": "TPZP"
+}
+
+<span class="c">// Deployment (deploy to PRD):</span>
+<span class="b">POST</span> /ispw/{srid}/releases/{releaseId}/tasks/deploy
+{
+  "level": "PRD",
+  "dpEnvironment": "PROD"
+}</div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">⌨️</span> ISPW CLI (Topaz CLI)</h3>
+            <div class="term"><span class="c"># Logowanie do ISPW via CLI:</span>
+<span class="b">ispw-cli</span> login --host <span class="y">mainframe.company.com</span> \
+                  --port <span class="y">16196</span> \
+                  --user <span class="g">DEVUSER1</span> \
+                  --pass <span class="r">****</span>
+
+<span class="c"># Pobranie listy tasków:</span>
+<span class="b">ispw-cli</span> assignment tasks \
+         --assignment <span class="y">A000012345</span> \
+         --level <span class="g">DEV</span>
+
+<span class="c"># Promote:</span>
+<span class="b">ispw-cli</span> assignment promote \
+         --assignment <span class="y">A000012345</span> \
+         --level <span class="g">QA</span>
+
+<span class="c"># Generate konkretnego taska:</span>
+<span class="b">ispw-cli</span> task generate \
+         --task <span class="y">7E54321</span>
+
+<span class="c"># Pobierz source (do workspace dla SonarQube):</span>
+<span class="b">ispw-cli</span> task download \
+         --assignment <span class="y">A000012345</span> \
+         --level <span class="g">QA</span> \
+         --targetDir <span class="p">./src</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- ISPW vs ENDEVOR -->
+<section id="vs">
+    <div class="container">
+        <div class="stitle fin"><h2>⚖️ ISPW vs Endevor</h2><div class="line"></div><p>Porównanie dwóch głównych SCM na mainframe</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">📊</span> Porównanie</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Cecha</th><th>ISPW (BMC)</th><th>Endevor (Broadcom/CA)</th></tr></thead>
+                    <tbody>
+                        <tr><td>Producent</td><td>BMC (dawniej Compuware)</td><td>Broadcom (dawniej CA)</td></tr>
+                        <tr><td>Pełna nazwa</td><td>BMC AMI DevX SCM</td><td>CA Endevor SCM</td></tr>
+                        <tr><td>Model lifecycle</td><td>Level-based (DEV→QA→PRD)</td><td>Stage-based (environments)</td></tr>
+                        <tr><td>Kontener zmian</td><td>Assignment + Release</td><td>Package</td></tr>
+                        <tr><td>Locking model</td><td>Pessimistic (lock on checkout)</td><td>Pessimistic</td></tr>
+                        <tr><td>IDE</td><td>Topaz Workbench (Eclipse)</td><td>Eclipse plugin / Bridge for Git</td></tr>
+                        <tr><td>Git Integration</td><td>ISPW-Git sync (natywny)</td><td>Endevor Bridge for Git</td></tr>
+                        <tr><td>CI/CD</td><td>Jenkins plugin (BMC AMI DevX)</td><td>Jenkins plugin (Zowe CLI)</td></tr>
+                        <tr><td>API</td><td>REST API + CLI</td><td>REST API + Zowe CLI</td></tr>
+                        <tr><td>Impact Analysis</td><td>Wbudowana</td><td>Wbudowana</td></tr>
+                        <tr><td>UI na z/OS</td><td>ISPF panel</td><td>ISPF panel</td></tr>
+                        <tr><td>Krzywa uczenia</td><td>Łagodniejsza</td><td>Bardziej stroma</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BEST PRACTICES -->
+<section id="best" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>✅ Best Practices</h2><div class="line"></div><p>Sprawdzone praktyki pracy z ISPW</p></div>
+
+        <div class="g2 fin">
+            <div class="card" style="border-left:5px solid var(--green)">
+                <h3><span class="ic">✅</span> DO — rób tak</h3>
+                <ul>
+                    <li><strong>Zawsze twórz Assignment</strong> powiązany z ticketem (Jira/ServiceNow)</li>
+                    <li><strong>Generuj natychmiast</strong> po edycji — wyłapuj błędy kompilacji wcześnie</li>
+                    <li><strong>Używaj Impact Analysis</strong> przed promote — sprawdź zależności</li>
+                    <li><strong>Atomowe zmiany</strong> — jeden Assignment = jedna funkcjonalność</li>
+                    <li><strong>Testuj na QA</strong> zanim promujesz dalej</li>
+                    <li><strong>Włącz Git sync</strong> — backup i audyt w Git</li>
+                    <li><strong>Używaj Quality Gates</strong> — SonarQube + Total Test w pipeline</li>
+                    <li><strong>Dokumentuj</strong> — komentarz przy checkout i promote</li>
+                </ul>
+            </div>
+            <div class="card" style="border-left:5px solid var(--red)">
+                <h3><span class="ic">❌</span> DON'T — unikaj</h3>
+                <ul>
+                    <li><strong>Nie edytuj na QA/STG</strong> — zawsze wracaj do DEV</li>
+                    <li><strong>Nie obchodź lifecycle</strong> — nie promuj bez testów</li>
+                    <li><strong>Nie zostawiaj locków</strong> — rób checkout tylko gdy faktycznie edytujesz</li>
+                    <li><strong>Nie ignoruj RC</strong> — return code > 4 = problem do rozwiązania</li>
+                    <li><strong>Nie mieszaj assignmentów</strong> — nie łącz niezwiązanych zmian</li>
+                    <li><strong>Nie deployuj w piątek</strong> — chyba że musisz (emergency)</li>
+                    <li><strong>Nie pomijaj regress planu</strong> — zawsze miej plan rollbacku</li>
+                    <li><strong>Nie modyfikuj PROD bezpośrednio</strong> — tylko przez ISPW</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+    <div class="container">
+        <div class="stitle fin"><h2>❓ FAQ — Najczęściej zadawane pytania</h2><div class="line"></div></div>
+        <div class="fin">
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Jak cofnąć checkout (zwolnić lock) bez zapisywania zmian?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">Użyj operacji <strong>UNDO CHECKOUT</strong> (lub <strong>Fallback</strong>). Przywraca komponent do stanu sprzed checkout, zwalnia lock i usuwa Task z Assignment. W Topaz: Right-click → ISPW → Undo Checkout. W ISPF: opcja U przy taskach.</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Co jeśli Generate się nie powiedzie (RC > 4)?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">Task pozostaje na danym poziomie ze statusem <strong>FAILED GENERATE</strong>. Nie można go promować. Sprawdź listing kompilacji (SYSPRINT) w ISPW — pokaże dokładne błędy COBOL/link-edit. Popraw kod i ponów Generate. Jeśli problem jest z copybookiem lub zależnością, użyj Impact Analysis.</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Jak działa Impact Analysis?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi"><strong>Impact Analysis</strong> skanuje zależności: jeśli zmienisz copybook EMPREC, ISPW znajdzie wszystkie programy, które go COPY — i pokaże, które trzeba przekompilować. Można uruchomić IA manualnie lub ISPW automatycznie wyzwoli re-generate zależnych komponentów przy promote.</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Czym różni się Assignment od Release?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi"><strong>Assignment</strong> — mały kontener (1 feature/bug fix), zwykle 1-10 tasków. Może być promowany niezależnie.<br><strong>Release</strong> — duży kontener grupujący wiele Assignmentów. Wszystkie Assignmenty w Release muszą przejść lifecycle razem. Release zapewnia koordynację dużych wdrożeń (np. kwartalny release).</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Jak ISPW współpracuje z Git?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi"><strong>ISPW-Git sync</strong> umożliwia dwukierunkową synchronizację: każda operacja w ISPW (checkout, generate, promote) jest odzwierciedlona jako commit w Git. Developerzy mogą też pracować lokalnie w IDE z Git i pushować do ISPW. To daje najlepsze z dwóch światów: mainframe lifecycle + Git history/branching.</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Czym jest Runtime Configuration?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi"><strong>Runtime Configuration</strong> definiuje środowisko wykonania: jakie biblioteki (LOADLIB, COPYLIB, DBRMLIB) używa każdy level, jakie opcje kompilatora, jakie parametry DB2 BIND. Każda aplikacja może mieć różne runtime configs — np. oddzielne dla DEV i QA z różnymi bazami DB2.</div></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🧠 Quiz — ISPW</h2><div class="line"></div><p>Sprawdź swoją wiedzę!</p></div>
+        <div class="qbox fin">
+            <div class="qmeta">Pytanie <span id="qN">1</span>/<span id="qT">10</span> | Wynik: <span id="qS">0</span></div>
+            <div class="qq" id="qQ"></div>
+            <div class="qopts" id="qO"></div>
+            <div class="qfb" id="qFb"></div>
+            <div class="qnav">
+                <button class="qb nxt" id="qNxt" onclick="qNx()" disabled>Następne →</button>
+                <button class="qb res" id="qRst" onclick="qRe()">Od nowa 🔄</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <h3>🚀 ISPW — DevOps for Mainframe</h3>
+    <p>Interaktywny przewodnik edukacyjny</p>
+    <p style="margin-top:10px"><a href="#what">Co to ISPW</a> • <a href="#concepts">Koncepcje</a> • <a href="#lifecycle">Lifecycle</a> • <a href="#workflow">Workflow</a> • <a href="#cli">CLI/API</a></p>
+    <p style="font-size:.75rem;opacity:.5;margin-top:16px">© 2024</p>
+</footer>
+
+<script>
+// ══════════════════════
+// INTERACTIVE WORKFLOW
+// ══════════════════════
+const levels = ['DEV','QA','STG','PRD'];
+const levelColors = {DEV:'#3b82f6',QA:'#eab308',STG:'#a855f7',PRD:'#22c55e'};
+let tasks = [
+    {id:'7E54321',name:'PAYROLL.COB',type:'COBOL',level:0,generated:false},
+    {id:'7E54322',name:'TAXCALC.COB',type:'COBOL',level:0,generated:false},
+    {id:'7E54323',name:'EMPREC.COPY',type:'Copybook',level:0,generated:true},
+    {id:'7E54324',name:'PAYRPT.JCL',type:'JCL',level:0,generated:true}
+];
+
+function renderBoard(){
+    const board = document.getElementById('wfBoard');
+    board.innerHTML = '';
+    levels.forEach((lv,li)=>{
+        const col = document.createElement('div');
+        col.className = 'wf-col';
+        col.innerHTML = `<div class="wf-col-title" style="border-color:${levelColors[lv]};color:${levelColors[lv]}">${lv}</div>`;
+        tasks.filter(t=>t.level===li).forEach(t=>{
+            const task = document.createElement('div');
+            task.className = 'wf-task';
+            task.style.borderLeftColor = levelColors[lv];
+            task.innerHTML = `<div class="wf-id">${t.id}</div><div class="wf-name">${t.name}</div><div class="wf-type">${t.type} ${t.generated?'<span style="color:#4ade80">● Generated</span>':'<span style="color:#f87171">○ Not Generated</span>'}</div>`;
+            col.appendChild(task);
+        });
+        if(tasks.filter(t=>t.level===li).length===0){
+            col.innerHTML += '<div style="text-align:center;color:#4a5c70;font-size:.78rem;padding:20px">Empty</div>';
+        }
+        board.appendChild(col);
+    });
+}
+
+function wfLog(msg,color){
+    const log = document.getElementById('wfLog');
+    const d = document.createElement('div');
+    d.style.color = color||'#94a3b8';
+    const t = new Date().toLocaleTimeString();
+    d.textContent = `[${t}] ${msg}`;
+    log.prepend(d);
+    if(log.children.length>30) log.removeChild(log.lastChild);
+}
+
+function wfPromote(){
+    const maxLv = Math.max(...tasks.map(t=>t.level));
+    if(maxLv >= 3){wfLog('❌ Already at PRD — cannot promote further','#f87171');return}
+    const notGen = tasks.filter(t=>t.level===maxLv && !t.generated && t.type!=='JCL' && t.type!=='Copybook');
+    if(notGen.length>0){wfLog(`❌ Cannot promote — ${notGen.map(t=>t.name).join(', ')} not generated!`,'#f87171');return}
+    const from = levels[maxLv], to = levels[maxLv+1];
+    tasks.forEach(t=>{if(t.level===maxLv)t.level++});
+    wfLog(`⬆️ PROMOTE: ${from} → ${to} — ${tasks.length} tasks moved`,'#4ade80');
+    renderBoard();
+}
+
+function wfDemote(){
+    const maxLv = Math.max(...tasks.map(t=>t.level));
+    if(maxLv<=0){wfLog('❌ Already at DEV — cannot demote','#f87171');return}
+    const from = levels[maxLv], to = levels[maxLv-1];
+    tasks.forEach(t=>{if(t.level===maxLv)t.level--});
+    wfLog(`⬇️ DEMOTE: ${from} → ${to} — tasks returned for rework`,'#fbbf24');
+    renderBoard();
+}
+
+function wfGenerate(){
+    const notGen = tasks.filter(t=>!t.generated && t.type==='COBOL');
+    if(notGen.length===0){wfLog('✅ All COBOL components already generated','#4ade80');return}
+    notGen.forEach(t=>{
+        t.generated = true;
+        wfLog(`⚙️ GENERATE: ${t.name} — RC=0 (SUCCESS)`,'#22d3ee');
+    });
+    renderBoard();
+}
+
+function wfDeploy(){
+    const maxLv = Math.max(...tasks.map(t=>t.level));
+    if(maxLv!==2){wfLog('❌ Deploy only from STG level — promote to STG first','#f87171');return}
+    tasks.forEach(t=>t.level=3);
+    wfLog('🚀 DEPLOY: All tasks deployed to PRD — Assignment CLOSED','#4ade80');
+    renderBoard();
+}
+
+function wfReset(){
+    tasks=[
+        {id:'7E54321',name:'PAYROLL.COB',type:'COBOL',level:0,generated:false},
+        {id:'7E54322',name:'TAXCALC.COB',type:'COBOL',level:0,generated:false},
+        {id:'7E54323',name:'EMPREC.COPY',type:'Copybook',level:0,generated:true},
+        {id:'7E54324',name:'PAYRPT.JCL',type:'JCL',level:0,generated:true}
+    ];
+    wfLog('🔄 RESET — Assignment restored to initial state','#60a5fa');
+    renderBoard();
+}
+
+renderBoard();
+
+// ══════════════════════
+// ACCORDION
+// ══════════════════════
+function togAcc(h){const i=h.parentElement;const b=i.querySelector('.acc-b');const o=i.classList.contains('open');document.querySelectorAll('.acc-i').forEach(x=>{x.classList.remove('open');x.querySelector('.acc-b').style.maxHeight=null});if(!o){i.classList.add('open');b.style.maxHeight=b.scrollHeight+'px'}}
+
+// ══════════════════════
+// QUIZ
+// ══════════════════════
+const qD=[
+    {q:"Co to jest ISPW?",o:["Język programowania","Narzędzie SCM i lifecycle management na mainframe","Baza danych","System operacyjny"],a:1,e:"ISPW to narzędzie Source Code Management i Release Management dla z/OS, produkowane przez BMC."},
+    {q:"Co to Assignment w ISPW?",o:["Typ pliku","Kontener grupujący powiązane taski/zmiany","Opcja kompilatora","Polecenie JCL"],a:1,e:"Assignment to kontener (jak Pull Request) grupujący powiązane taski — zwykle jedna feature lub bug fix."},
+    {q:"Co się dzieje przy CHECKOUT?",o:["Program się kompiluje","Tworzony jest Task, komponent jest lockowany do edycji","Plik jest usuwany","Dane są backupowane"],a:1,e:"CHECKOUT tworzy Task w Assignment, lockuje komponent (zapobiega równoczesnym zmianom) i udostępnia go do edycji."},
+    {q:"Typowa kolejność levels w lifecycle?",o:["PRD → QA → DEV","DEV → QA → STG → PRD","QA → DEV → PRD","DEV → PRD"],a:1,e:"Standardowy lifecycle: DEV (development) → QA (testy) → STG (staging) → PRD (produkcja)."},
+    {q:"Co robi operacja GENERATE?",o:["Tworzy dokumentację","Kompiluje, linkuje i binduje komponent","Promuje na wyższy level","Wysyła email"],a:1,e:"Generate to automatyczny build: preprocess + compile (IGYCRCTL) + link-edit (IEWL) + DB2 bind. Tworzy load module."},
+    {q:"Co to PROMOTE?",o:["Edycja kodu","Przeniesienie komponentu na wyższy level (np. DEV→QA)","Usunięcie komponentu","Zmiana nazwy"],a:1,e:"PROMOTE przenosi taski na następny level w lifecycle — np. z DEV do QA po pomyślnym generate i testach."},
+    {q:"Co to DEMOTE?",o:["Cofnięcie na niższy level (np. QA→DEV)","Upgrade systemu","Kompilacja","Deployment"],a:0,e:"DEMOTE cofa taski na niższy level — używane gdy testy na QA wykazały błędy i developer musi poprawić kod."},
+    {q:"Co to REGRESS?",o:["Testy regresyjne","Wycofanie z produkcji (przywrócenie poprzedniej wersji)","Generowanie raportu","Reset hasła"],a:1,e:"REGRESS to rollback produkcyjny — przywraca poprzedni load module. Krytyczna operacja z pełnym audytem."},
+    {q:"Jaki plugin Jenkins integruje ISPW?",o:["COBOL Plugin","BMC AMI DevX Plugin","Maven Plugin","Docker Plugin"],a:1,e:"BMC AMI DevX Plugin for Jenkins (dawniej Compuware) — umożliwia trigger pipeline na operacjach ISPW (promote, deploy)."},
+    {q:"Czym różni się Assignment od Release?",o:["Nie ma różnicy","Assignment = mały (1 feature), Release = duży (wiele assignmentów razem)","Release jest mniejszy","Assignment jest dla produkcji"],a:1,e:"Assignment to mały kontener (1 feature). Release grupuje wiele Assignmentów do skoordynowanego wdrożenia."}
+];
+let qi=0,qs=0,qa=false;
+function qRn(){if(qi>=qD.length){qEn();return}const q=qD[qi];document.getElementById('qN').textContent=qi+1;document.getElementById('qT').textContent=qD.length;document.getElementById('qQ').textContent=q.q;const o=document.getElementById('qO');o.innerHTML='';q.o.forEach((t,i)=>{const d=document.createElement('div');d.className='qopt';d.textContent=t;d.onclick=()=>qAn(i);o.appendChild(d)});document.getElementById('qFb').className='qfb';document.getElementById('qNxt').disabled=true;document.getElementById('qNxt').style.display='';document.getElementById('qRst').style.display='none';qa=false}
+function qAn(i){if(qa)return;qa=true;const q=qD[qi],os=document.querySelectorAll('.qopt'),fb=document.getElementById('qFb');os[q.a].classList.add('ok');if(i===q.a){qs++;fb.textContent='✅ Brawo! '+q.e;fb.style.background='#d1fae5';fb.style.color='#065f46'}else{os[i].classList.add('no');fb.textContent='❌ Źle. '+q.e;fb.style.background='#fee2e2';fb.style.color='#991b1b'}fb.className='qfb show';document.getElementById('qS').textContent=qs;document.getElementById('qNxt').disabled=false;os.forEach(o=>o.style.pointerEvents='none')}
+function qNx(){qi++;qRn()}
+function qEn(){const p=Math.round(qs/qD.length*100);let e=p===100?'🏆':p>=70?'🌟':p>=40?'👍':'📚';let m=p===100?'Perfekcyjnie!':p>=70?'Świetnie!':p>=40?'Nieźle!':'Powtórz materiał!';document.getElementById('qQ').innerHTML=`${e} Wynik: <strong>${qs}/${qD.length}</strong> (${p}%)`;document.getElementById('qO').innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:16px;color:var(--muted)">${m}</div>`;document.getElementById('qFb').className='qfb';document.getElementById('qNxt').style.display='none';document.getElementById('qRst').style.display=''}
+function qRe(){qi=0;qs=0;document.getElementById('qS').textContent=0;qRn()}
+qRn();
+
+// SCROLL ANIM
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')})},{threshold:.06});
+document.querySelectorAll('.fin').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
+```
+
+## Zawartość strony — podsumowanie:
+
+### 📖 12 sekcji edukacyjnych:
+
+| Sekcja | Zawartość |
+|---|---|
+| **Co to ISPW** | Definicja, analogia do Git+Jenkins, 8 kluczowych funkcji |
+| **Koncepcje** | Hierarchia (Application→Stream→Assignment→Task→Component→Level), słownik 14 pojęć z analogiami Git, typy komponentów |
+| **Lifecycle** | Wizualizacja DEV→QA→STG→PRD, szczegóły każdego poziomu, Emergency Fix Path |
+| **Workflow** | 🎮 **Interaktywna symulacja** — board z 4 taskami, promowanie/cofanie/generate/deploy |
+| **Operacje** | CHECKOUT (tworzenie Task+Lock), GENERATE (build flow 6 kroków), PROMOTE (6-krokowa tabela), DEMOTE vs REGRESS |
+| **Generate & Deploy** | Szczegóły kompilacji pod maską, 9-krokowy Deploy Process |
+| **Integracje** | Jenkins pipeline z ISPW (pełny Jenkinsfile), SonarQube, Jira, Git sync, Total Test |
+| **CLI & REST API** | Przykłady REST (GET/POST), komendy CLI (login, promote, generate, download) |
+| **ISPW vs Endevor** | Tabela porównawcza 12 cech |
+| **Best Practices** | ✅ DO (8 punktów) vs ❌ DON'T (8 punktów) |
+| **FAQ** | 6 pytań w akordeonach (Undo Checkout, Failed Generate, Impact Analysis, Assignment vs Release, Git sync, Runtime Config) |
+| **Quiz** | 10 pytań z wyjaśnieniami |
+
+### 🛠️ Narzędzia interaktywne:
+1. **🎮 Assignment Board** — kanban z 4 kolumnami (DEV/QA/STG/PRD), 4 taski, przyciski Promote/Demote/Generate/Deploy z walidacją (np. nie można promować bez Generate)
+2. **🧠 Quiz 10 pytań**
+3. **Akordeonowe FAQ**
+4. **Fade-in animacje**
+5. **Responsywny design**
