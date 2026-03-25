@@ -1,0 +1,1323 @@
+```html
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARC JCL OPIS — Zmienne i Konfiguracja</title>
+    <style>
+        /* ===== RESET & ZMIENNE ===== */
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --accent2: #27ae60;
+            --accent3: #f39c12;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            scroll-behavior: smooth;
+        }
+
+        /* ===== NAWIGACJA ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        nav ul li a {
+            display: block;
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 18px 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        nav ul li a:hover {
+            background: rgba(52, 152, 219, 0.3);
+            border-bottom: 3px solid var(--secondary);
+            color: #3498db;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
+            text-align: center;
+            padding: 160px 20px 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "JOB DD DISP SYSIN PGM DSN";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 1.5rem;
+            color: rgba(52, 152, 219, 0.07);
+            word-wrap: break-word;
+            line-height: 2;
+            pointer-events: none;
+            padding: 20px;
+            letter-spacing: 10px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            text-shadow: 0 0 30px rgba(52, 152, 219, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #b0b8c8;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .hero .badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== KONTENERY ===== */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .section-title .underline {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ===== KARTY ===== */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card h3 .icon {
+            font-size: 2rem;
+        }
+
+        .card p, .card li {
+            color: #555;
+            font-size: 1.05rem;
+        }
+
+        /* ===== TABELE ===== */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: 30px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary), #34495e);
+            color: white;
+            padding: 16px 20px;
+            text-align: center;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 14px 20px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tr:hover {
+            background: #e8f4fd;
+        }
+
+        /* ===== BLOKI KODU / PRZYKŁADY ===== */
+        .example-box {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #00ff88;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            line-height: 2;
+            overflow-x: auto;
+            border-left: 5px solid #00ff88;
+        }
+
+        .example-box .comment {
+            color: #636e88;
+        }
+
+        .example-box .highlight {
+            color: #ff6b6b;
+            font-weight: 700;
+        }
+
+        .example-box .highlight2 {
+            color: #ffd93d;
+            font-weight: 700;
+        }
+
+        .example-box .highlight3 {
+            color: #6bcaff;
+            font-weight: 700;
+        }
+
+        /* ===== KROKI / PROCES ===== */
+        .steps {
+            position: relative;
+            padding-left: 50px;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--secondary), var(--accent));
+        }
+
+        .step {
+            position: relative;
+            margin-bottom: 30px;
+            background: var(--card-bg);
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .step::before {
+            content: attr(data-step);
+            position: absolute;
+            left: -42px;
+            top: 25px;
+            width: 36px;
+            height: 36px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .step h4 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1.15rem;
+        }
+
+        /* ===== INTERAKTYWNY KONWERTER ===== */
+        .converter-container {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: var(--radius);
+            padding: 50px 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .converter-container h3 {
+            color: white;
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+        }
+
+        .converter-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 14px 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            min-width: 200px;
+            transition: all 0.3s;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: white;
+            background: rgba(255,255,255,0.25);
+        }
+
+        .form-group select option {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-convert {
+            padding: 14px 40px;
+            background: white;
+            color: #764ba2;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-convert:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .result-item {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .result-item .label {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .result-item .value {
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-size: 1.4rem;
+            font-weight: 700;
+            word-break: break-all;
+        }
+
+        /* ===== ZASTOSOWANIA ===== */
+        .use-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .use-case {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 35px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid;
+            transition: transform 0.3s;
+        }
+
+        .use-case:hover {
+            transform: translateY(-5px);
+        }
+
+        .use-case:nth-child(1) { border-left-color: var(--accent); }
+        .use-case:nth-child(2) { border-left-color: var(--secondary); }
+        .use-case:nth-child(3) { border-left-color: var(--accent2); }
+        .use-case:nth-child(4) { border-left-color: var(--accent3); }
+
+        .use-case h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .use-case p {
+            color: var(--text-light);
+        }
+
+        /* ===== QUIZ ===== */
+        .quiz-container {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .quiz-question {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-option {
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.05rem;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--secondary);
+            background: #e8f4fd;
+        }
+
+        .quiz-option.correct {
+            border-color: var(--accent2);
+            background: #d4edda;
+            color: var(--accent2);
+        }
+
+        .quiz-option.wrong {
+            border-color: var(--accent);
+            background: #f8d7da;
+            color: var(--accent);
+        }
+
+        .quiz-feedback {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+
+        .quiz-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .quiz-btn {
+            padding: 12px 30px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .quiz-btn:hover { background: #2980b9; }
+        .quiz-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .quiz-score {
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        /* ===== WAŻNE INFORMACJE ===== */
+        .info-box {
+            background: linear-gradient(135deg, #e8f4fd, #d6eaf8);
+            border-left: 5px solid var(--secondary);
+            border-radius: 0 12px 12px 0;
+            padding: 25px 30px;
+            margin: 25px 0;
+        }
+
+        .info-box.warning {
+            background: linear-gradient(135deg, #fdf2e9, #fdebd0);
+            border-left-color: var(--accent3);
+        }
+
+        .info-box.success {
+            background: linear-gradient(135deg, #e8f8f0, #d5f5e3);
+            border-left-color: var(--accent2);
+        }
+
+        .info-box h4 {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #b0b8c8;
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        footer h3 {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        footer p {
+            max-width: 500px;
+            margin: 0 auto 20px;
+            font-size: 0.95rem;
+        }
+
+        footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        footer .footer-links a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        footer .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== ANIMACJE ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== RESPONSYWNOŚĆ ===== */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1rem; }
+            .section-title h2 { font-size: 1.8rem; }
+            .card { padding: 25px; }
+            nav ul li a { padding: 12px 14px; font-size: 0.8rem; }
+            .converter-container { padding: 30px 20px; }
+            .quiz-options { grid-template-columns: 1fr; }
+            .steps { padding-left: 40px; }
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        /* Ukrycie scrolla na tabeli */
+        .table-wrapper::-webkit-scrollbar {
+            height: 8px;
+        }
+        .table-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: #bbb;
+            border-radius: 4px;
+        }
+
+        /* Listy */
+        .card ul, .card ol {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+
+        .card ul li, .card ol li {
+            margin-bottom: 8px;
+        }
+
+        .formula {
+            background: #f8f9fa;
+            border: 2px dashed #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            margin: 20px 0;
+            color: var(--primary);
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAWIGACJA -->
+    <nav>
+        <ul>
+            <li><a href="#intro">Wprowadzenie</a></li>
+            <li><a href="#jcl-basics">Podstawy JCL</a></li>
+            <li><a href="#variables">Zmienne</a></li>
+            <li><a href="#config">Konfiguracja</a></li>
+            <li><a href="#examples">Przykłady</a></li>
+            <li><a href="#best-practices">Best Practices</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+        <h1>🖥️ ARC JCL OPIS</h1>
+        <p>Kompletny przewodnik po zmiennych i konfiguracji w JCL — dla systemów mainframe IBM z użyciem ARC.</p>
+        <div class="badges">
+            <span class="badge">📌 JOB</span>
+            <span class="badge">📋 DD</span>
+            <span class="badge">⚙️ PGM</span>
+            <span class="badge">🔄 DSN</span>
+        </div>
+    </header>
+
+    <!-- WPROWADZENIE -->
+    <section id="intro">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Czym jest JCL i ARC?</h2>
+                <div class="underline"></div>
+                <p>Podstawy języka sterowania zadaniami</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">📘</span> Definicja JCL</h3>
+                <p><strong>JCL (Job Control Language)</strong> to język używany w systemach mainframe IBM do opisywania zadań (jobów) wykonywanych przez system operacyjny z/OS. Pozwala określić:</p>
+                <ul>
+                    <li>Jakie programy mają być uruchomione</li>
+                    <li>Jakie zasoby (pliki, urządzenia) są potrzebne</li>
+                    <li>Jakie parametry sterują wykonaniem</li>
+                </ul>
+
+                <div class="info-box" style="margin-top: 20px;">
+                    <h4>💡 Co to jest ARC?</h4>
+                    <p><strong>ARC (Advanced Resource Control)</strong> to narzędzie lub warstwa zarządzająca zasobami w środowisku mainframe, która często rozszerza możliwości JCL o dodatkowe zmienne, makra i mechanizmy kontroli zasobów.</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🧩</span> Struktura JOB-a JCL</h3>
+                <p>Każdy job składa się z sekcji rozpoczynających się od operatora "//". Najważniejsze to:</p>
+                <ul>
+                    <li><strong>// JOB</strong> — definicja zadania (nazwa, parametry użytkownika, priorytet)</li>
+                    <li><strong>// EXEC</strong> — wykonanie programu lub procedury</li>
+                    <li><strong>// DD</strong> — definicja danych (Dataset Definition) — pliki wejściowe/wyjściowe</li>
+                </ul>
+
+                <div class="example-box">
+                    <span class="comment">// Przykład prostego JOB-a</span><br>
+                    //MYJOB   JOB (ACCT),'DESC',CLASS=A,MSGCLASS=X<br>
+                    //STEP1   EXEC PGM=IEFBR14<br>
+                    //DD1     DD DSN=MY.DATASET.NAME,DISP=(NEW,CATLG),<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SPACE=(TRK,(1,1)),DCB=(RECFM=FB,LRECL=80)
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PODSTAWY JCL -->
+    <section id="jcl-basics" style="background: #eef2f7;">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🧾 Podstawowe elementy JCL</h2>
+                <div class="underline"></div>
+                <p>Kluczowe instrukcje i ich znaczenie</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🏷️</span> JOB — Definicja zadania</h3>
+                <p>Instrukcja rozpoczynająca każdy job. Określa parametry globalne.</p>
+                <div class="example-box">
+                    //NAZWA_JOB  JOB (numer_konta),'OPIS',<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CLASS=A,MSGCLASS=X,NOTIFY=&amp;SYSUID
+                </div>
+                <p><strong>Najważniejsze parametry:</strong></p>
+                <ul>
+                    <li><code>CLASS</code> — klasa joba (wpływa na priorytet i alokację zasobów)</li>
+                    <li><code>MSGCLASS</code> — klasa wydruku komunikatów</li>
+                    <li><code>NOTIFY</code> — użytkownik do powiadomienia po zakończeniu</li>
+                    <li><code>&amp;SYSUID</code> — zmienna systemowa = ID aktualnego użytkownika</li>
+                </ul>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">▶️</span> EXEC — Wykonanie kroku</h3>
+                <p>Uruchamia program lub procedurę w ramach joba.</p>
+                <div class="example-box">
+                    //KROK1   EXEC PGM=IEBGENER<br>
+                    //KROK2   EXEC PROC=MOJA_PROCEDURA
+                </div>
+                <p><strong>PGM</strong> — nazwa programu (np. IEFBR14, SORT, IEBGENER)<br>
+                <strong>PROC</strong> — nazwa procedury JCL (może zawierać wiele kroków)</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">💾</span> DD — Definicja zbioru danych</h3>
+                <p>Określa dane wejściowe/wyjściowe dla kroku.</p>
+                <div class="example-box">
+                    //WEJSCIE DD DSN=PLIK.WEJSCIOWY,DISP=SHR<br>
+                    //WYJSCIE DD DSN=PLIK.WYJSCIOWY,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DISP=(NEW,CATLG,DELETE),<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SPACE=(CYL,(5,2)),<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)
+                </div>
+                <p><strong>Najważniejsze parametry DD:</strong></p>
+                <ul>
+                    <li><code>DSN</code> — nazwa datasetu</li>
+                    <li><code>DISP</code> — dyspozycja (np. SHR, NEW, OLD, MOD)</li>
+                    <li><code>SPACE</code> — alokacja miejsca</li>
+                    <li><code>DCB</code> — charakterystyka bloku danych (format rekordu, długość itp.)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ZMIENNE -->
+    <section id="variables">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🔄 Zmienne w JCL i ARC</h2>
+                <div class="underline"></div>
+                <p>Jak używać symboli i makr do elastycznej konfiguracji</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🔠</span> Symbole JCL (Symbolic Parameters)</h3>
+                <p>Zmienne w JCL definiuje się za pomocą <strong>// SET</strong> lub jako parametry procedur.</p>
+                <div class="example-box">
+                    // SET ENV=PROD<br>
+                    // SET DATA='20240501'<br>
+                    //STEP1 EXEC PGM=MYPGM<br>
+                    //INPUT DD DSN=MY.&amp;ENV..DATA.&amp;DATA,DISP=SHR
+                </div>
+                <p>Powyższy przykład po podstawieniu staje się:<br>
+                <code>//INPUT DD DSN=MY.PROD.DATA.20240501,DISP=SHR</code></p>
+
+                <div class="info-box success" style="margin-top: 20px;">
+                    <h4>✅ Reguły nazewnictwa</h4>
+                    <p>- Nazwy zaczynają się od litery<br>
+                    - Maksymalnie 8 znaków<br>
+                    - Używane z prefiksem <strong>&amp;</strong> przy odwoływaniu się<br>
+                    - Wartości w cudzysłowach jeśli zawierają spacje lub specjalne znaki</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🔧</span> Zmienne ARC</h3>
+                <p>ARC często wprowadza własne zmienne systemowe lub umożliwia definiowanie zmiennych środowiskowych dla lepszego zarządzania zasobami.</p>
+                <div class="example-box">
+                    // SET &amp;ARC_POOL='HIGH_PERFORMANCE'<br>
+                    // SET &amp;ARC_TIMEOUT=3600<br>
+                    //*<br>
+                    //* Użycie w komentarzu lub przekazanie do programu przez PARM<br>
+                    //STEP1 EXEC PGM=ARCCTRL,PARM='POOL=&amp;ARC_POOL,TIMEOUT=&amp;ARC_TIMEOUT'
+                </div>
+
+                <div class="info-box warning" style="margin-top: 20px;">
+                    <h4>⚠️ Uwaga</h4>
+                    <p>Dokładna składnia i dostępne zmienne zależą od implementacji ARC w danym środowisku. Zawsze sprawdź dokumentację lokalną!</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">📦</span> Zmienne systemowe (predefiniowane)</h3>
+                <p>JCL oferuje wbudowane symbole systemowe:</p>
+                <div class="table-wrapper" style="margin-top: 20px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Zmienna</th>
+                                <th>Opis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>&amp;SYSUID</td>
+                                <td>ID aktualnego użytkownika</td>
+                            </tr>
+                            <tr>
+                                <td>&amp;SYSNAME</td>
+                                <td>Nazwa systemu</td>
+                            </tr>
+                            <tr>
+                                <td>&amp;SYSDATE</td>
+                                <td>Data w formacie YYDDD (rok/dzień roku)</td>
+                            </tr>
+                            <tr>
+                                <td>&amp;SYSTIME</td>
+                                <td>Czas w formacie HHMMSS</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="example-box" style="margin-top: 20px;">
+                    //OUTPUT DD DSN=LOG.&amp;SYSUID..&amp;SYSDATE..&amp;SYSTIME,DISP=(NEW,CATLG)
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KONFIGURACJA -->
+    <section id="config" style="background: #eef2f7;">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>⚙️ Konfiguracja z użyciem zmiennych</h2>
+                <div class="underline"></div>
+                <p>Jak tworzyć elastyczne i wielokrotnie używalne joby</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">📄</span> Procedury z parametrami</h3>
+                <p>Procedury pozwalają na ponowne użycie kodu JCL. Parametry są przekazywane jak zmienne.</p>
+                <div class="example-box">
+                    <span class="comment">// Definicja procedury (np. w bibliotece PROCLIB)</span><br>
+                    //MYPROC PROC ENV=TEST,OWNER=&amp;SYSUID<br>
+                    //STEP1  EXEC PGM=IEFBR14<br>
+                    //DD1    DD DSN=DATA.&amp;ENV..&amp;OWNER,DISP=(NEW,CATLG),<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SPACE=(TRK,1)<br>
+                    //       PEND<br><br>
+                    
+                    <span class="comment">// Użycie procedury w jobie</span><br>
+                    //JOB1   JOB ...<br>
+                    //RUN    EXEC MYPROC,ENV=PROD,OWNER=OPERATOR
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🔁</span> Dynamiczna konfiguracja w ARC</h3>
+                <p>W środowisku ARC często można przekazywać zmienne kontrolujące np. limity zasobów, profile wydajnościowe czy ścieżki logowania.</p>
+                <div class="example-box">
+                    // SET &amp;MAX_CPU=300<br>
+                    // SET &amp;LOG_LEVEL=DEBUG<br>
+                    // SET &amp;POOL_NAME='ARC_BATCH_LOW'<br><br>
+                    
+                    //STEP1 EXEC PGM=ARCRUN,PARM=('MAXCPU=&amp;MAX_CPU','LOG=&amp;LOG_LEVEL')<br>
+                    //CTL    DD *<br>
+                    POOL=&amp;POOL_NAME<br>
+                    TIMEOUT=3600<br>
+                    /*
+                </div>
+
+                <div class="info-box" style="margin-top: 20px;">
+                    <h4>💡 Porada</h4>
+                    <p>Używaj zmiennych do oddzielenia logiki od konfiguracji — ułatwia to testowanie, migrację między środowiskami (DEV/TEST/PROD) i utrzymanie kodu.</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🗂️</span> Konfiguracja zbiorów danych</h3>
+                <p>Zmienne idealnie nadają się do konstruowania nazw datasetów w zależności od środowiska, daty, użytkownika itp.</p>
+                <div class="example-box">
+                    // SET &amp;CLIENT='ABC'<br>
+                    // SET &amp;DATE='202405'<br>
+                    // SET &amp;ENV='PROD'<br><br>
+                    
+                    //INPUT  DD DSN=CLIENT.&amp;CLIENT..SOURCE.&amp;DATE,DISP=SHR<br>
+                    //OUTPUT DD DSN=CLIENT.&amp;CLIENT..ARCHIVE.&amp;ENV..&amp;DATE,DISP=(NEW,CATLG),<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SPACE=(CYL,(10,5))
+                </div>
+                <p>Wynik: <code>CLIENT.ABC.ARCHIVE.PROD.202405</code></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRZYKŁADY -->
+    <section id="examples">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🧪 Praktyczne przykłady</h2>
+                <div class="underline"></div>
+                <p>Gotowe szablony z użyciem zmiennych</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">📊</span> Job archiwizujący z dynamiczną nazwą</h3>
+                <div class="example-box">
+                    //ARCHIVE JOB (ACCT),'ARCHIVE DATA',CLASS=A,MSGCLASS=X<br>
+                    // SET &amp;SYSTEM='SALES'<br>
+                    // SET &amp;DATE=&amp;SYSDATE<br>
+                    // SET &amp;OWNER=&amp;SYSUID<br><br>
+                    
+                    //STEP01 EXEC PGM=ADRDSSU,PARM='DUMP'<br>
+                    //SYSPRINT DD SYSOUT=*<br>
+                    //OUT      DD DSN=BACKUP.&amp;SYSTEM..&amp;DATE..&amp;OWNER,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DISP=(NEW,CATLG),UNIT=TAPE,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LABEL=(1,SL),VOL=(,,,10)<br>
+                    //SYSIN    DD *<br>
+                      DUMP DATASET(INCLUDE('ACTIVE.&amp;SYSTEM.*')) -<br>
+                           OUTDDNAME(OUT)<br>
+                    /*
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">📈</span> Job z konfiguracją środowiska ARC</h3>
+                <div class="example-box">
+                    //BATCHJOB JOB ...<br>
+                    // SET &amp;ARC_PROFILE='HIGH_MEM'<br>
+                    // SET &amp;TIMEOUT='7200'<br>
+                    // SET &amp;LOG_DEST='SYSOUT'<br><br>
+                    
+                    //STEP1   EXEC PGM=ARC_DISPATCH,PARM='PROFILE=&amp;ARC_PROFILE,TIMEOUT=&amp;TIMEOUT'<br>
+                    //ARCCONF DD *<br>
+                    LOGGING=&amp;LOG_DEST<br>
+                    ALERT_ON_ERROR=YES<br>
+                    RESOURCE_POOL=BATCH_CRITICAL<br>
+                    /*<br>
+                    //INPUT   DD DSN=SOURCE.DATA,DISP=SHR<br>
+                    //OUTPUT  DD DSN=TARGET.&amp;ARC_PROFILE..&amp;SYSDATE,DISP=(NEW,CATLG)
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🔁</span> Uniwersalna procedura backupu</h3>
+                <div class="example-box">
+                    <span class="comment">// W bibliotece PROCLIB:</span><br>
+                    //BACKUP PROC DSN='',UNIT='DISK',VOL=''<br>
+                    //STEP1  EXEC PGM=IEBGENER<br>
+                    //SYSPRINT DD SYSOUT=*<br>
+                    //SYSUT1 DD DSN=&amp;DSN,DISP=SHR<br>
+                    //SYSUT2 DD DSN=&amp;DSN..BK&amp;SYSDATE,DISP=(NEW,CATLG),<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UNIT=&amp;UNIT,VOL=&amp;VOL,SPACE=(TRK,(10,5))<br>
+                    //SYSIN  DD DUMMY<br>
+                    //       PEND<br><br>
+                    
+                    <span class="comment">// Użycie:</span><br>
+                    //RUN    EXEC BACKUP,DSN='USER.DATA.FILE',UNIT='TAPE',VOL='(SER=TAPE01)'
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BEST PRACTICES -->
+    <section id="best-practices" style="background: #eef2f7;">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🏆 Best Practices</h2>
+                <div class="underline"></div>
+                <p>Zalecenia i pułapki do uniknięcia</p>
+            </div>
+
+            <div class="use-cases fade-in">
+                <div class="use-case">
+                    <h4>✅ Nadawaj znaczące nazwy</h4>
+                    <p>Używaj nazw zmiennych, które mówią, co reprezentują: <code>&amp;ENV</code>, <code>&amp;CLIENT_ID</code>, <code>&amp;MAX_RECORDS</code>.</p>
+                </div>
+                <div class="use-case">
+                    <h4>✅ Używaj domyślnych wartości</h4>
+                    <p>Definiuj wartości domyślne w procedurach, aby job działał nawet bez przekazania parametrów.</p>
+                </div>
+                <div class="use-case">
+                    <h4>✅ Dokumentuj zmienne</h4>
+                    <p>Umieszczaj komentarze wyjaśniające przeznaczenie każdej zmiennej i dopuszczalne wartości.</p>
+                </div>
+                <div class="use-case">
+                    <h4>❌ Unikaj hardcoded wartości</h4>
+                    <p>Nigdy nie wpisuj na stałe nazw datasetów, ścieżek czy limitów — używaj zmiennych!</p>
+                </div>
+                <div class="use-case">
+                    <h4>❌ Nie przekraczaj limitu 8 znaków</h4>
+                    <p>Nazwy symboli JCL są ograniczone do 8 znaków — planuj nazewnictwo odpowiednio.</p>
+                </div>
+                <div class="use-case">
+                    <h4>⚠️ Testuj podstawienia</h4>
+                    <p>Zawsze sprawdzaj, jak job wygląda po podstawieniu zmiennych (można użyć JCL checker lub emulatora).</p>
+                </div>
+            </div>
+
+            <div class="card fade-in" style="margin-top: 30px;">
+                <h3><span class="icon">📝</span> Szablon dobrego joba z ARC</h3>
+                <div class="example-box">
+                    //MYJOB   JOB (ACCT),'OPIS',CLASS=A,MSGCLASS=X,NOTIFY=&amp;SYSUID<br>
+                    //*<br>
+                    //* === KONFIGURACJA ŚRODOWISKA ===<br>
+                    // SET &amp;ENV='TEST'          /* TEST/PROD/UAT */<br>
+                    // SET &amp;CLIENT='DEFAULT'   /* ID klienta */<br>
+                    // SET &amp;ARC_POOL='STANDARD'/* Profil zasobów ARC */<br>
+                    // SET &amp;TIMEOUT=3600       /* Limit czasu w sekundach */<br>
+                    //*<br>
+                    //STEP1   EXEC PGM=ARCMAIN,PARM='POOL=&amp;ARC_POOL,TIMEOUT=&amp;TIMEOUT'<br>
+                    //SYSOUT  DD SYSOUT=*<br>
+                    //INPUT   DD DSN=SOURCE.&amp;CLIENT..&amp;ENV,DISP=SHR<br>
+                    //OUTPUT  DD DSN=TARGET.&amp;CLIENT..&amp;ENV..&amp;SYSDATE,DISP=(NEW,CATLG)<br>
+                    //ARCCFG  DD *<br>
+                    LOG_LEVEL=INFO<br>
+                    ALERT_EMAIL=admin@company.com<br>
+                    /*
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="quiz">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🧠 Quiz — Sprawdź swoją wiedzę!</h2>
+                <div class="underline"></div>
+                <p>Odpowiedz na pytania dotyczące JCL i zmiennych</p>
+            </div>
+
+            <div class="quiz-container fade-in">
+                <div class="quiz-score">Pytanie <span id="qNumber">1</span> / <span id="qTotal">6</span> &nbsp;&nbsp;|&nbsp;&nbsp; Wynik: <span id="qScore">0</span></div>
+                <hr style="margin: 15px 0; border: 1px solid #eee;">
+                <div class="quiz-question" id="quizQuestion"></div>
+                <div class="quiz-options" id="quizOptions"></div>
+                <div class="quiz-feedback" id="quizFeedback"></div>
+                <div class="quiz-nav">
+                    <button class="quiz-btn" id="nextBtn" onclick="nextQuestion()" disabled>Następne pytanie →</button>
+                    <button class="quiz-btn" id="restartBtn" onclick="restartQuiz()" style="display:none; background: var(--accent);">Zacznij od nowa 🔄</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PODSUMOWANIE -->
+    <section id="summary" style="background: #eef2f7;">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>📝 Podsumowanie</h2>
+                <div class="underline"></div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🎯</span> Kluczowe wnioski</h3>
+                <ol>
+                    <li><strong>JCL</strong> to język sterowania zadaniami w środowisku mainframe IBM.</li>
+                    <li><strong>ARC</strong> to często warstwa zarządzania zasobami rozszerzająca możliwości JCL.</li>
+                    <li><strong>Zmienne (symbole)</strong> definiuje się przez <code>// SET</code> i używa z prefiksem <code>&amp;</code>.</li>
+                    <li><strong>Procedury</strong> pozwalają na wielokrotne użycie kodu i przyjmują parametry jak zmienne.</li>
+                    <li><strong>Zmienne systemowe</strong> jak <code>&amp;SYSUID</code>, <code>&amp;SYSDATE</code> są predefiniowane.</li>
+                    <li><strong>Best practices:</strong> używaj znaczących nazw, domyślnych wartości, unikaj hardcoded wartości.</li>
+                </ol>
+
+                <div class="info-box success" style="margin-top: 20px;">
+                    <h4>🚀 Wskazówka</h4>
+                    <p>Zacznij od małego — przekształć jeden istniejący job, zastępując powtarzające się wartości zmiennymi. Potem twórz procedury. Zobaczysz, jak bardzo uprości to Twoją pracę!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <h3>🖥️ ARC JCL OPIS — Zmienne i Konfiguracja</h3>
+        <p>Kompletny przewodnik dla administratorów i programistów mainframe.</p>
+        <div class="footer-links">
+            <a href="#intro">Wprowadzenie</a>
+            <a href="#variables">Zmienne</a>
+            <a href="#config">Konfiguracja</a>
+            <a href="#examples">Przykłady</a>
+            <a href="#quiz">Quiz</a>
+        </div>
+        <p style="font-size: 0.85rem; opacity: 0.6;">© 2024 — Projekt edukacyjny | Wszelkie prawa zastrzeżone</p>
+    </footer>
+
+    <!-- ===== SKRYPTY ===== -->
+    <script>
+        // =====================
+        // QUIZ
+        // =====================
+        const questions = [
+            {
+                q: "Jak poprawnie zdefiniować zmienną w JCL?",
+                options: ["// VAR NAME=VALUE", "// DEFINE &NAME VALUE", "// SET NAME=VALUE", "// PARAMETER NAME=VALUE"],
+                correct: 2,
+                explanation: "Poprawna składnia to: // SET NAZWA=WARTOŚĆ. Np. // SET ENV=PROD"
+            },
+            {
+                q: "Jak odwołać się do zmiennej w treści JCL?",
+                options: ["$NAME", "&NAME", "{NAME}", "%%NAME"],
+                correct: 1,
+                explanation: "Zmienne (symbole) odwołuje się z prefiksem &. Np. DSN=MY.&ENV.DATA"
+            },
+            {
+                q: "Co oznacza zmienna systemowa &SYSUID?",
+                options: ["Nazwę systemu", "Bieżącą datę", "ID użytkownika", "Czas systemowy"],
+                correct: 2,
+                explanation: "&SYSUID zwraca identyfikator użytkownika, który submitował job."
+            },
+            {
+                q: "Ile znaków może mieć nazwa zmiennej w JCL?",
+                options: ["8", "16", "32", "Nie ma limitu"],
+                correct: 0,
+                explanation: "Nazwy symboli JCL są ograniczone do maksymalnie 8 znaków."
+            },
+            {
+                q: "Co robi instrukcja // EXEC PGM=...?",
+                options: ["Definiuje dataset", "Uruchamia program", "Ustawia zmienną", "Kończy job"],
+                correct: 1,
+                explanation: "// EXEC uruchamia krok joba — program lub procedurę."
+            },
+            {
+                q: "Jakie jest typowe zastosowanie zmiennych w środowisku ARC?",
+                options: ["Zmiana kolorów terminala", "Sterowanie zasobami i profilami", "Automatyczne formatowanie kodu", "Generowanie grafik"],
+                correct: 1,
+                explanation: "ARC to Advanced Resource Control — zmienne służą do przekazywania parametrów zasobów, limitów, profili wydajnościowych itp."
+            }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+        let answered = false;
+
+        function renderQuestion() {
+            if (currentQ >= questions.length) {
+                showFinalScore();
+                return;
+            }
+
+            const q = questions[currentQ];
+            document.getElementById('qNumber').textContent = currentQ + 1;
+            document.getElementById('qTotal').textContent = questions.length;
+            document.getElementById('quizQuestion').textContent = q.q;
+            
+            const optionsDiv = document.getElementById('quizOptions');
+            optionsDiv.innerHTML = '';
+            q.options.forEach((opt, i) => {
+                const btn = document.createElement('div');
+                btn.className = 'quiz-option';
+                btn.textContent = opt;
+                btn.addEventListener('click', () => selectAnswer(i));
+                optionsDiv.appendChild(btn);
+            });
+
+            document.getElementById('quizFeedback').className = 'quiz-feedback';
+            document.getElementById('quizFeedback').textContent = '';
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('nextBtn').style.display = 'inline-block';
+            document.getElementById('restartBtn').style.display = 'none';
+            answered = false;
+        }
+
+        function selectAnswer(index) {
+            if (answered) return;
+            answered = true;
+
+            const q = questions[currentQ];
+            const options = document.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById('quizFeedback');
+
+            options[q.correct].classList.add('correct');
+            
+            if (index === q.correct) {
+                score++;
+                feedback.textContent = '✅ Brawo! ' + q.explanation;
+                feedback.style.background = '#d4edda';
+                feedback.style.color = '#155724';
+            } else {
+                options[index].classList.add('wrong');
+                feedback.textContent = '❌ Niestety nie. ' + q.explanation;
+                feedback.style.background = '#f8d7da';
+                feedback.style.color = '#721c24';
+            }
+
+            feedback.className = 'quiz-feedback show';
+            document.getElementById('qScore').textContent = score;
+            document.getElementById('nextBtn').disabled = false;
+
+            // Zablokuj klikanie
+            options.forEach(o => o.style.pointerEvents = 'none');
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            if (currentQ >= questions.length) {
+                showFinalScore();
+            } else {
+                renderQuestion();
+            }
+        }
+
+        function showFinalScore() {
+            const container = document.querySelector('.quiz-container');
+            const percent = Math.round(score / questions.length * 100);
+            let emoji, msg;
+            
+            if (percent === 100) { emoji = '🏆'; msg = 'Perfekcyjnie! Jesteś ekspertem JCL!'; }
+            else if (percent >= 75) { emoji = '🌟'; msg = 'Świetny wynik! Świetnie znasz temat!'; }
+            else if (percent >= 50) { emoji = '👍'; msg = 'Nieźle! Warto powtórzyć materiał.'; }
+            else { emoji = '📚'; msg = 'Przeczytaj przewodnik jeszcze raz i spróbuj ponownie!'; }
+
+            document.getElementById('quizQuestion').innerHTML = `${emoji} Wynik końcowy: <strong>${score} / ${questions.length}</strong> (${percent}%)`;
+            document.getElementById('quizOptions').innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 20px; font-size: 1.2rem; color: var(--text-light);">${msg}</div>`;
+            document.getElementById('quizFeedback').className = 'quiz-feedback';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('restartBtn').style.display = 'inline-block';
+        }
+
+        function restartQuiz() {
+            currentQ = 0;
+            score = 0;
+            document.getElementById('qScore').textContent = 0;
+            renderQuestion();
+        }
+
+        renderQuestion();
+
+        // =====================
+        // ANIMACJE SCROLL
+        // =====================
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+
+</body>
+</html>
+```
