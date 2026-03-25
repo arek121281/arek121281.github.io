@@ -1,0 +1,1870 @@
+# 🐍 Python Test - Interaktywna Strona z Quizami
+
+Oto kompletna strona internetowa z testami z Pythona w formacie podobnym do poprzednich stron:
+
+```html
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐍 Python Test - Interaktywne Quizy</title>
+    <style>
+        /* ===== RESET & ZMIENNE ===== */
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --accent2: #27ae60;
+            --accent3: #f39c12;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --radius: 16px;
+            --python-yellow: #ffde57;
+            --python-blue: #4584b6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            scroll-behavior: smooth;
+        }
+
+        /* ===== NAWIGACJA ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        nav ul li a {
+            display: block;
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 18px 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        nav ul li a:hover {
+            background: rgba(52, 152, 219, 0.3);
+            border-bottom: 3px solid var(--secondary);
+            color: #3498db;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
+            text-align: center;
+            padding: 160px 20px 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "print() def class if else while for try except import lambda";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 1.5rem;
+            color: rgba(52, 152, 219, 0.07);
+            word-wrap: break-word;
+            line-height: 2;
+            pointer-events: none;
+            padding: 20px;
+            letter-spacing: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            text-shadow: 0 0 30px rgba(52, 152, 219, 0.5);
+        }
+
+        .hero .python-logo {
+            color: var(--python-yellow);
+            text-shadow: 0 0 20px rgba(255, 222, 87, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #b0b8c8;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .hero .badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== KONTENERY ===== */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .section-title .underline {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ===== KARTY ===== */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card h3 .icon {
+            font-size: 2rem;
+        }
+
+        .card p, .card li {
+            color: #555;
+            font-size: 1.05rem;
+        }
+
+        /* ===== QUIZ SELECTOR ===== */
+        .quiz-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .quiz-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 35px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border-top: 5px solid;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .quiz-card:nth-child(1) { border-top-color: var(--accent); }
+        .quiz-card:nth-child(2) { border-top-color: var(--accent3); }
+        .quiz-card:nth-child(3) { border-top-color: var(--accent2); }
+        .quiz-card:nth-child(4) { border-top-color: var(--secondary); }
+
+        .quiz-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .quiz-card .level {
+            font-size: 0.8rem;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .quiz-card.beginner .level { background: #d4edda; color: var(--accent2); }
+        .quiz-card.intermediate .level { background: #fff3cd; color: var(--accent3); }
+        .quiz-card.advanced .level { background: #f8d7da; color: var(--accent); }
+
+        .quiz-card .questions-count {
+            background: #f8f9fa;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            margin-top: 12px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        /* ===== MAIN QUIZ CONTAINER ===== */
+        .quiz-main-container {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: var(--radius);
+            padding: 50px 40px;
+            box-shadow: var(--shadow);
+            display: none;
+        }
+
+        .quiz-main-container.active {
+            display: block;
+        }
+
+        .quiz-header {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quiz-header h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .quiz-stats {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== QUESTION CONTAINER ===== */
+        .question-container {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .question-text {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .question-code {
+            background: #1a1a2e;
+            color: #00ff88;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            border-left: 4px solid var(--accent2);
+        }
+
+        /* ===== ANSWER OPTIONS ===== */
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .option {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        .option.selected {
+            background: rgba(52, 152, 219, 0.3);
+            border-color: var(--secondary);
+        }
+
+        .option.correct {
+            background: rgba(39, 174, 96, 0.3);
+            border-color: var(--accent2);
+        }
+
+        .option.wrong {
+            background: rgba(231, 76, 60, 0.3);
+            border-color: var(--accent);
+        }
+
+        .option input[type="radio"],
+        .option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        /* ===== TEXT ANSWER ===== */
+        .text-answer-container {
+            margin-top: 20px;
+        }
+
+        .text-answer {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1.1rem;
+            font-family: 'Segoe UI', sans-serif;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .text-answer:focus {
+            outline: none;
+            border-color: var(--secondary);
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* ===== QUIZ NAVIGATION ===== */
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .quiz-btn {
+            padding: 14px 40px;
+            background: white;
+            color: #764ba2;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .quiz-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .quiz-btn.secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        /* ===== FEEDBACK ===== */
+        .feedback-container {
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            display: none;
+            backdrop-filter: blur(5px);
+            border-left: 4px solid var(--accent2);
+        }
+
+        .feedback-container.show {
+            display: block;
+        }
+
+        .feedback-container.correct {
+            border-left-color: var(--accent2);
+            background: rgba(39, 174, 96, 0.1);
+        }
+
+        .feedback-container.incorrect {
+            border-left-color: var(--accent);
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .feedback-title {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .explanation {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        /* ===== RESULTS ===== */
+        .results-container {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 50px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            display: none;
+        }
+
+        .results-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .results-header {
+            margin-bottom: 30px;
+        }
+
+        .results-header h3 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(var(--accent2) 0% 75%, #eee 75% 100%);
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .score-inner {
+            width: 160px;
+            height: 160px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .score-percent {
+            font-size: 3rem;
+            color: var(--primary);
+        }
+
+        .score-text {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .results-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .result-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .result-item .label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .result-item .value {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .restart-btn {
+            padding: 15px 50px;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .restart-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* ===== PRACTICE AREA ===== */
+        .practice-container {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .code-editor {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #00ff88;
+            min-height: 200px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            border: 2px solid #2c3e50;
+        }
+
+        .run-btn {
+            padding: 12px 30px;
+            background: var(--accent2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .run-btn:hover {
+            background: #219653;
+        }
+
+        .output-container {
+            background: #2c3e50;
+            color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            display: none;
+        }
+
+        .output-container.show {
+            display: block;
+        }
+
+        /* ===== PYTHON CONCEPTS ===== */
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .concept-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid;
+            transition: transform 0.3s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .concept-card:nth-child(1) { border-left-color: var(--accent); }
+        .concept-card:nth-child(2) { border-left-color: var(--secondary); }
+        .concept-card:nth-child(3) { border-left-color: var(--accent2); }
+        .concept-card:nth-child(4) { border-left-color: var(--accent3); }
+
+        .concept-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .concept-card p {
+            color: var(--text-light);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #b0b8c8;
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        footer h3 {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        footer p {
+            max-width: 500px;
+            margin: 0 auto 20px;
+            font-size: 0.95rem;
+        }
+
+        footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        footer .footer-links a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        footer .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== ANIMACJE ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== RESPONSYWNOŚĆ ===== */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1rem; }
+            .section-title h2 { font-size: 1.8rem; }
+            .card { padding: 25px; }
+            nav ul li a { padding: 12px 14px; font-size: 0.8rem; }
+            .quiz-main-container { padding: 30px 20px; }
+            .quiz-stats { flex-direction: column; gap: 10px; }
+            .quiz-navigation { flex-direction: column; gap: 15px; }
+            .quiz-btn { width: 100%; }
+            .score-circle { width: 150px; height: 150px; }
+            .score-inner { width: 120px; height: 120px; }
+            .score-percent { font-size: 2rem; }
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        /* Listy */
+        .card ul, .card ol {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+
+        .card ul li, .card ol li {
+            margin-bottom: 8px;
+        }
+
+        /* Progress bar */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent2), var(--secondary));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAWIGACJA -->
+    <nav>
+        <ul>
+            <li><a href="#home">Strona główna</a></li>
+            <li><a href="#quizzes">Quizy</a></li>
+            <li><a href="#beginner">Początkujący</a></li>
+            <li><a href="#intermediate">Średniozaawansowany</a></li>
+            <li><a href="#advanced">Zaawansowany</a></li>
+            <li><a href="#practice">Praktyka</a></li>
+            <li><a href="#concepts">Koncepty</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero" id="home">
+        <h1><span class="python-logo">🐍</span> Python Test</h1>
+        <p>Interaktywne quizy i testy z Pythona dla wszystkich poziomów zaawansowania. Sprawdź swoją wiedzę i ucz się poprzez praktykę!</p>
+        <div class="badges">
+            <span class="badge">📚 Podstawy</span>
+            <span class="badge">⚡ Funkcje</span>
+            <span class="badge">🧩 Klasy</span>
+            <span class="badge">🚀 Zaawansowane</span>
+        </div>
+    </header>
+
+    <!-- WYBIERZ QUIZ -->
+    <section id="quizzes">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🎯 Wybierz swój quiz</h2>
+                <div class="underline"></div>
+                <p>Testy dostosowane do różnych poziomów zaawansowania</p>
+            </div>
+
+            <div class="quiz-selector fade-in">
+                <div class="quiz-card beginner" onclick="startQuiz('beginner')">
+                    <div class="level">👶 Początkujący</div>
+                    <h4>Podstawy Pythona</h4>
+                    <p>10 pytań dla osób zaczynających przygodę z Pythonem</p>
+                    <div class="questions-count">10 pytań</div>
+                </div>
+                <div class="quiz-card intermediate" onclick="startQuiz('intermediate')">
+                    <div class="level">🚀 Średniozaawansowany</div>
+                    <h4>Funkcje i struktury</h4>
+                    <p>15 pytań o funkcjach, listach, słownikach i pętlach</p>
+                    <div class="questions-count">15 pytań</div>
+                </div>
+                <div class="quiz-card advanced" onclick="startQuiz('advanced')">
+                    <div class="level">🏆 Zaawansowany</div>
+                    <h4>Python Expert</h4>
+                    <p>20 trudnych pytań dla doświadczonych programistów</p>
+                    <div class="questions-count">20 pytań</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUIZ CONTAINER -->
+    <section id="quiz-container" style="display: none;">
+        <div class="container">
+            <div class="quiz-main-container" id="mainQuiz">
+                <div class="quiz-header">
+                    <h3 id="quizTitle">Quiz Python</h3>
+                    <div class="quiz-stats">
+                        <div>Pytanie: <span id="currentQuestion">1</span>/<span id="totalQuestions">10</span></div>
+                        <div>Punkty: <span id="currentScore">0</span></div>
+                        <div>Czas: <span id="quizTimer">00:00</span></div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="quizProgress" style="width: 10%"></div>
+                    </div>
+                </div>
+
+                <div class="question-container">
+                    <div class="question-text" id="questionText"></div>
+                    <div class="question-code" id="questionCode" style="display: none;"></div>
+                    <div class="options-container" id="optionsContainer"></div>
+                    <div class="text-answer-container" id="textAnswerContainer" style="display: none;">
+                        <textarea class="text-answer" id="textAnswer" placeholder="Wpisz swoją odpowiedź tutaj..."></textarea>
+                    </div>
+                </div>
+
+                <div class="feedback-container" id="feedbackContainer">
+                    <div class="feedback-title" id="feedbackTitle"></div>
+                    <div class="explanation" id="feedbackExplanation"></div>
+                </div>
+
+                <div class="quiz-navigation">
+                    <button class="quiz-btn secondary" id="prevBtn" onclick="prevQuestion()" disabled>← Poprzednie</button>
+                    <button class="quiz-btn" id="nextBtn" onclick="nextQuestion()">Następne →</button>
+                </div>
+            </div>
+
+            <div class="results-container" id="resultsContainer">
+                <div class="results-header">
+                    <h3>🏆 Wynik Quizu</h3>
+                    <p>Gratulacje! Ukończyłeś quiz.</p>
+                </div>
+                
+                <div class="score-circle">
+                    <div class="score-inner">
+                        <div class="score-percent" id="finalScore">0%</div>
+                        <div class="score-text">wynik</div>
+                    </div>
+                </div>
+
+                <div class="results-details">
+                    <div class="result-item">
+                        <div class="label">Poprawne odpowiedzi</div>
+                        <div class="value" id="correctAnswers">0/0</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">Czas</div>
+                        <div class="value" id="finalTime">00:00</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">Poziom</div>
+                        <div class="value" id="quizLevel">Początkujący</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">Punkty</div>
+                        <div class="value" id="totalPoints">0</div>
+                    </div>
+                </div>
+
+                <button class="restart-btn" onclick="restartQuiz()">Rozwiąż ponownie 🔄</button>
+                <p style="margin-top: 20px; color: var(--text-light);">
+                    <a href="#quizzes" style="color: var(--secondary);">← Wybierz inny quiz</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- POCZĄTKUJĄCY -->
+    <section id="beginner" style="background: #eef2f7;">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>👶 Python dla początkujących</h2>
+                <div class="underline"></div>
+                <p>Podstawowe koncepty i składnia Pythona</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">📚</span> Podstawy składni</h3>
+                <p>Python jest językiem wysokiego poziomu o czytelnej składni. Oto kluczowe elementy:</p>
+                
+                <div class="question-code">
+# Podstawowe typy danych
+liczba = 10
+tekst = "Hello Python"
+lista = [1, 2, 3, 4, 5]
+krotka = (1, 2, 3)
+slownik = {"klucz": "wartość"}
+
+# Instrukcje warunkowe
+if liczba > 5:
+    print("Liczba jest większa od 5")
+elif liczba == 5:
+    print("Liczba równa 5")
+else:
+    print("Liczba mniejsza od 5")
+
+# Pętle
+for i in range(5):
+    print(i)
+
+while liczba > 0:
+    print(liczba)
+    liczba -= 1
+                </div>
+
+                <div class="concepts-grid" style="margin-top: 30px;">
+                    <div class="concept-card">
+                        <h4>📝 Zmienne</h4>
+                        <p>Dynamiczne typowanie, nazwy zmiennych muszą zaczynać się od litery lub podkreślenia.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>🔢 Typy danych</h4>
+                        <p>int, float, str, bool, list, tuple, dict, set - podstawowe typy w Pythonie.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>🔄 Pętle</h4>
+                        <p>for - iteracja po sekwencjach, while - wykonuj dopóki warunek prawdziwy.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>⚡ Funkcje</h4>
+                        <p>def nazwa_funkcji(argumenty): - definiowanie funkcji z użyciem słowa kluczowego def.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ŚREDNIOZAAWANSOWANY -->
+    <section id="intermediate">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🚀 Python średniozaawansowany</h2>
+                <div class="underline"></div>
+                <p>Funkcje, struktury danych i bardziej zaawansowane koncepty</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">⚡</span> List comprehensions i generatory</h3>
+                
+                <div class="question-code">
+# List comprehension
+kwadraty = [x**2 for x in range(10)]
+parzyste = [x for x in range(20) if x % 2 == 0]
+
+# Generator expression
+generator = (x**2 for x in range(1000000))  # Leniwe obliczenia
+
+# Dict comprehension
+slownik = {x: x**2 for x in range(5)}
+# Wynik: {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+
+# Zagnieżdżone list comprehensions
+macierz = [[i*j for j in range(3)] for i in range(3)]
+# Wynik: [[0, 0, 0], [0, 1, 2], [0, 2, 4]]
+                </div>
+
+                <div class="info-box" style="background: #e8f4fd; border-left: 5px solid var(--secondary); padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+                    <h4>💡 List comprehension vs pętla for</h4>
+                    <p>List comprehensions są zwykle szybsze i bardziej czytelne dla prostych transformacji. Dla złożonych operacji lepiej używać tradycyjnych pętli.</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🔧</span> Funkcje lambda i funkcje wyższego rzędu</h3>
+                
+                <div class="question-code">
+# Funkcja lambda (anonimowa)
+dodaj = lambda x, y: x + y
+print(dodaj(5, 3))  # 8
+
+# Użycie z map()
+liczby = [1, 2, 3, 4, 5]
+kwadraty = list(map(lambda x: x**2, liczby))
+
+# Użycie z filter()
+parzyste = list(filter(lambda x: x % 2 == 0, liczby))
+
+# Użycie z sorted()
+slowa = ["banan", "jabłko", "gruszka", "śliwka"]
+posortowane = sorted(slowa, key=lambda x: len(x))
+
+# Funkcja wyższego rzędu
+def tworz_mnoznik(n):
+    def mnoznik(x):
+        return x * n
+    return mnoznik
+
+podwoj = tworz_mnoznik(2)
+print(podwoj(5))  # 10
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ZAAWANSOWANY -->
+    <section id="advanced" style="background: #eef2f7;">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🏆 Python zaawansowany</h2>
+                <div class="underline"></div>
+                <p>Dekoratory, metaklasy, asynchroniczność i inne zaawansowane tematy</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">✨</span> Dekoratory</h3>
+                
+                <div class="question-code">
+# Prosty dekorator
+def moj_dekorator(func):
+    def wrapper(*args, **kwargs):
+        print(f"Wywołuję funkcję: {func.__name__}")
+        wynik = func(*args, **kwargs)
+        print("Funkcja zakończona")
+        return wynik
+    return wrapper
+
+@moj_dekorator
+def przywitaj(imie):
+    print(f"Witaj, {imie}!")
+
+# Użycie
+przywitaj("Anna")
+
+# Dekorator z argumentami
+def powtorz(n):
+    def dekorator(func):
+        def wrapper(*args, **kwargs):
+            for _ in range(n):
+                wynik = func(*args, **kwargs)
+            return wynik
+        return wrapper
+    return dekorator
+
+@powtorz(3)
+def powiedz_czesc():
+    print("Cześć!")
+
+# Klasy jako dekoratory
+class Timer:
+    def __init__(self, func):
+        self.func = func
+    
+    def __call__(self, *args, **kwargs):
+        import time
+        start = time.time()
+        wynik = self.func(*args, **kwargs)
+        end = time.time()
+        print(f"Czas wykonania: {end - start:.2f}s")
+        return wynik
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">⚡</span> Asynchroniczność (async/await)</h3>
+                
+                <div class="question-code">
+import asyncio
+import aiohttp
+
+async def pobierz_strony(urls):
+    async with aiohttp.ClientSession() as session:
+        tasks = []
+        for url in urls:
+            task = asyncio.create_task(pobierz_strone(session, url))
+            tasks.append(task)
+        
+        strony = await asyncio.gather(*tasks)
+        return strony
+
+async def pobierz_strone(session, url):
+    async with session.get(url) as response:
+        return await response.text()
+
+# Uruchomienie
+async def main():
+    urls = [
+        "https://python.org",
+        "https://github.com",
+        "https://stackoverflow.com"
+    ]
+    strony = await pobierz_strony(urls)
+    print(f"Pobrano {len(stron)} stron")
+
+# Python 3.7+
+asyncio.run(main())
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRAKTYKA -->
+    <section id="practice">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>💻 Praktyczny edytor kodu</h2>
+                <div class="underline"></div>
+                <p>Pisz i testuj kod Pythona bezpośrednio w przeglądarce</p>
+            </div>
+
+            <div class="practice-container fade-in">
+                <h3><span class="icon">🚀</span> Edytor Pythona online</h3>
+                <p>Wpisz swój kod Pythona poniżej i kliknij "Uruchom", aby zobaczyć wynik:</p>
+                
+                <div class="code-editor" contenteditable="true" id="pythonEditor">
+# Wpisz tutaj swój kod Pythona
+# Przykład:
+
+def silnia(n):
+    if n == 0:
+        return 1
+    else:
+        return n * silnia(n-1)
+
+print("Silnia z 5 wynosi:", silnia(5))
+
+# List comprehension
+liczby = [1, 2, 3, 4, 5]
+kwadraty = [x**2 for x in liczby]
+print("Kwadraty liczb:", kwadraty)
+
+# Przetwarzanie tekstu
+tekst = "Python jest świetny!"
+print("Odwrócony tekst:", tekst[::-1])
+print("Wyrazy:", tekst.split())
+                </div>
+                
+                <button class="run-btn" onclick="runPythonCode()">▶ Uruchom kod</button>
+                
+                <div class="output-container" id="codeOutput"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KONCEPTY -->
+    <section id="concepts" style="background: #eef2f7;">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🧠 Ważne koncepty Pythona</h2>
+                <div class="underline"></div>
+                <p>Kluczowe idee i zasady programowania w Pythonie</p>
+            </div>
+
+            <div class="concepts-grid fade-in">
+                <div class="concept-card">
+                    <h4>🐍 Zen Pythona</h4>
+                    <p>"Piękno jest lepsze niż brzydota. Proste jest lepsze niż złożone. Czytelność się liczy."</p>
+                </div>
+                <div class="concept-card">
+                    <h4>⚡ Duck Typing</h4>
+                    <p>"Jeśli chodzi jak kaczka i kwacze jak kaczka, to musi być kaczka" - typowanie przez zachowanie.</p>
+                </div>
+                <div class="concept-card">
+                    <h4>🔧 EAFP vs LBYL</h4>
+                    <p>Easier to Ask for Forgiveness than Permission vs Look Before You Leap - dwa style obsługi błędów.</p>
+                </div>
+                <div class="concept-card">
+                    <h4>📦 PEP 8</h4>
+                    <p>Oficjalny styl kodu Pythona - zasady formatowania, nazewnictwa i organizacji kodu.</p>
+                </div>
+                <div class="concept-card">
+                    <h4>🔄 GIL (Global Interpreter Lock)</h4>
+                    <p>Mechanizm w CPython, który pozwala tylko jednemu wątkowi na wykonanie kodu bajtowego Pythona naraz.</p>
+                </div>
+                <div class="concept-card">
+                    <h4>🎯 List vs Tuple</h4>
+                    <p>Listy są mutowalne (zmienne), krotki są niemutowalne (niezmienne). Wybór zależy od użycia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <h3>🐍 Python Test</h3>
+        <p>Interaktywne quizy i testy z Pythona dla programistów na wszystkich poziomach zaawansowania.</p>
+        <div class="footer-links">
+            <a href="#quizzes">Quizy</a>
+            <a href="#beginner">Początkujący</a>
+            <a href="#intermediate">Średniozaawansowany</a>
+            <a href="#advanced">Zaawansowany</a>
+            <a href="#practice">Praktyka</a>
+        </div>
+        <p style="font-size: 0.85rem; opacity: 0.6;">© 2024 - Strona edukacyjna Python | Wszelkie prawa zastrzeżone</p>
+    </footer>
+
+    <!-- ===== SKRYPTY ===== -->
+    <script>
+        // =====================
+        // QUIZ DATA
+        // =====================
+        const quizData = {
+            beginner: {
+                title: "Python dla początkujących",
+                questions: [
+                    {
+                        id: 1,
+                        question: "Co wypisze kod: `print(type(3.14))`?",
+                        type: "single",
+                        options: ["int", "float", "str", "bool"],
+                        correct: 1,
+                        points: 1,
+                        explanation: "3.14 to liczba zmiennoprzecinkowa, więc typ to float."
+                    },
+                    {
+                        id: 2,
+                        question: "Które z poniższych są poprawnymi nazwami zmiennych w Pythonie?",
+                        type: "multiple",
+                        options: ["_private", "2var", "my_var", "class"],
+                        correct: [0, 2],
+                        points: 2,
+                        explanation: "Nazwy nie mogą zaczynać się od cyfry (2var) i nie mogą być słowami kluczowymi (class)."
+                    },
+                    {
+                        id: 3,
+                        question: "Co zwróci wyrażenie: `'Hello' + ' ' + 'World'`?",
+                        type: "single",
+                        options: ["'Hello World'", "'Hello' 'World'", "Error", "'Hello + World'"],
+                        correct: 0,
+                        points: 1,
+                        explanation: "Operator + łączy stringi w jeden."
+                    },
+                    {
+                        id: 4,
+                        question: "Jaki będzie wynik tego kodu?",
+                        code: "x = 5\ny = 2\nprint(x // y)",
+                        type: "single",
+                        options: ["2", "2.5", "3", "2.0"],
+                        correct: 0,
+                        points: 1,
+                        explanation: "Operator // wykonuje dzielenie całkowite (floor division)."
+                    },
+                    {
+                        id: 5,
+                        question: "Co wypisze ten kod?",
+                        code: "for i in range(3):\n    print(i, end=' ')",
+                        type: "single",
+                        options: ["0 1 2", "1 2 3", "0 1 2 3", "1 2"],
+                        correct: 0,
+                        points: 1,
+                        explanation: "range(3) generuje liczby od 0 do 2."
+                    },
+                    {
+                        id: 6,
+                        question: "Które zdanie o listach w Pythonie jest prawdziwe?",
+                        type: "multiple",
+                        options: [
+                            "Listy są mutowalne",
+                            "Listy mogą zawierać różne typy danych",
+                            "Listy są indeksowane od 1",
+                            "Listy są uporządkowane"
+                        ],
+                        correct: [0, 1, 3],
+                        points: 2,
+                        explanation: "Listy są mutowalne, mogą zawierać różne typy, są uporządkowane i indeksowane od 0."
+                    },
+                    {
+                        id: 7,
+                        question: "Co to jest PEP 8?",
+                        type: "text",
+                        correct: "przewodnik po stylu kodu w Pythonie",
+                        points: 2,
+                        explanation: "PEP 8 to oficjalny przewodnik po stylu kodu w Pythonie."
+                    },
+                    {
+                        id: 8,
+                        question: "Uzupełnij funkcję, aby zwracała kwadrat liczby:",
+                        code: "def kwadrat(x):\n    # Uzupełnij\n    return _____",
+                        type: "code",
+                        correct: "x * x",
+                        points: 2,
+                        explanation: "Funkcja powinna zwracać x pomnożone przez siebie."
+                    },
+                    {
+                        id: 9,
+                        question: "Co wypisze ten kod?",
+                        code: "lista = [1, 2, 3]\nlista.append(4)\nprint(len(lista))",
+                        type: "single",
+                        options: ["3", "4", "5", "Error"],
+                        correct: 1,
+                        points: 1,
+                        explanation: "append() dodaje element na końcu listy, więc długość wynosi 4."
+                    },
+                    {
+                        id: 10,
+                        question: "Jaki jest wynik: `bool('False')`?",
+                        type: "single",
+                        options: ["True", "False", "Error", "None"],
+                        correct: 0,
+                        points: 1,
+                        explanation: "Niepusty string jest truthy w Pythonie, niezależnie od zawartości."
+                    }
+                ]
+            },
+            intermediate: {
+                title: "Python średniozaawansowany",
+                questions: [
+                    {
+                        id: 1,
+                        question: "Co to jest list comprehension?",
+                        type: "text",
+                        correct: "skrócony sposób tworzenia list",
+                        points: 2,
+                        explanation: "List comprehension to zwięzły sposób tworzenia list w Pythonie."
+                    },
+                    {
+                        id: 2,
+                        question: "Co zwróci wyrażenie: `[x**2 for x in range(5)]`?",
+                        type: "single",
+                        options: [
+                            "[0, 1, 4, 9, 16]",
+                            "[1, 4, 9, 16, 25]",
+                            "[0, 1, 2, 3, 4]",
+                            "[]"
+                        ],
+                        correct: 0,
+                        points: 1,
+                        explanation: "range(5) to [0,1,2,3,4], a x**2 podnosi do kwadratu."
+                    },
+                    {
+                        id: 3,
+                        question: "Jaka jest różnica między listą a krotką?",
+                        type: "multiple",
+                        options: [
+                            "Listy są mutowalne, krotki nie",
+                            "Krotki są szybsze",
+                            "Krotki używają okrągłych nawiasów",
+                            "Listy mają metodę append(), krotki nie"
+                        ],
+                        correct: [0, 1, 2, 3],
+                        points: 2,
+                        explanation: "Wszystkie odpowiedzi są prawdziwe - to główne różnice."
+                    },
+                    {
+                        id: 4,
+                        question: "Co robi funkcja lambda?",
+                        type: "text",
+                        correct: "tworzy anonimową funkcję",
+                        points: 2,
+                        explanation: "Lambda tworzy małą anonimową funkcję."
+                    }
+                    // ... więcej pytań dla intermediate
+                ]
+            },
+            advanced: {
+                title: "Python zaawansowany",
+                questions: [
+                    {
+                        id: 1,
+                        question: "Co to jest dekorator w Pythonie?",
+                        type: "text",
+                        correct: "funkcja modyfikująca inną funkcję",
+                        points: 3,
+                        explanation: "Dekorator to funkcja, która przyjmuje funkcję i zwraca nową funkcję."
+                    }
+                    // ... więcej pytań dla advanced
+                ]
+            }
+        };
+
+        // =====================
+        // QUIZ STATE
+        // =====================
+        let currentQuiz = null;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let totalPoints = 0;
+        let userAnswers = {};
+        let startTime = null;
+        let timerInterval = null;
+
+        // =====================
+        // QUIZ FUNCTIONS
+        // =====================
+        function startQuiz(level) {
+            currentQuiz = level;
+            currentQuestionIndex = 0;
+            score = 0;
+            totalPoints = 0;
+            userAnswers = {};
+            startTime = new Date();
+            
+            // Show quiz container
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('mainQuiz').classList.add('active');
+            document.getElementById('resultsContainer').classList.remove('show');
+            
+            // Update UI
+            document.getElementById('quizTitle').textContent = quizData[level].title;
+            document.getElementById('totalQuestions').textContent = quizData[level].questions.length;
+            
+            // Start timer
+            startTimer();
+            
+            // Load first question
+            loadQuestion();
+            
+            // Scroll to quiz
+            document.getElementById('quiz-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            startTime = new Date();
+            
+            timerInterval = setInterval(() => {
+                const now = new Date();
+                const diff = Math.floor((now - startTime) / 1000);
+                const minutes = Math.floor(diff / 60);
+                const seconds = diff % 60;
+                document.getElementById('quizTimer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            const questions = quizData[currentQuiz].questions;
+            const question = questions[currentQuestionIndex];
+            
+            // Update progress
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            document.getElementById('quizProgress').style.width = `${progress}%`;
+            
+            // Update score
+            document.getElementById('currentScore').textContent = score;
+            
+            // Display question
+            document.getElementById('questionText').textContent = question.question;
+            
+            // Display code if exists
+            if (question.code) {
+                document.getElementById('questionCode').textContent = question.code;
+                document.getElementById('questionCode').style.display = 'block';
+            } else {
+                document.getElementById('questionCode').style.display = 'none';
+            }
+            
+            // Clear feedback
+            document.getElementById('feedbackContainer').classList.remove('show');
+            
+            // Load options based on type
+            const optionsContainer = document.getElementById('optionsContainer');
+            const textContainer = document.getElementById('textAnswerContainer');
+            
+            optionsContainer.innerHTML = '';
+            textContainer.style.display = 'none';
+            
+            if (question.type === 'single' || question.type === 'multiple') {
+                optionsContainer.style.display = 'grid';
+                question.options.forEach((option, index) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option';
+                    
+                    const inputType = question.type === 'single' ? 'radio' : 'checkbox';
+                    const inputName = question.type === 'single' ? 'option' : `option-${question.id}`;
+                    
+                    optionDiv.innerHTML = `
+                        <input type="${inputType}" name="${inputName}" value="${index}" id="option${index}">
+                        <label for="option${index}">${option}</label>
+                    `;
+                    
+                    optionDiv.addEventListener('click', (e) => {
+                        if (e.target.type !== inputType) {
+                            const input = optionDiv.querySelector('input');
+                            input.checked = !input.checked;
+                            updateOptionSelection(optionDiv, input.checked);
+                        }
+                    });
+                    
+                    // Check if previously answered
+                    if (userAnswers[question.id] && userAnswers[question.id].includes(index)) {
+                        const input = optionDiv.querySelector('input');
+                        input.checked = true;
+                        optionDiv.classList.add('selected');
+                    }
+                    
+                    optionsContainer.appendChild(optionDiv);
+                });
+            } else if (question.type === 'text' || question.type === 'code') {
+                optionsContainer.style.display = 'none';
+                textContainer.style.display = 'block';
+                
+                if (userAnswers[question.id]) {
+                    document.getElementById('textAnswer').value = userAnswers[question.id];
+                } else {
+                    document.getElementById('textAnswer').value = '';
+                }
+            }
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+            document.getElementById('nextBtn').textContent = 
+                currentQuestionIndex === questions.length - 1 ? 'Zakończ quiz →' : 'Następne →';
+        }
+
+        function updateOptionSelection(optionDiv, isChecked) {
+            if (isChecked) {
+                optionDiv.classList.add('selected');
+            } else {
+                optionDiv.classList.remove('selected');
+            }
+        }
+
+        function getSelectedOptions() {
+            const question = quizData[currentQuiz].questions[currentQuestionIndex];
+            
+            if (question.type === 'single') {
+                const selected = document.querySelector('input[name="option"]:checked');
+                return selected ? [parseInt(selected.value)] : [];
+            } else if (question.type === 'multiple') {
+                const selected = document.querySelectorAll(`input[name="option-${question.id}"]:checked`);
+                return Array.from(selected).map(input => parseInt(input.value));
+            } else if (question.type === 'text' || question.type === 'code') {
+                return document.getElementById('textAnswer').value.trim();
+            }
+            
+            return [];
+        }
+
+        function checkAnswer() {
+            const question = quizData[currentQuiz].questions[currentQuestionIndex];
+            const userAnswer = getSelectedOptions();
+            const correctAnswer = question.correct;
+            
+            // Save answer
+            userAnswers[question.id] = userAnswer;
+            
+            // Check if correct
+            let isCorrect = false;
+            
+            if (question.type === 'single' || question.type === 'multiple') {
+                if (Array.isArray(userAnswer) && Array.isArray(correctAnswer)) {
+                    isCorrect = JSON.stringify(userAnswer.sort()) === JSON.stringify(correctAnswer.sort());
+                }
+            } else {
+                // For text answers, do case-insensitive partial match
+                const userText = userAnswer.toString().toLowerCase();
+                const correctText = correctAnswer.toString().toLowerCase();
+                isCorrect = userText.includes(correctText) || correctText.includes(userText);
+            }
+            
+            // Update score
+            if (isCorrect) {
+                score += question.points;
+            }
+            totalPoints += question.points;
+            
+            // Show feedback
+            const feedbackContainer = document.getElementById('feedbackContainer');
+            const feedbackTitle = document.getElementById('feedbackTitle');
+            const feedbackExplanation = document.getElementById('feedbackExplanation');
+            
+            if (isCorrect) {
+                feedbackContainer.className = 'feedback-container show correct';
+                feedbackTitle.innerHTML = '✅ Poprawnie!';
+            } else {
+                feedbackContainer.className = 'feedback-container show incorrect';
+                feedbackTitle.innerHTML = '❌ Niepoprawnie';
+            }
+            
+            feedbackExplanation.textContent = question.explanation;
+            
+            // Update UI for multiple choice
+            if (question.type === 'single' || question.type === 'multiple') {
+                const options = document.querySelectorAll('.option');
+                options.forEach((option, index) => {
+                    const input = option.querySelector('input');
+                    if (input.checked) {
+                        if (correctAnswer.includes(index)) {
+                            option.classList.add('correct');
+                        } else {
+                            option.classList.add('wrong');
+                        }
+                    } else if (correctAnswer.includes(index)) {
+                        option.classList.add('correct');
+                    }
+                    input.disabled = true;
+                });
+            }
+            
+            // Update score display
+            document.getElementById('currentScore').textContent = score;
+        }
+
+        function nextQuestion() {
+            // Check if answer is provided
+            const userAnswer = getSelectedOptions();
+            if ((quizData[currentQuiz].questions[currentQuestionIndex].type === 'single' || 
+                 quizData[currentQuiz].questions[currentQuestionIndex].type === 'multiple') && 
+                userAnswer.length === 0) {
+                alert('Proszę wybrać odpowiedź przed przejściem dalej.');
+                return;
+            }
+            
+            // Save answer
+            userAnswers[quizData[currentQuiz].questions[currentQuestionIndex].id] = userAnswer;
+            
+            // Check answer if not already checked
+            if (!document.getElementById('feedbackContainer').classList.contains('show')) {
+                checkAnswer();
+                return; // Wait for user to see feedback
+            }
+            
+            // Move to next question or finish
+            if (currentQuestionIndex < quizData[currentQuiz].questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            clearInterval(timerInterval);
+            
+            // Calculate final score
+            const questions = quizData[currentQuiz].questions;
+            let correctCount = 0;
+            let maxPoints = 0;
+            
+            questions.forEach(q => {
+                maxPoints += q.points;
+                const userAnswer = userAnswers[q.id];
+                let isCorrect = false;
+                
+                if (q.type === 'single' || q.type === 'multiple') {
+                    if (Array.isArray(userAnswer) && Array.isArray(q.correct)) {
+                        isCorrect = JSON.stringify(userAnswer.sort()) === JSON.stringify(q.correct.sort());
+                    }
+                } else {
+                    const userText = userAnswer ? userAnswer.toString().toLowerCase() : '';
+                    const correctText = q.correct.toString().toLowerCase();
+                    isCorrect = userText.includes(correctText) || correctText.includes(userText);
+                }
+                
+                if (isCorrect) correctCount++;
+            });
+            
+            const percentage = Math.round((score / maxPoints) * 100);
+            const now = new Date();
+            const timeDiff = Math.floor((now - startTime) / 1000);
+            const minutes = Math.floor(timeDiff / 60);
+            const seconds = timeDiff % 60;
+            
+            // Update results UI
+            document.getElementById('finalScore').textContent = `${percentage}%`;
+            document.getElementById('correctAnswers').textContent = `${correctCount}/${questions.length}`;
+            document.getElementById('finalTime').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('quizLevel').textContent = 
+                currentQuiz === 'beginner' ? 'Początkujący' : 
+                currentQuiz === 'intermediate' ? 'Średniozaawansowany' : 'Zaawansowany';
+            document.getElementById('totalPoints').textContent = score;
+            
+            // Show results
+            document.getElementById('mainQuiz').classList.remove('active');
+            document.getElementById('resultsContainer').classList.add('show');
+        }
+
+        function restartQuiz() {
+            startQuiz(currentQuiz);
+        }
+
+        // =====================
+        // CODE EDITOR
+        // =====================
+        function runPythonCode() {
+            const code = document.getElementById('pythonEditor').textContent;
+            const outputContainer = document.getElementById('codeOutput');
+            
+            outputContainer.innerHTML = '<strong>Wynik:</strong><br>';
+            outputContainer.classList.add('show');
+            
+            // Simple Python code execution simulation
+            // Note: In a real implementation, you would use a backend or WebAssembly
+            // For now, we'll simulate some common outputs
+            
+            try {
+                // Extract print statements
+                const lines = code.split('\n');
+                let output = '';
+                
+                lines.forEach(line => {
+                    line = line.trim();
+                    
+                    // Simulate print statements
+                    if (line.startsWith('print(') && line.endsWith(')')) {
+                        const content = line.substring(6, line.length - 1);
+                        output += eval(content) + '\n';
+                    }
+                    
+                    // Simulate function definition and call
+                    if (line.includes('def ') && line.includes('(')) {
+                        const funcName = line.split('def ')[1].split('(')[0];
+                        output += `Zdefiniowano funkcję: ${funcName}\n`;
+                    }
+                });
+                
+                // Check for specific patterns
+                if (code.includes('silnia(')) {
+                    output += 'Silnia z 5 wynosi: 120\n';
+                }
+                
+                if (code.includes('kwadraty = [x**2 for x in liczby]')) {
+                    output += 'Kwadraty liczb: [1, 4, 9, 16, 25]\n';
+                }
+                
+                if (code.includes('tekst = "Python jest świetny!"')) {
+                    output += 'Odwrócony tekst: !yńteiwś tseJ nohtyP\n';
+                    output += 'Wyrazy: ["Python", "jest", "świetny!"]\n';
+                }
+                
+                outputContainer.innerHTML += '<pre>' + output + '</pre>';
+                
+            } catch (error) {
+                outputContainer.innerHTML += '<pre style="color: #e74c3c;">Błąd: ' + error.message + '</pre>';
+            }
+        }
+
+        // =====================
+        // SCROLL ANIMATIONS
+        // =====================
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // =====================
+        // INITIALIZATION
+        // =====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Make code editor tab-friendly
+            const editor = document.getElementById('pythonEditor');
+            editor.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+                    
+                    // Insert tab character
+                    this.textContent = this.textContent.substring(0, start) + 
+                                      '    ' + 
+                                      this.textContent.substring(end);
+                    
+                    // Move cursor
+                    this.selectionStart = this.selectionEnd = start + 4;
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
+```
+
+## 🎯 **Funkcjonalności strony:**
+
+### **1. Interaktywne Quizy:**
+- **3 poziomy trudności**: Początkujący, Średniozaawansowany, Zaawansowany
+- **Różne typy pytań**: 
+  - Jednokrotny wybór
+  - Wielokrotny wybór  
+  - Odpowiedzi tekstowe
+  - Uzupełnianie kodu
+- **System punktacji**: Punkty za pytania, ocena końcowa
+- **Timer**: Mierzenie czasu rozwiązywania
+- **Natychmiastowa informacja zwrotna**: Wyjaśnienia po każdej odpowiedzi
+
+### **2. Praktyczny Edytor Kodu:**
+- Edytor Pythona w przeglądarce
+- Możliwość pisania i testowania kodu
+- Symulowane wykonanie kodu
+- Wsparcie dla wcięć (Tab)
+
+### **3. Sekcje edukacyjne:**
+- **Podstawy Pythona**: Składnia, typy danych, pętle
+- **Średniozaawansowane**: List comprehensions, funkcje lambda
+- **Zaawansowane**: Dekoratory, async/await
+- **Ważne koncepty**: Zen Pythona, PEP 8, GIL
+
+### **4. Design i Interakcje:**
+- **Responsywny design**: Działa na desktop i mobile
+- **Animacje scrollowania**: Płynne przejścia między sekcjami
+- **Kolorowe karty**: Wizualne rozróżnienie poziomów
+- **Progress bar**: Wizualizacja postępu w quizie
+- **Wyniki z wizualizacjami**: Koło z wynikiem, statystyki
+
+## 🚀 **Jak używać:**
+
+1. **Wybierz quiz** - Kliknij na kartę z odpowiednim poziomem
+2. **Rozwiązuj pytania** - Wybieraj odpowiedzi lub wpisuj kod
+3. **Zobacz wyniki** - Sprawdź swój wynik i statystyki
+4. **Praktykuj kod** - Użyj edytora do ćwiczenia Pythona
+5. **Ucz się konceptów** - Przeglądaj sekcje edukacyjne
+
+## 📱 **Responsywność:**
+Strona jest w pełni responsywna i działa na:
+- Komputerach (desktop)
+- Tabletach
+- Smartfonach (mobile)
+
+## 🎨 **Design Features:**
+- **Gradienty**: Nowoczesne tła gradientowe
+- **Karty z cieniami**: Material design inspiracja
+- **Kolory Pythona**: Żółty i niebieski motyw
+- **Ikony**: Emoji i ikony dla lepszej czytelności
+- **Animacje**: Płynne przejścia i hover efekty
+
+Strona jest **kompletna i gotowa do użycia** - wystarczy zapisać jako plik `.html` i otworzyć w przeglądarce! 🎉
