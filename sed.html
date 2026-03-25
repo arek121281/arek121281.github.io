@@ -1,0 +1,833 @@
+
+
+```html
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SED — Kompletny Przewodnik | Stream Editor Linux</title>
+    <style>
+        :root{
+            --primary:#0c1021;--secondary:#e06c75;--accent:#61afef;--green:#98c379;--gold:#e5c07b;--purple:#c678dd;--cyan:#56b6c2;--orange:#d19a66;
+            --bg:#f4f6f9;--card:#fff;--text:#1e2a3a;--muted:#5a6a80;--shadow:0 8px 30px rgba(0,0,0,.07);--radius:16px;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth;scroll-padding-top:68px}
+        body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.78}
+        nav{position:fixed;top:0;width:100%;z-index:1000;background:rgba(12,16,33,.97);backdrop-filter:blur(14px);box-shadow:0 2px 24px rgba(0,0,0,.4)}
+        .nav-in{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+        .logo{color:#abb2bf;font-weight:900;font-size:1.15rem;padding:14px 0;font-family:'Courier New',monospace}
+        .logo span{color:var(--green)}
+        nav ul{display:flex;list-style:none;flex-wrap:wrap}
+        nav ul li a{display:block;color:#636d83;text-decoration:none;padding:16px 14px;font-size:.78rem;font-weight:600;transition:.3s;border-bottom:3px solid transparent;text-transform:uppercase;letter-spacing:.6px}
+        nav ul li a:hover{color:#abb2bf;border-bottom-color:var(--green)}
+        .mbtn{display:none;background:none;border:none;color:#abb2bf;font-size:1.4rem;cursor:pointer}
+        .hero{background:linear-gradient(135deg,#0c1021 0%,#151a2e 40%,#1c2540 70%,#0c1021 100%);color:#abb2bf;text-align:center;padding:145px 20px 105px;position:relative;overflow:hidden}
+        .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 45%,rgba(152,195,121,.08),transparent 60%),radial-gradient(ellipse at 70% 55%,rgba(224,108,117,.06),transparent 55%)}
+        .hero>*{position:relative;z-index:1}
+        .hero-ic{font-size:4.5rem;margin-bottom:14px;animation:hfl 4s ease-in-out infinite}
+        @keyframes hfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        .hero h1{font-size:3.4rem;font-weight:900;margin-bottom:12px;letter-spacing:-1px;font-family:'Courier New',monospace}
+        .hero h1 .h1{color:var(--green)}
+        .hero h1 .h2{color:var(--secondary)}
+        .hero>p{font-size:1.12rem;color:#636d83;max-width:720px;margin:0 auto 28px}
+        .hero-tags{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+        .htag{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);padding:10px 20px;border-radius:12px;font-size:.8rem;color:#7a8599;font-family:'Courier New',monospace}
+        .htag b{color:var(--green)}
+        .container{max-width:1100px;margin:0 auto;padding:0 20px}
+        section{padding:80px 0}
+        .stitle{text-align:center;margin-bottom:48px}
+        .stitle h2{font-size:2.3rem;font-weight:800;letter-spacing:-.5px}
+        .stitle .line{width:65px;height:4px;margin:12px auto;background:linear-gradient(90deg,var(--green),var(--secondary));border-radius:2px}
+        .stitle p{color:var(--muted);font-size:1.03rem;max-width:650px;margin:0 auto}
+        .alt{background:#e8ecf2}
+        .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:32px;margin-bottom:22px;border:1px solid rgba(0,0,0,.04);transition:transform .3s}
+        .card:hover{transform:translateY(-2px)}
+        .card h3{font-size:1.35rem;margin-bottom:11px;color:var(--primary);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .card h3 .ic{font-size:1.5rem}
+        .card p,.card li{color:#475569;font-size:.98rem}
+        .card ul,.card ol{padding-left:20px;margin:10px 0}
+        .card li{margin-bottom:5px}
+        .g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+        .g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+        .ib{border-radius:0 12px 12px 0;padding:18px 22px;margin:16px 0;border-left:5px solid}
+        .ib.blue{background:#e8f4fd;border-color:var(--accent)}
+        .ib.green{background:#eef8f0;border-color:var(--green)}
+        .ib.yellow{background:#fdf8e8;border-color:var(--gold)}
+        .ib.red{background:#fdeef0;border-color:var(--secondary)}
+        .ib.purple{background:#f4eef8;border-color:var(--purple)}
+        .ib h4{margin-bottom:4px;display:flex;align-items:center;gap:8px}
+        /* TERMINAL */
+        .term{background:#282c34;color:#abb2bf;border-radius:14px;padding:20px 22px;margin:16px 0;font-family:'Courier New','Fira Code',monospace;font-size:.88rem;line-height:1.85;overflow-x:auto;position:relative;border:1px solid #3e4452}
+        .term::before{content:'● ● ●';position:absolute;top:8px;left:14px;font-size:.5rem;letter-spacing:4px;color:#636d83}
+        .term{padding-top:28px}
+        .term .cm{color:#5c6370;font-style:italic}
+        .term .cmd{color:var(--green);font-weight:700}
+        .term .flag{color:var(--secondary);font-weight:700}
+        .term .str{color:var(--gold)}
+        .term .pat{color:var(--purple);font-weight:700}
+        .term .rep{color:var(--cyan);font-weight:700}
+        .term .file{color:var(--orange)}
+        .term .out{color:#636d83}
+        .term .hl{color:#e06c75;font-weight:700}
+        .term .num{color:var(--orange);font-weight:700}
+        .tw{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow);margin:20px 0}
+        table{width:100%;border-collapse:collapse;background:var(--card)}
+        th{background:#282c34;color:#abb2bf;padding:13px 14px;text-align:center;font-size:.8rem;text-transform:uppercase;letter-spacing:1px;font-family:'Courier New',monospace}
+        td{padding:11px 14px;text-align:center;border-bottom:1px solid #f0f3f7;font-size:.9rem}
+        td:first-child{text-align:left;font-weight:600;font-family:'Courier New',monospace;color:var(--secondary)}
+        tr:nth-child(even){background:#f8fafc}
+        tr:hover{background:#eef2ff}
+        .acc-i{margin-bottom:8px}
+        .acc-h{background:var(--card);border:1px solid #dde2ea;padding:15px 20px;border-radius:12px;cursor:pointer;font-weight:700;font-size:.95rem;display:flex;justify-content:space-between;align-items:center;transition:.3s}
+        .acc-h:hover{background:#f0f3f7}
+        .acc-h .aw{transition:transform .3s;font-size:1.1rem}
+        .acc-i.open .acc-h .aw{transform:rotate(180deg)}
+        .acc-b{max-height:0;overflow:hidden;transition:max-height .5s ease;background:#f8fafc;border-radius:0 0 12px 12px}
+        .acc-bi{padding:16px 20px;color:#475569;line-height:1.85;font-size:.92rem}
+        /* INTERACTIVE */
+        .try-wrap{background:#282c34;border-radius:var(--radius);padding:30px;color:#abb2bf;box-shadow:var(--shadow)}
+        .try-wrap h3{text-align:center;font-size:1.3rem;margin-bottom:6px;color:var(--green)}
+        .try-sub{text-align:center;color:#636d83;margin-bottom:18px;font-size:.88rem}
+        .try-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;align-items:flex-end}
+        .try-field{display:flex;flex-direction:column;flex:1;min-width:200px}
+        .try-field label{font-size:.72rem;color:#636d83;margin-bottom:3px;text-transform:uppercase;letter-spacing:1px}
+        .try-field input,.try-field textarea{padding:10px 14px;border-radius:8px;border:2px solid #3e4452;background:#1e222a;color:#abb2bf;font-size:.95rem;font-family:'Courier New',monospace;resize:vertical}
+        .try-field input:focus,.try-field textarea:focus{outline:none;border-color:var(--green)}
+        .try-btn{padding:10px 24px;border:none;border-radius:10px;background:var(--green);color:#282c34;font-weight:700;cursor:pointer;font-size:.92rem;transition:.3s}
+        .try-btn:hover{transform:scale(1.05);box-shadow:0 5px 18px rgba(152,195,121,.4)}
+        .try-output{background:#1e222a;border-radius:10px;padding:16px;margin-top:12px;font-family:'Courier New',monospace;font-size:.88rem;min-height:60px;white-space:pre-wrap;border:1px solid #3e4452}
+        .try-output .lbl{color:#636d83;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;display:block}
+        /* CHEAT */
+        .cheat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+        .cheat-card{background:var(--card);border:1px solid #dde2ea;border-radius:12px;padding:14px 16px;transition:.3s}
+        .cheat-card:hover{border-color:var(--green);box-shadow:0 4px 16px rgba(152,195,121,.12)}
+        .cheat-card .cc-cmd{font-family:'Courier New',monospace;font-weight:700;font-size:.9rem;color:var(--green);margin-bottom:3px;word-break:break-all}
+        .cheat-card .cc-desc{font-size:.82rem;color:#475569}
+        .search-bar{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap;align-items:center;justify-content:center}
+        .search-bar input{padding:11px 18px;border:2px solid #dde2ea;border-radius:12px;font-size:.95rem;width:350px;transition:.3s;font-family:'Courier New',monospace}
+        .search-bar input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(152,195,121,.15)}
+        .search-bar .cnt{color:var(--muted);font-size:.85rem;font-weight:600}
+        .qbox{background:var(--card);border-radius:var(--radius);padding:32px;box-shadow:var(--shadow);max-width:700px;margin:0 auto}
+        .qq{font-size:1.15rem;font-weight:700;color:var(--primary);margin-bottom:14px}
+        .qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .qopt{padding:13px 14px;border:2px solid #dde2ea;border-radius:12px;cursor:pointer;transition:.3s;font-size:.9rem;text-align:center;font-weight:500;font-family:'Courier New',monospace}
+        .qopt:hover{border-color:var(--green);background:#eef8f0}
+        .qopt.ok{border-color:var(--green);background:#d1fae5;color:#065f46}
+        .qopt.no{border-color:var(--secondary);background:#fee2e2;color:#991b1b}
+        .qfb{padding:13px;border-radius:10px;margin-top:12px;font-weight:600;display:none;font-size:.88rem}
+        .qfb.show{display:block}
+        .qmeta{color:var(--muted);margin-bottom:8px;font-size:.85rem}
+        .qnav{display:flex;justify-content:space-between;margin-top:12px}
+        .qb{padding:10px 22px;border:none;border-radius:10px;cursor:pointer;font-size:.88rem;font-weight:700;transition:.3s}
+        .qb.nxt{background:var(--green);color:#282c34}
+        .qb.res{background:var(--secondary);color:#fff;display:none}
+        .qb:hover{transform:scale(1.04)}
+        .qb:disabled{opacity:.35;cursor:not-allowed}
+        footer{background:#0c1021;color:#636d83;text-align:center;padding:42px 20px;font-family:'Courier New',monospace}
+        footer h3{color:#abb2bf;margin-bottom:6px}
+        footer a{color:var(--green);text-decoration:none}
+        .fin{opacity:0;transform:translateY(28px);transition:all .7s cubic-bezier(.16,1,.3,1)}
+        .fin.vis{opacity:1;transform:translateY(0)}
+        @media(max-width:768px){
+            .hero h1{font-size:2rem}.stitle h2{font-size:1.6rem}.card{padding:18px}
+            nav ul{display:none}nav ul.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(12,16,33,.98)}
+            .mbtn{display:block}.qopts{grid-template-columns:1fr}.search-bar input{width:100%}.cheat-grid{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-in">
+        <div class="logo">$ <span>sed</span></div>
+        <button class="mbtn" onclick="document.querySelector('nav ul').classList.toggle('open')">☰</button>
+        <ul>
+            <li><a href="#what">Co to sed</a></li>
+            <li><a href="#syntax">Składnia</a></li>
+            <li><a href="#substitution">s/ zamiana</a></li>
+            <li><a href="#delete">d/ usuwanie</a></li>
+            <li><a href="#print">p/ drukowanie</a></li>
+            <li><a href="#insert">i/a/c</a></li>
+            <li><a href="#addresses">Adresy</a></li>
+            <li><a href="#advanced">Zaawansowane</a></li>
+            <li><a href="#try">Tryb Live</a></li>
+            <li><a href="#cheat">Ściąga</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+        </ul>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="hero-ic">📝</div>
+    <h1><span class="h1">sed</span> — <span class="h2">Stream Editor</span></h1>
+    <p>Kompletny przewodnik po sed — potężnym narzędziu do przetwarzania tekstu linia po linii w systemach Unix/Linux. Od podstaw do zaawansowanych wyrażeń regularnych.</p>
+    <div class="hero-tags">
+        <div class="htag"><b>sed</b> — Stream EDitor</div>
+        <div class="htag"><b>s/old/new/</b> — zamiana tekstu</div>
+        <div class="htag"><b>regex</b> — wyrażenia regularne</div>
+        <div class="htag"><b>linia po linii</b> — przetwarzanie strumieniowe</div>
+    </div>
+</header>
+
+<!-- CO TO SED -->
+<section id="what">
+    <div class="container">
+        <div class="stitle fin"><h2>🔍 Czym jest sed?</h2><div class="line"></div><p>Stream Editor — edytor strumieniowy</p></div>
+        <div class="card fin">
+            <h3><span class="ic">📖</span> Definicja</h3>
+            <p><strong>sed</strong> (Stream EDitor) to narzędzie wiersza poleceń w Unix/Linux służące do <strong>przetwarzania i transformacji tekstu</strong> linia po linii. Sed czyta wejście (plik lub stdin), stosuje komendy edycji i wypisuje wynik na stdout — <strong>domyślnie nie modyfikuje pliku źródłowego</strong>.</p>
+            <div class="ib green">
+                <h4>💡 Kluczowa idea</h4>
+                <p>Sed przetwarza tekst <strong>bez otwierania edytora</strong> — idealny do skryptów, automatyzacji, potoków (<code>|</code>) i jednolinijkowych transformacji. Nie wymaga interakcji użytkownika.</p>
+            </div>
+        </div>
+        <div class="card fin">
+            <h3><span class="ic">⚙️</span> Jak sed przetwarza tekst</h3>
+            <div class="term"><span class="cm"># Cykl pracy sed (dla każdej linii wejścia):</span>
+
+1. <span class="cmd">READ</span>    — Wczytaj linię do <span class="str">pattern space</span> (bufora roboczego)
+2. <span class="cmd">EXECUTE</span> — Zastosuj komendy sed do pattern space
+3. <span class="cmd">PRINT</span>   — Wypisz zmodyfikowany pattern space na stdout
+4. <span class="cmd">REPEAT</span>  — Wróć do kroku 1 dla następnej linii
+
+<span class="cm"># Dwa bufory:</span>
+  <span class="str">Pattern Space</span> — bufor roboczy (aktualna linia)
+  <span class="str">Hold Space</span>    — bufor pomocniczy (do zaawansowanych operacji)</div>
+        </div>
+    </div>
+</section>
+
+<!-- SKŁADNIA -->
+<section id="syntax" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>📐 Składnia sed</h2><div class="line"></div><p>Format polecenia i flagi</p></div>
+        <div class="card fin">
+            <h3><span class="ic">📐</span> Ogólna składnia</h3>
+            <div class="term"><span class="cm"># Podstawowa składnia:</span>
+<span class="cmd">sed</span> <span class="flag">[opcje]</span> <span class="str">'[adres]komenda'</span> <span class="file">plik</span>
+
+<span class="cm"># Przykłady:</span>
+<span class="cmd">sed</span> <span class="str">'s/stary/nowy/'</span> <span class="file">plik.txt</span>           <span class="cm"># zamiana w pliku</span>
+<span class="cmd">echo</span> "hello" | <span class="cmd">sed</span> <span class="str">'s/hello/world/'</span>    <span class="cm"># z potoku</span>
+<span class="cmd">sed</span> <span class="flag">-i</span> <span class="str">'s/stary/nowy/g'</span> <span class="file">plik.txt</span>       <span class="cm"># edycja IN-PLACE (zmienia plik!)</span>
+<span class="cmd">sed</span> <span class="flag">-n</span> <span class="str">'5p'</span> <span class="file">plik.txt</span>                   <span class="cm"># wypisz tylko linię 5</span>
+<span class="cmd">sed</span> <span class="flag">-e</span> <span class="str">'s/a/A/'</span> <span class="flag">-e</span> <span class="str">'s/b/B/'</span> <span class="file">plik.txt</span>  <span class="cm"># wiele komend</span>
+<span class="cmd">sed</span> <span class="flag">-f</span> <span class="file">komendy.sed</span> <span class="file">plik.txt</span>           <span class="cm"># komendy z pliku</span></div>
+        </div>
+        <div class="card fin">
+            <h3><span class="ic">🏳️</span> Flagi (opcje) sed</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Flaga</th><th>Opis</th><th>Przykład</th></tr></thead>
+                    <tbody>
+                        <tr><td>-i</td><td><strong>In-place</strong> — modyfikuje plik bezpośrednio (bez -i: stdout)</td><td>sed -i 's/a/b/' plik</td></tr>
+                        <tr><td>-i.bak</td><td>In-place z <strong>backupem</strong> (tworzy plik.bak)</td><td>sed -i.bak 's/a/b/' plik</td></tr>
+                        <tr><td>-n</td><td><strong>Ciche</strong> — nie wypisuj automatycznie; wymaga jawnego <code>p</code></td><td>sed -n '5p' plik</td></tr>
+                        <tr><td>-e</td><td><strong>Wiele komend</strong> — każda poprzedzona -e</td><td>sed -e 'cmd1' -e 'cmd2'</td></tr>
+                        <tr><td>-f</td><td>Komendy z <strong>pliku skryptowego</strong></td><td>sed -f skrypt.sed plik</td></tr>
+                        <tr><td>-r / -E</td><td><strong>Extended regex</strong> (ERE) — +, ?, |, () bez backslasha</td><td>sed -E 's/(foo|bar)/X/'</td></tr>
+                        <tr><td>--posix</td><td>Tryb ścisłej zgodności POSIX</td><td>sed --posix 's/a/b/'</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SUBSTITUTION s/ -->
+<section id="substitution">
+    <div class="container">
+        <div class="stitle fin"><h2>🔄 s/ — Zamiana tekstu (substitution)</h2><div class="line"></div><p>Najczęściej używana komenda sed</p></div>
+        <div class="card fin">
+            <h3><span class="ic">🔄</span> Składnia s/wzorzec/zamiana/flagi</h3>
+            <div class="term"><span class="cm"># Format:</span>
+<span class="cmd">sed</span> <span class="str">'s/<span class="pat">wzorzec</span>/<span class="rep">zamiana</span>/<span class="flag">flagi</span>'</span>
+
+<span class="cm"># Flagi zamiany:</span>
+  <span class="flag">g</span>   — <span class="str">Global</span> — zamień WSZYSTKIE wystąpienia (nie tylko pierwsze)
+  <span class="flag">1-9</span> — Zamień N-te wystąpienie
+  <span class="flag">p</span>   — <span class="str">Print</span> — wypisz linię po zamianie (z -n)
+  <span class="flag">w</span>   — <span class="str">Write</span> — zapisz zmodyfikowane linie do pliku
+  <span class="flag">i</span>   — <span class="str">Case-insensitive</span> — ignoruj wielkość liter (GNU sed)
+  <span class="flag">I</span>   — Alias dla i (niektóre wersje)</div>
+        </div>
+        <div class="card fin">
+            <h3><span class="ic">📝</span> Przykłady zamiany</h3>
+            <div class="term"><span class="cm"># === PODSTAWOWE ===</span>
+
+<span class="cm"># Zamień pierwsze 'cat' na 'dog' w każdej linii:</span>
+<span class="cmd">sed</span> <span class="str">'s/cat/dog/'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Zamień WSZYSTKIE 'cat' na 'dog' (flaga g):</span>
+<span class="cmd">sed</span> <span class="str">'s/cat/dog/<span class="flag">g</span>'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Case-insensitive (Cat, CAT, cat → dog):</span>
+<span class="cmd">sed</span> <span class="str">'s/cat/dog/<span class="flag">gi</span>'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Zamień tylko drugie wystąpienie w linii:</span>
+<span class="cmd">sed</span> <span class="str">'s/cat/dog/<span class="flag">2</span>'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Edycja in-place z backupem:</span>
+<span class="cmd">sed</span> <span class="flag">-i.bak</span> <span class="str">'s/error/warning/g'</span> <span class="file">log.txt</span>
+
+<span class="cm"># === SEPARATOR — nie musi być / ===</span>
+
+<span class="cm"># Użyj | jako separatora (przydatne ze ścieżkami):</span>
+<span class="cmd">sed</span> <span class="str">'s|/usr/local|/opt|g'</span> <span class="file">config.txt</span>
+
+<span class="cm"># Użyj # jako separatora:</span>
+<span class="cmd">sed</span> <span class="str">'s#http://#https://#g'</span> <span class="file">urls.txt</span>
+
+<span class="cm"># === REGEX ===</span>
+
+<span class="cm"># Usuń początkowe spacje:</span>
+<span class="cmd">sed</span> <span class="str">'s/^[ \t]*//'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Usuń końcowe spacje:</span>
+<span class="cmd">sed</span> <span class="str">'s/[ \t]*$//'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Zamień wiele spacji na jedną:</span>
+<span class="cmd">sed</span> <span class="str">'s/  */ /g'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Dodaj prefix do każdej linii:</span>
+<span class="cmd">sed</span> <span class="str">'s/^/PREFIX: /'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Dodaj suffix do każdej linii:</span>
+<span class="cmd">sed</span> <span class="str">'s/$/ #END/'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># === GRUPY I BACKREFERENCJE ===</span>
+
+<span class="cm"># Zamień kolejność: "Kowalski Jan" → "Jan Kowalski":</span>
+<span class="cmd">sed</span> <span class="str">'s/\(<span class="pat">[^ ]*</span>\) \(<span class="pat">[^ ]*</span>\)/<span class="rep">\2 \1</span>/'</span> <span class="file">names.txt</span>
+
+<span class="cm"># To samo z ERE (-E):</span>
+<span class="cmd">sed</span> <span class="flag">-E</span> <span class="str">'s/(<span class="pat">[^ ]+</span>) (<span class="pat">[^ ]+</span>)/<span class="rep">\2 \1</span>/'</span> <span class="file">names.txt</span>
+
+<span class="cm"># Otocz liczby nawiasami: 42 → [42]:</span>
+<span class="cmd">sed</span> <span class="flag">-E</span> <span class="str">'s/(<span class="pat">[0-9]+</span>)/<span class="rep">[\1]</span>/g'</span> <span class="file">data.txt</span>
+
+<span class="cm"># Duplikuj znalezione słowo: hello → hello hello:</span>
+<span class="cmd">sed</span> <span class="flag">-E</span> <span class="str">'s/(<span class="pat">hello</span>)/<span class="rep">\1 \1</span>/'</span>
+
+<span class="cm"># & — cały dopasowany tekst:</span>
+<span class="cmd">sed</span> <span class="str">'s/[0-9]*/<span class="rep">[&]</span>/g'</span>      <span class="cm"># 42 → [42]</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- DELETE d -->
+<section id="delete" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🗑️ d — Usuwanie linii</h2><div class="line"></div><p>Kasowanie linii pasujących do wzorca</p></div>
+        <div class="card fin">
+            <h3><span class="ic">🗑️</span> Przykłady usuwania</h3>
+            <div class="term"><span class="cm"># Usuń linię 3:</span>
+<span class="cmd">sed</span> <span class="str">'<span class="num">3</span>d'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Usuń linie 2-5:</span>
+<span class="cmd">sed</span> <span class="str">'<span class="num">2,5</span>d'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Usuń ostatnią linię:</span>
+<span class="cmd">sed</span> <span class="str">'<span class="num">$</span>d'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Usuń linie zawierające "error":</span>
+<span class="cmd">sed</span> <span class="str">'/<span class="pat">error</span>/d'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Usuń puste linie:</span>
+<span class="cmd">sed</span> <span class="str">'/^$/d'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Usuń linie zaczynające się od # (komentarze):</span>
+<span class="cmd">sed</span> <span class="str">'/^#/d'</span> <span class="file">config.txt</span>
+
+<span class="cm"># Usuń linie NIE zawierające "important" (!):</span>
+<span class="cmd">sed</span> <span class="str">'/<span class="pat">important</span>/!d'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Usuń od "START" do "END" (włącznie):</span>
+<span class="cmd">sed</span> <span class="str">'/<span class="pat">START</span>/,/<span class="pat">END</span>/d'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Usuń od linii 10 do końca:</span>
+<span class="cmd">sed</span> <span class="str">'<span class="num">10,$</span>d'</span> <span class="file">plik.txt</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- PRINT p -->
+<section id="print">
+    <div class="container">
+        <div class="stitle fin"><h2>📤 p — Drukowanie linii</h2><div class="line"></div><p>Wypisywanie wybranych linii (z -n)</p></div>
+        <div class="card fin">
+            <div class="term"><span class="cm"># Wypisz linię 5 (z -n aby nie duplikować):</span>
+<span class="cmd">sed</span> <span class="flag">-n</span> <span class="str">'<span class="num">5</span>p'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Wypisz linie 10-20:</span>
+<span class="cmd">sed</span> <span class="flag">-n</span> <span class="str">'<span class="num">10,20</span>p'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Wypisz linie zawierające "error":</span>
+<span class="cmd">sed</span> <span class="flag">-n</span> <span class="str">'/<span class="pat">error</span>/p'</span> <span class="file">log.txt</span>
+
+<span class="cm"># Wypisz ostatnią linię:</span>
+<span class="cmd">sed</span> <span class="flag">-n</span> <span class="str">'<span class="num">$</span>p'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Wypisz od "BEGIN" do "END":</span>
+<span class="cmd">sed</span> <span class="flag">-n</span> <span class="str">'/<span class="pat">BEGIN</span>/,/<span class="pat">END</span>/p'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Wypisz co drugą linię (kroku 2):</span>
+<span class="cmd">sed</span> <span class="flag">-n</span> <span class="str">'<span class="num">1~2</span>p'</span> <span class="file">plik.txt</span>     <span class="cm"># nieparzyste</span>
+<span class="cmd">sed</span> <span class="flag">-n</span> <span class="str">'<span class="num">0~2</span>p'</span> <span class="file">plik.txt</span>     <span class="cm"># parzyste</span>
+
+<span class="cm"># Wypisz numery linii (=):</span>
+<span class="cmd">sed</span> <span class="flag">-n</span> <span class="str">'/<span class="pat">error</span>/='</span> <span class="file">log.txt</span>    <span class="cm"># numery linii z "error"</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- INSERT / APPEND / CHANGE -->
+<section id="insert" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>✏️ i / a / c — Wstawianie i zamiana linii</h2><div class="line"></div><p>Dodawanie tekstu przed, po lub zamiast linii</p></div>
+        <div class="card fin">
+            <div class="term"><span class="cm"># i\ — INSERT (wstaw PRZED linią):</span>
+<span class="cmd">sed</span> <span class="str">'<span class="num">3</span>i\Nowa linia przed 3'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># a\ — APPEND (wstaw PO linii):</span>
+<span class="cmd">sed</span> <span class="str">'<span class="num">3</span>a\Nowa linia po 3'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># c\ — CHANGE (zamień CAŁĄ linię):</span>
+<span class="cmd">sed</span> <span class="str">'<span class="num">3</span>c\Zupełnie nowa linia 3'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Wstaw nagłówek na początku pliku:</span>
+<span class="cmd">sed</span> <span class="str">'1i\# Nagłówek pliku'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Dodaj stopkę na końcu pliku:</span>
+<span class="cmd">sed</span> <span class="str">'$a\# Koniec pliku'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Wstaw linię po każdej linii z "SECTION":</span>
+<span class="cmd">sed</span> <span class="str">'/<span class="pat">SECTION</span>/a\---separator---'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Zamień linie z "deprecated" na nowy tekst:</span>
+<span class="cmd">sed</span> <span class="str">'/<span class="pat">deprecated</span>/c\# REMOVED - deprecated feature'</span> <span class="file">config.txt</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- ADRESY -->
+<section id="addresses">
+    <div class="container">
+        <div class="stitle fin"><h2>📍 Adresy — wybór linii</h2><div class="line"></div><p>Na których liniach sed ma działać</p></div>
+        <div class="card fin">
+            <h3><span class="ic">📍</span> Typy adresowania</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Adres</th><th>Znaczenie</th><th>Przykład</th></tr></thead>
+                    <tbody>
+                        <tr><td>5</td><td>Linia numer 5</td><td>sed '5d'</td></tr>
+                        <tr><td>$</td><td>Ostatnia linia</td><td>sed '$d'</td></tr>
+                        <tr><td>2,5</td><td>Linie od 2 do 5</td><td>sed '2,5d'</td></tr>
+                        <tr><td>2,+3</td><td>Linia 2 i 3 następne</td><td>sed '2,+3d'</td></tr>
+                        <tr><td>1~2</td><td>Co druga linia od 1 (1,3,5...)</td><td>sed -n '1~2p'</td></tr>
+                        <tr><td>0~3</td><td>Co trzecia linia (3,6,9...)</td><td>sed -n '0~3p'</td></tr>
+                        <tr><td>/regex/</td><td>Linie pasujące do wzorca</td><td>sed '/error/d'</td></tr>
+                        <tr><td>/start/,/end/</td><td>Zakres: od wzorca do wzorca</td><td>sed '/BEGIN/,/END/d'</td></tr>
+                        <tr><td>5,/end/</td><td>Od linii 5 do wzorca</td><td>sed '5,/END/d'</td></tr>
+                        <tr><td>!</td><td>Negacja — linie NIE pasujące</td><td>sed '/keep/!d'</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ZAAWANSOWANE -->
+<section id="advanced" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>🔧 Zaawansowane techniki</h2><div class="line"></div><p>Hold space, wieloliniowe, etykiety i rozgałęzienia</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">📋</span> Wszystkie komendy sed</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Komenda</th><th>Opis</th></tr></thead>
+                    <tbody>
+                        <tr><td>s/pat/rep/</td><td>Zamiana (substitution)</td></tr>
+                        <tr><td>d</td><td>Usuń linię (delete)</td></tr>
+                        <tr><td>p</td><td>Wypisz linię (print)</td></tr>
+                        <tr><td>q</td><td>Zakończ (quit) — przestań przetwarzać</td></tr>
+                        <tr><td>i\text</td><td>Wstaw tekst PRZED bieżącą linią (insert)</td></tr>
+                        <tr><td>a\text</td><td>Wstaw tekst PO bieżącej linii (append)</td></tr>
+                        <tr><td>c\text</td><td>Zamień CAŁĄ linię na tekst (change)</td></tr>
+                        <tr><td>y/abc/ABC/</td><td>Transliteracja (jak tr) — zamiana znak-po-znaku</td></tr>
+                        <tr><td>=</td><td>Wypisz numer linii</td></tr>
+                        <tr><td>r plik</td><td>Wczytaj i wstaw zawartość pliku (read)</td></tr>
+                        <tr><td>w plik</td><td>Zapisz pattern space do pliku (write)</td></tr>
+                        <tr><td>n</td><td>Wczytaj następną linię do pattern space</td></tr>
+                        <tr><td>N</td><td>Dołącz następną linię do pattern space (\n)</td></tr>
+                        <tr><td>h</td><td>Kopiuj pattern space → hold space</td></tr>
+                        <tr><td>H</td><td>Dołącz pattern space → hold space</td></tr>
+                        <tr><td>g</td><td>Kopiuj hold space → pattern space</td></tr>
+                        <tr><td>G</td><td>Dołącz hold space → pattern space</td></tr>
+                        <tr><td>x</td><td>Zamień pattern space ↔ hold space</td></tr>
+                        <tr><td>b label</td><td>Skok do etykiety (branch)</td></tr>
+                        <tr><td>t label</td><td>Skok do etykiety jeśli ostatnie s/ się powiodło</td></tr>
+                        <tr><td>: label</td><td>Definicja etykiety</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🔬</span> Zaawansowane przykłady</h3>
+            <div class="term"><span class="cm"># Zamień znaki (transliteracja) — jak tr:</span>
+<span class="cmd">sed</span> <span class="str">'y/abcdefghij/ABCDEFGHIJ/'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Odwróć kolejność linii (jak tac):</span>
+<span class="cmd">sed</span> <span class="str">-n '1!G;h;$p'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Ponumeruj linie:</span>
+<span class="cmd">sed</span> <span class="str">'='</span> <span class="file">plik.txt</span> | <span class="cmd">sed</span> <span class="str">'N;s/\n/\t/'</span>
+
+<span class="cm"># Usuń zduplikowane puste linie (jak cat -s):</span>
+<span class="cmd">sed</span> <span class="str">'/^$/N;/^\n$/d'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Zamień wieloliniowy blok:</span>
+<span class="cmd">sed</span> <span class="str">'/START/{N;s/START\nOLD/START\nNEW/}'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Wypisz linie między dwoma wzorcami (bez nich):</span>
+<span class="cmd">sed</span> <span class="flag">-n</span> <span class="str">'/<span class="pat">BEGIN</span>/,/<span class="pat">END</span>/{/<span class="pat">BEGIN</span>/d;/<span class="pat">END</span>/d;p}'</span>
+
+<span class="cm"># Zamień newline na spację (join lines):</span>
+<span class="cmd">sed</span> <span class="str">':a;N;$!ba;s/\n/ /g'</span> <span class="file">plik.txt</span>
+
+<span class="cm"># Zamień tylko w liniach zawierających "config":</span>
+<span class="cmd">sed</span> <span class="str">'/<span class="pat">config</span>/s/<span class="pat">false</span>/<span class="rep">true</span>/g'</span> <span class="file">settings.txt</span>
+
+<span class="cm"># Wiele komend na jednym adresie { }:</span>
+<span class="cmd">sed</span> <span class="str">'/<span class="pat">error</span>/{s/<span class="pat">error</span>/<span class="rep">ERROR</span>/;s/$/ !!!/<span class="flag"></span>}'</span> <span class="file">log.txt</span>
+
+<span class="cm"># Przeczytaj plik i wstaw po wzorcu:</span>
+<span class="cmd">sed</span> <span class="str">'/<span class="pat">INSERT_HERE</span>/r <span class="file">fragment.txt</span>'</span> <span class="file">main.txt</span></div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🔤</span> Regex w sed — ściąga</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Wzorzec</th><th>Znaczenie</th></tr></thead>
+                    <tbody>
+                        <tr><td>.</td><td>Dowolny znak (jeden)</td></tr>
+                        <tr><td>*</td><td>0 lub więcej powtórzeń poprzedniego</td></tr>
+                        <tr><td>+</td><td>1 lub więcej (ERE, wymaga -E)</td></tr>
+                        <tr><td>?</td><td>0 lub 1 (ERE, wymaga -E)</td></tr>
+                        <tr><td>^</td><td>Początek linii</td></tr>
+                        <tr><td>$</td><td>Koniec linii</td></tr>
+                        <tr><td>[abc]</td><td>Klasa znaków (a lub b lub c)</td></tr>
+                        <tr><td>[^abc]</td><td>Negacja klasy (nie a, nie b, nie c)</td></tr>
+                        <tr><td>[a-z]</td><td>Zakres znaków</td></tr>
+                        <tr><td>\( \)</td><td>Grupa (BRE) — do backreferencji</td></tr>
+                        <tr><td>( )</td><td>Grupa (ERE, z -E)</td></tr>
+                        <tr><td>\1 \2</td><td>Backreferencja do grupy 1, 2...</td></tr>
+                        <tr><td>&</td><td>Cały dopasowany tekst (w zamianie)</td></tr>
+                        <tr><td>\b</td><td>Granica słowa (GNU sed)</td></tr>
+                        <tr><td>\w \W</td><td>Znak słowa / nie-słowa (GNU)</td></tr>
+                        <tr><td>\s \S</td><td>Biały znak / nie-biały (GNU)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- LIVE TRYB -->
+<section id="try">
+    <div class="container">
+        <div class="stitle fin"><h2>🎮 Tryb Live — wypróbuj sed</h2><div class="line"></div><p>Wpisz komendę sed i tekst wejściowy — zobacz wynik natychmiast</p></div>
+
+        <div class="try-wrap fin">
+            <h3>$ sed — Sandbox</h3>
+            <div class="try-sub">Emulacja sed w przeglądarce (JavaScript) — obsługuje s/, d, p, i/a/c, numery linii</div>
+
+            <div class="try-row">
+                <div class="try-field" style="flex:2">
+                    <label>Komenda sed</label>
+                    <input type="text" id="trySedCmd" value="s/hello/world/g" placeholder="s/old/new/g">
+                </div>
+                <button class="try-btn" onclick="runSed()">▶ Uruchom</button>
+            </div>
+
+            <div class="try-row">
+                <div class="try-field" style="flex:1">
+                    <label>Tekst wejściowy</label>
+                    <textarea id="trySedInput" rows="6" placeholder="Wpisz tekst...">hello world
+hello again
+foo bar hello
+goodbye world
+hello hello hello</textarea>
+                </div>
+            </div>
+
+            <div class="try-output" id="trySedOutput">
+                <span class="lbl">Wynik:</span>
+                <span id="trySedResult">Kliknij "Uruchom" aby zobaczyć wynik...</span>
+            </div>
+
+            <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+                <button class="try-btn" style="background:var(--accent);font-size:.78rem" onclick="loadExample(0)">s/zamiana/g</button>
+                <button class="try-btn" style="background:var(--secondary);font-size:.78rem" onclick="loadExample(1)">Usuń puste</button>
+                <button class="try-btn" style="background:var(--purple);font-size:.78rem" onclick="loadExample(2)">Tylko linia 3</button>
+                <button class="try-btn" style="background:var(--orange);font-size:.78rem" onclick="loadExample(3)">Komentarze</button>
+                <button class="try-btn" style="background:var(--cyan);font-size:.78rem;color:#282c34" onclick="loadExample(4)">Regex grupy</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ŚCIĄGA -->
+<section id="cheat" class="alt">
+    <div class="container">
+        <div class="stitle fin"><h2>📋 Ściąga sed — Cheat Sheet</h2><div class="line"></div><p>Szybki przegląd najczęstszych komend</p></div>
+
+        <div class="search-bar fin">
+            <input type="text" id="cheatSearch" placeholder="🔍 Szukaj komendy..." oninput="filterCheat()">
+            <span class="cnt" id="cheatCount"></span>
+        </div>
+
+        <div class="cheat-grid fin" id="cheatGrid"></div>
+    </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz">
+    <div class="container">
+        <div class="stitle fin"><h2>🧠 Quiz — sed</h2><div class="line"></div></div>
+        <div class="qbox fin">
+            <div class="qmeta">Pytanie <span id="qN">1</span>/<span id="qT">12</span> | Wynik: <span id="qS">0</span></div>
+            <div class="qq" id="qQ"></div>
+            <div class="qopts" id="qO"></div>
+            <div class="qfb" id="qFb"></div>
+            <div class="qnav">
+                <button class="qb nxt" id="qNxt" onclick="qNx()" disabled>Następne →</button>
+                <button class="qb res" id="qRst" onclick="qRe()">Od nowa 🔄</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <h3>$ sed — Stream Editor</h3>
+    <p>Kompletny przewodnik po sed</p>
+    <p style="margin-top:10px"><a href="#what">Co to sed</a> • <a href="#substitution">s/ zamiana</a> • <a href="#advanced">Zaawansowane</a> • <a href="#try">Live</a> • <a href="#cheat">Ściąga</a></p>
+    <p style="font-size:.72rem;opacity:.5;margin-top:14px">© 2024</p>
+</footer>
+
+<script>
+// ══════════════════════
+// SED EMULATOR (simplified)
+// ══════════════════════
+function runSed(){
+    const cmd = document.getElementById('trySedCmd').value.trim();
+    const input = document.getElementById('trySedInput').value;
+    const lines = input.split('\n');
+    let result = [];
+
+    try {
+        // Parse basic sed commands
+        if(cmd.match(/^s[\/|#@].*[\/|#@].*[\/|#@][giIp]*$/)) {
+            // s/pattern/replacement/flags
+            const sep = cmd[1];
+            const parts = cmd.slice(2).split(sep);
+            const pattern = parts[0];
+            const replacement = parts[1];
+            const flags = parts[2] || '';
+            const isGlobal = flags.includes('g');
+            const isCaseInsensitive = flags.includes('i') || flags.includes('I');
+            const regFlags = (isGlobal?'g':'')+(isCaseInsensitive?'i':'');
+            const regex = new RegExp(pattern, regFlags);
+            result = lines.map(l => l.replace(regex, replacement));
+        } else if(cmd.match(/^\/.*\/d$/)) {
+            // /pattern/d — delete matching lines
+            const pattern = cmd.slice(1, -2);
+            const regex = new RegExp(pattern);
+            result = lines.filter(l => !regex.test(l));
+        } else if(cmd.match(/^[0-9]+d$/)) {
+            // Nd — delete line N
+            const n = parseInt(cmd) - 1;
+            result = lines.filter((l,i) => i !== n);
+        } else if(cmd === '/^$/d') {
+            // delete empty lines
+            result = lines.filter(l => l.trim() !== '');
+        } else if(cmd.match(/^[0-9]+p$/) || cmd.match(/^[0-9]+,[0-9]+p$/)) {
+            // Np or N,Mp — print lines (assume -n)
+            const m = cmd.match(/^(\d+)(?:,(\d+))?p$/);
+            const from = parseInt(m[1]) - 1;
+            const to = m[2] ? parseInt(m[2]) - 1 : from;
+            result = lines.filter((l,i) => i >= from && i <= to);
+        } else if(cmd.match(/^\/.*\/!d$/)) {
+            // /pattern/!d — keep only matching
+            const pattern = cmd.slice(1, cmd.lastIndexOf('/!d'));
+            const regex = new RegExp(pattern);
+            result = lines.filter(l => regex.test(l));
+        } else if(cmd.match(/^\/.*\/p$/)) {
+            // /pattern/p — print matching (assume -n)
+            const pattern = cmd.slice(1, cmd.lastIndexOf('/p'));
+            const regex = new RegExp(pattern);
+            result = lines.filter(l => regex.test(l));
+        } else if(cmd === '$d') {
+            result = lines.slice(0, -1);
+        } else if(cmd === '1d') {
+            result = lines.slice(1);
+        } else {
+            // Try as generic s command with different delimiters
+            result = ['⚠️ Komenda nie rozpoznana w emulatorze.','Obsługiwane: s/pat/rep/flags, /pat/d, Nd, /pat/p, /^$/d, /pat/!d'];
+        }
+        document.getElementById('trySedResult').textContent = result.join('\n');
+    } catch(e) {
+        document.getElementById('trySedResult').textContent = '❌ Błąd: ' + e.message;
+    }
+}
+
+const examples = [
+    {cmd:'s/hello/HELLO/g', input:'hello world\nhello again\nfoo bar hello\ngoodbye world\nhello hello hello'},
+    {cmd:'/^$/d', input:'line 1\n\nline 3\n\n\nline 6\n\nline 8'},
+    {cmd:'3p', input:'alpha\nbeta\ngamma\ndelta\nepsilon'},
+    {cmd:'/^#/d', input:'# komentarz\nkod\n# inny komentarz\nwięcej kodu\n# uwaga'},
+    {cmd:'s/([0-9]+)/[\\1]/g', input:'Jest 42 kotów i 7 psów\nCena: 100 zł\n0 błędów'}
+];
+
+function loadExample(i){
+    const ex = examples[i];
+    document.getElementById('trySedCmd').value = ex.cmd;
+    document.getElementById('trySedInput').value = ex.input.replace(/\\n/g,'\n');
+    runSed();
+}
+
+// ══════════════════════
+// CHEAT SHEET
+// ══════════════════════
+const CHEAT = [
+    {cmd:"sed 's/old/new/' file",desc:"Zamień pierwsze 'old' na 'new' w każdej linii"},
+    {cmd:"sed 's/old/new/g' file",desc:"Zamień WSZYSTKIE 'old' na 'new'"},
+    {cmd:"sed 's/old/new/gi' file",desc:"Zamień wszystkie, ignorując wielkość liter"},
+    {cmd:"sed -i 's/old/new/g' file",desc:"Zamień in-place (modyfikuje plik!)"},
+    {cmd:"sed -i.bak 's/old/new/g' file",desc:"Zamień in-place z backupem (.bak)"},
+    {cmd:"sed 's|/usr|/opt|g' file",desc:"Zamień ze ścieżkami (separator |)"},
+    {cmd:"sed 's/^/PREFIX: /' file",desc:"Dodaj prefix na początku każdej linii"},
+    {cmd:"sed 's/$/ SUFFIX/' file",desc:"Dodaj suffix na końcu każdej linii"},
+    {cmd:"sed 's/^[ \\t]*//' file",desc:"Usuń początkowe spacje/taby (left trim)"},
+    {cmd:"sed 's/[ \\t]*$//' file",desc:"Usuń końcowe spacje/taby (right trim)"},
+    {cmd:"sed 's/  */ /g' file",desc:"Zamień wiele spacji na jedną"},
+    {cmd:"sed '/^$/d' file",desc:"Usuń puste linie"},
+    {cmd:"sed '/^#/d' file",desc:"Usuń linie-komentarze (zaczynające się od #)"},
+    {cmd:"sed '/pattern/d' file",desc:"Usuń linie zawierające 'pattern'"},
+    {cmd:"sed '/pattern/!d' file",desc:"Zostaw TYLKO linie zawierające 'pattern' (jak grep)"},
+    {cmd:"sed '3d' file",desc:"Usuń linię 3"},
+    {cmd:"sed '2,5d' file",desc:"Usuń linie 2-5"},
+    {cmd:"sed '$d' file",desc:"Usuń ostatnią linię"},
+    {cmd:"sed '10,$d' file",desc:"Usuń od linii 10 do końca"},
+    {cmd:"sed -n '5p' file",desc:"Wypisz tylko linię 5"},
+    {cmd:"sed -n '10,20p' file",desc:"Wypisz linie 10-20"},
+    {cmd:"sed -n '/error/p' file",desc:"Wypisz linie zawierające 'error' (jak grep)"},
+    {cmd:"sed -n '$p' file",desc:"Wypisz ostatnią linię (jak tail -1)"},
+    {cmd:"sed -n '1~2p' file",desc:"Wypisz nieparzyste linie (1,3,5...)"},
+    {cmd:"sed -n '/BEGIN/,/END/p' file",desc:"Wypisz blok od BEGIN do END"},
+    {cmd:"sed '1i\\HEADER' file",desc:"Wstaw linię na początku pliku"},
+    {cmd:"sed '$a\\FOOTER' file",desc:"Dodaj linię na końcu pliku"},
+    {cmd:"sed '3c\\NEW LINE' file",desc:"Zamień linię 3 na nowy tekst"},
+    {cmd:"sed '/pat/a\\new line' file",desc:"Dodaj linię PO każdej linii z 'pat'"},
+    {cmd:"sed 'y/abc/ABC/' file",desc:"Transliteracja a→A, b→B, c→C (jak tr)"},
+    {cmd:"sed -E 's/([0-9]+)/[\\1]/g' file",desc:"Otocz liczby nawiasami: 42 → [42]"},
+    {cmd:"sed -E 's/(\\w+) (\\w+)/\\2 \\1/' file",desc:"Zamień kolejność dwóch słów"},
+    {cmd:"sed 's/[0-9]*/(&)/g' file",desc:"& = cały match: 42 → (42)"},
+    {cmd:"sed '/config/s/false/true/g' file",desc:"Zamień false→true TYLKO w liniach z 'config'"},
+    {cmd:"sed -n '/error/=' file",desc:"Wypisz NUMERY linii zawierających 'error'"},
+    {cmd:"sed ':a;N;$!ba;s/\\n/ /g' file",desc:"Połącz wszystkie linie w jedną (join)"},
+    {cmd:"sed -n '1!G;h;$p' file",desc:"Odwróć kolejność linii (jak tac)"},
+    {cmd:"sed '/^$/N;/^\\n$/d' file",desc:"Usuń zduplikowane puste linie (jak cat -s)"},
+    {cmd:"sed 'G' file",desc:"Podwój odstępy (dodaj pustą linię po każdej)"},
+    {cmd:"sed '/INSERT/r data.txt' file",desc:"Wstaw zawartość data.txt po linii z 'INSERT'"},
+];
+
+function renderCheat(list){
+    const grid = document.getElementById('cheatGrid');
+    grid.innerHTML = '';
+    list.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'cheat-card';
+        card.innerHTML = `<div class="cc-cmd">${c.cmd}</div><div class="cc-desc">${c.desc}</div>`;
+        grid.appendChild(card);
+    });
+    document.getElementById('cheatCount').textContent = `${list.length} komend`;
+}
+
+function filterCheat(){
+    const s = document.getElementById('cheatSearch').value.toLowerCase();
+    renderCheat(CHEAT.filter(c => c.cmd.toLowerCase().includes(s) || c.desc.toLowerCase().includes(s)));
+}
+
+renderCheat(CHEAT);
+
+// ══════════════════════
+// ACCORDION
+// ══════════════════════
+function togAcc(h){const i=h.parentElement;const b=i.querySelector('.acc-b');const o=i.classList.contains('open');document.querySelectorAll('.acc-i').forEach(x=>{x.classList.remove('open');const xb=x.querySelector('.acc-b');if(xb)xb.style.maxHeight=null});if(!o){i.classList.add('open');b.style.maxHeight=b.scrollHeight+'px';}}
+
+// ══════════════════════
+// QUIZ
+// ══════════════════════
+const qD=[
+    {q:"Co oznacza 'sed'?",o:["System Editor","Stream Editor","String Encoder","Shell Debugger"],a:1,e:"sed = Stream EDitor — edytor strumieniowy przetwarzający tekst linia po linii."},
+    {q:"Co robi flaga -i?",o:["Ignoruje wielkość liter","Modyfikuje plik in-place","Włącza tryb interaktywny","Wypisuje numery linii"],a:1,e:"-i (in-place) — sed modyfikuje plik bezpośrednio zamiast wypisywać na stdout."},
+    {q:"Co robi 's/cat/dog/g'?",o:["Usuwa 'cat'","Zamienia pierwsze 'cat' na 'dog'","Zamienia WSZYSTKIE 'cat' na 'dog'","Drukuje linie z 'cat'"],a:2,e:"Flaga 'g' (global) powoduje zamianę WSZYSTKICH wystąpień w linii, nie tylko pierwszego."},
+    {q:"Jak usunąć puste linie?",o:["sed 'd' plik","sed '/^$/d' plik","sed 's/^$//' plik","sed -n 'p' plik"],a:1,e:"/^$/ to regex dopasowujący pustą linię (początek ^ bezpośrednio przed końcem $), d ją usuwa."},
+    {q:"Co robi flaga -n?",o:["Numeruje linie","Wyłącza automatyczne wypisywanie (silent mode)","Neguje wzorzec","Włącza tryb binarny"],a:1,e:"-n (silent) wyłącza domyślne wypisywanie — trzeba jawnie użyć 'p' aby coś wypisać."},
+    {q:"Jak wypisać tylko linię 5?",o:["sed '5' plik","sed '5d' plik","sed -n '5p' plik","sed '5s' plik"],a:2,e:"sed -n '5p' — -n wyłącza auto-print, 5p wypisuje tylko linię 5."},
+    {q:"Co oznacza & w zamianie s/?",o:["Koniec linii","Cały dopasowany tekst","Separator","Nowa linia"],a:1,e:"& w części 'replacement' oznacza cały tekst dopasowany przez wzorzec."},
+    {q:"Jak zamienić separator / na inny?",o:["Nie da się","Użyj innego znaku po s: s|old|new|","Użyj podwójnego //","Dodaj flagę -s"],a:1,e:"Separator po 's' może być dowolnym znakiem: s|old|new|, s#old#new#, s@old@new@ — przydatne ze ścieżkami."},
+    {q:"Co robi \\1 w zamianie?",o:["Wstawia liczbę 1","Backreferencja — pierwsza grupa (\\( \\) lub () z -E)","Usuwa pierwszy znak","Powtarza komendę"],a:1,e:"\\1 to backreferencja do pierwszej grupy przechwytującej w wyrażeniu regularnym."},
+    {q:"Co robi 'sed -E'?",o:["Tryb edycji","Extended regex (ERE) — +, ?, |, () bez backslasha","Eksport do pliku","Tryb błędów"],a:1,e:"-E (lub -r w starszych) włącza Extended Regular Expressions — nie trzeba escapować +, ?, |, ()."},
+    {q:"Jak usunąć linie zawierające 'error'?",o:["sed 's/error//' plik","sed '/error/d' plik","sed -d 'error' plik","sed 'error' plik"],a:1,e:"/error/d — adres /error/ dopasowuje linie zawierające 'error', komenda 'd' je usuwa."},
+    {q:"Co robi '!' w adresie sed?",o:["Komentarz","Negacja — stosuje komendę do linii NIE pasujących","Wymuszenie","Koniec skryptu"],a:1,e:"! neguje adres: /pattern/!d = usuń linie, które NIE zawierają 'pattern' (zostaw tylko pasujące)."}
+];
+let qi=0,qs=0,qa=false;
+function qRn(){if(qi>=qD.length){qEn();return}const q=qD[qi];document.getElementById('qN').textContent=qi+1;document.getElementById('qT').textContent=qD.length;document.getElementById('qQ').textContent=q.q;const o=document.getElementById('qO');o.innerHTML='';q.o.forEach((t,i)=>{const d=document.createElement('div');d.className='qopt';d.textContent=t;d.onclick=()=>qAn(i);o.appendChild(d)});document.getElementById('qFb').className='qfb';document.getElementById('qNxt').disabled=true;document.getElementById('qNxt').style.display='';document.getElementById('qRst').style.display='none';qa=false}
+function qAn(i){if(qa)return;qa=true;const q=qD[qi],os=document.querySelectorAll('.qopt'),fb=document.getElementById('qFb');os[q.a].classList.add('ok');if(i===q.a){qs++;fb.textContent='✅ Brawo! '+q.e;fb.style.background='#d1fae5';fb.style.color='#065f46'}else{os[i].classList.add('no');fb.textContent='❌ Źle. '+q.e;fb.style.background='#fee2e2';fb.style.color='#991b1b'}fb.className='qfb show';document.getElementById('qS').textContent=qs;document.getElementById('qNxt').disabled=false;os.forEach(o=>o.style.pointerEvents='none')}
+function qNx(){qi++;qRn()}
+function qEn(){const p=Math.round(qs/qD.length*100);let e=p===100?'🏆':p>=70?'🌟':p>=40?'👍':'📚';let m=p===100?'Perfekcyjnie!':p>=70?'Świetnie!':p>=40?'Nieźle!':'Powtórz materiał!';document.getElementById('qQ').innerHTML=`${e} <strong>${qs}/${qD.length}</strong> (${p}%)`;document.getElementById('qO').innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:14px;color:var(--muted)">${m}</div>`;document.getElementById('qFb').className='qfb';document.getElementById('qNxt').style.display='none';document.getElementById('qRst').style.display=''}
+function qRe(){qi=0;qs=0;document.getElementById('qS').textContent=0;qRn()}
+qRn();
+
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')})},{threshold:.06});
+document.querySelectorAll('.fin').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
+```
+
+## Zawartość strony — podsumowanie:
+
+### 📖 11 sekcji edukacyjnych:
+
+| Sekcja | Zawartość |
+|---|---|
+| **Co to sed** | Definicja, cykl pracy (READ→EXECUTE→PRINT→REPEAT), pattern space vs hold space |
+| **Składnia** | Ogólna składnia, tabela 7 flag (-i, -n, -e, -f, -E, -i.bak, --posix) |
+| **s/ Zamiana** | Flagi zamiany (g, i, p, w, 1-9), **~25 przykładów**: podstawowe, separator, regex, grupy, backreferencje, & |
+| **d/ Usuwanie** | **10 przykładów**: linia N, zakres, wzorzec, puste, komentarze, negacja, zakres wzorców |
+| **p/ Drukowanie** | **8 przykładów**: linia, zakres, wzorzec, co N-ta, numery linii |
+| **i/a/c** | Insert/Append/Change — **7 przykładów**: nagłówek, stopka, zamiana linii, po wzorcu |
+| **Adresy** | Tabela **10 typów adresowania**: numer, $, zakres, krok, regex, /start/,/end/, negacja |
+| **Zaawansowane** | Tabela **22 komend sed** (s,d,p,q,i,a,c,y,=,r,w,n,N,h,H,g,G,x,b,t,:), **10 zaawansowanych przykładów** (join, reverse, multiline), tabela **17 regex wzorców** |
+| **🎮 Live Tryb** | Emulator sed w przeglądarce! Wpisz komendę + tekst → wynik natychmiast. 5 gotowych przykładów. |
+| **📋 Ściąga** | **40 komend** z wyszukiwarką — od prostych zamian po zaawansowane (join, reverse, transliteracja) |
+| **🧠 Quiz** | 12 pytań z wyjaśnieniami |
+
+### 🛠️ Narzędzia interaktywne:
+1. **🎮 Emulator sed** — wpisz komendę i tekst, obsługuje: s///, /pat/d, Nd, /pat/p, /pat/!d, /^$/d
+2. **📋 Cheat Sheet z wyszukiwarką** — 40 komend do przeszukania
+3. **🧠 Quiz 12 pytań**
+4. **Fade-in animacje, responsywny design**
+
+### 🎨 Design:
+- Styl terminalowy "One Dark" (kolory edytora kodu)
+- Kolorowanie składni w przykładach (cmd, flag, pattern, replacement, file, comment)
+- Monospace font dla kodu
