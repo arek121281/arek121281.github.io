@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sztuczna Inteligencja: Agenci, Modele i Pojęcia</title>
+    <style>
+        /* Stylogwanie CSS */
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2b6cb0;
+            --bg-color: #f7fafc;
+            --text-color: #2d3748;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        nav {
+            background-color: #2d3748;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav li {
+            margin: 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 1rem 1.5rem;
+            display: block;
+            transition: background 0.3s;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .concept-box {
+            background: #edf2f7;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        .concept-box h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        /* Wyróżnienia tekstu */
+        .highlight {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Przewodnik po Sztucznej Inteligencji</h1>
+        <p>Zrozum Modele AI, Agentów oraz kluczowe technologie napędzające dzisiejszy świat.</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#modele">Modele AI</a></li>
+            <li><a href="#agenci">Agenci AI</a></li>
+            <li><a href="#pojecia">Słowniczek Pojęć</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- SEKCJA MODELE AI -->
+        <section id="modele" class="card">
+            <h2>Czym są Modele AI?</h2>
+            <p><span class="highlight">Model sztucznej inteligencji</span> to program komputerowy, który został "wytrenowany" na ogromnym zbiorze danych do rozpoznawania wzorców i podejmowania decyzji. Możesz o nim myśleć jak o "mózgu" w słoiku – posiada wiedzę i potrafi przetwarzać informacje, ale sam z siebie nie wchodzi w interakcje ze światem zewnętrznym.</p>
+            
+            <h3>Główne rodzaje modeli:</h3>
+            <ul>
+                <li><strong>LLM (Large Language Models)</strong> - Wielkie Modele Językowe (np. GPT-4, Claude 3, Llama). Rozumieją i generują tekst przypominający ludzki.</li>
+                <li><strong>Modele Dyfuzyjne</strong> - Służą do generowania obrazów na podstawie opisu tekstowego (np. Midjourney, DALL-E).</li>
+                <li><strong>Modele Predykcyjne</strong> - Przewidują przyszłe wartości na podstawie danych historycznych (np. na giełdzie lub w pogodzie).</li>
+            </ul>
+        </section>
+
+        <!-- SEKCJA AGENCI AI -->
+        <section id="agenci" class="card">
+            <h2>Czym są Agenci AI?</h2>
+            <p><span class="highlight">Agent AI</span> to system, który wykracza poza bycie tylko modelem. To system wyposażony w "ręce i zmysły". Agent używa modelu AI jako swojego mózgu, ale potrafi samodzielnie planować, podejmować decyzje i korzystać z narzędzi zewnętrznych, aby zrealizować powierzony mu cel.</p>
+            
+            <div class="grid-container" style="margin-top: 1rem;">
+                <div class="concept-box">
+                    <h3>Cechy Agenta AI:</h3>
+                    <ul>
+                        <li><strong>Percepcja:</strong> Odbieranie danych ze środowiska (np. czytanie maili).</li>
+                        <li><strong>Autonomia:</strong> Samodzielne podejmowanie kroków bez ciągłego nadzoru człowieka.</li>
+                        <li><strong>Działanie (Akcja):</strong> Wykonywanie zadań (np. wysłanie maila, przeszukanie internetu, uruchomienie kodu).</li>
+                    </ul>
+                </div>
+                <div class="concept-box">
+                    <h3>Model vs Agent - Analogia</h3>
+                    <p><strong>Model AI:</strong> To genialny kucharz, który zna wszystkie przepisy świata, ale nie ma rąk i nie może wyjść z kuchni.</p>
+                    <p><strong>Agent AI:</strong> To robot kuchenny z wbudowanym modelem kucharza. Potrafi sam sprawdzić, czego brakuje w lodówce, zamówić składniki przez internet i ugotować obiad.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEKCJA POJĘCIA -->
+        <section id="pojecia" class="card">
+            <h2>Kluczowe Pojęcia związane z AI</h2>
+            <div class="grid-container">
+                <div class="concept-box">
+                    <h3>Prompt Engineering</h3>
+                    <p>Inżynieria zapytań. Umiejętność precyzyjnego formułowania instrukcji (promptów) dla modeli AI, aby uzyskać jak najlepsze, najdokładniejsze i najbardziej użyteczne odpowiedzi.</p>
+                </div>
+                
+                <div class="concept-box">
+                    <h3>RAG (Retrieval-Augmented Generation)</h3>
+                    <p>Technika, w której model AI przed wygenerowaniem odpowiedzi najpierw przeszukuje zewnętrzną, dedykowaną bazę wiedzy (np. dokumenty firmowe). Dzięki temu AI nie zmyśla, lecz opiera się na faktach dostarczonych przez użytkownika.</p>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Halucynacje</h3>
+                    <p>Zjawisko, w którym model AI (np. ChatGPT) generuje informacje brzmiące bardzo przekonująco i logicznie, ale w rzeczywistości całkowicie zmyślone lub błędne faktuwalnie.</p>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Fine-tuning (Douczanie)</h3>
+                    <p>Proces brania gotowego modelu bazowego (np. GPT) i dodatkowego trenowania go na mniejszym, specjalistycznym zestawie danych, aby wyspecjalizować go w konkretnej dziedzinie (np. prawnej lub medycznej).</p>
+                </div>
+
+                <div class="concept-box">
+                    <h3>API (Interfejs Programowania Aplikacji)</h3>
+                    <p>Sposób, w jaki różne programy komputerowe komunikują się ze sobą. Dzięki API AI, deweloperzy mogą "podłączyć" możliwości modelu AI (np. rozpoznawanie obrazu) do własnych aplikacji mobilnych czy stron WWW.</p>
+                </div>
+
+                <div class="concept-box">
+                    <h3>AGI (Artificial General Intelligence)</h3>
+                    <p>Silna sztuczna inteligencja. Teoretyczny poziom AI, w którym maszyna dorównuje intelektem człowiekowi we wszystkich dziedzinach i jest w stanie nauczyć się każdego zadania umysłowego. Obecnie nie istnieje.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Kompendium Wiedzy o Sztucznej Inteligencji. Wygenerowane dla celów edukacyjnych.</p>
+    </footer>
+
+</body>
+</html>
