@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Explained — Agenci, Modele i Pojęcia</title>
+    <style>
+        :root {
+            --primary: #0a0e27;
+            --secondary: #7c3aed;
+            --accent: #f43f5e;
+            --green: #10b981;
+            --blue: #3b82f6;
+            --orange: #f59e0b;
+            --cyan: #06b6d4;
+            --pink: #ec4899;
+            --bg: #f0f2f8;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --shadow: 0 8px 32px rgba(0,0,0,0.08);
+            --radius: 18px;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth;scroll-padding-top:70px}
+        body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.78}
+
+        /* NAV */
+        nav{position:fixed;top:0;width:100%;z-index:1000;background:rgba(10,14,39,0.96);backdrop-filter:blur(14px);box-shadow:0 2px 24px rgba(0,0,0,0.4)}
+        .nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+        .logo{color:#fff;font-weight:900;font-size:1.15rem;padding:16px 0;display:flex;align-items:center;gap:8px}
+        .logo span{color:var(--secondary)}
+        nav ul{display:flex;list-style:none;gap:0;flex-wrap:wrap}
+        nav ul li a{display:block;color:#b0b8d0;text-decoration:none;padding:17px 14px;font-size:.82rem;font-weight:500;transition:.3s;border-bottom:3px solid transparent}
+        nav ul li a:hover{color:#fff;border-bottom-color:var(--secondary);background:rgba(124,58,237,.12)}
+        .menu-btn{display:none;background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer}
+
+        /* HERO */
+        .hero{background:linear-gradient(135deg,#0a0e27 0%,#1a1145 40%,#2d1b69 70%,#0f172a 100%);color:#fff;text-align:center;padding:150px 24px 110px;position:relative;overflow:hidden}
+        .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 25% 40%,rgba(124,58,237,.18),transparent 55%),radial-gradient(circle at 75% 60%,rgba(244,63,94,.12),transparent 50%);animation:heroBg 10s ease-in-out infinite alternate}
+        @keyframes heroBg{0%{transform:scale(1)}100%{transform:scale(1.12) rotate(2deg)}}
+        .hero>*{position:relative;z-index:1}
+        .hero-icon{font-size:5.5rem;margin-bottom:18px;filter:drop-shadow(0 0 40px rgba(124,58,237,.5));animation:cpuFloat 3.5s ease-in-out infinite}
+        @keyframes cpuFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-14px) rotate(3deg)}}
+        .hero h1{font-size:3.6rem;font-weight:900;margin-bottom:14px;letter-spacing:-1.5px}
+        .hero h1 span{background:linear-gradient(90deg,var(--secondary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .hero>p{font-size:1.25rem;color:#94a3b8;max-width:680px;margin:0 auto 32px}
+        .hero-chips{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+        .chip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);padding:14px 26px;border-radius:14px;backdrop-filter:blur(6px)}
+        .chip .v{font-size:1.7rem;font-weight:900;color:var(--secondary)}
+        .chip .l{font-size:.75rem;color:#94a3b8;text-transform:uppercase;letter-spacing:1.2px}
+
+        /* UTILS */
+        .container{max-width:1100px;margin:0 auto;padding:0 24px}
+        section{padding:90px 0}
+        .stitle{text-align:center;margin-bottom:55px}
+        .stitle h2{font-size:2.5rem;font-weight:800;letter-spacing:-.5px}
+        .stitle .line{width:70px;height:4px;margin:14px auto;background:linear-gradient(90deg,var(--secondary),var(--accent));border-radius:2px}
+        .stitle p{color:var(--muted);font-size:1.08rem;max-width:620px;margin:0 auto}
+        .alt-bg{background:#e8eaf3}
+
+        /* CARDS */
+        .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:38px;margin-bottom:28px;border:1px solid rgba(0,0,0,.04);transition:transform .3s}
+        .card:hover{transform:translateY(-3px)}
+        .card h3{font-size:1.5rem;margin-bottom:14px;color:var(--primary);display:flex;align-items:center;gap:11px}
+        .card h3 .ic{font-size:1.7rem}
+        .card p,.card li{color:#475569;font-size:1.03rem}
+        .card ul,.card ol{padding-left:22px;margin:12px 0}
+        .card li{margin-bottom:7px}
+
+        /* GRIDS */
+        .g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px}
+        .g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px}
+        .g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:22px}
+
+        /* FEATURE CARDS */
+        .fc{background:var(--card);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow);border-top:5px solid var(--secondary);transition:.3s;text-align:center}
+        .fc:nth-child(2){border-top-color:var(--accent)}
+        .fc:nth-child(3){border-top-color:var(--green)}
+        .fc:nth-child(4){border-top-color:var(--orange)}
+        .fc:nth-child(5){border-top-color:var(--cyan)}
+        .fc:nth-child(6){border-top-color:var(--pink)}
+        .fc:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.12)}
+        .fc .fi{font-size:2.8rem;margin-bottom:12px}
+        .fc h4{font-size:1.15rem;margin-bottom:8px;color:var(--primary)}
+        .fc p{color:var(--muted);font-size:.93rem}
+
+        /* INFO BOXES */
+        .ib{border-radius:0 14px 14px 0;padding:22px 26px;margin:20px 0;border-left:5px solid}
+        .ib.blue{background:#eff6ff;border-color:var(--blue)}
+        .ib.green{background:#ecfdf5;border-color:var(--green)}
+        .ib.yellow{background:#fffbeb;border-color:var(--orange)}
+        .ib.red{background:#fef2f2;border-color:var(--accent)}
+        .ib.purple{background:#f5f3ff;border-color:var(--secondary)}
+        .ib h4{margin-bottom:5px;display:flex;align-items:center;gap:8px}
+
+        /* TERMINAL */
+        .term{background:linear-gradient(135deg,#0a0e27,#1a1a3e);color:#4ade80;border-radius:14px;padding:26px 30px;margin:20px 0;font-family:'Courier New',monospace;font-size:.98rem;line-height:2;overflow-x:auto;border-left:5px solid #4ade80;position:relative}
+        .term::before{content:'● ● ●';position:absolute;top:10px;left:16px;font-size:.6rem;letter-spacing:4px;color:#475569}
+        .term{padding-top:36px}
+        .term .c{color:#4b5a75}
+        .term .r{color:#f87171;font-weight:700}
+        .term .y{color:#fbbf24;font-weight:700}
+        .term .b{color:#60a5fa;font-weight:700}
+        .term .g{color:#4ade80;font-weight:700}
+        .term .p{color:#c084fc;font-weight:700}
+        .term .w{color:#e2e8f0;font-weight:700}
+
+        /* TABLES */
+        .tw{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow);margin:26px 0}
+        table{width:100%;border-collapse:collapse;background:var(--card)}
+        th{background:linear-gradient(135deg,var(--primary),#1e293b);color:#fff;padding:15px 16px;text-align:center;font-size:.85rem;text-transform:uppercase;letter-spacing:1px}
+        td{padding:13px 16px;text-align:center;border-bottom:1px solid #f1f5f9;font-size:.95rem}
+        td:first-child{text-align:left;font-weight:600}
+        tr:nth-child(even){background:#f8fafc}
+        tr:hover{background:#eef2ff}
+
+        /* PROCESS FLOW */
+        .pflow{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;margin:30px 0}
+        .pfs{background:var(--card);border-radius:14px;padding:20px 22px;text-align:center;box-shadow:var(--shadow);min-width:130px;max-width:180px}
+        .pfs .pfi{font-size:2rem;margin-bottom:6px}
+        .pfs h5{font-size:.9rem;color:var(--primary)}
+        .pfs p{font-size:.75rem;color:var(--muted)}
+        .pfa{font-size:1.5rem;color:var(--secondary);padding:0 6px;font-weight:900}
+
+        /* TIMELINE */
+        .tl{position:relative;padding-left:50px}
+        .tl::before{content:'';position:absolute;left:20px;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--secondary),var(--accent),var(--green),var(--blue))}
+        .tli{position:relative;margin-bottom:24px;background:var(--card);padding:24px 28px;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,.06)}
+        .tli::before{content:attr(data-y);position:absolute;left:-52px;top:24px;width:42px;height:42px;background:var(--secondary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.6rem}
+        .tli h4{color:var(--primary);margin-bottom:4px;font-size:1.05rem}
+        .tli p{color:var(--muted);font-size:.92rem}
+
+        /* SIMULATOR */
+        .sim-wrap{background:linear-gradient(135deg,#1a1145,#2d1b69,#0f172a);border-radius:var(--radius);padding:40px;box-shadow:var(--shadow);color:#fff}
+        .sim-wrap h3{text-align:center;font-size:1.7rem;margin-bottom:6px}
+        .sim-sub{text-align:center;color:#a5b4fc;margin-bottom:24px}
+        .sim-cpu{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+        .sim-unit{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:20px}
+        .sim-unit h5{text-align:center;color:var(--secondary);text-transform:uppercase;letter-spacing:1.5px;font-size:.8rem;margin-bottom:12px}
+        .reg-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+        .reg{background:rgba(0,0,0,.25);border-radius:8px;padding:10px 12px;font-family:'Courier New',monospace;font-size:.85rem;display:flex;justify-content:space-between;align-items:center;transition:.4s}
+        .reg .rn{color:#a5b4fc;font-weight:700}
+        .reg .rv{color:#4ade80;font-weight:700}
+        .reg.active{background:rgba(124,58,237,.35);box-shadow:0 0 12px rgba(124,58,237,.4)}
+        .prog-area{background:rgba(0,0,0,.3);border-radius:12px;padding:16px;max-height:200px;overflow-y:auto}
+        .inst-line{display:flex;align-items:center;gap:10px;padding:6px 10px;font-family:'Courier New',monospace;font-size:.88rem;border-radius:6px;margin-bottom:3px;transition:.3s;color:#94a3b8}
+        .inst-line .ln{color:#4b5563;width:24px;text-align:right}
+        .inst-line.current{background:rgba(244,63,94,.25);color:#fff}
+        .inst-line.done{color:#4b5563;text-decoration:line-through}
+        .sim-output{background:rgba(0,0,0,.3);border-radius:12px;padding:16px;margin-top:16px;font-family:'Courier New',monospace;font-size:.85rem;color:#94a3b8;max-height:130px;overflow-y:auto}
+        .sim-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+        .sb{padding:12px 28px;border:none;border-radius:10px;font-size:.92rem;font-weight:700;cursor:pointer;transition:.3s;text-transform:uppercase;letter-spacing:.5px}
+        .sb:hover{transform:scale(1.05);box-shadow:0 5px 20px rgba(0,0,0,.3)}
+        .sb.step-btn{background:var(--green);color:#fff}
+        .sb.run-btn{background:var(--secondary);color:#fff}
+        .sb.rst-btn{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+        .sb.load-btn{background:var(--orange);color:var(--primary)}
+        .pipeline-vis{display:flex;gap:4px;margin-top:18px;flex-wrap:wrap;justify-content:center}
+        .pipe-stage{padding:10px 16px;border-radius:8px;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:rgba(255,255,255,.06);color:#64748b;transition:.4s;min-width:90px;text-align:center}
+        .pipe-stage.active{color:#fff}
+        .pipe-stage.fetch-a{background:rgba(59,130,246,.5)}
+        .pipe-stage.decode-a{background:rgba(124,58,237,.5)}
+        .pipe-stage.execute-a{background:rgba(244,63,94,.5)}
+        .pipe-stage.memory-a{background:rgba(245,158,11,.5)}
+        .pipe-stage.writeback-a{background:rgba(16,185,129,.5)}
+
+        /* LATENCY BARS */
+        .lbars{margin:18px 0}
+        .lbi{margin-bottom:16px}
+        .lbl-row{display:flex;justify-content:space-between;margin-bottom:4px;font-weight:600;font-size:.93rem}
+        .lbl-row span:last-child{color:var(--muted)}
+        .lb-track{background:#e2e8f0;border-radius:8px;height:26px;overflow:hidden}
+        .lb-fill{height:100%;border-radius:8px;display:flex;align-items:center;padding-left:10px;color:#fff;font-weight:700;font-size:.78rem;transition:width 1.2s ease}
+
+        /* ACCORDION */
+        .acc{margin:8px 0}
+        .acc-i{margin-bottom:8px}
+        .acc-h{background:var(--card);border:1px solid #e2e8f0;padding:18px 24px;border-radius:12px;cursor:pointer;font-weight:700;font-size:1.03rem;display:flex;justify-content:space-between;align-items:center;transition:.3s}
+        .acc-h:hover{background:#f1f5f9}
+        .acc-h .aw{transition:transform .3s;font-size:1.2rem}
+        .acc-i.open .acc-h .aw{transform:rotate(180deg)}
+        .acc-b{max-height:0;overflow:hidden;transition:max-height .4s ease;background:#f8fafc;border-radius:0 0 12px 12px}
+        .acc-bi{padding:20px 24px;color:#475569;line-height:1.85}
+
+        /* QUIZ */
+        .qbox{background:var(--card);border-radius:var(--radius);padding:38px;box-shadow:var(--shadow)}
+        .qq{font-size:1.25rem;font-weight:700;color:var(--primary);margin-bottom:18px}
+        .qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .qopt{padding:15px 18px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;transition:.3s;font-size:.98rem;text-align:center;font-weight:500}
+        .qopt:hover{border-color:var(--secondary);background:#f5f3ff}
+        .qopt.ok{border-color:var(--green);background:#d1fae5;color:#065f46}
+        .qopt.no{border-color:var(--accent);background:#fee2e2;color:#991b1b}
+        .qfb{padding:14px;border-radius:10px;margin-top:14px;font-weight:600;display:none}
+        .qfb.show{display:block}
+        .qmeta{color:var(--muted);margin-bottom:10px;font-size:.93rem}
+        .qnav{display:flex;justify-content:space-between;margin-top:16px}
+        .qb{padding:11px 26px;border:none;border-radius:10px;cursor:pointer;font-size:.93rem;font-weight:700;transition:.3s}
+        .qb.nxt{background:var(--secondary);color:#fff}
+        .qb.res{background:var(--accent);color:#fff;display:none}
+        .qb:hover{transform:scale(1.04)}
+        .qb:disabled{opacity:.35;cursor:not-allowed}
+
+        /* FOOTER */
+        footer{background:linear-gradient(135deg,#0a0e27,#1a1145);color:#94a3b8;text-align:center;padding:50px 24px}
+        footer h3{color:#fff;margin-bottom:6px}
+        footer a{color:var(--secondary);text-decoration:none}
+        footer a:hover{text-decoration:underline}
+
+        /* ANIM */
+        .fin{opacity:0;transform:translateY(28px);transition:all .7s cubic-bezier(.16,1,.3,1)}
+        .fin.vis{opacity:1;transform:translateY(0)}
+
+        /* RESPONSIVE */
+        @media(max-width:768px){
+            .hero h1{font-size:2.1rem}
+            .stitle h2{font-size:1.8rem}
+            .card{padding:22px}
+            nav ul{display:none}
+            nav ul.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(10,14,39,.98)}
+            .menu-btn{display:block}
+            .qopts{grid-template-columns:1fr}
+            .pfa{transform:rotate(90deg)}
+            .pflow{flex-direction:column}
+            .sim-cpu{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <div class="logo">🧠 <span>AI</span>Explained</div>
+        <button class="menu-btn" onclick="document.querySelector('nav ul').classList.toggle('open')">☰</button>
+        <ul>
+            <li><a href="#agents">Agenci AI</a></li>
+            <li><a href="#models">Modele AI</a></li>
+            <li><a href="#cycle">Cykl pracy</a></li>
+            <li><a href="#arch">Architektury</a></li>
+            <li><a href="#rag">RAG & Planowanie</a></li>
+            <li><a href="#tools">Narzędzia</a></li>
+            <li><a href="#history">Historia</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+        </ul>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="hero-icon">🤖</div>
+    <h1>Jak działają <span>Agenci AI</span>?</h1>
+    <p>Kompletny, interaktywny przewodnik po agentach AI, modelach językowych i mechanizmach podejmowania decyzji przez maszyny</p>
+    <div class="hero-chips">
+        <div class="chip"><div class="v">GPT-4o</div><div class="l">Model</div></div>
+        <div class="chip"><div class="v">LangChain</div><div class="l">Framework</div></div>
+        <div class="chip"><div class="v">RAG</div><div class="l">Technika</div></div>
+        <div class="chip"><div class="v">AutoGen</div><div class="l">Multi-Agent</div></div>
+    </div>
+</header>
+
+<!-- AGENCI -->
+<section id="agents">
+    <div class="container">
+        <div class="stitle fin"><h2>🔍 Co to są Agenci AI?</h2><div class="line"></div><p>Autonomiczne byty cyfrowe, które myślą, planują i działają</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">📖</span> Definicja</h3>
+            <p><strong>Agent AI</strong> to program lub system, który <strong>samodzielnie podejmuje decyzje</strong>, wykonuje zadania i interaguje ze środowiskiem (np. użytkownikiem, API, innymi agentami) w celu osiągnięcia określonego celu.</p>
+            <div class="ib blue" style="margin-top:18px">
+                <h4>💡 Analogia: asystent biurowy</h4>
+                <p>Agent AI działa jak <strong>doskonały asystent</strong>. Nie tylko odpowiada na pytania, ale sam planuje działania: „Sprawdzę terminy spotkań, zarezerwuję salę, przygotuję notatkę i wyśle zaproszenia”. Potrafi uczyć się, adaptować i współpracować.</p>
+            </div>
+        </div>
+
+        <div class="g3 fin">
+            <div class="fc"><div class="fi">🧩</div><h4>Autonomia</h4><p>Agent działa bez ciągłego nadzoru — sam decyduje, co robić dalej</p></div>
+            <div class="fc"><div class="fi">🎯</div><h4>Celowy</h4><p>Działa w kierunku osiągnięcia konkretnego celu (np. „zarezerwuj wakacje”)</p></div>
+            <div class="fc"><div class="fi">🔄</div><h4>Reaktywność</h4><p>Reaguje na zmiany w środowisku (np. nowe dane, błędy, feedback)</p></div>
+            <div class="fc"><div class="fi">📈</div><h4>Uczenie się</h4><p>Może poprawiać swoje działania na podstawie doświadczenia</p></div>
+            <div class="fc"><div class="fi">🤝</div><h4>Społeczność</h4><p>Współpracuje z innymi agentami lub ludźmi</p></div>
+            <div class="fc"><div class="fi">🛠️</div><h4>Narzędzia</h4><p>Używa narzędzi (API, kalkulator, przeglądarka, kod) do realizacji zadań</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- MODELE -->
+<section id="models" class="alt-bg">
+    <div class="container">
+        <div class="stitle fin"><h2>🏗️ Modele AI — silniki agentów</h2><div class="line"></div><p>Z czego składają się modele AI?</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">🔬</span> Od tokenów do odpowiedzi</h3>
+            <p>Model AI to matematyczny system przetwarzający sekwencje tokenów (fragmentów tekstu). Na podstawie ogromnej ilości danych uczony jest przewidywać następny token — co pozwala generować spójne, logiczne odpowiedzi.</p>
+            <div class="term">
+                <span class="c">// Jak powstaje odpowiedź:</span><br><br>
+                <span class="p">Wejście:</span> „Jaka jest stolica Francji?”<br>
+                &nbsp;&nbsp;&nbsp;↓ Tokenizacja<br>
+                <span class="b">Tokeny:</span> [„Jaka”, „jest”, „stolica”, „Francji”, „?”]<br>
+                &nbsp;&nbsp;&nbsp;↓ Przetwarzanie przez sieć neuronową<br>
+                <span class="y">Embedding → Warstwy Transformer → Logits</span><br>
+                &nbsp;&nbsp;&nbsp;↓ Sampling / Decoding<br>
+                <span class="g">Wyjście:</span> [„Paryż”] → „Paryż.” ✅
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🧱</span> Główne typy modeli AI</h3>
+            <div class="g2" style="margin-top:16px">
+                <div style="background:#f5f3ff;padding:24px;border-radius:14px;border-left:4px solid var(--secondary)">
+                    <h4>🔤 LLM — Large Language Models</h4>
+                    <p>Modele językowe (GPT, Llama, Claude) — rozumieją i generują tekst. Są „mózgiem” większości agentów AI.</p>
+                </div>
+                <div style="background:#fef2f2;padding:24px;border-radius:14px;border-left:4px solid var(--accent)">
+                    <h4>🖼️ VLM — Vision-Language Models</h4>
+                    <p>Modele multimodalne (GPT-4V, Gemini, LLaVA) — rozumieją obrazy + tekst. Mogą analizować screenshoty, diagramy, zdjęcia.</p>
+                </div>
+                <div style="background:#ecfdf5;padding:24px;border-radius:14px;border-left:4px solid var(--green)">
+                    <h4>🎵 MLLM — Multimodal LLM</h4>
+                    <p>Obsługują wiele modalności: tekst, obraz, dźwięk, wideo. Przyszłość interfejsów AI.</p>
+                </div>
+                <div style="background:#fffbeb;padding:24px;border-radius:14px;border-left:4px solid var(--orange)">
+                    <h4>📊 SSM — State Space Models</h4>
+                    <p>Alternatywa dla Transformerów (np. Mamba). Bardziej efektywne przy długich sekwencjach.</p>
+                </div>
+                <div style="background:#eff6ff;padding:24px;border-radius:14px;border-left:4px solid var(--blue)">
+                    <h4>🎲 RLHF — Reinforcement Learning from Human Feedback</h4>
+                    <p>Technika dopracowywania modelu przez nagradzanie „dobrych” odpowiedzi. Uczy uprzejmości i bezpieczeństwa.</p>
+                </div>
+                <div style="background:#fdf2f8;padding:24px;border-radius:14px;border-left:4px solid var(--pink)">
+                    <h4>🔧 MoE — Mixture of Experts</h4>
+                    <p>Model składa się z wielu „ekspertów”, z których aktywowane są tylko niektóre per token. Efektywność obliczeniowa (np. Mixtral).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">📊</span> Ważne parametry modeli</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Parametr</th><th>Opis</th><th>Przykład</th></tr></thead>
+                    <tbody>
+                        <tr><td>Parametry</td><td>Liczba wag w modelu — im więcej, tym większa pojemność</td><td>7B, 70B, 1.8T</td></tr>
+                        <tr><td>Kontekst</td><td>Maksymalna długość wejścia/wyjścia (tokenów)</td><td>4K, 32K, 1M tokenów</td></tr>
+                        <tr><td>TPM</td><td>Tokens Per Minute — szybkość generowania</td><td>1000 TPM = ~15 słów/s</td></tr>
+                        <tr><td>Latencja</td><td>Czas pierwszej odpowiedzi (TTFT — Time To First Token)</td><td>200ms, 2s</td></tr>
+                        <tr><td>Precyzja</td><td>Format liczb zmiennoprzecinkowych (wpływa na jakość i VRAM)</td><td>FP16, BF16, INT4</td></tr>
+                        <tr><td>LoRA</td><td>Technika fine-tuning z małą liczbą parametrów</td><td>Adapter na 1% wag</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CYKL PRACY AGENTA -->
+<section id="cycle">
+    <div class="container">
+        <div class="stitle fin"><h2>🔄 Cykl pracy agenta AI</h2><div class="line"></div><p>Jak agent AI wykonuje zadanie krok po kroku</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">⚙️</span> Cykl ReAct: Reason + Act</h3>
+            <p>Większość współczesnych agentów używa cyklu <strong>ReAct</strong> (Reason + Act). W każdej iteracji agent:</p>
+            <ol>
+                <li><strong>Myśli</strong> — analizuje sytuację, planuje</li>
+                <li><strong>Działa</strong> — wykonuje akcję (używa narzędzia, pyta, generuje kod)</li>
+                <li><strong>Obserwuje</strong> — analizuje wynik</li>
+                <li><strong>Powtarza</strong> aż do osiągnięcia celu lub limitu kroków</li>
+            </ol>
+
+            <div class="pflow" style="margin:30px 0">
+                <div class="pfs" style="border:2px solid var(--blue)">
+                    <div class="pfi">🤔</div><h5>THINK</h5><p>Co mam zrobić? Jaki plan?</p>
+                </div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--secondary)">
+                    <div class="pfi">🛠️</div><h5>ACT</h5><p>Użyj narzędzia / zapytaj / wygeneruj</p>
+                </div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--accent)">
+                    <div class="pfi">👁️</div><h5>OBSERVE</h5><p>Co się stało? Czy to pomogło?</p>
+                </div>
+                <div class="pfa">→</div>
+                <div class="pfs" style="border:2px solid var(--green)">
+                    <div class="pfi">🔁</div><h5>REPEAT</h5><p>Powtórz lub zakończ</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">📋</span> Szczegółowy przykład: „Znajdź najtańszy lot do Tokio”</h3>
+            <div class="term">
+                <span class="c">// ═══ KROK 1: THINK ═══</span><br>
+                <span class="b">Cel:</span> Znajdź najtańszy lot do Tokio w przyszłym miesiącu.<br>
+                <span class="p">Plan:</span> 1. Sprawdź daty w przyszłym miesiącu. 2. Użyj narzędzia wyszukiwania lotów. 3. Porównaj ceny. 4. Zwróć najlepszą ofertę.<br><br>
+
+                <span class="c">// ═══ KROK 2: ACT (search_flights) ═══</span><br>
+                <span class="y">Akcja:</span> search_flights(destination="Tokyo", dates=["2025-04-01","2025-04-30"])<br>
+                <span class="g">Wynik:</span> Znaleziono 12 lotów. Najtańszy: LOT 123, 15 kwietnia, 890 zł.<br><br>
+
+                <span class="c">// ═══ KROK 3: OBSERVE ═══</span><br>
+                <span class="w">Analiza:</span> To wygląda na dobrą ofertę. Czy sprawdzić alternatywy?<br><br>
+
+                <span class="c">// ═══ KROK 4: THINK → ACT → DONE ═══</span><br>
+                <span class="r">Decyzja:</span> To najtańszy lot. Zwracam wynik użytkownikowi. ✓<br><br>
+
+                <span class="c">// Cały proces trwał 3 sekundy i 2 iteracje cyklu ReAct</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ARCHITEKTURY -->
+<section id="arch" class="alt-bg">
+    <div class="container">
+        <div class="stitle fin"><h2>🏛️ Architektury agentów AI</h2><div class="line"></div><p>Różne sposoby budowania inteligentnych systemów</p></div>
+
+        <div class="g2 fin">
+            <div class="card" style="border-top:5px solid var(--blue)">
+                <h3><span class="ic">🔄</span> ReAct (Reason + Act)</h3>
+                <p>Najpopularniejszy wzorzec. Agent naprzemiennie myśli i działa. Prosty, skuteczny, łatwy w debugowaniu.</p>
+                <ul>
+                    <li>Przykład: AutoGPT, BabyAGI</li>
+                    <li>Plusy: przejrzystość, kontrola</li>
+                    <li>Minusy: może zapętlać się, wolne</li>
+                </ul>
+            </div>
+            <div class="card" style="border-top:5px solid var(--green)">
+                <h3><span class="ic">🧠</span> Plan-and-Execute</h3>
+                <p>Najpierw tworzy szczegółowy plan, potem go wykonuje krok po kroku. Lepsze dla złożonych zadań.</p>
+                <ul>
+                    <li>Przykład: Microsoft AutoGen</li>
+                    <li>Plusy: lepsza koordynacja, mniej błędów</li>
+                    <li>Minusy: sztywność, nie radzi sobie z niespodziewanymi zmianami</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">🔀</span> Multi-Agent Systems</h3>
+            <div class="term">
+                <span class="c">// ═══ JEDEN AGENT ═══</span><br>
+                <span class="c">// Sam wykonuje wszystkie zadania</span><br>
+                [🧠 Asystent] → myśli → działa → kończy<br><br>
+
+                <span class="c">// ═══ WIELOAGENTOWY SYSTEM ═══</span><br>
+                <span class="c">// Specjalizowani agenci współpracują</span><br>
+                [👨‍💼 Manager] → deleguje<br>
+                [🔍 Researcher] → szuka informacji<br>
+                [📊 Analyst] → analizuje dane<br>
+                [📝 Writer] → pisze raport<br>
+                [✅ Reviewer] → sprawdza jakość<br><br>
+
+                <span class="c">// ═══ PRZYKŁAD: AutoGen Studio ═══</span><br>
+                <span class="g">Grupa agentów</span> rozwiązuje problem biznesowy:<br>
+                - Product Manager definiuje wymagania<br>
+                - Engineer pisze kod<br>
+                - Tester uruchamia testy<br>
+                - UX Designer proponuje ulepszenia<br>
+                → <span class="r">Pełny cykl rozwoju oprogramowania bez człowieka!</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- RAG I PLANOWANIE -->
+<section id="rag">
+    <div class="container">
+        <div class="stitle fin"><h2>📚 RAG & Planowanie</h2><div class="line"></div><p>Jak agenci uzyskują aktualną wiedzę i planują działania</p></div>
+
+        <div class="card fin">
+            <h3><span class="ic">🔗</span> RAG — Retrieval-Augmented Generation</h3>
+            <p><strong>RAG</strong> to technika, w której model AI <strong>najpierw szuka informacji</strong> w bazie danych, dokumentach lub internecie, a dopiero potem generuje odpowiedź na ich podstawie. Zapobiega halucynacjom i podaje aktualne dane.</p>
+            <div class="ib blue"><h4>💡 Analogia: student z dostępem do biblioteki</h4><p>Zamiast polegać na pamięci (treningu), agent AI „zagląda do książek” (bazy danych) przed udzieleniem odpowiedzi. Więcej pewności, mniej błędów.</p></div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">📊</span> RAG vs Fine-tuning</h3>
+            <div class="term">
+                <span class="c">// ═══ FINE-TUNING ═══</span><br>
+                <span class="c">// Uczenie modelu na nowych danych — trwałe zmiany wag</span><br>
+                <span class="y">+ Dobre dla stałej wiedzy</span><br>
+                <span class="r">- Drogie, wolne, nieaktualne</span><br><br>
+
+                <span class="c">// ═══ RAG ═══</span><br>
+                <span class="c">// Dołączanie zewnętrznych danych w locie</span><br>
+                <span class="g">+ Aktualne, tanie, elastyczne</span><br>
+                <span class="b">- Wymaga dobrej bazy danych i retrievera</span><br><br>
+
+                <span class="c">// ═══ HYBRYDA: Fine-tune + RAG ═══</span><br>
+                <span class="p">Fine-tune</span> na domenie (np. prawo medyczne)<br>
+                <span class="p">RAG</span> na aktualnych dokumentach (np. nowa ustawa)<br>
+                → <span class="g">Idealne połączenie!</span>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">⚠️</span> Planowanie i pamięć agenta</h3>
+            <div class="g3" style="margin-top:14px">
+                <div style="background:#fef2f2;padding:20px;border-radius:12px">
+                    <h4 style="color:var(--accent)">🔴 Short-Term Memory</h4>
+                    <p style="font-size:.92rem;color:#475569">Kontekst bieżącej sesji (ostatnie wiadomości). Ograniczony rozmiarem okna kontekstu modelu.</p>
+                </div>
+                <div style="background:#eff6ff;padding:20px;border-radius:12px">
+                    <h4 style="color:var(--blue)">🔵 Long-Term Memory</h4>
+                    <p style="font-size:.92rem;color:#475569">Zapisywanie ważnych faktów w bazie wektorowej (Chroma, Pinecone). Pobierane przy pomocy RAG.</p>
+                </div>
+                <div style="background:#fffbeb;padding:20px;border-radius:12px">
+                    <h4 style="color:var(--orange)">🟡 Reflection</h4>
+                    <p style="font-size:.92rem;color:#475569">Agent analizuje swoje wcześniejsze działania i uczy się na błędach. „Czego się nauczyłem z tego zadania?”</p>
+                </div>
+            </div>
+            <div class="ib purple" style="margin-top:16px">
+                <h4>🧠 Tool Calling — wywoływanie narzędzi</h4>
+                <p>Nowoczesne modele (GPT-4, Claude 3, Llama 3) potrafią <strong>automatycznie wywoływać funkcje</strong> z precyzyjnymi parametrami. System parsuje JSON i wykonuje akcję — bez prompt engineeringu!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- NARZĘDZIA -->
+<section id="tools" class="alt-bg">
+    <div class="container">
+        <div class="stitle fin"><h2>🛠️ Narzędzia i Frameworki</h2><div class="line"></div><p>Jak budować własne agenty AI</p></div>
+
+        <div class="g2 fin">
+            <div class="card" style="border-top:5px solid var(--blue)">
+                <h3><span class="ic">⛓️</span> LangChain</h3>
+                <p>Najpopularniejszy framework do budowy aplikacji i agentów z LLM. Moduły: Chains, Agents, Tools, Memory, RAG.</p>
+                <ul>
+                    <li>Python + JS</li>
+                    <li>Dokumentacja: świetna</li>
+                    <li>Ekosystem: ogromny (LlamaIndex, LangSmith)</li>
+                </ul>
+            </div>
+            <div class="card" style="border-top:5px solid var(--green)">
+                <h3><span class="ic">🤖</span> AutoGen (Microsoft)</h3>
+                <p>Framework do budowy <strong>multi-agent systems</strong>. Łatwe tworzenie zespołów specjalistów AI.</p>
+                <ul>
+                    <li>Conversation-driven</li>
+                    <li>Wbudowane typy agentów</li>
+                    <li>Studio GUI dla początkujących</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span class="ic">⚡</span> Inne ważne narzędzia</h3>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>Narzędzie</th><th>Opis</th><th>Link</th></tr></thead>
+                    <tbody>
+                        <tr><td>LlamaIndex</td><td>Budowanie aplikacji RAG — indeksowanie i pobieranie danych</td><td>llamaindex.ai</td></tr>
+                        <tr><td>CrewAI</td><td>Framework do multi-agent teams — prostszy niż AutoGen</td><td>crewai.com</td></tr>
+                        <tr><td>Haystack</td><td>Open-source RAG pipeline od deepset.ai</td><td>haystack.deepset.ai</td></tr>
+                        <tr><td>LiteLLM</td><td>Uniwersalny wrapper dla 100+ modeli (OpenAI, Anthropic, lokalne)</td><td>litellm.ai</td></tr>
+                        <tr><td>Ollama</td><td>Uruchamianie modeli lokalnie (Llama 3, Mistral, Gemma)</td><td>ollama.com</td></tr>
+                        <tr><td>Hugging Face</td><td>Repozytorium modeli, datasetów i Spaces do demo</td><td>huggingface.co</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HISTORIA -->
+<section id="history">
+    <div class="container">
+        <div class="stitle fin"><h2>📜 Historia agentów AI</h2><div class="line"></div><p>Od ELIZY po autonomiczne zespoły agentów</p></div>
+        <div class="tl fin">
+            <div class="tli" data-y="1966"><h4>ELIZA — pierwszy chatbot</h4><p>Program emulujący terapeutę. Proste dopasowanie wzorców. Pokazał, że ludzie mogą traktować maszyny jak istoty.</p></div>
+            <div class="tli" data-y="1997"><h4>Deep Blue — IBM vs Kasparow</h4><p>Pierwszy komputer, który pokonał mistrza świata w szachy. Agent oparty na regułach i przeszukiwaniu drzewa gry.</p></div>
+            <div class="tli" data-y="2017"><h4>Transformer — rewolucja</h4><p>Artykuł „Attention is All You Need” wprowadza architekturę Transformer — podstawa wszystkich nowoczesnych LLM.</p></div>
+            <div class="tli" data-y="2020"><h4>GPT-3 — generalne możliwości</h4><p>175B parametrów. Potrafi pisać, tłumaczyć, kodować, rozumować. Początek ery promptowania.</p></div>
+            <div class="tli" data-y="2022"><h4>ChatGPT — era agentów</h4><p>Interfejs czatu + pamięć + pluginy. Ludzie zaczynają traktować AI jak pomocnika, nie tylko generator tekstu.</p></div>
+            <div class="tli" data-y="2023"><h4>AutoGPT, BabyAGI — autonomia</h4><p>Pierwsze projekty agentów zdolnych do samodzielnego działania. Burza na GitHubie. Początek multi-agent systems.</p></div>
+            <div class="tli" data-y="2024"><h4>Claude 3, GPT-4o, Llama 3 — dojrzałość</h4><p>Modele rozumiejące obrazy, dźwięk, potrafiące planować i używać narzędzi. Agenci stają się praktycznymi narzędziami biznesowymi.</p></div>
+            <div class="tli" data-y="2025"><h4>Era Agent OS</h4><p>Systemy operacyjne sterowane przez AI. Agenci zarządzają aplikacjami, danymi, komunikacją. Komputer jako osobisty asystent.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="alt-bg">
+    <div class="container">
+        <div class="stitle fin"><h2>❓ Najczęściej Zadawane Pytania</h2><div class="line"></div></div>
+        <div class="acc fin">
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Jaka jest różnica między modelem a agentem?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi"><strong>Model AI</strong> (np. GPT-4) to silnik generujący tekst na podstawie danych wejściowych. <strong>Agent AI</strong> to system, który używa modelu (lub kilku) do <strong>samodzielnego wykonywania zadań</strong> — planuje, używa narzędzi, podejmuje decyzje. Model to mózg, agent to cały organizm.</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Czy agenci AI mogą być niebezpieczni?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">Tak, jeśli nie zostaną odpowiednio zaprojektowani. Ryzyka: wykonanie niebezpiecznych poleceń, ucieczka z pętli (zapętlenie), manipulacja użytkownikiem, naruszenie prywatności. Dlatego stosuje się: ograniczenia (safety layers), monitorowanie, human-in-the-loop, audyty.</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Czy potrzebuję GPU, żeby uruchomić agenta?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi"><strong>Nie zawsze.</strong> Proste agenty z zewnętrznymi API (np. OpenAI) działają na zwykłym laptopie. Ale jeśli chcesz uruchamiać duże modele lokalnie (Llama 3 70B), potrzebujesz potężnego GPU (np. RTX 4090, A100) lub kilku kart. Istnieją też mniejsze modele (Phi-3, Gemma 2B) działające na CPU.</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Co to jest „agent loop”?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">To sytuacja, gdy agent wchodzi w nieskończoną pętlę — np. ciągle pyta się samego siebie, albo wykonuje tę samą akcję bez postępu. Zapobiega się temu przez: limity iteracji, mechanizmy refleksji, kontrolę jakości, human review.</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Jakie języki programowania są najlepsze do agentów?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi"><strong>Python</strong> — absolutny lider dzięki ekosystemowi (LangChain, LlamaIndex, Transformers). <strong>TypeScript/JavaScript</strong> — do aplikacji webowych i narzędzi (Next.js, Vercel AI SDK). Rust i Go — dla wydajnych backendów. Ale… możesz zacząć nawet w no-code toolach (Zapier, Make, n8n).</div></div></div>
+            <div class="acc-i"><div class="acc-h" onclick="togAcc(this)">Czy agenci zastąpią programistów?<span class="aw">▼</span></div><div class="acc-b"><div class="acc-bi">Nie zastąpią, ale <strong>zmienią ich pracę</strong>. Agenci AI (GitHub Copilot, Cursor, Codeium) już dziś pomagają pisać, debugować i testować kod. Programista staje się „menedżerem agentów” — definiuje cele, przegląda wyniki, integruje systemy. To jak przejście od assemblera do Pythona — wyższy poziom abstrakcji.</div></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz">
+    <div class="container">
+        <div class="stitle fin"><h2>🧠 Quiz — Sprawdź wiedzę o Agentach AI!</h2><div class="line"></div><p>12 pytań o sztuczną inteligencję</p></div>
+        <div class="qbox fin">
+            <div class="qmeta">Pytanie <span id="qN">1</span>/<span id="qT">12</span> | Wynik: <span id="qS">0</span></div>
+            <div class="qq" id="qQ"></div>
+            <div class="qopts" id="qO"></div>
+            <div class="qfb" id="qFb"></div>
+            <div class="qnav">
+                <button class="qb nxt" id="qNxt" onclick="qNx()" disabled>Następne →</button>
+                <button class="qb res" id="qRst" onclick="qRe()">Od nowa 🔄</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <h3>🤖 Jak działają Agenci AI</h3>
+    <p>Interaktywny przewodnik edukacyjny po sztucznej inteligencji</p>
+    <p style="margin-top:10px"><a href="#agents">Agenci</a> • <a href="#models">Modele</a> • <a href="#cycle">Cykl pracy</a> • <a href="#tools">Narzędzia</a> • <a href="#quiz">Quiz</a></p>
+    <p style="font-size:.78rem;opacity:.5;margin-top:18px">© 2025 — Projekt edukacyjny</p>
+</footer>
+
+<script>
+// ══════════════════════════════
+// ACCORDION
+// ══════════════════════════════
+function togAcc(h){
+    const item = h.parentElement;
+    const body = item.querySelector('.acc-b');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.acc-i').forEach(i=>{i.classList.remove('open');i.querySelector('.acc-b').style.maxHeight=null});
+    if(!isOpen){item.classList.add('open');body.style.maxHeight=body.scrollHeight+'px';}
+}
+
+// ══════════════════════════════
+// QUIZ
+// ══════════════════════════════
+const qData=[
+    {q:"Co to jest Agent AI?",o:["Program do obróbki zdjęć","System autonomicznie podejmujący decyzje","Typ bazy danych","Format pliku"],a:1,e:"Agent AI to system, który samodzielnie planuje i wykonuje zadania w celu osiągnięcia celu."},
+    {q:"Co oznacza skrót LLM?",o:["Large Language Model","Linear Logic Machine","Local Learning Module","Long-term Language Memory"],a:0,e:"LLM = Large Language Model — duży model językowy, np. GPT, Llama, Claude."},
+    {q:"Jaki cykl pracy jest najpopularniejszy wśród agentów?",o:["Input-Process-Output","Think-Act-Observe (ReAct)","Read-Eval-Print","Load-Compute-Store"],a:1,e:"ReAct (Reason + Act) — agent naprzemiennie myśli, działa i obserwuje wynik."},
+    {q:"Co to jest RAG?",o:["Rodzaj GPU","Technika łącząca wyszukiwanie z generowaniem","Format obrazu","Protokół sieciowy"],a:1,e:"RAG = Retrieval-Augmented Generation — model najpierw szuka informacji, potem generuje odpowiedź."},
+    {q:"Który framework służy do budowy agentów w Pythonie?",o:["React","TensorFlow","LangChain","Django"],a:2,e:"LangChain to najpopularniejszy framework do budowy aplikacji i agentów z LLM."},
+    {q:"Co umożliwia Tool Calling?",o:["Automatyczne malowanie obrazów","Wywoływanie funkcji przez model z parametrami","Tłumaczenie języków","Kompresję danych"],a:1,e:"Tool Calling — model automatycznie generuje JSON z nazwą funkcji i parametrami do wykonania."},
+    {q:"Czym różni się fine-tuning od RAG?",o:["Fine-tuning jest darmowy, RAG płatny","Fine-tuning uczy model na nowych danych, RAG dołącza dane w locie","RAG działa tylko online","Nie ma różnicy"],a:1,e:"Fine-tuning zmienia wagi modelu (trwałe), RAG dołącza zewnętrzne dane (elastyczne, aktualne)."},
+    {q:"Co to jest context window?",o:["Okno przeglądarki","Limit tokenów wejścia/wyjścia modelu","Rozmiar ekranu","Typ pamięci RAM"],a:1,e:"Context window — maksymalna liczba tokenów, które model może przetworzyć naraz (np. 32K, 128K)."},
+    {q:"Który model jako pierwszy wprowadził architekturę Transformer?",o:["BERT","GPT-2","Original Transformer (2017)","Llama"],a:2,e:"Artykuł „Attention is All You Need” (2017) wprowadził architekturę Transformer — fundament LLM."},
+    {q:"Co to jest Multi-Agent System?",o:["System z wieloma GPU","Zespół specjalistów AI współpracujących ze sobą","Serwer z wieloma procesorami","System backupowy"],a:1,e:"Multi-Agent System — grupa agentów (np. badacz, analityk, pisarz) współpracujących przy rozwiązaniu zadania."},
+    {q:"Który język jest najpopularniejszy do budowy agentów?",o:["Java","C++","Python","Rust"],a:2,e:"Python — dzięki ogromnemu ekosystemowi (LangChain, LlamaIndex, Transformers, PyTorch)."},
+    {q:"Czy agenci AI potrafią uczyć się na błędach?",o:["Nie, są statyczni","Tylko jeśli mają dostęp do internetu","Tak, przez mechanizm Reflection","Tylko w nocy"],a:2,e:"Reflection — agent analizuje swoje wcześniejsze działania i wyciąga wnioski, aby poprawić przyszłe decyzje."}
+];
+let qi=0,qs=0,qa=false;
+function qRn(){
+    if(qi>=qData.length){qEn();return}
+    const q=qData[qi];
+    document.getElementById('qN').textContent=qi+1;
+    document.getElementById('qT').textContent=qData.length;
+    document.getElementById('qQ').textContent=q.q;
+    const o=document.getElementById('qO');o.innerHTML='';
+    q.o.forEach((t,i)=>{const d=document.createElement('div');d.className='qopt';d.textContent=t;d.onclick=()=>qAn(i);o.appendChild(d)});
+    document.getElementById('qFb').className='qfb';
+    document.getElementById('qNxt').disabled=true;document.getElementById('qNxt').style.display='';
+    document.getElementById('qRst').style.display='none';qa=false;
+}
+function qAn(i){
+    if(qa)return;qa=true;
+    const q=qData[qi],opts=document.querySelectorAll('.qopt'),fb=document.getElementById('qFb');
+    opts[q.a].classList.add('ok');
+    if(i===q.a){qs++;fb.textContent='✅ Brawo! '+q.e;fb.style.background='#d1fae5';fb.style.color='#065f46'}
+    else{opts[i].classList.add('no');fb.textContent='❌ Źle. '+q.e;fb.style.background='#fee2e2';fb.style.color='#991b1b'}
+    fb.className='qfb show';document.getElementById('qS').textContent=qs;
+    document.getElementById('qNxt').disabled=false;
+    opts.forEach(o=>o.style.pointerEvents='none');
+}
+function qNx(){qi++;qRn()}
+function qEn(){
+    const p=Math.round(qs/qData.length*100);
+    let e=p===100?'🏆':p>=75?'🌟':p>=50?'👍':'📚';
+    let m=p===100?'Perfekcyjnie! Znasz AI na wylot!':p>=75?'Świetna robota!':p>=50?'Nieźle, ale warto powtórzyć.':'Przeczytaj przewodnik jeszcze raz!';
+    document.getElementById('qQ').innerHTML=`${e} Wynik: <strong>${qs}/${qData.length}</strong> (${p}%)`;
+    document.getElementById('qO').innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--muted)">${m}</div>`;
+    document.getElementById('qFb').className='qfb';
+    document.getElementById('qNxt').style.display='none';document.getElementById('qRst').style.display='';
+}
+function qRe(){qi=0;qs=0;document.getElementById('qS').textContent=0;qRn()}
+qRn();
+
+// ══════════════════════════════
+// SCROLL ANIM
+// ══════════════════════════════
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')})},{threshold:.07});
+document.querySelectorAll('.fin').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
