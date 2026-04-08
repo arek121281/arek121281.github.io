@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Wiedzy z Systemów Operacyjnych — Sprawdź się!</title>
+    <style>
+        :root {
+            --primary: #0a0e27;
+            --secondary: #7c3aed; /* fioletowy — kolor kernela */
+            --accent: #f43f5e;   /* czerwony — akcent */
+            --green: #10b981;
+            --blue: #3b82f6;
+            --bg: #f0f2f8;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --shadow: 0 8px 32px rgba(0,0,0,0.08);
+            --radius: 18px;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.78;padding:20px}
+
+        .container{max-width:900px;margin:40px auto;padding:0 20px}
+        .stitle{text-align:center;margin-bottom:40px}
+        .stitle h1{font-size:2.8rem;font-weight:800;color:var(--primary);margin-bottom:10px}
+        .stitle p{color:var(--muted);font-size:1.1rem}
+
+        .qbox{background:var(--card);border-radius:var(--radius);padding:38px;box-shadow:var(--shadow);margin-bottom:30px}
+        .qq{font-size:1.25rem;font-weight:700;color:var(--primary);margin-bottom:20px;line-height:1.5}
+        .qopts{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:20px}
+        @media(min-width:768px){.qopts{grid-template-columns:1fr 1fr}}
+        .qopt{padding:16px 20px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;transition:.3s;font-size:1rem;text-align:left;font-weight:500;background:#f8fafc}
+        .qopt:hover{border-color:var(--secondary);background:#f5f3ff}
+        .qopt.selected{border-color:var(--secondary);background:#f5f3ff}
+        .qopt.correct{border-color:var(--green);background:#d1fae5;color:#065f46}
+        .qopt.incorrect{border-color:var(--red);background:#fee2e2;color:#991b1b}
+
+        .qfb{padding:16px;border-radius:12px;margin-top:20px;font-weight:600;display:none;background:#f1f5f9}
+        .qfb.show{display:block}
+        .qmeta{color:var(--muted);margin-bottom:20px;font-size:.95rem;text-align:center}
+
+        .nav-buttons{text-align:center;margin-top:30px}
+        .qb{padding:14px 32px;border:none;border-radius:12px;cursor:pointer;font-size:1rem;font-weight:700;transition:.3s;text-transform:uppercase;letter-spacing:.5px}
+        .qb.prev{background:#e2e8f0;color:var(--text);margin-right:10px}
+        .qb.next{background:var(--secondary);color:white}
+        .qb.submit{background:var(--accent);color:white}
+        .qb:disabled{opacity:.5;cursor:not-allowed}
+        .qb:hover:not(:disabled){transform:scale(1.03)}
+
+        .results{background:var(--card);border-radius:var(--radius);padding:40px;box-shadow:var(--shadow);text-align:center;display:none}
+        .score{font-size:3rem;font-weight:800;color:var(--secondary);margin:20px 0}
+        .message{font-size:1.25rem;margin-bottom:30px;font-weight:600}
+        .restart-btn{background:var(--green);color:white;padding:14px 32px;border:none;border-radius:12px;cursor:pointer;font-size:1.1rem;font-weight:700;margin-top:20px}
+
+        .progress-bar{height:8px;background:#e2e8f0;border-radius:4px;margin:20px 0;overflow:hidden}
+        .progress{height:100%;background:var(--secondary);width:0%;transition:width 0.5s ease}
+
+        footer{margin-top:50px;text-align:center;color:var(--muted);font-size:.9rem}
+        
+        code{background:#f5f3ff;padding:2px 6px;border-radius:4px;font-family:Consolas, monospace;font-size:0.9em;color:var(--secondary)}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="stitle">
+        <h1>💻 Test Systemów Operacyjnych</h1>
+        <p>Sprawdź swoją wiedzę — 20 pytań od podstaw po zaawansowane mechanizmy jądra</p>
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress" id="progress"></div>
+    </div>
+
+    <div id="quiz-container">
+        <!-- Pytania będą generowane tutaj przez JS -->
+    </div>
+
+    <div class="results" id="results">
+        <h2>🎉 Wynik testu</h2>
+        <div class="score" id="final-score">0/20</div>
+        <div class="message" id="result-message">...</div>
+        <button class="restart-btn" onclick="restartQuiz()">🔄 Spróbuj ponownie</button>
+    </div>
+</div>
+
+<footer>
+    Test wiedzy z Systemów Operacyjnych — edukacyjny projekt • Pytania obejmują procesy, pamięć, pliki, bezpieczeństwo i architekturę jądra
+</footer>
+
+<script>
+const quizData = [
+    {
+        q: "Co to jest system operacyjny?",
+        o: [
+            "Oprogramowanie zarządzające sprzętem i zapewniające środowisko dla aplikacji",
+            "Typ pamięci komputera",
+            "Język programowania niskiego poziomu",
+            "Urządzenie wejścia/wyjścia"
+        ],
+        a: 0,
+        e: "System operacyjny to oprogramowanie, które <strong>zarządza zasobami sprzętowymi</strong> (CPU, pamięć, dyski, urządzenia) i <strong>dostarcza usługi aplikacjom</strong> (interfejs API, bezpieczeństwo, abstrakcja sprzętu)."
+    },
+    {
+        q: "Które z poniższych NIE jest funkcją systemu operacyjnego?",
+        o: [
+            "Zarządzanie procesami",
+            "Kompilacja kodu źródłowego",
+            "Zarządzanie pamięcią",
+            "Obsługa systemu plików"
+        ],
+        a: 1,
+        e: "<strong>Kompilacja kodu źródłowego</strong> jest zadaniem kompilatorów (np. gcc, javac), nie systemu operacyjnego. SO dostarcza tylko środowisko do uruchamiania kompilatorów."
+    },
+    {
+        q: "Co to jest proces w systemie operacyjnym?",
+        o: [
+            "Program w trakcie wykonywania",
+            "Plik konfiguracyjny systemu",
+            "Urządzenie fizyczne",
+            "Fragment pamięci podręcznej"
+        ],
+        a: 0,
+        e: "Proces to <strong>program w trakcie wykonywania</strong>. Ma przypisane zasoby: pamięć, deskryptory plików, PID, stan (running, ready, blocked) i kontekst wykonania."
+    },
+    {
+        q: "Jak nazywa się mechanizm, który pozwala na przełączanie między procesami?",
+        o: [
+            "Przełączanie kontekstu (context switching)",
+            "Multipleksowanie czasu",
+            "Segmentacja pamięci",
+            "Buforowanie danych"
+        ],
+        a: 0,
+        e: "<code>Context switching</code> — jądro zapisuje stan bieżącego procesu (rejestry, PC, stos) i wczytuje stan następnego procesu. Kosztowna operacja — dlatego stosuje się planistykę."
+    },
+    {
+        q: "Które z poniższych jest algorytmem planowania procesów?",
+        o: [
+            "Round Robin",
+            "Bubble Sort",
+            "Depth First Search",
+            "Binary Search"
+        ],
+        a: 0,
+        e: "<code>Round Robin</code> — każdy proces dostaje kwant czasu CPU, potem następuje przełączenie. Inne algorytmy: FCFS, SJF, Priority Scheduling, Multilevel Queue."
+    },
+    {
+        q: "Co to jest deadlock (zakleszczenie)?",
+        o: [
+            "Sytuacja, w której dwa lub więcej procesów czeka na zasoby przydzielone innym procesom",
+            "Błąd w kodzie programu",
+            "Awaria dysku twardego",
+            "Przegrzanie procesora"
+        ],
+        a: 0,
+        e: "Deadlock występuje, gdy procesy wzajemnie blokują się, czekając na zasoby. Warunki Konwencjonalne: wzajemne wykluczanie, posiadanie i oczekiwanie, brak wywłaszczania, cykliczne czekanie."
+    },
+    {
+        q: "Jakie są główne cele zarządzania pamięcią?",
+        o: [
+            "Alokacja, ochrona, abstrakcja, współdzielenie",
+            "Kompresja, szyfrowanie, backup, replikacja",
+            "Indeksowanie, sortowanie, filtrowanie, agregacja",
+            "Wizualizacja, renderowanie, animacja, drukowanie"
+        ],
+        a: 0,
+        e: "Zarządzanie pamięcią ma na celu: <strong>alokację</strong> (przydział pamięci procesom), <strong>ochronę</strong> (zapobieganie dostępowi do cudzej pamięci), <strong>abstrakcję</strong> (pamięć wirtualna), <strong>współdzielenie</strong> (biblioteki, IPC)."
+    },
+    {
+        q: "Co to jest stronicowanie (paging)?",
+        o: [
+            "Technika dzielenia pamięci na równe bloki zwane stronami",
+            "Metoda kompresji danych",
+            "Algorytm sortowania",
+            "Protokół sieciowy"
+        ],
+        a: 0,
+        e: "Stronicowanie to technika <strong>pamięci wirtualnej</strong>, gdzie pamięć dzielona jest na stałe bloki (np. 4KB) zwane stronami. Pozwala na nieciągłe przydziały i wymianę stron z dysku (swapping)."
+    },
+    {
+        q: "Co robi MMU (Memory Management Unit)?",
+        o: [
+            "Tłumaczy adresy wirtualne na fizyczne",
+            "Steruje urządzeniami wejścia/wyjścia",
+            "Zarządza procesorem graficznym",
+            "Obsługuje połączenia sieciowe"
+        ],
+        a: 0,
+        e: "MMU to jednostka sprzętowa, która <strong>tłumaczy adresy wirtualne na fizyczne</strong> za pomocą tablic stron. Kluczowy element dla pamięci wirtualnej i ochrony pamięci."
+    },
+    {
+        q: "Jak nazywa się obszar na dysku używany jako rozszerzenie pamięci RAM?",
+        o: [
+            "Pamięć wirtualna / swap",
+            "Cache L3",
+            "Buffer I/O",
+            "Stack overflow"
+        ],
+        a: 0,
+        e: "<code>Pamięć wirtualna</code> (swap space) — gdy RAM się kończy, jądro przenosi mniej używane strony na dysk. W Linuxie: partycja swap lub plik swap. W Windows: pagefile.sys."
+    },
+    {
+        q: "Co to jest system plików?",
+        o: [
+            "Sposób organizacji i przechowywania danych na nośniku",
+            "Program do przeglądania zdjęć",
+            "Protokół transferu plików",
+            "Format dokumentu tekstowego"
+        ],
+        a: 0,
+        e: "System plików definiuje jak dane są <strong>organizowane, nazwywane, przechowywane i wyszukiwane</strong> na nośniku. Przykłady: NTFS (Windows), ext4 (Linux), APFS (macOS), FAT32."
+    },
+    {
+        q: "Które z poniższych NIE jest systemem plików?",
+        o: [
+            "HTTP",
+            "ext4",
+            "NTFS",
+            "FAT32"
+        ],
+        a: 0,
+        e: "<code>HTTP</code> to protokół komunikacyjny, nie system plików. ext4, NTFS, FAT32 to systemy plików. Inne: XFS, Btrfs, HFS+, ZFS."
+    },
+    {
+        q: "Co to jest inode w systemach Unix/Linux?",
+        o: [
+            "Struktura danych przechowująca metadane pliku (uprawnienia, właściciel, rozmiar, wskaźniki do bloków danych)",
+            "Nazwa użytkownika z uprawnieniami administratora",
+            "Polecenie do instalowania pakietów",
+            "Typ procesora komputera"
+        ],
+        a: 0,
+        e: "Inode (index node) to <strong>struktura zawierająca metadane pliku</strong>: typ, uprawnienia, właściciel, grupa, rozmiar, czas modyfikacji, wskaźniki do bloków danych. Nie zawiera nazwy pliku!"
+    },
+    {
+        q: "Jak nazywa się mechanizm pozwalający wielu procesom współdzielić tę samą bibliotekę w pamięci?",
+        o: [
+            "Współdzielona pamięć (shared libraries)",
+            "Dynamiczne linkowanie",
+            "Stronicowanie",
+            "Buforowanie"
+        ],
+        a: 0,
+        e: "Biblioteki współdzielone (np. <code>.so</code> w Linux, <code>.dll</code> w Windows) są ładowane do pamięci raz i współdzielone przez wiele procesów. Oszczędność pamięci i ułatwienie aktualizacji."
+    },
+    {
+        q: "Co to jest system czasu rzeczywistego (RTOS)?",
+        o: [
+            "System gwarantujący wykonanie zadań w ściśle określonym czasie",
+            "System z interfejsem graficznym",
+            "System wyłącznie do gier komputerowych",
+            "System bezpieczny kryptograficznie"
+        ],
+        a: 0,
+        e: "RTOS (Real-Time Operating System) gwarantuje, że zadania zostaną wykonane w <strong>ściśle określonym czasie</strong> (deadlines). Zastosowania: sterowniki, medycyna, lotnictwo, automatyka. Przykłady: VxWorks, QNX, FreeRTOS."
+    },
+    {
+        q: "Które z poniższych jest przykładem mikrojądra?",
+        o: [
+            "Minix",
+            "Linux",
+            "Windows NT",
+            "macOS"
+        ],
+        a: 0,
+        e: "<code>Minix</code> to klasyczny przykład mikrojądra — minimalna funkcjonalność w trybie jądra (IPC, podstawowe sterowniki), reszta usług w przestrzeni użytkownika. Linux to monolityczne jądro. Mach (w macOS/iOS) to hybryda."
+    },
+    {
+        q: "Co to jest DMA (Direct Memory Access)?",
+        o: [
+            "Mechanizm pozwalający urządzeniom na bezpośredni dostęp do pamięci RAM bez udziału CPU",
+            "Rodzaj pamięci podręcznej procesora",
+            "Algorytm planowania dysku",
+            "Protokół sieciowy"
+        ],
+        a: 0,
+        e: "DMA pozwala urządzeniom (np. dysk, karta sieciowa) <strong>bezpośrednio czytać/zapisywać do pamięci RAM</strong>, bez obciążania CPU. CPU inicjuje transfer, potem może wykonywać inne zadania."
+    },
+    {
+        q: "Jak nazywa się atak, w którym proces próbuję uzyskać dostęp do pamięci innego procesu?",
+        o: [
+            "Naruszenie ochrony pamięci",
+            "Deadlock",
+            "Thrashing",
+            "Race condition"
+        ],
+        a: 0,
+        e: "Naruszenie ochrony pamięci — jądro powinno tego uniemożliwić dzięki MMU i mechanizmom izolacji. Jeśli się powiedzie — to poważny błąd bezpieczeństwa (np. Heartbleed w OpenSSL)."
+    },
+    {
+        q: "Co to jest thrashing w kontekście pamięci wirtualnej?",
+        o: [
+            "Stan, w którym system spędza większość czasu na wymianie stron zamiast na wykonywaniu zadań",
+            "Błąd w systemie plików",
+            "Awaria zasilacza",
+            "Przeciążenie sieci"
+        ],
+        a: 0,
+        e: "Thrashing występuje, gdy <strong>RAM jest zbyt mały</strong> dla aktywnych procesów → ciągła wymiana stron (swapping) → bardzo niska wydajność. Rozwiązanie: dodać RAM, zmniejszyć liczbę procesów, zoptymalizować użycie pamięci."
+    },
+    {
+        q: "Które polecenie w Linuxie pokazuje uruchomione procesy?",
+        o: [
+            "ps",
+            "ls",
+            "cd",
+            "mkdir"
+        ],
+        a: 0,
+        e: "<code>ps</code> — process status. Popularne opcje: <code>ps aux</code> (wszystkie procesy), <code>ps -ef</code>. Do monitorowania w czasie rzeczywistym: <code>top</code> lub <code>htop</code>."
+    }
+];
+
+let currentQuestion = 0;
+let userAnswers = new Array(quizData.length).fill(null);
+let score = 0;
+
+function loadQuestion() {
+    const quizContainer = document.getElementById('quiz-container');
+    const progress = document.getElementById('progress');
+    
+    // Aktualizuj pasek postępu
+    progress.style.width = ((currentQuestion / quizData.length) * 100) + '%';
+    
+    const q = quizData[currentQuestion];
+    let optionsHTML = '';
+    
+    q.o.forEach((option, index) => {
+        const isSelected = userAnswers[currentQuestion] === index;
+        optionsHTML += `
+            <div class="qopt ${isSelected ? 'selected' : ''}" onclick="selectOption(${index})">
+                ${option}
+            </div>
+        `;
+    });
+    
+    quizContainer.innerHTML = `
+        <div class="qmeta">Pytanie ${currentQuestion + 1} z ${quizData.length}</div>
+        <div class="qbox">
+            <div class="qq">${q.q}</div>
+            <div class="qopts" id="options">
+                ${optionsHTML}
+            </div>
+            <div class="qfb" id="feedback"></div>
+        </div>
+        <div class="nav-buttons">
+            <button class="qb prev" ${currentQuestion === 0 ? 'disabled' : ''} onclick="prevQuestion()">← Poprzednie</button>
+            ${currentQuestion === quizData.length - 1 
+                ? '<button class="qb submit" onclick="showResults()">Zakończ test 🎯</button>'
+                : '<button class="qb next" onclick="nextQuestion()">Następne →</button>'
+            }
+        </div>
+    `;
+}
+
+function selectOption(index) {
+    userAnswers[currentQuestion] = index;
+    document.querySelectorAll('.qopt').forEach(opt => opt.classList.remove('selected'));
+    document.querySelectorAll('.qopt')[index].classList.add('selected');
+}
+
+function nextQuestion() {
+    if (currentQuestion < quizData.length - 1) {
+        currentQuestion++;
+        loadQuestion();
+    }
+}
+
+function prevQuestion() {
+    if (currentQuestion > 0) {
+        currentQuestion--;
+        loadQuestion();
+    }
+}
+
+function showResults() {
+    // Oblicz wynik
+    score = 0;
+    quizData.forEach((q, index) => {
+        if (userAnswers[index] === q.a) score++;
+    });
+    
+    // Pokaż odpowiedzi i feedback
+    let resultsHTML = `<h2>📝 Twoje odpowiedzi</h2>`;
+    
+    quizData.forEach((q, index) => {
+        const isCorrect = userAnswers[index] === q.a;
+        const userAnswer = userAnswers[index] !== null ? q.o[userAnswers[index]] : '[nie odpowiedziano]';
+        const correctAnswer = q.o[q.a];
+        
+        resultsHTML += `
+            <div class="qbox" style="margin-bottom:20px">
+                <div class="qq">${index + 1}. ${q.q}</div>
+                <div class="qopts">
+                    <div class="qopt ${isCorrect ? 'correct' : userAnswers[index] !== null && userAnswers[index] !== q.a ? 'incorrect' : ''}">
+                        Twoja odpowiedź: ${userAnswer}
+                    </div>
+                    <div class="qopt correct">
+                        Poprawna odpowiedź: ${correctAnswer}
+                    </div>
+                </div>
+                <div class="qfb show" style="margin-top:15px">${q.e}</div>
+            </div>
+        `;
+    });
+    
+    // Ukryj quiz, pokaż wyniki
+    document.getElementById('quiz-container').style.display = 'none';
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.style.display = 'block';
+    document.getElementById('final-score').textContent = `${score}/${quizData.length}`;
+    
+    // Wiadomość końcowa
+    const percentage = Math.round((score / quizData.length) * 100);
+    let message = "";
+    if (percentage >= 90) message = "👑 Ekspert Systemów Operacyjnych! Doskonały wynik!";
+    else if (percentage >= 70) message = "🌟 Świetnie! Masz solidną wiedzę!";
+    else if (percentage >= 50) message = "👍 Nieźle! Jest jeszcze trochę do nauki.";
+    else message = "📚 Powtórz podstawy — systemy operacyjne to fundament informatyki!";
+    
+    document.getElementById('result-message').textContent = message;
+    
+    // Dodaj szczegółowe wyniki po wyniku
+    resultsDiv.innerHTML += resultsHTML;
+}
+
+function restartQuiz() {
+    currentQuestion = 0;
+    userAnswers = new Array(quizData.length).fill(null);
+    score = 0;
+    document.getElementById('quiz-container').style.display = 'block';
+    document.getElementById('results').style.display = 'none';
+    loadQuestion();
+}
+
+// Start quizu
+document.addEventListener('DOMContentLoaded', loadQuestion);
+</script>
+
+</body>
+</html>
