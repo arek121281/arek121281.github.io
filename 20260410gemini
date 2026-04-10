@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uprawnienia w Linux: Pliki vs Katalogi (Advanced)</title>
+    <style>
+        :root {
+            /* Motyw Systemów Operacyjnych / Hardware */
+            --primary: #0f172a; 
+            --os-cyan: #06b6d4;
+            --os-indigo: #4f46e5;
+            --os-light: #e0f2fe;
+            
+            --green: #10b981;
+            --yellow: #f59e0b;
+            --red: #f43f5e;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #334155;
+            --muted: #64748b;
+            --shadow: 0 10px 40px rgba(0,0,0,0.08);
+            --radius: 16px;
+            --term-bg: #020617;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth;scroll-padding-top:70px}
+        body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+
+        /* NAV */
+        nav{position:fixed;top:0;width:100%;z-index:1000;background:rgba(15, 23, 42, 0.98);backdrop-filter:blur(10px);box-shadow:0 2px 20px rgba(0,0,0,0.2)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+        .logo{color:#fff;font-weight:900;font-size:1.3rem;padding:16px 0;display:flex;align-items:center;gap:8px;font-family: 'Courier New', Courier, monospace;}
+        .logo span{color:var(--os-cyan)}
+        nav ul{display:flex;list-style:none;gap:0;flex-wrap:wrap}
+        nav ul li a{display:block;color:#cbd5e1;text-decoration:none;padding:17px 16px;font-size:.85rem;font-weight:600;transition:.3s;border-bottom:3px solid transparent}
+        nav ul li a:hover{color:var(--os-cyan);border-bottom-color:var(--os-cyan);background:rgba(6, 182, 212, 0.1)}
+        .menu-btn{display:none;background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer}
+
+        /* HERO */
+        .hero{background:linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);color:#fff;text-align:center;padding:160px 24px 120px;position:relative;overflow:hidden}
+        .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(6, 182, 212, 0.15),transparent 50%);animation:pulse 8s infinite alternate}
+        @keyframes pulse{0%{opacity:0.5;transform:scale(1)}100%{opacity:1;transform:scale(1.2)}}
+        .hero>*{position:relative;z-index:1}
+        .hero-icon{font-size:5.5rem;margin-bottom:15px;filter:drop-shadow(0 10px 20px rgba(6, 182, 212, 0.4));animation:float 4s ease-in-out infinite}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+        .hero h1{font-size:3.8rem;font-weight:900;margin-bottom:15px;letter-spacing:-1px}
+        .hero h1 span{color:var(--os-cyan)}
+        .hero>p{font-size:1.25rem;color:#cbd5e1;max-width:700px;margin:0 auto 35px}
+        .hero-chips{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+        .chip{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);padding:12px 24px;border-radius:30px;backdrop-filter:blur(5px);font-weight:700;letter-spacing:1px;font-size:0.9rem;font-family:monospace;}
+        .chip:nth-child(1){color:var(--os-cyan)}
+        .chip:nth-child(2){color:#818cf8}
+        .chip:nth-child(3){color:var(--green)}
+
+        /* UTILS */
+        .container{max-width:1000px;margin:0 auto;padding:0 24px}
+        section{padding:100px 0}
+        .stitle{text-align:center;margin-bottom:60px}
+        .stitle h2{font-size:2.4rem;font-weight:800;color:var(--primary)}
+        .stitle .line{width:60px;height:5px;margin:15px auto;background:linear-gradient(90deg,var(--os-indigo),var(--os-cyan));border-radius:3px}
+        .stitle p{color:var(--muted);font-size:1.1rem;max-width:600px;margin:0 auto}
+        .alt-bg{background:#e2e8f0}
+
+        /* CARDS */
+        .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:40px;margin-bottom:30px;transition:transform .3s, box-shadow .3s}
+        .card:hover{transform:translateY(-4px);box-shadow:0 15px 45px rgba(0,0,0,0.1)}
+        .card h3{font-size:1.6rem;margin-bottom:16px;color:var(--primary);display:flex;align-items:center;gap:10px}
+        .card p, .card li{font-size:1.05rem;color:var(--text);margin-bottom:10px}
+        .card ul{padding-left:24px}
+
+        /* CODE BLOCK */
+        .code-block{background:var(--term-bg);color:#d4d4d4;font-family:'Consolas','Courier New',monospace;padding:25px;border-radius:10px;margin:20px 0;overflow-x:auto;font-size:0.95rem;line-height:1.6;border-top:15px solid #1e293b;position:relative;}
+        .code-block::before{content:'● ● ●';position:absolute;top:-13px;left:10px;color:#cbd5e1;font-size:0.5rem;letter-spacing:3px;}
+        .cmd{color:var(--green);font-weight:bold;} /* command */
+        .arg{color:#60a5fa} /* arguments */
+        .str{color:#fcd34d} /* strings */
+        .cm{color:#64748b} /* comment */
+        .op{color:var(--os-cyan)} /* operators */
+        .prompt{color:var(--os-indigo)}
+        .out{color:#94a3b8}
+
+        /* TABLES */
+        .tw{overflow-x:auto;border-radius:12px;box-shadow:var(--shadow);margin:25px 0}
+        table{width:100%;border-collapse:collapse;background:var(--card)}
+        th{background:var(--primary);color:#fff;padding:16px;text-align:left;font-size:0.9rem;text-transform:uppercase}
+        td{padding:14px 16px;border-bottom:1px solid #e2e8f0;font-size:0.95rem;font-family:monospace;}
+        td:last-child{font-family:inherit;}
+        tr:last-child td{border-bottom:none}
+        tr:nth-child(even){background:var(--os-light)}
+        .badge{padding:4px 10px;border-radius:20px;font-size:0.8rem;font-weight:700}
+        .b-dan{background:#fee2e2;color:#991b1b}
+        .b-safe{background:#d1fae5;color:#065f46}
+
+        /* SIMULATOR */
+        .sim-wrap{background:var(--primary);border-radius:var(--radius);padding:40px;box-shadow:var(--shadow);border:1px solid #1e293b; color: white;}
+        .sim-header{text-align:center;margin-bottom:25px}
+        .sim-header h3{font-size:1.8rem;color:var(--os-cyan);margin-bottom:5px;display:flex;align-items:center;justify-content:center;gap:10px; font-family:monospace;}
+        
+        .sim-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px;}
+        @media(max-width: 800px) { .sim-grid { grid-template-columns: 1fr; } }
+        
+        .sim-term-input { background: #020617; border: 1px solid #334155; border-radius: 8px; padding: 12px 15px; font-family: monospace; font-size: 1.1rem; color: #e2e8f0; width: 100%; outline: none;}
+        .sim-term-input:focus { border-color: var(--os-cyan); }
+
+        .sim-output { background: var(--term-bg); font-family: monospace; padding: 20px; border-radius: 8px; min-height: 200px; color: #9ca3af; font-size: 0.95rem; border-left: 4px solid var(--os-indigo); white-space: pre-wrap; }
+        
+        .explanation { background: rgba(6, 182, 212, 0.05); border-left: 4px solid var(--os-cyan); padding: 15px; border-radius: 8px; margin-top: 15px; font-size: 0.9rem;}
+
+        /* QUIZ ENGINE */
+        .qbox{background:var(--card);border-radius:20px;padding:45px;box-shadow:0 20px 50px rgba(0,0,0,0.1);border-top:6px solid var(--os-cyan)}
+        .qmeta{display:flex;justify-content:space-between;color:var(--muted);font-weight:600;font-size:0.95rem;margin-bottom:20px;padding-bottom:15px;border-bottom:2px dashed #e2e8f0}
+        .qq{font-size:1.35rem;font-weight:700;color:var(--primary);margin-bottom:25px;line-height:1.4}
+        .qcode{background:#f1f5f9;padding:15px 20px;border-radius:8px;font-family:'Consolas',monospace;font-size:1.05rem;color:#0f172a;margin-bottom:25px;border-left:4px solid var(--os-indigo)}
+        .qopts{display:grid;grid-template-columns:1fr;gap:12px}
+        .qopt{background:#f8fafc;padding:18px 20px;border:2px solid #cbd5e1;border-radius:12px;cursor:pointer;transition:all .2s;font-size:1.05rem;font-weight:500;display:flex;align-items:center;gap:15px;font-family:monospace;}
+        .qopt::before{content:'>';font-weight:bold;color:#cbd5e1;display:inline-block;transition:0.3s}
+        .qopt:hover{border-color:var(--os-cyan);background:var(--os-light)}
+        .qopt.ok{border-color:var(--green);background:#ecfdf5;color:#166534}
+        .qopt.ok::before{content:'✔';color:var(--green)}
+        .qopt.no{border-color:var(--red);background:#fef2f2;color:#991b1b}
+        .qopt.no::before{content:'✖';color:var(--red)}
+        
+        .qfb{padding:20px;border-radius:12px;margin-top:20px;font-size:1rem;line-height:1.6;display:none;animation:fadeIn 0.5s ease}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .qfb.show{display:block}
+        .qfb.success{background:#d1fae5;color:#065f46;border-left:4px solid var(--green)}
+        .qfb.error{background:#fee2e2;color:#991b1b;border-left:4px solid var(--red)}
+        
+        .qnav{display:flex;justify-content:flex-end;margin-top:25px}
+        .qnav .btn{background:var(--primary);color:#fff;padding:14px 35px;font-size:1.05rem;border:none;border-radius:8px;font-weight:bold;cursor:pointer;transition:.2s}
+        .qnav .btn:hover{background:var(--os-indigo)}
+        .qnav .btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none}
+        
+        /* RESULT SCREEN */
+        .res-screen{text-align:center;padding:20px 0}
+        .res-icon{font-size:4.5rem;margin-bottom:15px}
+        .res-title{font-size:2.2rem;color:var(--primary);margin-bottom:10px}
+        .res-score{font-size:4.5rem;font-weight:900;color:var(--os-cyan);margin:20px 0;text-shadow:0 5px 15px rgba(6, 182, 212, 0.3)}
+        .res-desc{font-size:1.2rem;color:var(--text);max-width:500px;margin:0 auto 30px}
+
+        /* FOOTER */
+        footer{background:#020617;color:#94a3b8;text-align:center;padding:50px 24px;border-top:1px solid #0f172a}
+        footer span{color:var(--os-cyan)}
+
+        /* ANIM */
+        .fin{opacity:0;transform:translateY(30px);transition:all .8s cubic-bezier(0.2, 0.8, 0.2, 1)}
+        .fin.vis{opacity:1;transform:translateY(0)}
+
+        @media(max-width:768px){
+            .hero h1{font-size:2.5rem}
+            .hero-icon{font-size:4.5rem}
+            .stitle h2{font-size:2rem}
+            .card{padding:25px}
+            nav ul{display:none}
+            .menu-btn{display:block}
+            .qbox{padding:25px}
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <div class="logo">chmod <span>777</span></div>
+        <ul>
+            <li><a href="#intro">Różnice: Plik vs Katalog</a></li>
+            <li><a href="#special">Uprawnienia Specjalne</a></li>
+            <li><a href="#simulator">Symulator</a></li>
+            <li><a href="#quiz">Zacznij Test</a></li>
+        </ul>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="hero-icon">🛡️</div>
+    <h1>Zaawansowane Uprawnienia w <span>Linux</span></h1>
+    <p>Wejdź na wyższy poziom administrowania. Zrozum, dlaczego `rwx` na pliku to nie to samo co `rwx` na katalogu i odkryj moc bitów SUID, SGID i Sticky Bit.</p>
+    <div class="hero-chips">
+        <div class="chip">Plik vs Katalog</div>
+        <div class="chip">SUID / SGID</div>
+        <div class="chip">Sticky Bit</div>
+    </div>
+</header>
+
+<!-- WPROWADZENIE -->
+<section id="intro">
+    <div class="container">
+        <div class="stitle fin">
+            <h2>📜 Semantyczne Różnice w `rwx`</h2>
+            <div class="line"></div>
+            <p>Ta sama litera, zupełnie inne znaczenie. Uprawnienia w Linuxie są kontekstowe.</p>
+        </div>
+
+        <div class="card fin">
+            <h3>Kluczowa różnica: Bit `x` (Execute/Wykonanie)</h3>
+            <p>Bit `x` to najbardziej mylące uprawnienie. Jego znaczenie całkowicie zależy od tego, czy mamy do czynienia z plikiem, czy z katalogiem.</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top:20px; flex-wrap: wrap;">
+                <div style="background: #f0fdf4; border-left: 4px solid var(--green); padding: 20px; border-radius: 8px;">
+                    <h4 style="color: #166534">Dla PLIKU (np. `-rwx------`)</h4>
+                    <p>Bit `x` oznacza, że plik jest <strong>wykonywalny</strong>. Można go uruchomić jako program lub skrypt. Bez tego bitu system odmówi jego odpalenia, nawet jeśli masz prawo do odczytu.</p>
+                </div>
+                <div style="background: var(--os-light); border-left: 4px solid var(--os-cyan); padding: 20px; border-radius: 8px;">
+                    <h4 style="color: #0e7490">Dla KATALOGU (np. `drwx------`)</h4>
+                    <p>Bit `x` oznacza prawo do <strong>"wejścia" (przejścia przez)</strong> do katalogu. Umożliwia dostęp do plików i podkatalogów wewnątrz niego oraz użycie komendy `cd`.</p>
+                </div>
+            </div>
+            
+            <div class="code-block" style="margin-top: 25px;">
+<span class="prompt">user@linux:~$</span> <span class="cmd">ls -l</span>
+<span class="out">dr--r--r-- 2 user user 4096 Nov 13 10:00 tajny_katalog</span>
+<span class="prompt">user@linux:~$</span> <span class="cmd">ls tajny_katalog/</span>
+<span class="out">bardzo_tajny_plik.txt</span>
+<span class="cm"># Mamy 'r', więc widzimy nazwy plików w środku.</span>
+
+<span class="prompt">user@linux:~$</span> <span class="cmd">cat tajny_katalog/bardzo_tajny_plik.txt</span>
+<span class="out">cat: tajny_katalog/bardzo_tajny_plik.txt: Permission denied</span>
+<span class="cm"># Błąd! Nie mamy bitu 'x', więc nie możemy "przejść" przez katalog, aby odczytać zawartość pliku.</span>
+            </div>
+        </div>
+
+        <div class="card fin">
+            <h3>Różnice dla bitów `r` (Read) i `w` (Write)</h3>
+             <div class="tw">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Bit</th>
+                            <th>Na Pliku</th>
+                            <th>Na Katalogu</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>r</code> (Read)</td>
+                            <td>Możliwość odczytania <strong>zawartości pliku</strong> (np. komendą <code>cat</code>).</td>
+                            <td>Możliwość wylistowania <strong>nazw plików i podkatalogów</strong> wewnątrz (np. komendą <code>ls</code>).</td>
+                        </tr>
+                        <tr>
+                            <td><code>w</code> (Write)</td>
+                            <td>Możliwość modyfikowania <strong>zawartości pliku</strong>.</td>
+                            <td>Możliwość <strong>tworzenia, usuwania i zmiany nazw plików</strong> wewnątrz tego katalogu. <strong>Uwaga:</strong> `w` na katalogu pozwala usunąć plik, nawet jeśli nie masz do niego praw zapisu!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- UPRAWNIENIA SPECJALNE -->
+<section id="special" class="alt-bg">
+    <div class="container">
+        <div class="stitle fin">
+            <h2>✨ Uprawnienia Specjalne (SUID, SGID, Sticky)</h2>
+            <div class="line"></div>
+            <p>Odkryj trzy bity, które wykraczają poza standardowe `rwx` i są kluczowe dla bezpieczeństwa i współpracy.</p>
+        </div>
+
+        <div class="card fin">
+            <h3><span style="font-size: 1.5rem">🔑</span> SUID (Set User ID) – bit `s` na właścicielu</h3>
+            <p>Gdy bit SUID jest ustawiony na <strong>pliku wykonywalnym</strong>, program podczas uruchamiania działa z uprawnieniami <strong>właściciela pliku</strong>, a nie użytkownika, który go uruchomił.</p>
+            
+            <div class="code-block">
+<span class="prompt">user@linux:~$</span> <span class="cmd">ls -l /usr/bin/passwd</span>
+<span class="out">-rwsr-xr-x 1 root root 63896 Mar 29 2022 /usr/bin/passwd</span>
+<span class="cm">#     ^ Zauważ 's' zamiast 'x' w sekcji właściciela (user)</span>
+
+<span class="prompt">user@linux:~$</span> <span class="cmd">passwd</span>
+<span class="cm"># Zmieniasz swoje hasło. Program musi mieć uprawnienia roota, by zapisać zmiany w pliku /etc/shadow.</span>
+<span class="cm"># Dzięki SUID, na moment wykonania polecenia `passwd` stajesz się "rootem".</span>
+            </div>
+            <p style="font-style: italic; color: var(--red); font-weight: bold">Ustawianie SUID na własnych skryptach jest niezwykle niebezpieczne i może prowadzić do eskalacji uprawnień w systemie!</p>
+        </div>
+        
+        <div class="card fin">
+            <h3><span style="font-size: 1.5rem">👥</span> SGID (Set Group ID) – bit `s` na grupie</h3>
+            <p>Bit SGID ma dwa różne, potężne zastosowania, w zależności od tego, gdzie jest ustawiony:</p>
+            <ul>
+                <li><strong>Na pliku wykonywalnym:</strong> Działa analogicznie do SUID, ale program uruchamia się z uprawnieniami <strong>grupy</strong> będącej właścicielem pliku.</li>
+                <li><strong>Na katalogu:</strong> Wszystkie nowe pliki i podkatalogi tworzone wewnątrz tego katalogu automatycznie <strong>dziedziczą grupę po katalogu nadrzędnym</strong>, a nie po podstawowej grupie użytkownika, który je tworzy. Jest to idealne dla folderów projektowych, gdzie wielu użytkowników musi mieć dostęp do plików kolegów.</li>
+            </ul>
+             <div class="code-block">
+<span class="prompt">user@linux:~$</span> <span class="cmd">chmod g+s /srv/projekt_wspolny/</span>
+<span class="prompt">user@linux:~$</span> <span class="cmd">ls -ld /srv/projekt_wspolny/</span>
+<span class="out">drwxr-sr-x 2 root developer 4096 Nov 13 11:00 /srv/projekt_wspolny/</span>
+<span class="cm">#      ^ Zauważ 's' w sekcji grupy.</span>
+             </div>
+        </div>
+
+        <div class="card fin">
+            <h3><span style="font-size: 1.5rem">🔒</span> Sticky Bit – bit `t` na pozostałych</h3>
+            <p>Gdy Sticky Bit jest ustawiony na <strong>katalogu</strong>, tylko <strong>właściciel pliku</strong> (lub root) może usunąć lub zmienić nazwę pliku wewnątrz tego katalogu. Zapobiega to sytuacji, w której jeden użytkownik kasuje pliki innego w publicznym, współdzielonym katalogu.</p>
+            <p>Klasycznym przykładem jest katalog <code>/tmp</code>, który musi być zapisywalny dla wszystkich, ale nikt nie powinien móc usuwać nie swoich plików tymczasowych.</p>
+            <div class="code-block">
+<span class="prompt">user@linux:~$</span> <span class="cmd">ls -ld /tmp</span>
+<span class="out">drwxrwxrwt 17 root root 12288 Nov 13 11:30 /tmp</span>
+<span class="cm">#            ^ Zauważ 't' na końcu uprawnień ('others').</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SYMULATOR -->
+<section id="simulator">
+    <div class="container">
+        <div class="stitle fin">
+            <h2>🎮 chmod Playground</h2>
+            <div class="line"></div>
+            <p>Wpisz komendę `chmod` (np. `chmod 777 plik`) i wciśnij Enter, aby zobaczyć zmiany i ich wyjaśnienie.</p>
+        </div>
+
+        <div class="sim-wrap fin">
+            <div class="sim-header">
+                <h3>chmod Simulator</h3>
+            </div>
+            
+            <div class="sim-grid">
+                <div class="sim-output" id="simOutput">
+-rwxr-xr-- 1 user dev 1024 Nov 13 12:00 skrypt.sh
+drwxr-x--- 2 user dev 4096 Nov 13 12:01 projekt/
+                </div>
+                <div class="explanation" id="simExplanation">
+                    <strong>Stan początkowy:</strong><br>
+                    • `skrypt.sh` może być odczytany/wykonany przez właściciela i grupę, ale tylko odczytany przez innych.<br>
+                    • Do katalogu `projekt/` wejść może tylko właściciel i członkowie grupy `dev`.
+                </div>
+            </div>
+            <div style="margin-top:20px;">
+                <input type="text" class="sim-term-input" id="chmodInput" placeholder="np. chmod u+s skrypt.sh">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TEST WIEDZY -->
+<section id="quiz" class="alt-bg">
+    <div class="container">
+        <div class="stitle fin">
+            <h2>🏆 Wielki Test Uprawnień</h2>
+            <div class="line"></div>
+            <p>15 podchwytliwych pytań dla prawdziwych administratorów systemów Linux.</p>
+        </div>
+
+        <div class="qbox fin" id="quizContainer">
+            <div class="qmeta">
+                <span>Pytanie <span id="qNum">1</span> z <span id="qTotal">15</span></span>
+                <span style="color:var(--os-cyan); font-weight: bold;">Poziom: <span id="qLevel">Zaawansowany</span></span>
+            </div>
+            
+            <div class="qq" id="qText">Ładowanie pytania...</div>
+            <div id="qCodeBlock" class="qcode" style="display:none;"></div>
+            
+            <div class="qopts" id="qOptions">
+                <!-- Options injected via JS -->
+            </div>
+            
+            <div class="qfb" id="qFeedback">
+                <!-- Feedback injected via JS -->
+            </div>
+            
+            <div class="qnav">
+                <button class="btn" id="btnNext" onclick="nextQuestion()" disabled>Sprawdź i przejdź dalej ➔</button>
+            </div>
+        </div>
+
+        <!-- EKRAN WYNIKÓW (Początkowo ukryty) -->
+        <div class="qbox fin" id="resultContainer" style="display:none;">
+            <div class="res-screen">
+                <div class="res-icon" id="resIcon">🏆</div>
+                <div class="res-title" id="resTitle">Koniec Testu!</div>
+                <div class="res-score"><span id="resScore">0</span> / 15</div>
+                <div class="res-desc" id="resDesc">Opis Twojego poziomu wiedzy pojawi się tutaj.</div>
+                <button class="btn btn-run" onclick="location.reload()" style="font-size: 1.1rem; border-radius: 8px;">Rozwiąż ponownie 🔄</button>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<footer>
+    <h2>chmod <span>777</span></h2>
+    <p style="margin-top: 10px;">Interaktywny przewodnik po zaawansowanych uprawnieniach w systemach Linux.</p>
+    <p style="font-size: 0.8rem; margin-top: 20px; opacity: 0.5;">© 2024 Generated for Educational Purposes.</p>
+</footer>
+
+<script>
+/* =========================================
+   SCROLL ANIMATIONS
+========================================= */
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if(entry.isIntersecting) entry.target.classList.add('vis');
+    });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fin').forEach(el => observer.observe(el));
+
+/* =========================================
+   CHMOD SIMULATOR
+========================================= */
+const chmodInput = document.getElementById('chmodInput');
+const simOutput = document.getElementById('simOutput');
+const simExplanation = document.getElementById('simExplanation');
+
+let filePerms = { user: 7, group: 5, other: 4 }; // rwxr-xr--
+let dirPerms = { user: 7, group: 5, other: 0 };  // rwxr-x---
+
+function permsToSymbolic(perms, isDir) {
+    let s = isDir ? 'd' : '-';
+    s += (perms.user & 4) ? 'r' : '-';
+    s += (perms.user & 2) ? 'w' : '-';
+    if (perms.suid) s += 's'; else s += (perms.user & 1) ? 'x' : '-';
+    
+    s += (perms.group & 4) ? 'r' : '-';
+    s += (perms.group & 2) ? 'w' : '-';
+    if (perms.sgid) s += 's'; else s += (perms.group & 1) ? 'x' : '-';
+
+    s += (perms.other & 4) ? 'r' : '-';
+    s += (perms.other & 2) ? 'w' : '-';
+    if (perms.sticky) s += 't'; else s += (perms.other & 1) ? 'x' : '-';
+    
+    return s;
+}
+
+function updateSimDisplay() {
+    let fileSymbolic = permsToSymbolic(filePerms, false);
+    let dirSymbolic = permsToSymbolic(dirPerms, true);
+    
+    simOutput.textContent = 
+        `${fileSymbolic} 1 user dev 1024 Nov 13 12:00 skrypt.sh\n` +
+        `${dirSymbolic} 2 user dev 4096 Nov 13 12:01 projekt/`;
+}
+
+function explainPerms(target, perms, isDir) {
+    let exp = `<strong>${target}: ${permsToSymbolic(perms, isDir)}</strong><br>`;
+    
+    const readMeaning = isDir ? "listować nazwy plików wewnątrz." : "odczytać zawartość.";
+    const writeMeaning = isDir ? "tworzyć/usuwać/zmieniać nazwy plików wewnątrz." : "modyfikować zawartość.";
+    const execMeaning = isDir ? "wejść do katalogu (użyć 'cd')." : "uruchomić jako program.";
+
+    exp += "• Właściciel ('user') może ";
+    if (perms.user === 0) exp += "nic nie robić. ";
+    else exp += [perms.user & 4 ? readMeaning : '', perms.user & 2 ? writeMeaning : '', perms.user & 1 ? execMeaning : ''].filter(Boolean).join(' ');
+    
+    exp += "<br>• Grupa ('dev') może ";
+    if (perms.group === 0) exp += "nic nie robić. ";
+    else exp += [perms.group & 4 ? readMeaning : '', perms.group & 2 ? writeMeaning : '', perms.group & 1 ? execMeaning : ''].filter(Boolean).join(' ');
+
+    exp += "<br>• Inni ('others') mogą ";
+    if (perms.other === 0) exp += "nic nie robić. ";
+    else exp += [perms.other & 4 ? readMeaning : '', perms.other & 2 ? writeMeaning : '', perms.other & 1 ? execMeaning : ''].filter(Boolean).join(' ');
+
+    if(perms.suid) exp += "<br><strong style='color: var(--red)'>• SUID:</strong> Program będzie uruchamiany z uprawnieniami właściciela!";
+    if(perms.sgid && !isDir) exp += "<br><strong style='color: var(--yellow)'>• SGID:</strong> Program będzie uruchamiany z uprawnieniami grupy!";
+    if(perms.sgid && isDir) exp += "<br><strong style='color: var(--yellow)'>• SGID:</strong> Nowe pliki w tym katalogu odziedziczą grupę 'dev'!";
+    if(perms.sticky) exp += "<br><strong style='color: var(--os-indigo)'>• Sticky Bit:</strong> Tylko właściciel pliku może go usunąć z tego katalogu!";
+    
+    return exp;
+}
+
+chmodInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        const command = e.target.value.trim();
+        e.target.value = '';
+        const parts = command.split(' ');
+        
+        if (parts[0] !== 'chmod' || parts.length < 3) {
+            simExplanation.innerHTML = "<strong style='color: var(--red)'>Błąd:</strong> Nieprawidłowa komenda. Użyj np. `chmod 777 skrypt.sh` lub `chmod u+x projekt/`";
+            return;
+        }
+
+        const mode = parts[1];
+        const target = parts[2];
+        let targetPerms = (target.includes('skrypt')) ? filePerms : dirPerms;
+        
+        // Handle octal
+        const octalMatch = mode.match(/^[0-7]{3,4}$/);
+        if (octalMatch) {
+            let m = mode;
+            if (m.length === 3) m = '0' + m;
+            targetPerms.suid = (parseInt(m[0]) & 4) > 0;
+            targetPerms.sgid = (parseInt(m[0]) & 2) > 0;
+            targetPerms.sticky = (parseInt(m[0]) & 1) > 0;
+            targetPerms.user = parseInt(m[1]);
+            targetPerms.group = parseInt(m[2]);
+            targetPerms.other = parseInt(m[3]);
+        } 
+        // Handle symbolic (simplified)
+        else {
+             const symbolicMatch = mode.match(/([augo]*)?([+\-=])([rwxst]*)/);
+             if(symbolicMatch) {
+                let who = symbolicMatch[1] || 'a';
+                const op = symbolicMatch[2];
+                const what = symbolicMatch[3];
+                
+                const targets = [];
+                if(who.includes('u') || who.includes('a')) targets.push('user');
+                if(who.includes('g') || who.includes('a')) targets.push('group');
+                if(who.includes('o') || who.includes('a')) targets.push('other');
+
+                let mask = 0;
+                if(what.includes('r')) mask |= 4;
+                if(what.includes('w')) mask |= 2;
+                if(what.includes('x')) mask |= 1;
+
+                targets.forEach(t => {
+                    if (op === '+') targetPerms[t] |= mask;
+                    else if (op === '-') targetPerms[t] &= ~mask;
+                    else if (op === '=') targetPerms[t] = mask;
+                });
+                
+                if(what.includes('s') && (who.includes('u') || who.includes('a'))) targetPerms.suid = (op === '+');
+                if(what.includes('s') && (who.includes('g') || who.includes('a'))) targetPerms.sgid = (op === '+');
+                if(what.includes('t') && (who.includes('o') || who.includes('a'))) targetPerms.sticky = (op === '+');
+
+             } else {
+                 simExplanation.innerHTML = "<strong style='color: var(--red)'>Błąd:</strong> Nieobsługiwana składnia chmod.";
+                 return;
+             }
+        }
+        
+        simExplanation.innerHTML = explainPerms(target, targetPerms, target.includes('projekt'));
+        updateSimDisplay();
+    }
+});
+
+updateSimDisplay(); // Initial display
+
+/* =========================================
+   QUIZ ENGINE (15 PYTAŃ)
+========================================= */
+const quizData = [
+    // --- JUNIOR (1-5) ---
+    {
+        level: "Zaawansowany",
+        q: "Katalog `projekt` ma uprawnienia `d-wx------`. Co możesz w nim zrobić?",
+        code: null,
+        opts: [
+            "Wejść do niego komendą `cd` i wylistować pliki.", 
+            "Utworzyć nowy plik, ale nie możesz go usunąć.", 
+            "Nie możesz wylistować zawartości (`ls`), ale możesz stworzyć/usunąć plik. Możesz też wejść do katalogu (`cd`).", 
+            "Absolutnie nic. Brak prawa do odczytu blokuje wszystko."
+        ],
+        ans: 2,
+        exp: "Brak `r` uniemożliwia listowanie (`ls`), ale `w` pozwala na operacje na plikach, a `x` pozwala na wejście (`cd`) i dostęp do nich po nazwie, jeśli ją znamy."
+    },
+    {
+        level: "Zaawansowany",
+        q: "Plik `skrypt.sh` ma uprawnienia `---r-xr-x`, a jego właścicielem jesteś Ty. Czy możesz go uruchomić?",
+        code: null,
+        opts: [
+            "Tak, ponieważ masz prawo do wykonania dla grupy i innych.", 
+            "Tak, ponieważ jesteś jego właścicielem.", 
+            "Nie. Jądro sprawdza tylko i wyłącznie uprawnienia dla Twojej kategorii (właściciela). Jeśli tam jest `---`, dostęp jest blokowany, niezależnie od praw dla grupy/innych.", 
+            "Zależy od tego, czy masz prawo do zapisu w katalogu."
+        ],
+        ans: 2,
+        exp: "System sprawdza uprawnienia w kolejności: właściciel, grupa, inni. Gdy znajdzie dopasowanie, przestaje sprawdzać dalej. Skoro jesteś właścicielem, obowiązuje Cię `---` i dostęp jest blokowany."
+    },
+    {
+        level: "Zaawansowany",
+        q: "Co oznacza symbol `s` w sekcji właściciela (user) w wyniku `ls -l` (np. `-rwsr-xr-x`)?",
+        code: null,
+        opts: [
+            "Plik jest skompresowany.",
+            "Plik jest dowiązaniem symbolicznym (Symbolic Link).",
+            "Ustawiony jest bit SUID (Set User ID). Program uruchomi się z uprawnieniami właściciela pliku.",
+            "Plik jest oznaczony jako 'bezpieczny' (secure)."
+        ],
+        ans: 2,
+        exp: "To jest właśnie bit SUID. `s` oznacza, że plik ma jednocześnie prawo wykonania (`x`) i bit SUID. Gdyby było wielkie `S`, oznaczałoby to sam bit SUID bez prawa wykonania, co jest bezużyteczne."
+    },
+    {
+        level: "Zaawansowany",
+        q: "Do czego służy `chmod g+s` na KATALOGU?",
+        code: null,
+        opts: [
+            "Powoduje, że wszystkie programy uruchomione z tego katalogu działają z uprawnieniami grupy.",
+            "Ukrywa katalog przed użytkownikami spoza grupy.",
+            "Powoduje, że wszystkie nowe pliki i podkatalogi tworzone wewnątrz automatycznie dziedziczą grupę z tego katalogu, a nie grupę użytkownika.",
+            "To samo co `chmod 777`."
+        ],
+        ans: 2,
+        exp: "To kluczowa funkcja dla folderów współdzielonych. Użytkownik `jan` (grupa `jan`) tworzy plik w katalogu `/srv/projekt` (grupa `dev`). Plik automatycznie otrzyma grupę `dev`, dzięki czemu inni członkowie grupy `dev` będą mogli go edytować."
+    },
+    {
+        level: "Zaawansowany",
+        q: "Jaka jest rola `t` na końcu uprawnień katalogu (np. `drwxrwxrwt`), czyli tzw. Sticky Bit?",
+        code: null,
+        opts: [
+            "Katalog jest tymczasowy i zostanie usunięty po restarcie systemu.",
+            "Uniemożliwia modyfikację jakichkolwiek plików wewnątrz.",
+            "Powoduje, że pliki wewnątrz tego katalogu są 'przyklejone' do pamięci RAM, by szybciej się ładowały.",
+            "Tylko właściciel pliku (lub root) może usunąć lub zmienić nazwę pliku wewnątrz tego katalogu, nawet jeśli inni mają prawo zapisu do katalogu."
+        ],
+        ans: 3,
+        exp: "Sticky Bit chroni pliki w publicznych katalogach (jak `/tmp`) przed usunięciem przez innych użytkowników, którzy również mają tam prawo zapisu."
+    },
+    {
+        level: "Zaawansowany",
+        q: "Co oznacza `chmod 4755 skrypt.sh` w notacji ósemkowej (octal)?",
+        code: null,
+        opts: [
+            "Nadaje prawa `r--rwx-r-x` i jest błędne.",
+            "Ustawia bit SUID oraz standardowe prawa `rwxr-xr-x`.",
+            "Ustawia bit SGID oraz standardowe prawa `rwxr-xr-x`.",
+            "Jest to tożsame z `chmod 777 skrypt.sh`."
+        ],
+        ans: 1,
+        exp: "Pierwsza cyfra (`4`) w notacji czterocyfrowej to bity specjalne (SUID=4, SGID=2, Sticky=1). `755` to standardowe `rwxr-xr-x`. Razem tworzą `rwsr-xr-x`."
+    },
+    {
+        level: "Zaawansowany",
+        q: "Masz uprawnienia `dr-xr-xr-x` do katalogu. Czy możesz w nim utworzyć nowy plik?",
+        code: null,
+        opts: ["Tak, ponieważ masz prawo wykonania `x`.", "Tak, ponieważ masz prawo odczytu `r`.", "Nie. Do tworzenia/usuwania plików w katalogu niezbędny jest bit zapisu `w` na tym katalogu.", "Tylko jeśli jesteś rootem."],
+        ans: 2,
+        exp: "Prawa `r-x` pozwalają wejść do katalogu i wylistować jego zawartość, ale nie pozwalają w żaden sposób modyfikować tej zawartości (czyli dodawać/usuwać/zmieniać nazw plików)."
+    },
+    {
+        level: "Zaawansowany",
+        q: "Użytkownik `user1` nie ma żadnych praw do pliku `/home/user2/plik.txt`. Jednak ma pełne prawa `rwx` do katalogu `/home/user2/`. Co może zrobić?",
+        code: null,
+        opts: [
+            "Odczytać `plik.txt`.",
+            "Zmodyfikować `plik.txt`.",
+            "Usunąć `plik.txt`.",
+            "Nic."
+        ],
+        ans: 2,
+        exp: "To jest pułapka! Prawo do usunięcia pliku nie jest związane z prawami do pliku, ale z prawem zapisu (`w`) do katalogu nadrzędnego, w którym ten plik się znajduje."
+    },
+    {
+        level: "Zaawansowany",
+        q: "Do czego w praktyce służy domyślna wartość `umask` w systemie (np. 022)?",
+        code: null,
+        opts: [
+            "Określa maksymalny rozmiar pliku, jaki można utworzyć.",
+            "Szyfruje nowe pliki.",
+            "To 'maska', która jest odejmowana od pełnych uprawnień (`777` dla katalogów, `666` dla plików) podczas tworzenia nowych plików/katalogów, aby domyślnie nie były one w pełni zapisywalne dla wszystkich.",
+            "Określa domyślnego właściciela nowych plików."
+        ],
+        ans: 2,
+        exp: "Maska `022` oznacza, że od domyślnych uprawnień zabierane jest prawo zapisu dla grupy i innych. Dlatego nowo tworzone katalogi mają prawa `755`, a pliki `644`."
+    },
+    {
+        level: "Zaawansowany",
+        q: "Jaką komendą zmienisz właściciela i grupę pliku jednocześnie?",
+        code: null,
+        opts: ["chmod user:group plik", "setowner user:group plik", "chown user:group plik", "chown user plik && chgrp group plik"],
+        ans: 2,
+        exp: "`chown` (change owner) akceptuje składnię `użytkownik:grupa`, co jest najszybszym sposobem na jednoczesną zmianę obu tych atrybutów."
+    },
+    {
+        level: "Zaawansowany",
+        q: "Co oznacza wielkie 'S' (zamiast małego 's') w uprawnieniach pliku, np. `-rwSr-xr-x`?",
+        code: null,
+        opts: [
+            "Oznacza to, że bit SUID jest ustawiony, ale plik NIE MA prawa do wykonania (`x`) dla właściciela, co czyni to ustawienie bezużytecznym.",
+            "To jest super-SUID z jeszcze wyższymi uprawnieniami.",
+            "Plik jest w trakcie zapisu i jest zablokowany.",
+            "Plik jest dowiązaniem symbolicznym."
+        ],
+        ans: 0,
+        exp: "Wielka litera dla bitów specjalnych (S, S, T) zawsze oznacza, że dany bit jest ustawiony, ale brakuje podstawowego prawa wykonania (`x`) w tej samej sekcji."
+    },
+    {
+        level: "Zaawansowany",
+        q: "Czym są Listy Kontroli Dostępu (ACL - Access Control Lists) w kontekście uprawnień?",
+        code: null,
+        opts: [
+            "Listą użytkowników zalogowanych do systemu.",
+            "Rozszerzeniem standardowego modelu `ugo`, pozwalającym na nadanie szczegółowych uprawnień dla wielu dodatkowych, konkretnych użytkowników i grup do jednego pliku.",
+            "Logami systemowymi dotyczącymi dostępu do plików.",
+            "Listą zablokowanych adresów IP w firewallu."
+        ],
+        ans: 1,
+        exp: "ACL (zarządzane przez `getfacl` i `setfacl`) przełamują ograniczenia modelu 'jeden właściciel, jedna grupa'. Pozwalają nadać np. użytkownikowi `jan` prawo odczytu, a użytkownikowi `anna` prawo zapisu do tego samego pliku, bez tworzenia specjalnej grupy."
+    },
+    {
+        level: "Zaawansowany",
+        q: "Jakie uprawnienia (w notacji ósemkowej) zazwyczaj posiada katalog domowy użytkownika (`/home/user`)?",
+        code: null,
+        opts: ["777", "755", "700", "644"],
+        ans: 2,
+        exp: "Zazwyczaj jest to `700` (`drwx------`) lub `750` (`drwxr-x---`). Oznacza to, że tylko właściciel może w nim cokolwiek robić. Inni użytkownicy systemu nie mogą nawet wylistować jego zawartości, co jest kluczowe dla prywatności."
+    },
+    {
+        level: "Zaawansowany",
+        q: "Komenda `find . -type f -perm /6000` wyszuka wszystkie pliki, które:",
+        code: null,
+        opts: [
+            "Mają dokładnie uprawnienia 6000.",
+            "Nie mają ustawionych żadnych bitów specjalnych.",
+            "Mają ustawiony bit SUID LUB SGID (lub oba).",
+            "Mają ustawiony bit SUID ORAZ SGID jednocześnie."
+        ],
+        ans: 2,
+        exp: "Prefiks `/` w opcji `-perm` dla komendy `find` oznacza logikę OR (dowolny z bitów musi pasować). `6000` to suma SUID (4000) i SGID (2000). To świetny sposób na audyt bezpieczeństwa i szukanie potencjalnie niebezpiecznych plików."
+    },
+    {
+        level: "Zaawansowany",
+        q: "Co jest głównym powodem, dla którego skrypty powłoki (np. w Bashu) NIGDY nie powinny mieć ustawionego bitu SUID?",
+        code: null,
+        opts: [
+            "Jądro Linuxa ignoruje bit SUID na skryptach, ponieważ jest to ogromna dziura bezpieczeństwa.",
+            "Skrypty są zbyt wolne, by działać z prawami roota.",
+            "Tylko skompilowane programy w C mogą mieć SUID.",
+            "Bit SUID działa tylko na katalogach."
+        ],
+        ans: 0,
+        exp: "Gdyby SUID działał na skryptach, użytkownik mógłby sprytnie zmanipulować zmienne środowiskowe (np. `PATH`) i zmusić skrypt odpalony jako root do uruchomienia złośliwego programu zamiast np. systemowego `ls`. Jądro blokuje to zachowanie z definicji."
+    }
+];
+
+let curQIndex = 0;
+let userScore = 0;
+let isAnswered = false;
+
+const elQNum = document.getElementById('qNum');
+const elQTotal = document.getElementById('qTotal');
+const elQLevel = document.getElementById('qLevel');
+const elQText = document.getElementById('qText');
+const elQCode = document.getElementById('qCodeBlock');
+const elQOpts = document.getElementById('qOptions');
+const elQFeedback = document.getElementById('qFeedback');
+const elBtnNext = document.getElementById('btnNext');
+
+// Inicjalizacja Quizu
+function initQuiz() {
+    elQTotal.textContent = quizData.length;
+    loadQuestion();
+}
+
+function loadQuestion() {
+    isAnswered = false;
+    const q = quizData[curQIndex];
+    elQNum.textContent = curQIndex + 1;
+    elQLevel.textContent = q.level;
+    elQText.textContent = q.q;
+    elQOpts.innerHTML = '';
+    q.opts.forEach((optText, index) => {
+        const optDiv = document.createElement('div');
+        optDiv.className = 'qopt';
+        optDiv.textContent = optText;
+        optDiv.onclick = () => selectAnswer(index, optDiv);
+        elQOpts.appendChild(optDiv);
+    });
+    elQFeedback.className = 'qfb';
+    elBtnNext.disabled = true;
+    elBtnNext.textContent = "Sprawdź i przejdź dalej ➔";
+}
+
+function selectAnswer(selectedIndex, optDiv) {
+    if(isAnswered) return;
+    isAnswered = true;
+    const q = quizData[curQIndex];
+    const allOpts = document.querySelectorAll('.qopt');
+    allOpts.forEach(opt => opt.style.pointerEvents = 'none');
+    allOpts[q.ans].classList.add('ok');
+    
+    if (selectedIndex === q.ans) {
+        userScore++;
+        elQFeedback.innerHTML = `<strong>✅ Dobra odpowiedź!</strong><br>${q.exp}`;
+        elQFeedback.className = 'qfb show success';
+    } else {
+        optDiv.classList.add('no');
+        elQFeedback.innerHTML = `<strong>❌ Zła odpowiedź.</strong><br>${q.exp}`;
+        elQFeedback.className = 'qfb show error';
+    }
+    
+    if (curQIndex === quizData.length - 1) {
+        elBtnNext.textContent = "Zakończ Test i Pokaż Wynik 🏆";
+    }
+    elBtnNext.disabled = false;
+}
+
+function nextQuestion() {
+    curQIndex++;
+    if (curQIndex < quizData.length) {
+        loadQuestion();
+    } else {
+        showResults();
+    }
+}
+
+function showResults() {
+    document.getElementById('quizContainer').style.display = 'none';
+    const resBox = document.getElementById('resultContainer');
+    resBox.style.display = 'block';
+    
+    document.getElementById('resScore').textContent = userScore;
+    
+    const title = document.getElementById('resTitle');
+    const desc = document.getElementById('resDesc');
+    const icon = document.getElementById('resIcon');
+    
+    const pct = Math.round((userScore / quizData.length) * 100);
+    
+    if (pct === 100) {
+        icon.textContent = "🐧";
+        title.textContent = "Arcymistrz chmod!";
+        desc.textContent = "Perfekcyjny wynik! Nie tylko rozumiesz `rwx`, ale bity specjalne i ich kontekstowe znaczenie nie mają przed Tobą żadnych tajemnic. Jesteś gotów administrować serwerami produkcyjnymi.";
+    } else if (pct >= 70) {
+        icon.textContent = "🌟";
+        title.textContent = "Doświadczony SysAdmin";
+        desc.textContent = "Bardzo dobrze! Rozumiesz subtelne różnice i potrafisz zarządzać uprawnieniami w sposób świadomy i bezpieczny. Jeszcze tylko kilka niszowych konceptów do opanowania.";
+    } else if (pct >= 40) {
+        icon.textContent = "👍";
+        title.textContent = "Świadomy Użytkownik Linuxa";
+        desc.textContent = "Znasz podstawy `rwx`, ale bity specjalne (SUID, Sticky) i ich implikacje bezpieczeństwa mogą sprawiać Ci jeszcze problem. Przeanalizuj ściągawkę i symulator!";
+    } else {
+        icon.textContent = "📚";
+        title.textContent = "Początkujący w CLI";
+        desc.textContent = "Świat uprawnień Uniksowych to fascynująca dziedzina. Ten test był trudny, ale nie zrażaj się! Każdy admin kiedyś zaczynał od `chmod 777` 😉.";
+    }
+}
+
+window.onload = initQuiz;
+</script>
+</body>
+</html>
