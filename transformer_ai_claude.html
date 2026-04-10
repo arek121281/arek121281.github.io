@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformer w AI - Kompletny Przewodnik</title>
+    <style>
+        /* ===== RESET & ZMIENNE ===== */
+        :root {
+            --primary: #0f0f1e;
+            --secondary: #6366f1;
+            --accent: #ec4899;
+            --accent2: #14b8a6;
+            --accent3: #f59e0b;
+            --bg: #0f0f1e;
+            --card-bg: #1a1a2e;
+            --text: #e5e7eb;
+            --text-light: #9ca3af;
+            --shadow: 0 10px 30px rgba(0,0,0,0.5);
+            --radius: 14px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Courier New', monospace;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            scroll-behavior: smooth;
+        }
+
+        /* ===== NAWIGACJA ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 15, 30, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 2px solid var(--secondary);
+            padding: 0;
+            box-shadow: var(--shadow);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        nav ul li a {
+            display: block;
+            color: #e5e7eb;
+            text-decoration: none;
+            padding: 14px 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        nav ul li a:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-bottom: 3px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, #0f0f1e, #1a1a2e, #2d1f4d);
+            color: var(--accent2);
+            text-align: center;
+            padding: 160px 20px 100px;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 3px solid var(--secondary);
+        }
+
+        .hero::before {
+            content: "Attention • Query • Key • Value • Self-Attention • Multi-Head • Transformer";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 0.95rem;
+            color: rgba(99, 102, 241, 0.05);
+            word-wrap: break-word;
+            line-height: 3.5;
+            pointer-events: none;
+            padding: 20px;
+            letter-spacing: 2px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            text-shadow: 0 0 40px rgba(236, 72, 153, 0.5);
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .hero .badges {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .badge {
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid var(--secondary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        /* ===== KONTENERY ===== */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--accent2);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .section-title .underline {
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            font-size: 1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ===== KARTY ===== */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-left: 5px solid var(--secondary);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-left: 5px solid var(--accent);
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--accent2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card h3 .icon {
+            font-size: 2.2rem;
+        }
+
+        .card p, .card li {
+            color: var(--text);
+            font-size: 0.95rem;
+            line-height: 1.9;
+        }
+
+        /* ===== DIAGRAMY ===== */
+        .diagram {
+            background: rgba(99, 102, 241, 0.1);
+            border: 2px solid var(--secondary);
+            border-radius: var(--radius);
+            padding: 30px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            color: var(--accent2);
+        }
+
+        .diagram-title {
+            color: var(--secondary);
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .diagram-line {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .diagram-arrow {
+            color: var(--accent);
+            margin: 0 10px;
+            font-weight: bold;
+        }
+
+        /* ===== BLOKI KODU ===== */
+        .code-block {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--secondary);
+            border-radius: var(--radius);
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.9;
+            overflow-x: auto;
+            color: var(--accent2);
+        }
+
+        .code-block .comment {
+            color: #6b7280;
+        }
+
+        .code-block .highlight {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .code-block .highlight2 {
+            color: var(--accent3);
+            font-weight: 700;
+        }
+
+        .code-block .keyword {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        /* ===== KOMPONENTY ===== */
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .component-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 2px solid transparent;
+            border-left: 5px solid var(--secondary);
+            transition: all 0.3s;
+        }
+
+        .component-card:nth-child(1) { border-left-color: #ec4899; }
+        .component-card:nth-child(2) { border-left-color: #14b8a6; }
+        .component-card:nth-child(3) { border-left-color: #f59e0b; }
+        .component-card:nth-child(4) { border-left-color: #6366f1; }
+        .component-card:nth-child(5) { border-left-color: #06b6d4; }
+        .component-card:nth-child(6) { border-left-color: #8b5cf6; }
+
+        .component-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+            border: 2px solid var(--accent);
+        }
+
+        .component-card h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--accent2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .component-card .emoji {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .component-card p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .component-card .features {
+            list-style: none;
+            padding: 0;
+        }
+
+        .component-card .features li {
+            margin-bottom: 8px;
+            padding-left: 15px;
+            position: relative;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .component-card .features li::before {
+            content: "▪";
+            position: absolute;
+            left: 0;
+            color: var(--accent2);
+        }
+
+        /* ===== INFO BOXY ===== */
+        .info-box {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.1));
+            border-left: 4px solid var(--secondary);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 25px 30px;
+            margin: 25px 0;
+        }
+
+        .info-box.warning {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.1));
+            border-left-color: var(--accent);
+        }
+
+        .info-box.success {
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.2), rgba(20, 184, 166, 0.1));
+            border-left-color: var(--accent2);
+        }
+
+        .info-box h4 {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent2);
+            text-transform: uppercase;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+        }
+
+        .info-box p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* ===== PORÓWNANIE ===== */
+        .comparison-table {
+            overflow-x: auto;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: 30px 0;
+            border: 1px solid var(--secondary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+        }
+
+        th {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: var(--text);
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            font-size: 0.9rem;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        tr:hover {
+            background: rgba(236, 72, 153, 0.1);
+        }
+
+        td:first-child {
+            font-weight: 700;
+            color: var(--accent2);
+        }
+
+        /* ===== WIZUALIZACJA ===== */
+        .visualization {
+            background: var(--card-bg);
+            border: 2px solid var(--secondary);
+            border-radius: var(--radius);
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .attention-flow {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .flow-box {
+            background: rgba(99, 102, 241, 0.2);
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+            padding: 20px 30px;
+            color: var(--accent2);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            min-width: 150px;
+        }
+
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: linear-gradient(135deg, var(--primary), #1a1a2e);
+            color: var(--text-light);
+            text-align: center;
+            padding: 50px 20px;
+            border-top: 2px solid var(--secondary);
+        }
+
+        footer h3 {
+            color: var(--accent2);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        footer p {
+            max-width: 600px;
+            margin: 0 auto 20px;
+            font-size: 0.9rem;
+        }
+
+        footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        footer .footer-links a {
+            color: var(--secondary);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        footer .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        /* ===== ANIMACJE ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== RESPONSYWNOŚĆ ===== */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1rem; }
+            .section-title h2 { font-size: 1.8rem; }
+            .card { padding: 25px; }
+            nav ul li a { padding: 10px 12px; font-size: 0.7rem; }
+            .components-grid { grid-template-columns: 1fr; }
+            .attention-flow { flex-direction: column; }
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        .card ul, .card ol {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+
+        .card ul li, .card ol li {
+            margin-bottom: 10px;
+        }
+
+        .highlight-text {
+            background: rgba(236, 72, 153, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .math {
+            background: rgba(99, 102, 241, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            color: var(--accent2);
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAWIGACJA -->
+    <nav>
+        <ul>
+            <li><a href="#intro">Intro</a></li>
+            <li><a href="#what">Co to?</a></li>
+            <li><a href="#before">Przed</a></li>
+            <li><a href="#architecture">Architektura</a></li>
+            <li><a href="#attention">Attention</a></li>
+            <li><a href="#components">Komponenty</a></li>
+            <li><a href="#math">Matematyka</a></li>
+            <li><a href="#training">Trenowanie</a></li>
+            <li><a href="#applications">Aplikacje</a></li>
+            <li><a href="#variants">Warianty</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+        <h1>🔄 TRANSFORMER</h1>
+        <p>Kompletny przewodnik po architekturze Transformer - fundamentzie nowoczesnego AI. Zrozum jak działają GPT, BERT, LLM.</p>
+        <div class="badges">
+            <span class="badge">🧠 Architecture</span>
+            <span class="badge">👀 Attention</span>
+            <span class="badge">🤖 LLM</span>
+            <span class="badge">📊 Deep Learning</span>
+        </div>
+    </header>
+
+    <!-- WPROWADZENIE -->
+    <section id="intro">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Czym jest Transformer?</h2>
+                <div class="underline"></div>
+                <p>Architektura sieci neuronowej która zmieniła AI</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">⚡</span> Krótka Odpowiedź</h3>
+                <p><strong>Transformer</strong> to architektura sieci neuronowej (deep learning model), opublikowana w papierze 
+                <span class="highlight-text">"Attention is All You Need" (2017)</span> przez Google Brain i University of Toronto. 
+                Zrewolucjonizowała przetwarzanie sekwencji tekstu.</p>
+
+                <p style="margin-top: 15px;">Zamiast przetwarzać tekst słowo po słowie (jak RNN), Transformer patrzą na <strong>cały tekst naraz</strong> 
+                i rozumieją powiązania między słowami w całym kontekście. To jest key difference - 
+                <span class="highlight-text">self-attention mechanism</span>.</p>
+
+                <div class="info-box success">
+                    <h4>✓ Gdzie są używane?</h4>
+                    <p>• <strong>GPT (OpenAI)</strong> — ChatGPT, GPT-4 = czysty Transformer<br>
+                    • <strong>BERT (Google)</strong> — Transformer dla rozumienia tekstu<br>
+                    • <strong>T5 (Google)</strong> — Transformer dla różnych NLP taskó<br>
+                    • <strong>Vision Transformers (ViT)</strong> — Transformers dla obrazów!<br>
+                    • <strong>Llama, Mistral, Claude</strong> — Wszystkie LLM to Transformery<br>
+                    • <strong>Casi wszystko w AI 2023+</strong> — SOTA models to Transformery</p>
+                </div>
+            </div>
+
+            <div class="info-box warning">
+                <h4>⚠️ Ważne</h4>
+                <p>Transformer to <strong>architektura (blueprint)</strong>, nie konkretny model. 
+                Jak <strong>budynek</strong> - wiele domów może mieć podobną architekturę ale różne detale, meble, wielkość. 
+                GPT, BERT, Llama - to wszystkie "domy" zbudowane na "planie" Transformer.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRZED TRANSFORMEREM -->
+    <section id="before" style="background: rgba(99, 102, 241, 0.05);">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Przed Transformerem</h2>
+                <div class="underline"></div>
+                <p>Jakie były problemy z poprzednimi modelami?</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">📊</span> RNN (Recurrent Neural Networks)</h3>
+                <p><strong>RNN/LSTM</strong> były standardem przed 2017. Jak czytają sekwencję?</p>
+
+                <div class="diagram">
+                    <div class="diagram-title">RNN Flow (Sekwencyjnie)</div>
+                    <div class="diagram-line">
+                        Input: "The cat sat on mat"
+                    </div>
+                    <div class="diagram-line">
+                        Krok 1: [The] <span class="diagram-arrow">→</span> hidden_state_1
+                    </div>
+                    <div class="diagram-line">
+                        Krok 2: [cat] + hidden_state_1 <span class="diagram-arrow">→</span> hidden_state_2
+                    </div>
+                    <div class="diagram-line">
+                        Krok 3: [sat] + hidden_state_2 <span class="diagram-arrow">→</span> hidden_state_3
+                    </div>
+                    <div class="diagram-line">
+                        ... i tak dalej, słowo po słowie
+                    </div>
+                </div>
+
+                <div class="info-box warning">
+                    <h4>❌ Problemy RNN</h4>
+                    <p>• <strong>Sekwencyjne przetwarzanie</strong> - musi czekać na poprzedni krok (bardzo WOLNO)<br>
+                    • <strong>Vanishing gradients</strong> - nie pamięta długoterminowych zależności (tekst > 100 słów = problem)<br>
+                    • <strong>Nie parallelizuje</strong> - GPU nie może przyspieszyć (każdy krok czeka na poprzedni)<br>
+                    • <strong>Słabe na długi kontekst</strong> - zapomina co było 50 słów temu</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🔍</span> Dlaczego Transformer Zwycięża?</h3>
+
+                <div class="diagram">
+                    <div class="diagram-title">Transformer Flow (Parallelnie)</div>
+                    <div class="diagram-line">
+                        Input: "The cat sat on mat"
+                    </div>
+                    <div class="diagram-line">
+                        CAŁY tekst w jednym time-step! <span class="diagram-arrow">→</span> Attention
+                    </div>
+                    <div class="diagram-line">
+                        Każde słowo patrzą na WSZYSTKIE słowa jednocześnie
+                    </div>
+                    <div class="diagram-line">
+                        Parallelny proces = SZYBKO ⚡
+                    </div>
+                </div>
+
+                <ul style="margin-top: 15px;">
+                    <li><strong>✓ Parallelizacja</strong> - wszystkie słowa naraz, GPU pełna moc</li>
+                    <li><strong>✓ Długi kontekst</strong> - zmienna attention pozwala pamiętać (teoretycznie) nieskończony kontekst</li>
+                    <li><strong>✓ Globalny kontekst</strong> - każde słowo wie o każdym innym słowie</li>
+                    <li><strong>✓ Szybsze trenowanie</strong> - parallelne = szybciej (GPT-3 5 miesięcy zamiast lat)</li>
+                    <li><strong>✓ Skaluje się lepiej</strong> - więcej danych, większy model = lepiej (RNN plateau)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ARCHITEKTURA TRANSFORMERA -->
+    <section id="architecture">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Architektura Transformera</h2>
+                <div class="underline"></div>
+                <p>Jak jest zbudowany?</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🏗️</span> Ogólna Struktura</h3>
+
+                <div class="diagram">
+                    <div class="diagram-title">Transformer Architecture</div>
+                    <div class="diagram-line">
+                        ┌─────────────────────────────────┐
+                    </div>
+                    <div class="diagram-line">
+                        │  INPUT TEXT (sekwencja tokenów) │
+                    </div>
+                    <div class="diagram-line">
+                        └──────────────┬──────────────────┘
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼
+                    </div>
+                    <div class="diagram-line">
+                        ┌─────────────────────────────────┐
+                    </div>
+                    <div class="diagram-line">
+                        │  TOKEN EMBEDDING (wektor 768D) │
+                    </div>
+                    <div class="diagram-line">
+                        └──────────────┬──────────────────┘
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼
+                    </div>
+                    <div class="diagram-line">
+                        ┌─────────────────────────────────┐
+                    </div>
+                    <div class="diagram-line">
+                        │ POSITIONAL ENCODING (gdzie są) │
+                    </div>
+                    <div class="diagram-line">
+                        └──────────────┬──────────────────┘
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼
+                    </div>
+                    <div class="diagram-line">
+                        ┌──────────────────────────────────────┐
+                    </div>
+                    <div class="diagram-line">
+                        │  ENCODER STACK (N times - 6-24)    │
+                    </div>
+                    <div class="diagram-line">
+                        │  ├─ Multi-Head Self-Attention      │
+                    </div>
+                    <div class="diagram-line">
+                        │  ├─ Add & Norm                      │
+                    </div>
+                    <div class="diagram-line">
+                        │  ├─ Feed-Forward Network            │
+                    </div>
+                    <div class="diagram-line">
+                        │  └─ Add & Norm                      │
+                    </div>
+                    <div class="diagram-line">
+                        └──────────────┬───────────────────────┘
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼
+                    </div>
+                    <div class="diagram-line">
+                        ┌─────────────────────────────────┐
+                    </div>
+                    <div class="diagram-line">
+                        │  DECODER STACK (dla generacji)  │
+                    </div>
+                    <div class="diagram-line">
+                        │  (przy decoderze te operacje)   │
+                    </div>
+                    <div class="diagram-line">
+                        └──────────────┬──────────────────┘
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼
+                    </div>
+                    <div class="diagram-line">
+                        ┌─────────────────────────────────┐
+                    </div>
+                    <div class="diagram-line">
+                        │  OUTPUT (następne słowo / tekst) │
+                    </div>
+                    <div class="diagram-line">
+                        └─────────────────────────────────┘
+                    </div>
+                </div>
+
+                <p style="margin-top: 20px;"><strong>Kluczowy insight:</strong> Wszystko między INPUT a OUTPUT to <span class="highlight-text">transformacje wektorów</span>. 
+                Tekst → liczby → operacje matematyczne → liczby → tekst.</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🔢</span> Dimensionality (Rozmiary)</h3>
+                <p>Transformer ma stałe rozmiary dla każdego wektora:</p>
+
+                <div class="diagram">
+                    <div class="diagram-title">Rozmiary Wektorów (dla BERT)</div>
+                    <div class="diagram-line">
+                        Token embedding: <span class="highlight">768 dimensions</span>
+                    </div>
+                    <div class="diagram-line">
+                        Każde słowo = wektor liczb (768 liczb)
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;
+                    </div>
+                    <div class="diagram-line">
+                        Multi-Head Attention: <span class="highlight">12 heads</span>
+                    </div>
+                    <div class="diagram-line">
+                        768 / 12 = <span class="highlight">64 dims per head</span>
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;
+                    </div>
+                    <div class="diagram-line">
+                        Feed-Forward: 768 <span class="diagram-arrow">→</span> 3072 <span class="diagram-arrow">→</span> 768
+                    </div>
+                    <div class="diagram-line">
+                        (rozszerza się wewnątrz, potem się zwęża)
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;
+                    </div>
+                    <div class="diagram-line">
+                        Attention heads: <span class="highlight">12</span>
+                    </div>
+                    <div class="diagram-line">
+                        Encoder layers: <span class="highlight">12</span>
+                    </div>
+                    <div class="diagram-line">
+                        Total params: <span class="highlight">110M (BERT-base)</span>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h4>💡 GPT-3 vs BERT</h4>
+                    <p><strong>BERT-base:</strong> 12 layers, 768 dims, 110M parameters<br>
+                    <strong>GPT-3:</strong> 96 layers, 12288 dims, 175B parameters (!)<br>
+                    To samo architecture, ale GIGANTYCZNE scale = GIGANTYCZNE moce</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SELF-ATTENTION -->
+    <section id="attention" style="background: rgba(99, 102, 241, 0.05);">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>⚡ Self-Attention Mechanism</h2>
+                <div class="underline"></div>
+                <p>Serce transformera - jak model zrozumie powiązania między słowami</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">👀</span> Co to jest Attention?</h3>
+                <p><strong>Attention</strong> to mechanizm który pozwala modelowi skoncentrować się na "ważnych" słowach.</p>
+
+                <div class="info-box success">
+                    <h4>✓ Intuicja (Human Example)</h4>
+                    <p>Czytasz: "The cat sat on the mat. It was black."<br>
+                    Pytanie: Co było czarne? (what does "It" refer to?)<br>
+                    Twój "attention" skoncentruje się na "cat" - bo to jest kontekst.<br>
+                    Attention weights: cat=0.9, sat=0.05, mat=0.03, rest=0.02</p>
+                </div>
+
+                <p style="margin-top: 15px;">Transformer robi dokładnie to samo, ale matematycznie!</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🧮</span> Attention Formula (Scaled Dot-Product)</h3>
+
+                <div class="math">
+                    Attention(Q, K, V) = softmax( QK<sup>T</sup> / √d<sub>k</sub> ) V
+                </div>
+
+                <p><strong>Gdzie:</strong></p>
+                <ul>
+                    <li><strong>Q (Query)</strong> - co szukamy? (bieżące słowo pytaniem)
+                    <li><strong>K (Key)</strong> - gdzie szukać? (indeksy w tekście)
+                    <li><strong>V (Value)</strong> - jaka jest wartość? (zawartość słów)
+                    <li><strong>d<sub>k</sub></strong> - wymiar keya (64 dla 12-head attention)
+                    <li><strong>QK<sup>T</sup></strong> - similarity scores (jak podobne są query do każdego keya)
+                    <li><strong>softmax</strong> - normalizuj do prawdopodobieństw (sum=1)
+                    <li><strong>V</strong> - ważona suma wartości (weighted average)
+                </ul>
+
+                <div class="code-block">
+<span class="comment"># Attention w pseudokodzie</span><br>
+<span class="keyword">def</span> <span class="highlight">attention</span>(query, key, value):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Krok 1: similarity scores</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;scores = query @ key.T <span class="comment"># matrix multiplication</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;scores = scores / <span class="highlight2">math.sqrt</span>(d_k) <span class="comment"># scale</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Krok 2: softmax (convert to probabilities)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;weights = <span class="highlight2">softmax</span>(scores) <span class="comment"># range 0-1, sum=1</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Krok 3: weighted sum of values</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;output = weights @ value <span class="comment"># weighted average</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> output
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🎯</span> Self-Attention - Co Się Dzieje Krok po Kroku?</h3>
+
+                <div class="diagram">
+                    <div class="diagram-title">Attention Flow dla Słowa "cat"</div>
+                    <div class="diagram-line">
+                        Sentence: "The cat sat on the mat"
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;
+                    </div>
+                    <div class="diagram-line">
+                        KROK 1: "cat" <span class="diagram-arrow">→</span> Query (szukaj tego)
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;
+                    </div>
+                    <div class="diagram-line">
+                        KROK 2: Score każde słowo (podobieństwo do query)
+                    </div>
+                    <div class="diagram-line">
+                        The:   0.1  (mało związane)
+                    </div>
+                    <div class="diagram-line">
+                        cat:   0.9  (sam siebie!)
+                    </div>
+                    <div class="diagram-line">
+                        sat:   0.7  (co robiła kota?)
+                    </div>
+                    <div class="diagram-line">
+                        on:    0.3  (mniej)
+                    </div>
+                    <div class="diagram-line">
+                        mat:   0.6  (gdzie siedziała)
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;
+                    </div>
+                    <div class="diagram-line">
+                        KROK 3: Softmax (normalizuj)
+                    </div>
+                    <div class="diagram-line">
+                        cat: 0.35 (highest!)
+                    </div>
+                    <div class="diagram-line">
+                        sat: 0.25
+                    </div>
+                    <div class="diagram-line">
+                        mat: 0.20
+                    </div>
+                    <div class="diagram-line">
+                        The: 0.10
+                    </div>
+                    <div class="diagram-line">
+                        on: 0.10
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;
+                    </div>
+                    <div class="diagram-line">
+                        KROK 4: Weź weighted average (0.35*cat_vector + 0.25*sat_vector + ...)
+                    </div>
+                    <div class="diagram-line">
+                        Output: nowa reprezentacja "cat" z kontekstem!
+                    </div>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🔀</span> Multi-Head Attention</h3>
+                <p>Jeden attention head = jeden typ relacji. <strong>Multi-head</strong> = wiele aspektów jednocześnie:</p>
+
+                <div class="diagram">
+                    <div class="diagram-title">12-Head Attention (BERT)</div>
+                    <div class="diagram-line">
+                        Head 1: Syntactic relations (podział i czasowniki)
+                    </div>
+                    <div class="diagram-line">
+                        Head 2: Co robi (verb-object relations)
+                    </div>
+                    <div class="diagram-line">
+                        Head 3: Singular/Plural (gender, number agreement)
+                    </div>
+                    <div class="diagram-line">
+                        Head 4: Location (gdzie, kiedy)
+                    </div>
+                    <div class="diagram-line">
+                        ... (8 more heads)
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;
+                    </div>
+                    <div class="diagram-line">
+                        Concat all 12 outputs <span class="diagram-arrow">→</span> 768D vector
+                    </div>
+                </div>
+
+                <p style="margin-top: 15px;">Każdy head uczy się innych "pojęć" - razem tworzą pełne rozumienie tekstu!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- KOMPONENTY TRANSFORMERA -->
+    <section id="components">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🔧 Komponenty Transformera</h2>
+                <div class="underline"></div>
+                <p>Budulce architektury</p>
+            </div>
+
+            <div class="components-grid fade-in">
+                <div class="component-card">
+                    <span class="emoji">🏷️</span>
+                    <h4>Token Embedding</h4>
+                    <p>Konwersja słów na wektory.</p>
+                    <ul class="features">
+                        <li>Vocab size ≈ 50K słów</li>
+                        <li>Każde słowo = wektor 768D</li>
+                        <li>Learned representation</li>
+                        <li>Special tokens: [CLS], [SEP], [MASK]</li>
+                    </ul>
+                </div>
+
+                <div class="component-card">
+                    <span class="emoji">📍</span>
+                    <h4>Positional Encoding</h4>
+                    <p>Mówi modelowi gdzie są słowa (nie ma sensu porządku bez pozycji).</p>
+                    <ul class="features">
+                        <li>Sinusoidal functions (sin/cos)</li>
+                        <li>Dodane do embedding</li>
+                        <li>Relative position info</li>
+                        <li>Supports long sequences</li>
+                    </ul>
+                </div>
+
+                <div class="component-card">
+                    <span class="emoji">👀</span>
+                    <h4>Self-Attention</h4>
+                    <p>Jądro transformera - relacje między słowami.</p>
+                    <ul class="features">
+                        <li>Query, Key, Value matrices</li>
+                        <li>Softmax normalization</li>
+                        <li>Attention weights (visualizable!)</li>
+                        <li>O(n²) complexity</li>
+                    </ul>
+                </div>
+
+                <div class="component-card">
+                    <span class="emoji">🎯</span>
+                    <h4>Multi-Head Attention</h4>
+                    <p>Wiele attention heads dla różnych aspektów.</p>
+                    <ul class="features">
+                        <li>Parallel attention operations</li>
+                        <li>h heads (usually 8-16)</li>
+                        <li>d_k = d_model / h</li>
+                        <li>Concatenate & project</li>
+                    </ul>
+                </div>
+
+                <div class="component-card">
+                    <span class="emoji">🧠</span>
+                    <h4>Feed-Forward Network</h4>
+                    <p>Po attention - dodatkowa transformacja wiedzy.</p>
+                    <ul class="features">
+                        <li>Dense layer 1: expand</li>
+                        <li>ReLU activation</li>
+                        <li>Dense layer 2: shrink back</li>
+                        <li>Pointwise (per position)</li>
+                    </ul>
+                </div>
+
+                <div class="component-card">
+                    <span class="emoji">⚙️</span>
+                    <h4>Layer Normalization</h4>
+                    <p>Stabilizuje trenowanie, normalizuje wartości.</p>
+                    <ul class="features">
+                        <li>After attention & FF</li>
+                        <li>Learnable scale & shift</li>
+                        <li>Helps gradient flow</li>
+                        <li>Pre-norm vs Post-norm</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MATEMATYKA -->
+    <section id="math" style="background: rgba(99, 102, 241, 0.05);">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>📐 Matematyka Transformera</h2>
+                <div class="underline"></div>
+                <p>Dokładne wzory (dla ciekawych)</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🔢</span> Multi-Head Self-Attention (Dokładnie)</h3>
+
+                <div class="math">
+                    Attention(Q, K, V) = softmax(QK<sup>T</sup>/√d<sub>k</sub>) V
+                </div>
+
+                <div class="math">
+                    MultiHead(Q, K, V) = Concat(head<sub>1</sub>,...,head<sub>h</sub>)W<sup>O</sup><br>
+                    gdzie head<sub>i</sub> = Attention(QW<sub>i</sub><sup>Q</sup>, KW<sub>i</sub><sup>K</sup>, VW<sub>i</sub><sup>V</sup>)
+                </div>
+
+                <p style="margin-top: 15px;"><strong>Interpretation:</strong></p>
+                <ul>
+                    <li>Każdy head ma własne Q, K, V transformacje (W matrices)</li>
+                    <li>Attention dzieje się osobno w każdym head</li>
+                    <li>Wyniki konkatenowane i mnożone przez W<sup>O</sup> (output projection)</li>
+                    <li>Powraca do d_model wymiarów</li>
+                </ul>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">📊</span> Feed-Forward Network</h3>
+
+                <div class="math">
+                    FFN(x) = max(0, xW<sub>1</sub> + b<sub>1</sub>)W<sub>2</sub> + b<sub>2</sub>
+                </div>
+
+                <p style="margin-top: 15px;"><strong>Gdzie:</strong></p>
+                <ul>
+                    <li>W<sub>1</sub>: d_model → d_ff (zwykle 4*d_model)</li>
+                    <li>max(0, ...): ReLU activation</li>
+                    <li>W<sub>2</sub>: d_ff → d_model (powrót)</li>
+                    <li>Applied per position (independent)</li>
+                </ul>
+
+                <div class="info-box">
+                    <h4>💡 Dlaczego d_ff = 4*d_model?</h4>
+                    <p>Dla BERT (d_model=768): d_ff = 3072 = 4×768<br>
+                    Empirycznie znaleziono że ta proporcja działa dobrze.<br>
+                    FFN jest gęstą "knowledge storage" warstwą.</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🌊</span> Softmax Formula</h3>
+
+                <div class="math">
+                    softmax(x<sub>i</sub>) = e<sup>x<sub>i</sub></sup> / Σ<sub>j</sub> e<sup>x<sub>j</sub></sup>
+                </div>
+
+                <p style="margin-top: 15px;"><strong>Co to robi:</strong></p>
+                <ul>
+                    <li>Konwersja dowolnych liczb na prawdopodobieństwa (0-1)</li>
+                    <li>Suma zawsze = 1</li>
+                    <li>e<sup>x</sup> emphasizes największe wartości</li>
+                    <li>Perfect dla attention weights!</li>
+                </ul>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🎯</span> Positional Encoding (Sinusoidal)</h3>
+
+                <div class="math">
+                    PE(pos, 2i) = sin(pos / 10000<sup>2i/d_model</sup>)<br>
+                    PE(pos, 2i+1) = cos(pos / 10000<sup>2i/d_model</sup>)
+                </div>
+
+                <p style="margin-top: 15px;"><strong>Czemu sinusoidy?</strong></p>
+                <ul>
+                    <li>Periodic patterns - model nauczy się relative positions</li>
+                    <li>Wszędzie dostępne - dla każdej pozycji</li>
+                    <li>Extrapolate - model może obsłużyć sekwencje długsze niż trenowanie</li>
+                    <li>Nie uczony - fixed, nie zużywa parametrów</li>
+                </ul>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">📐</span> Layer Normalization</h3>
+
+                <div class="math">
+                    LayerNorm(x) = γ * (x - mean(x)) / sqrt(var(x) + ε) + β
+                </div>
+
+                <p style="margin-top: 15px;"><strong>Gdzie:</strong></p>
+                <ul>
+                    <li>Normalizuj każdy sample (nie batch)</li>
+                    <li>γ, β - learned scale and shift (optional)</li>
+                    <li>ε - small number (avoid division by zero)</li>
+                    <li>Stabilizuje gradient flow podczas backprop</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRENOWANIE -->
+    <section id="training">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🎓 Jak Transformers Się Trenują?</h2>
+                <div class="underline"></div>
+                <p>Od danych do działającego modelu</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">📚</span> Pre-training (Ogromne skale)</h3>
+                <p>LLMy są trenowane w dwóch fazach:</p>
+
+                <div class="diagram">
+                    <div class="diagram-title">FAZA 1: Pre-training (Unsupervised)</div>
+                    <div class="diagram-line">
+                        Data: 300B+ tokens (Common Crawl, Books, Wikipedia)
+                    </div>
+                    <div class="diagram-line">
+                        Task: Next Token Prediction (LM)
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;
+                    </div>
+                    <div class="diagram-line">
+                        Input: "The quick brown fox"
+                    </div>
+                    <div class="diagram-line">
+                        Predict: "jumps" (next token)
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;
+                    </div>
+                    <div class="diagram-line">
+                        Loss: Cross-entropy (how wrong was prediction)
+                    </div>
+                    <div class="diagram-line">
+                        Optimizer: Adam (adaptive learning rates)
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;
+                    </div>
+                    <div class="diagram-line">
+                        Duration: weeks-months (GPT-3 took 5 months!)
+                    </div>
+                    <div class="diagram-line">
+                        Compute: <span class="highlight">MASSIVE</span> (1000s of GPUs)
+                    </div>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🎯</span> Fine-tuning (Transfer Learning)</h3>
+
+                <div class="diagram">
+                    <div class="diagram-title">FAZA 2: Fine-tuning (Supervised)</div>
+                    <div class="diagram-line">
+                        Start: Pre-trained model (GPT-3)
+                    </div>
+                    <div class="diagram-line">
+                        Data: Task-specific (1K-10K examples)
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;
+                    </div>
+                    <div class="diagram-line">
+                        Example: Classification
+                    </div>
+                    <div class="diagram-line">
+                        Input: "I loved this movie!"
+                    </div>
+                    <div class="diagram-line">
+                        Output: Sentiment = Positive
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;
+                    </div>
+                    <div class="diagram-line">
+                        Loss: Task-specific (cross-entropy, MSE, etc)
+                    </div>
+                    <div class="diagram-line">
+                        Learning rate: Much smaller (don't break pre-training!)
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;
+                    </div>
+                    <div class="diagram-line">
+                        Duration: hours-days (GPU friendly!)
+                    </div>
+                    <div class="diagram-line">
+                        Cost: Cheap (<$100 vs millions for pre-train)
+                    </div>
+                </div>
+
+                <div class="info-box success">
+                    <h4>✓ Transfer Learning Power</h4>
+                    <p>Pre-trained model już "zna" język, gramatykę, pojęcia. 
+                    Fine-tuning just adapts this knowledge. 
+                    To jest dlaczego można trenować na małych datasetach!</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🔄</span> RLHF (Reinforcement Learning from Human Feedback)</h3>
+                <p>Dla ChatGPT-like modeli:</p>
+
+                <div class="diagram">
+                    <div class="diagram-title">FAZA 3: RLHF (dla conversational models)</div>
+                    <div class="diagram-line">
+                        1. SFT (Supervised Fine-Tune)
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;&nbsp;Fine-tune na high-quality prompts + responses
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;
+                    </div>
+                    <div class="diagram-line">
+                        2. Reward Model Training
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;&nbsp;Ludzie oceniają: "which response is better?"
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;&nbsp;Train model to predict preference
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;
+                    </div>
+                    <div class="diagram-line">
+                        3. PPO (Proximal Policy Optimization)
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;&nbsp;Generator model updated using reward signal
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;&nbsp;Maximize: quality of responses
+                    </div>
+                    <div class="diagram-line">
+                        &nbsp;&nbsp;Minimize: divergence from SFT model
+                    </div>
+                </div>
+
+                <div class="info-box warning">
+                    <h4>⚠️ RLHF Challenges</h4>
+                    <p>• Reward hacking - model optimizes for metric, not actual quality<br>
+                    • Alignment problem - how to encode human values?<br>
+                    • Expensive - need human raters (thousands of evaluations)<br>
+                    • Somewhat alignment-theater (doesn't solve all problems)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- APLIKACJE -->
+    <section id="applications" style="background: rgba(99, 102, 241, 0.05);">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🚀 Aplikacje Transformera</h2>
+                <div class="underline"></div>
+                <p>Gdzie pracują transformery</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">💬</span> NLP (Natural Language Processing)</h3>
+                <ul>
+                    <li><strong>Machine Translation</strong> — Google Translate (używa transformers)</li>
+                    <li><strong>Text Classification</strong> — spam detection, sentiment analysis</li>
+                    <li><strong>Named Entity Recognition</strong> — znalezienie osób, miejsc, organizacji</li>
+                    <li><strong>Question Answering</strong> — SQuAD, TriviaQA</li>
+                    <li><strong>Summarization</strong> — BART, T5, Pegasus</li>
+                    <li><strong>Text Generation</strong> — GPT, Llama, Mistral</li>
+                </ul>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🖼️</span> Vision (Widzenie Komputerowe)</h3>
+                <ul>
+                    <li><strong>Vision Transformer (ViT)</strong> — "Attention is All You Need" dla obrazów!</li>
+                    <li><strong>Image Classification</strong> — ImageNet SOTA</li>
+                    <li><strong>Object Detection</strong> — DETR (Detection Transformer)</li>
+                    <li><strong>Segmentation</strong> — pixel-level tasks</li>
+                    <li><strong>CLIP</strong> — połączenie tekstu i obrazów (multimodal!)</li>
+                </ul>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🎵</span> Audio & Inne Domeny</h3>
+                <ul>
+                    <li><strong>Speech Recognition</strong> — Whisper (OpenAI)</li>
+                    <li><strong>Music Generation</strong> — Jukebox, MusicLM</li>
+                    <li><strong>Code Generation</strong> — Codex, GitHub Copilot</li>
+                    <li><strong>Protein Folding</strong> — AlphaFold 2 (transformers dla biologii!)</li>
+                    <li><strong>Molecule Generation</strong> — drug discovery</li>
+                </ul>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🤝</span> Multimodal</h3>
+                <ul>
+                    <li><strong>CLIP</strong> — tekst + obraz razem</li>
+                    <li><strong>Flamingo, LLaVA</strong> — Vision + Language model</li>
+                    <li><strong>DALL-E, Stable Diffusion</strong> — text-to-image (używają transformers)</li>
+                    <li><strong>Video Understanding</strong> — ViViT (Vision Video Transformer)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- WARIANTY TRANSFORMERA -->
+    <section id="variants">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>🔀 Warianty & Optymizacje</h2>
+                <div class="underline"></div>
+                <p>Ulepszenia do standardowego transformera</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">⚡</span> Efficient Transformers</h3>
+                <p><span class="highlight-text">Problem:</span> Standard attention = O(n²) complexity. Dla 2000 słów = 4M operacji!</p>
+
+                <ul style="margin-top: 15px;">
+                    <li><strong>Sparse Attention</strong> — attention tylko na subset słów (nie wszyscy)</li>
+                    <li><strong>Linformer</strong> — linear complexity (O(n)) zamiast O(n²)</li>
+                    <li><strong>Performer</strong> — kernel methods, faster attention</li>
+                    <li><strong>FlashAttention</strong> — optimized CUDA kernels (GPU-friendly)</li>
+                    <li><strong>Local Attention</strong> — attention tylko na sąsiednie słowa (sliding window)</li>
+                </ul>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">📏</span> Encoder vs Decoder vs Causal</h3>
+
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Attention Mask</th>
+                                <th>Input/Output</th>
+                                <th>Przykład</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Encoder-only</td>
+                                <td>Bidirectional</td>
+                                <td>Tekst → Representation</td>
+                                <td>BERT, RoBERTa (classification)</td>
+                            </tr>
+                            <tr>
+                                <td>Decoder-only</td>
+                                <td>Causal (future masked)</td>
+                                <td>Tekst → Next tokens</td>
+                                <td>GPT, Llama, Mistral (generation)</td>
+                            </tr>
+                            <tr>
+                                <td>Encoder-Decoder</td>
+                                <td>Both</td>
+                                <td>Tekst → Tekst</td>
+                                <td>T5, BART (translation)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🔧</span> Innowacyjne Warianty</h3>
+
+                <ul>
+                    <li><strong>Rotary Position Embeddings (RoPE)</strong> — lepsze pozycyjne encoding (LLaMA używa)</li>
+                    <li><strong>ALiBi</strong> — Attention with Linear Biases (prostsze niż sinusoidal)</li>
+                    <li><strong>GQA (Grouped Query Attention)</strong> — mniej KV heads dla szybkości</li>
+                    <li><strong>Mixture of Experts (MoE)</strong> — conditional FFN (dense to sparse)</li>
+                    <li><strong>Cross-layer Attention</strong> — skip connections między dalekimi layerami</li>
+                    <li><strong>Adapter Layers</strong> — mały tuning bez pełnego fine-tuning</li>
+                </ul>
+            </div>
+
+            <div class="card fade-in">
+                <h3><span class="icon">🎯</span> Scaling Laws (Co się Stało w 2020-2024)</h3>
+
+                <p><strong>Chinchilla, PaLM, GPT-3.5 papers odkryły:</strong></p>
+                <ul>
+                    <li>Bigger models = better (smoothly improving)</li>
+                    <li>Model size ≈ Data size (Chinchilla scaling laws)</li>
+                    <li>Grok'ing effect - plausible deniability does not work; sudden jumps in capability</li>
+                    <li>Emergent abilities - at certain scale, model magically gains new skills!</li>
+                    <li>Chain of Thought - bigger models exhibit reasoning (surprising!)</li>
+                </ul>
+
+                <div class="info-box success">
+                    <h4>✓ Trend</h4>
+                    <p>GPT-3 (175B) → GPT-4 (?B, rumored ~1T) → future = gigantic models<br>
+                    Trend: Bigger, faster, smarter = unstoppable</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <h3>🔄 TRANSFORMER ARCHITECTURE</h3>
+        <p>Kompletny przewodnik po transformerach - architekturze która zmieniła AI. Zrozum GPT, BERT, LLM i nowoczesne AI.</p>
+        <div class="footer-links">
+            <a href="#intro">Intro</a>
+            <a href="#what">Co to?</a>
+            <a href="#before">Przed</a>
+            <a href="#architecture">Architektura</a>
+            <a href="#attention">Attention</a>
+            <a href="#components">Komponenty</a>
+            <a href="#math">Matematyka</a>
+            <a href="#training">Trenowanie</a>
+            <a href="#applications">Aplikacje</a>
+            <a href="#variants">Warianty</a>
+        </div>
+        <p style="font-size: 0.85rem; opacity: 0.6;">© 2024 — Edukacyjnie | Wszelkie prawa zastrzeżone</p>
+    </footer>
+
+    <!-- SKRYPTY -->
+    <script>
+        // =====================
+        // ANIMACJE SCROLL
+        // =====================
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+
+</body>
+</html>
