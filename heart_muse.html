@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test: Romantyzm - Serce vs Rozum | Klasa 2 LO</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f1ee; color: #333; max-width: 900px; margin: 20px auto; padding: 20px; }
+        h1 { color: #7a0019; text-align: center; border-bottom: 3px solid #7a0019; padding-bottom: 10px; }
+        .pytanie { background: white; padding: 15px 20px; margin-bottom: 15px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .pytanie h3 { margin-top: 0; color: #444; }
+        label { display: block; margin: 5px 0; cursor: pointer; }
+        button { background: #7a0019; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 8px; cursor: pointer; display: block; margin: 20px auto; }
+        button:hover { background: #a50023; }
+        #wynik { text-align: center; font-size: 24px; font-weight: bold; margin-top: 20px; padding: 20px; background: #fff3cd; border-radius: 10px; display: none; }
+    </style>
+</head>
+<body>
+
+    <h1>Test z języka polskiego - Klasa 2 LO<br>ROMANTYZM: "Miej serce i patrzaj w serce"</h1>
+
+    <form id="test">
+        <div class="pytanie">
+            <h3>1. Kto jest autorem manifestu romantyzmu "Romantyczność"?</h3>
+            <label><input type="radio" name="q1" value="a"> Juliusz Słowacki</label>
+            <label><input type="radio" name="q1" value="b"> Adam Mickiewicz</label>
+            <label><input type="radio" name="q1" value="c"> Cyprian Norwid</label>
+        </div>
+
+        <div class="pytanie">
+            <h3>2. Z którego roku pochodzi wydanie "Ballad i romansów"?</h3>
+            <label><input type="radio" name="q2" value="a"> 1830</label>
+            <label><input type="radio" name="q2" value="b"> 1822</label>
+            <label><input type="radio" name="q2" value="c"> 1848</label>
+        </div>
+
+        <div class="pytanie">
+            <h3>3. Słynne "mędrca szkiełko i oko" symbolizuje:</h3>
+            <label><input type="radio" name="q3" value="a"> wiarę i uczucie</label>
+            <label><input type="radio" name="q3" value="b"> rozum, naukę, racjonalizm</label>
+            <label><input type="radio" name="q3" value="c"> miłość do ojczyzny</label>
+        </div>
+
+        <div class="pytanie">
+            <h3>4. Jakie duchy NIE pojawiają się w II cz. "Dziadów"?</h3>
+            <label><input type="radio" name="q4" value="a"> Duchy dzieci (Józia i Rózi)</label>
+            <label><input type="radio" name="q4" value="b"> Widmo Złego Pana</label>
+            <label><input type="radio" name="q4" value="c"> Duch Kordiana</label>
+        </div>
+
+        <div class="pytanie">
+            <h3>5. "Czucie i wiara silniej mówi do mnie / Niż mędrca szkiełko i oko" - to opozycja:</h3>
+            <label><input type="radio" name="q5" value="a"> serca i rozumu</label>
+            <label><input type="radio" name="q5" value="b"> dobra i zła</label>
+            <label><input type="radio" name="q5" value="c"> Polaka i Rosjanina</label>
+        </div>
+
+        <div class="pytanie">
+            <h3>6. Kim jest Gustaw przemieniony w Konrada z III cz. "Dziadów"?</h3>
+            <label><input type="radio" name="q6" value="a"> Bohaterem romantycznym - kochankiem i patriotą</label>
+            <label><input type="radio" name="q6" value="b"> Chłopem z ballady</label>
+            <label><input type="radio" name="q6" value="c"> Nauczycielem wiejskim</label>
+        </div>
+
+        <div class="pytanie">
+            <h3>7. Czym jest mesjanizm w literaturze polskiej?</h3>
+            <label><input type="radio" name="q7" value="a"> Wiara w misję Polaków jako "Chrystusa narodów"</label>
+            <label><input type="radio" name="q7" value="b"> Kult natury i wsi</label>
+            <label><input type="radio" name="q7" value="c"> Odrzucenie Boga</label>
+        </div>
+
+        <div class="pytanie">
+            <h3>8. W "Kordianie" Juliusza Słowackiego, główny bohater nie zabija cara, bo:</h3>
+            <label><input type="radio" name="q8" value="a"> mdleje pod wpływem strachu (imaginacji)</label>
+            <label><input type="radio" name="q8" value="b"> zostaje powstrzymany przez straż</label>
+            <label><input type="radio" name="q8" value="c"> zmienia zdanie</label>
+        </div>
+        
+        <div class="pytanie">
+            <h3>9. Zaznacz 4 cechy bohatera romantycznego:</h3>
+            <label><input type="checkbox" name="q9" value="a"> Indywidualizm i bunt</label>
+            <label><input type="checkbox" name="q9" value="b"> Nieszczęśliwa miłość</label>
+            <label><input type="checkbox" name="q9" value="c"> Racjonalizm i umiar</label>
+            <label><input type="checkbox" name="q9" value="d"> Patriotyzm i poświęcenie</label>
+            <label><input type="checkbox" name="q9" value="e"> Weltschmerz (ból świata)</label>
+        </div>
+
+        <div class="pytanie">
+            <h3>10. Kto wypowiada słowa "Miej serce i patrzaj w serce!"?</h3>
+            <label><input type="radio" name="q10" value="a"> Starzec do Karusi</label>
+            <label><input type="radio" name="q10" value="b"> Karusia do Starca</label>
+            <label><input type="radio" name="q10" value="c"> Guślarz do widma</label>
+        </div>
+
+    </form>
+    
+    <button onclick="sprawdz()">SPRAWDŹ WYNIK</button>
+    <div id="wynik"></div>
+
+<script>
+function sprawdz() {
+    let punkty = 0;
+    const odp = { q1:'b', q2:'b', q3:'b', q4:'c', q5:'a', q6:'a', q7:'a', q8:'a', q10:'a' };
+    
+    for (let p in odp) {
+        if (document.querySelector(`input[name="${p}"]:checked`)?.value === odp[p]) punkty++;
+    }
+    // pytanie 9 - checkbox
+    const q9 = document.querySelectorAll('input[name="q9"]:checked');
+    const q9poprawne = ['a','b','d','e'];
+    let q9good = 0;
+    q9.forEach(ch => { if(q9poprawne.includes(ch.value)) q9good++; else q9good-- });
+    if(q9good === 4) punkty++;
+
+    const wynik = document.getElementById('wynik');
+    wynik.style.display = 'block';
+    wynik.innerHTML = `Twój wynik: ${punkty} / 10<br>${punkty >= 9 ? 'Celujący! Mistrz Romantyzmu!' : punkty >=7 ? 'Bardzo dobry!' : punkty >=5 ? 'Dobry, ale powtórz ballady.' : 'Muszę jeszcze zajrzeć do "Dziadów"...'}`;
+    window.scrollTo(0, document.body.scrollHeight);
+}
+</script>
+
+</body>
+</html>
