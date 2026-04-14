@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -7,7 +8,7 @@
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 20px auto;
             padding: 30px;
             background: #f9f9f9;
@@ -27,22 +28,23 @@
         }
         .question {
             margin: 25px 0;
-            padding: 15px;
+            padding: 20px;
             background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .points { float: right; color: #b71c1c; font-weight: bold; }
+        svg {
+            display: block;
+            margin: 20px auto;
+            background: #fff;
+            border: 1px solid #ddd;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        .points {
-            float: right;
-            color: #b71c1c;
-            font-weight: bold;
-        }
-        ul { list-style-type: none; padding-left: 0; }
-        li { margin: 8px 0; }
         .answer-line {
-            border-bottom: 1px dashed #666;
+            border-bottom: 1px dashed #333;
             display: inline-block;
-            width: 300px;
+            width: 280px;
             margin-left: 10px;
         }
         footer {
@@ -62,85 +64,131 @@
         <strong>Imię i nazwisko:</strong> _______________________________ 
         <strong>Klasa:</strong> 2____ 
         <strong>Data:</strong> ____________<br><br>
-        <strong>Maksymalna liczba punktów: 40</strong>
+        <strong>Maksymalna liczba punktów: 42</strong>
     </div>
 
     <h2>Zadanie 1. (6 pkt) Wybierz jedną poprawną odpowiedź.</h2>
     <div class="question">
         <ol>
-            <li>1. Która część serca posiada najgrubszą ścianę mięśniową?<br>
-                <input type="radio" name="q1"> a) prawa komora<br>
-                <input type="radio" name="q1"> b) lewa komora<br>
-                <input type="radio" name="q1"> c) lewy przedsionek<br>
-                <input type="radio" name="q1"> d) prawa przedsionek
+            <li>1. Która część serca ma najgrubszą ścianę?<br>
+                <input type="radio" name="q1"> a) prawa komora &nbsp;&nbsp;
+                <input type="radio" name="q1"> b) lewa komora &nbsp;&nbsp;
+                <input type="radio" name="q1"> c) lewy przedsionek &nbsp;&nbsp;
+                <input type="radio" name="q1"> d) prawy przedsionek
             </li><br>
-            
-            <li>2. Zastawka dwudzielna znajduje się pomiędzy:<br>
-                <input type="radio" name="q2"> a) lewą komorą a aortą<br>
-                <input type="radio" name="q2"> b) lewym przedsionkiem a lewą komorą<br>
-                <input type="radio" name="q2"> c) prawym przedsionkiem a prawą komorą<br>
-                <input type="radio" name="q2"> d) prawą komorą a tętnicą płucną
-            </li><br>
-            
-            <li>3. Automatyzm serca jest możliwy dzięki:<br>
-                <input type="radio" name="q3"> a) układowi przywspółczulnemu<br>
-                <input type="radio" name="q3"> b) węzłowi zatokowo-przedsionkowemu (SA)<br>
-                <input type="radio" name="q3"> c) nerwowi błędnemu<br>
-                <input type="radio" name="q3"> d) ciśnieniu tętniczemu
+            <li>2. Węzeł zatokowo-przedsionkowy (SA) znajduje się w ścianie:<br>
+                <input type="radio" name="q2"> a) lewego przedsionka &nbsp;&nbsp;
+                <input type="radio" name="q2"> b) prawego przedsionka &nbsp;&nbsp;
+                <input type="radio" name="q2"> c) lewej komory &nbsp;&nbsp;
+                <input type="radio" name="q2"> d) przegrody międzykomorowej
             </li>
         </ol>
     </div>
 
-    <h2>Zadanie 2. (8 pkt) Uzupełnij luki odpowiednimi wyrazami.</h2>
+    <h2>Zadanie 2. (8 pkt) Uzupełnij luki.</h2>
     <div class="question">
-        <p>1. Serce jest zbudowane z trzech warstw. Najgrubszą z nich jest <span class="answer-line"></span> (mięsień sercowy).</p>
-        <p>2. Krew z całego ciała (z wyjątkiem płuc) dopływa do serca przez <span class="answer-line"></span> i <span class="answer-line"></span>.</p>
-        <p>3. Węzeł przedsionkowo-komorowy znajduje się w przegrodzie między <span class="answer-line"></span>.</p>
-        <p>4. Ciśnienie krwi w dużej tętnicy (aorcie) podczas skurczu lewej komory wynosi średnio <span class="answer-line"></span> mmHg.</p>
-        <p>5. Faza rozkurczu całego serca nazywa się <span class="answer-line"></span>.</p>
+        <p>1. Największą tętnicą w organizmie jest <span class="answer-line"></span>.</p>
+        <p>2. Krew odtlenowana dopływa do serca przez <span class="answer-line"></span> i <span class="answer-line"></span>.</p>
+        <p>3. Zastawka między lewym przedsionkiem a lewą komorą to zastawka <span class="answer-line"></span>.</p>
+        <p>4. Impuls elektryczny w sercu jest generowany w <span class="answer-line"></span>.</p>
     </div>
 
-    <h2>Zadanie 3. (10 pkt) Budowa serca – podpisanie rysunku.</h2>
-    <div class="question">
-        <p>Na poniższym schemacie serca podpisz oznaczone struktury (1–10):</p>
-        <p><strong>(Tu w wersji drukowanej wstawia się rysunek serca – możesz dodać zdjęcie lub SVG)</strong></p>
-        <ol>
-            <li>1. ..............................................</li>
-            <li>2. ..............................................</li>
-            <li>3. ..............................................</li>
-            <li>4. ..............................................</li>
-            <li>5. ..............................................</li>
-            <li>6. ..............................................</li>
-            <li>7. ..............................................</li>
-            <li>8. ..............................................</li>
-            <li>9. ..............................................</li>
-            <li>10. .............................................</li>
+    <h2>Zadanie 3. (12 pkt) Podpisz schemat budowy serca.</h2>
+    <div class="question" style="text-align:center;">
+        <svg width="720" height="520" viewBox="0 0 720 520" xmlns="http://www.w3.org/2000/svg">
+            <!-- Tło serca -->
+            <path d="M360 80 Q200 150 180 280 Q190 420 280 480 Q360 510 360 510 Q440 510 500 480 Q590 420 610 280 Q590 150 360 80 Z" 
+                  fill="#ffebee" stroke="#b71c1c" stroke-width="18"/>
+            
+            <!-- Przegroda -->
+            <path d="M360 140 L360 460" fill="none" stroke="#b71c1c" stroke-width="12"/>
+            
+            <!-- Lewa strona (czerwona - utlenowana) -->
+            <path d="M370 160 Q480 200 500 300 Q480 400 400 440" fill="none" stroke="#c62828" stroke-width="35" opacity="0.25"/>
+            
+            <!-- Prawa strona (niebieska - odtlenowana) -->
+            <path d="M350 160 Q230 200 210 300 Q230 400 310 440" fill="none" stroke="#1565c0" stroke-width="35" opacity="0.25"/>
+            
+            <!-- Etykiety z numerami -->
+            <!-- 1 Żyła główna górna -->
+            <text x="80" y="140" font-size="18" font-weight="bold">1</text>
+            <line x1="110" y1="145" x2="210" y2="175" stroke="#333" stroke-width="2"/>
+            
+            <!-- 2 Tętnica płucna -->
+            <text x="520" y="110" font-size="18" font-weight="bold">2</text>
+            <line x1="540" y1="115" x2="460" y2="165" stroke="#333" stroke-width="2"/>
+            
+            <!-- 3 Aorta -->
+            <text x="580" y="190" font-size="18" font-weight="bold">3</text>
+            <line x1="610" y1="195" x2="510" y2="205" stroke="#333" stroke-width="2"/>
+            
+            <!-- 4 Żyły płucne -->
+            <text x="520" y="280" font-size="18" font-weight="bold">4</text>
+            <line x1="545" y1="285" x2="460" y2="255" stroke="#333" stroke-width="2"/>
+            
+            <!-- 5 Prawy przedsionek -->
+            <text x="140" y="220" font-size="18" font-weight="bold">5</text>
+            
+            <!-- 6 Lewy przedsionek -->
+            <text x="510" y="220" font-size="18" font-weight="bold">6</text>
+            
+            <!-- 7 Prawa komora -->
+            <text x="200" y="410" font-size="18" font-weight="bold">7</text>
+            
+            <!-- 8 Lewa komora -->
+            <text x="460" y="410" font-size="18" font-weight="bold">8</text>
+            
+            <!-- 9 Zastawka trójdzielna -->
+            <text x="280" y="340" font-size="18" font-weight="bold">9</text>
+            
+            <!-- 10 Zastawka dwudzielna -->
+            <text x="430" y="340" font-size="18" font-weight="bold">10</text>
+            
+            <!-- Nazwy struktur (dla nauczyciela - można zakryć) -->
+            <text x="30" y="490" font-size="13" fill="#444">1. Żyła główna górna</text>
+            <text x="30" y="510" font-size="13" fill="#444">2. Tętnica płucna</text>
+            <text x="200" y="490" font-size="13" fill="#444">3. Aorta</text>
+            <text x="200" y="510" font-size="13" fill="#444">4. Żyły płucne</text>
+            <text x="380" y="490" font-size="13" fill="#444">5. Prawy przedsionek</text>
+            <text x="380" y="510" font-size="13" fill="#444">6. Lewy przedsionek</text>
+            <text x="30" y="30" font-size="13" fill="#444">7. Prawa komora  8. Lewa komora</text>
+            <text x="380" y="30" font-size="13" fill="#444">9. Zastawka trójdzielna  10. Zastawka dwudzielna</text>
+        </svg>
+        
+        <p><strong>Podpisz numery 1–10:</strong></p>
+        <ol style="text-align:left; max-width:600px; margin:15px auto;">
+            <li>1. ................................................</li>
+            <li>2. ................................................</li>
+            <li>3. ................................................</li>
+            <li>4. ................................................</li>
+            <li>5. ................................................</li>
+            <li>6. ................................................</li>
+            <li>7. ................................................</li>
+            <li>8. ................................................</li>
+            <li>9. ................................................</li>
+            <li>10. ............................................... </li>
         </ol>
-        <p><small>(Możesz podać listę: aorta, tętnica płucna, żyły główne, żyły płucne, zastawka trójdzielna, zastawka dwudzielna, zastawki półksiężycowate, węzeł SA, przegroda międzykomorowa itp.)</small></p>
     </div>
 
     <h2>Zadanie 4. (6 pkt) Prawda czy Fałsz?</h2>
     <div class="question">
         <ol>
-            <li>1. Krew w tętnicach zawsze jest bogata w tlen. <span style="margin-left:30px;">P / F</span></li>
-            <li>2. Impuls elektryczny w sercu rozprzestrzenia się od węzła SA → węzeł AV → pęczek Hisa → włókna Purkiniego.</li>
-            <li>3. Podczas skurczu komór ciśnienie w lewej komorze jest wyższe niż w prawej.</li>
-            <li>4. Nerw błędny (X) przyspiesza pracę serca.</li>
-            <li>5. Cykl pracy serca trwa średnio 0,8 sekundy przy tętnię 75 uderzeń/min.</li>
-            <li>6. Zastawki półksiężycowate zapobiegają cofaniu się krwi z aorty i tętnicy płucnej do komór.</li>
+            <li>1. Lewa komora pompuje krew do krążenia płucnego. <span style="margin-left:40px;">P / F</span></li>
+            <li>2. Węzeł AV opóźnia impuls, aby przedsionki zdążyły się skurczyć przed komorami.</li>
+            <li>3. Ciśnienie skurczowe w aorcie jest wyższe niż w tętnicy płucnej.</li>
+            <li>4. Nerw błędny (X) zwalnia akcję serca.</li>
         </ol>
     </div>
 
     <h2>Zadanie 5. (10 pkt) Pytania otwarte.</h2>
     <div class="question">
-        <p><strong>1.</strong> Wyjaśnij mechanizm automatyzmu serca oraz rolę układu przewodzącego. (4 pkt)</p><br>
-        <p><strong>2.</strong> Porównaj krążenie płucne (małe) i krążenie obwodowe (duże) – podaj różnice w budowie, ciśnieniu i funkcji. (4 pkt)</p><br>
-        <p><strong>3.</strong> Co to jest rzut serca i od czego zależy? (2 pkt)</p>
+        <p><strong>1.</strong> Wyjaśnij rolę układu bodźcoprzewodzącego serca (węzeł SA, AV, pęczek Hisa, włókna Purkiniego). (5 pkt)</p><br><br>
+        <p><strong>2.</strong> Omów przebieg cyklu pracy serca (fazę skurczu i rozkurczu). (5 pkt)</p>
     </div>
 
     <footer>
-        <p><strong>Koniec testu</strong><br>
-        Powodzenia! • Test przygotowany dla klasy 2 liceum zgodnie z podstawą programową 2023/2024</p>
+        <p><strong>Koniec testu • Razem 42 punkty</strong><br>
+        Test przygotowany dla klasy 2 liceum</p>
     </footer>
 
 </body>
