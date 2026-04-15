@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Porównanie JSON vs REX</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+        .header-json { color: #f0db4f; background-color: #323330; }
+        .header-rex { color: #ffffff; background-color: #e63946; }
+    </style>
+</head>
+<body>
+
+<h2>Porównanie formatów danych: JSON vs REX</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Cecha</th>
+            <th class="header-json">JSON (JavaScript Object Notation)</th>
+            <th class="header-rex">REX / REX2 (ReCycle Export)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Typ formatu</strong></td>
+            <td>Tekstowy (human-readable) format wymiany danych.</td>
+            <td>Binarny format audio (pętle/loopy) z metadanymi.</td>
+        </tr>
+        <tr>
+            <td><strong>Główne zastosowanie</strong></td>
+            <td>Przesyłanie danych w aplikacjach webowych i API.</td>
+            <td>Produkcja muzyczna, dopasowanie tempa próbek audio.</td>
+        </tr>
+        <tr>
+            <td><strong>Struktura</strong></td>
+            <td>Pary klucz-wartość, tablice, obiekty.</td>
+            <td>"Plasterki" (slices) audio oraz informacje MIDI.</td>
+        </tr>
+        <tr>
+            <td><strong>Elastyczność</strong></td>
+            <td>Bardzo wysoka – może opisywać dowolne dane strukturalne.</td>
+            <td>Specjalistyczna – skupiona na synchronizacji rytmicznej.</td>
+        </tr>
+        <tr>
+            <td><strong>Rozmiar</strong></td>
+            <td>Lekki, zależny od ilości tekstu.</td>
+            <td>Mniejszy niż WAV (nie zapisuje ciszy między fragmentami).</td>
+        </tr>
+        <tr>
+            <td><strong>Kompatybilność</strong></td>
+            <td>Obsługiwany przez niemal każdy język programowania.</td>
+            <td>Wymaga programów typu DAW (np. Reason, Cubase, Logic).</td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
