@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test z Informatyki – Rozszerzony</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1a1a2e;
+      color: #eee;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { color: #00d4ff; text-align: center; }
+    h2 { color: #ffa500; margin-top: 30px; border-bottom: 1px solid #444; padding-bottom: 5px; }
+    .dane { background: #16213e; padding: 20px; border-radius: 10px; margin: 20px 0; }
+    .dane label { display: block; margin: 8px 0; }
+    .dane input { padding: 8px; width: 300px; background: #0f3460; border: 1px solid #555; color: #eee; border-radius: 5px; }
+    .q { background: #16213e; padding: 15px; margin: 10px 0; border-radius: 8px; }
+    .q p { font-weight: bold; margin-bottom: 8px; }
+    .q label { display: block; margin: 4px 0; cursor: pointer; padding: 4px 0; }
+    .q label:hover { color: #00d4ff; }
+    .q code { background: #0f3460; padding: 2px 6px; border-radius: 4px; color: #00d4ff; }
+    .q pre { background: #0a0a1a; padding: 10px; border-radius: 5px; overflow-x: auto; margin: 8px 0; font-size: 0.95em; color: #ccc; }
+    button { padding: 12px 25px; margin: 5px; border: none; border-radius: 8px; font-size: 1em; cursor: pointer; }
+    .btn-check { background: #00d4ff; color: #000; font-weight: bold; }
+    .btn-reset { background: #444; color: #ccc; }
+    #wynik { display: none; background: #16213e; padding: 20px; border-radius: 10px; margin: 20px 0; }
+    #wynik h2 { color: #00d4ff; }
+    .bar-bg { background: #0a0a1a; border-radius: 8px; height: 25px; margin: 10px 0; }
+    .bar { height: 100%; border-radius: 8px; background: #00d4ff; transition: width 0.5s; text-align: center; font-weight: bold; color: #000; font-size: 0.9em; line-height: 25px; }
+    .correct { border-left: 4px solid #4ade80; }
+    .wrong { border-left: 4px solid #f87171; }
+    .info-box { background: #0f3460; padding: 15px; border-radius: 8px; margin: 15px 0; }
+    .info-box h3 { color: #ffa500; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+<h1>Test z Informatyki</h1>
+<p style="text-align:center;color:#888;">System dwójkowy · Uprawnienia Linux · Sprzęt komputerowy · Algorytmika · Sieci</p>
+
+<!-- DANE -->
+<div class="dane">
+  <h2 style="margin-top:0;">Dane ucznia</h2>
+  <label>Imię i nazwisko: <input type="text" id="imie" placeholder="np. Jan Kowalski"></label>
+  <label>Klasa: <input type="text" id="klasa" placeholder="np. 7b"></label>
+  <label>Wiek: <input type="number" id="wiek" placeholder="np. 14"></label>
+  <label>Szkoła: <input type="text" id="szkola" placeholder="np. SP nr 3"></label>
+</div>
+
+<!-- ===================== SEKCJA 1: SYSTEM DWÓJKOWY ===================== -->
+<h2>🔢 Sekcja 1 – System dwójkowy</h2>
+
+<div class="info-box">
+  <h3>Przypomnienie</h3>
+  <p>Pozycje bitów (od prawej): 1, 2, 4, 8, 16, 32, 64, 128...</p>
+  <p><code>1011</code> = 1×8 + 0×4 + 1×2 + 1×1 = <strong>11</strong></p>
+  <p>r = 4, w = 2, x = 1 → <code>rwx</code> = 4+2+1 = <strong>7</strong></p>
+</div>
+
+<div class="q" id="box-q1">
+  <p>1. Zamień <code>1101 0011</code> na liczbę dziesiętną.</p>
+  <label><input type="radio" name="q1" value="0"> 195</label>
+  <label><input type="radio" name="q1" value="1"> 211</label>
+  <label><input type="radio" name="q1" value="0"> 203</label>
+  <label><input type="radio" name="q1" value="0"> 179</label>
+</div>
+
+<div class="q" id="box-q2">
+  <p>2. Zamień liczbę <strong>42</strong> na system binarny.</p>
+  <label><input type="radio" name="q2" value="0"> 110010</label>
+  <label><input type="radio" name="q2" value="0"> 100110</label>
+  <label><input type="radio" name="q2" value="1"> 101010</label>
+  <label><input type="radio" name="q2" value="0"> 101100</label>
+</div>
+
+<div class="q" id="box-q3">
+  <p>3. Ile wynosi <code>1010 1100</code> + <code>0001 0101</code> w systemie binarnym?</p>
+  <label><input type="radio" name="q3" value="0"> 1011 1110</label>
+  <label><input type="radio" name="q3" value="1"> 1100 0001</label>
+  <label><input type="radio" name="q3" value="0"> 1011 0001</label>
+  <label><input type="radio" name="q3" value="0"> 1100 1001</label>
+</div>
+
+<div class="q" id="box-q4">
+  <p>4. W systemie heksadecymalnym (szesnastkowym) litera <strong>F</strong> odpowiada liczbie:</p>
+  <label><input type="radio" name="q4" value="0"> 10</label>
+  <label><input type="radio" name="q4" value="0"> 12</label>
+  <label><input type="radio" name="q4" value="1"> 15</label>
+  <label><input type="radio" name="q4" value="0"> 16</label>
+</div>
+
+<div class="q" id="box-q5">
+  <p>5. Na ilu bitach zapisujemy jeden znak w kodowaniu ASCII?</p>
+  <label><input type="radio" name="q5" value="0"> 4</label>
+  <label><input type="radio" name="q5" value="1"> 7 (lub 8 rozszerzone)</label>
+  <label><input type="radio" name="q5" value="0"> 16</label>
+  <label><input type="radio" name="q5" value="0"> 32</label>
+</div>
+
+<!-- ===================== SEKCJA 2: UPRAWNIENIA LINUX ===================== -->
+<h2>🐧 Sekcja 2 – Uprawnienia Linux</h2>
+
+<div class="info-box">
+  <h3>Przypomnienie</h3>
+  <p>Zapis: <code>-rwxr-xr--</code> → typ pliku | właściciel | grupa | inni</p>
+  <p><code>chmod 754</code> → właściciel: rwx(7), grupa: r-x(5), inni: r--(4)</p>
+  <p>Polecenie <code>chown</code> zmienia właściciela, <code>chgrp</code> zmienia grupę.</p>
+</div>
+
+<div class="q" id="box-q6">
+  <p>6. Co oznacza zapis uprawnień <code>-rw-r-----</code>?</p>
+  <label><input type="radio" name="q6" value="0"> Właściciel: rwx, grupa: r--, inni: ---</label>
+  <label><input type="radio" name="q6" value="1"> Właściciel: rw-, grupa: r--, inni: ---</label>
+  <label><input type="radio" name="q6" value="0"> Właściciel: r--, grupa: rw-, inni: ---</label>
+  <label><input type="radio" name="q6" value="0"> Właściciel: rw-, grupa: rw-, inni: r--</label>
+</div>
+
+<div class="q" id="box-q7">
+  <p>7. Jaka jest wartość liczbowa uprawnień <code>rw-r-xr--</code>?</p>
+  <label><input type="radio" name="q7" value="0"> 764</label>
+  <label><input type="radio" name="q7" value="1"> 654</label>
+  <label><input type="radio" name="q7" value="0"> 745</label>
+  <label><input type="radio" name="q7" value="0"> 644</label>
+</div>
+
+<div class="q" id="box-q8">
+  <p>8. Polecenie <code>chmod +x skrypt.sh</code> powoduje:</p>
+  <label><input type="radio" name="q8" value="0"> usunięcie prawa do odczytu</label>
+  <label><input type="radio" name="q8" value="0"> zmianę właściciela pliku</label>
+  <label><input type="radio" name="q8" value="1"> dodanie prawa do wykonywania dla wszystkich</label>
+  <label><input type="radio" name="q8" value="0"> zmianę nazwy pliku</label>
+</div>
+
+<div class="q" id="box-q9">
+  <p>9. Co robi polecenie <code>chmod 700 tajne.txt</code>?</p>
+  <label><input type="radio" name="q9" value="1"> Tylko właściciel ma pełne prawa, reszta nic</label>
+  <label><input type="radio" name="q9" value="0"> Wszyscy mają pełne prawa</label>
+  <label><input type="radio" name="q9" value="0"> Nikt nie ma żadnych praw</label>
+  <label><input type="radio" name="q9" value="0"> Właściciel ma odczyt, reszta zapis</label>
+</div>
+
+<div class="q" id="box-q10">
+  <p>10. Litera <code>d</code> na początku zapisu <code>drwxr-xr-x</code> oznacza:</p>
+  <label><input type="radio" name="q10" value="0"> urządzenie (device)</label>
+  <label><input type="radio" name="q10" value="1"> katalog (directory)</label>
+  <label><input type="radio" name="q10" value="0"> dysk</label>
+  <label><input type="radio" name="q10" value="0"> plik do pobrania (download)</label>
+</div>
+
+<!-- ===================== SEKCJA 3: SPRZĘT KOMPUTEROWY ===================== -->
+<h2>🖥️ Sekcja 3 – Sprzęt komputerowy</h2>
+
+<div class="info-box">
+  <h3>Przypomnienie</h3>
+  <p><strong>CPU</strong> – procesor (wykonuje obliczenia)<br>
+  <strong>RAM</strong> – pamięć operacyjna (ulotna, szybka)<br>
+  <strong>HDD/SSD</strong> – dysk twardy (trwałe przechowywanie danych)<br>
+  <strong>GPU</strong> – karta graficzna (obliczenia graficzne)<br>
+  <strong>Płyta główna</strong> – łączy wszystkie komponenty<br>
+  <strong>PSU</strong> – zasilacz (dostarcza prąd)</p>
+</div>
+
+<div class="q" id="box-q11">
+  <p>11. Która pamięć jest <strong>ulotna</strong> (traci dane po wyłączeniu zasilania)?</p>
+  <label><input type="radio" name="q11" value="0"> SSD</label>
+  <label><input type="radio" name="q11" value="0"> HDD</label>
+  <label><input type="radio" name="q11" value="1"> RAM</label>
+  <label><input type="radio" name="q11" value="0"> Pendrive</label>
+</div>
+
+<div class="q" id="box-q12">
+  <p>12. Co oznacza skrót <strong>GPU</strong>?</p>
+  <label><input type="radio" name="q12" value="0"> General Purpose Unit</label>
+  <label><input type="radio" name="q12" value="1"> Graphics Processing Unit</label>
+  <label><input type="radio" name="q12" value="0"> Global Processing Unit</label>
+  <label><input type="radio" name="q12" value="0"> Graphical Power Utility</label>
+</div>
+
+<div class="q" id="box-q13">
+  <p>13. Czym różni się SSD od HDD?</p>
+  <label><input type="radio" name="q13" value="0"> SSD ma ruchome talerze, HDD nie</label>
+  <label><input type="radio" name="q13" value="1"> SSD używa pamięci flash (brak ruchomych części), HDD ma obracające się talerze</label>
+  <label><input type="radio" name="q13" value="0"> Niczym, to to samo</label>
+  <label><input type="radio" name="q13" value="0"> HDD jest zawsze szybszy od SSD</label>
+</div>
+
+<div class="q" id="box-q14">
+  <p>14. Za co odpowiada <strong>płyta główna</strong> (motherboard)?</p>
+  <label><input type="radio" name="q14" value="0"> Tylko za dźwięk</label>
+  <label><input type="radio" name="q14" value="0"> Tylko za grafikę</label>
+  <label><input type="radio" name="q14" value="1"> Łączy i umożliwia komunikację między wszystkimi podzespołami</label>
+  <label><input type="radio" name="q14" value="0"> Przechowuje dane na stałe</label>
+</div>
+
+<div class="q" id="box-q15">
+  <p>15. Co to jest BIOS/UEFI?</p>
+  <label><input type="radio" name="q15" value="0"> Program antywirusowy</label>
+  <label><input type="radio" name="q15" value="0"> System operacyjny</label>
+  <label><input type="radio" name="q15" value="1"> Oprogramowanie wbudowane (firmware) uruchamiane przed systemem operacyjnym, inicjalizuje sprzęt</label>
+  <label><input type="radio" name="q15" value="0"> Sterownik karty graficznej</label>
+</div>
+
+<div class="q" id="box-q16">
+  <p>16. Jaka jednostka opisuje taktowanie procesora?</p>
+  <label><input type="radio" name="q16" value="0"> MB (megabajty)</label>
+  <label><input type="radio" name="q16" value="1"> GHz (gigaherce)</label>
+  <label><input type="radio" name="q16" value="0"> TB (terabajty)</label>
+  <label><input type="radio" name="q16" value="0"> Mbps (megabity na sekundę)</label>
+</div>
+
+<div class="q" id="box-q17">
+  <p>17. Co to jest pamięć cache (podręczna) procesora?</p>
+  <label><input type="radio" name="q17" value="0"> Dodatkowy dysk twardy</label>
+  <label><input type="radio" name="q17" value="1"> Bardzo szybka, mała pamięć wbudowana w procesor, przechowuje najczęściej używane dane</label>
+  <label><input type="radio" name="q17" value="0"> To samo co RAM</label>
+  <label><input type="radio" name="q17" value="0"> Pamięć karty graficznej</label>
+</div>
+
+<div class="q" id="box-q18">
+  <p>18. Który port jest obecnie najczęściej używany do podłączania urządzeń zewnętrznych?</p>
+  <label><input type="radio" name="q18" value="0"> Port równoległy (LPT)</label>
+  <label><input type="radio" name="q18" value="0"> PS/2</label>
+  <label><input type="radio" name="q18" value="0"> Port szeregowy (COM)</label>
+  <label><input type="radio" name="q18" value="1"> USB</label>
+</div>
+
+<!-- ===================== SEKCJA 4: ALGORYTMIKA ===================== -->
+<h2>⚙️ Sekcja 4 – Algorytmika</h2>
+
+<div class="info-box">
+  <h3>Przypomnienie</h3>
+  <p><strong>Algorytm</strong> – skończony ciąg kroków prowadzący do rozwiązania problemu.</p>
+  <p>Sposoby zapisu: lista kroków, schemat blokowy, pseudokod, język programowania.</p>
+  <p>Podstawowe struktury: <strong>sekwencja</strong>, <strong>selekcja</strong> (if/else), <strong>iteracja</strong> (pętla).</p>
+  <p>Złożoność: ile operacji wykonuje algorytm w zależności od rozmiaru danych (n).</p>
+</div>
+
+<div class="q" id="box-q19">
+  <p>19. Co to jest <strong>algorytm</strong>?</p>
+  <label><input type="radio" name="q19" value="0"> Rodzaj procesora</label>
+  <label><input type="radio" name="q19" value="0"> Język programowania</label>
+  <label><input type="radio" name="q19" value="1"> Skończony ciąg jednoznacznych kroków prowadzących do rozwiązania problemu</label>
+  <label><input type="radio" name="q19" value="0"> Program komputerowy zapisany na dysku</label>
+</div>
+
+<div class="q" id="box-q20">
+  <p>20. Jaki kształt ma blok <strong>warunku (decyzji)</strong> w schemacie blokowym?</p>
+  <label><input type="radio" name="q20" value="0"> Prostokąt</label>
+  <label><input type="radio" name="q20" value="1"> Romb</label>
+  <label><input type="radio" name="q20" value="0"> Owal</label>
+  <label><input type="radio" name="q20" value="0"> Równoległobok</label>
+</div>
+
+<div class="q" id="box-q21">
+  <p>21. Przeanalizuj pseudokod. Jaki będzie wynik?</p>
+  <pre>x = 5
+y = 3
+DOPÓKI y > 0:
+    x = x + 2
+    y = y - 1
+WYPISZ x</pre>
+  <label><input type="radio" name="q21" value="0"> 9</label>
+  <label><input type="radio" name="q21" value="1"> 11</label>
+  <label><input type="radio" name="q21" value="0"> 13</label>
+  <label><input type="radio" name="q21" value="0"> 7</label>
+</div>
+
+<div class="q" id="box-q22">
+  <p>22. Algorytm sortowania bąbelkowego (bubble sort) w najgorszym przypadku ma złożoność:</p>
+  <label><input type="radio" name="q22" value="0"> O(n)</label>
+  <label><input type="radio" name="q22" value="0"> O(n log n)</label>
+  <label><input type="radio" name="q22" value="1"> O(n²)</label>
+  <label><input type="radio" name="q22" value="0"> O(log n)</label>
+</div>
+
+<div class="q" id="box-q23">
+  <p>23. Na czym polega <strong>wyszukiwanie binarne</strong> (binary search)?</p>
+  <label><input type="radio" name="q23" value="0"> Sprawdzamy elementy od końca</label>
+  <label><input type="radio" name="q23" value="1"> Dzielimy posortowany zbiór na pół i sprawdzamy, w której połowie jest szukany element</label>
+  <label><input type="radio" name="q23" value="0"> Sprawdzamy wszystkie elementy po kolei</label>
+  <label><input type="radio" name="q23" value="0"> Losowo wybieramy elementy do porównania</label>
+</div>
+
+<div class="q" id="box-q24">
+  <p>24. Co wypisze ten pseudokod?</p>
+  <pre>wynik = 1
+DLA i = 1 DO 4:
+    wynik = wynik * i
+WYPISZ wynik</pre>
+  <label><input type="radio" name="q24" value="0"> 10</label>
+  <label><input type="radio" name="q24" value="0"> 16</label>
+  <label><input type="radio" name="q24" value="1"> 24</label>
+  <label><input type="radio" name="q24" value="0"> 4</label>
+</div>
+
+<div class="q" id="box-q25">
+  <p>25. Który zapis jest poprawną instrukcją warunkową?</p>
+  <label><input type="radio" name="q25" value="0"> JEŻELI x == 5 TO KONIEC</label>
+  <label><input type="radio" name="q25" value="1"> JEŻELI x > 10 TO WYPISZ "duże" W PRZECIWNYM RAZIE WYPISZ "małe"</label>
+  <label><input type="radio" name="q25" value="0"> DOPÓKI x > 10 TO WYPISZ x</label>
+  <label><input type="radio" name="q25" value="0"> DLA x = "tak" WYPISZ x</label>
+</div>
+
+<div class="q" id="box-q26">
+  <p>26. Co to jest <strong>rekurencja</strong>?</p>
+  <label><input type="radio" name="q26" value="0"> Pętla FOR</label>
+  <label><input type="radio" name="q26" value="0"> Sortowanie danych</label>
+  <label><input type="radio" name="q26" value="1"> Sytuacja, w której funkcja wywołuje samą siebie</label>
+  <label><input type="radio" name="q26" value="0"> Zapisywanie danych do pliku</label>
+</div>
+
+<!-- ===================== SEKCJA 5: SIECI KOMPUTEROWE ===================== -->
+<h2>🌐 Sekcja 5 – Sieci komputerowe</h2>
+
+<div class="info-box">
+  <h3>Przypomnienie</h3>
+  <p><strong>IP</strong> – adres urządzenia w sieci. IPv4 = 32 bity, IPv6 = 128 bitów.</p>
+  <p><strong>DNS</strong> – zamienia nazwy domen (np. google.com) na adresy IP.</p>
+  <p><strong>TCP/IP</strong> – zestaw protokołów komunikacji w sieci.</p>
+  <p><strong>Router</strong> – kieruje ruch między sieciami. <strong>Switch</strong> – łączy urządzenia w sieci lokalnej.</p>
+  <p><strong>Maska podsieci</strong> – określa, która część adresu IP to sieć, a która host.</p>
+</div>
+
+<div class="q" id="box-q27">
+  <p>27. Maska podsieci <code>255.255.255.0</code> oznacza, że na adresy hostów przeznaczono:</p>
+  <label><input type="radio" name="q27" value="0"> 16 bitów</label>
+  <label><input type="radio" name="q27" value="1"> 8 bitów (254 użyteczne adresy)</label>
+  <label><input type="radio" name="q27" value="0"> 24 bity</label>
+  <label><input type="radio" name="q27" value="0"> 32 bity</label>
+</div>
+
+<div class="q" id="box-q28">
+  <p>28. Który protokół odpowiada za bezpieczne (szyfrowane) przeglądanie stron?</p>
+  <label><input type="radio" name="q28" value="0"> HTTP</label>
+  <label><input type="radio" name="q28" value="1"> HTTPS</label>
+  <label><input type="radio" name="q28" value="0"> FTP</label>
+  <label><input type="radio" name="q28" value="0"> SMTP</label>
+</div>
+
+<div class="q" id="box-q29">
+  <p>29. Co robi serwer <strong>DHCP</strong>?</p>
+  <label><input type="radio" name="q29" value="0"> Przechowuje strony internetowe</label>
+  <label><input type="radio" name="q29" value="1"> Automatycznie przydziela adresy IP urządzeniom w sieci</label>
+  <label><input type="radio" name="q29" value="0"> Szyfruje połączenia</label>
+  <label><input type="radio" name="q29" value="0"> Filtruje spam w poczcie</label>
+</div>
+
+<div class="q" id="box-q30">
+  <p>30. Ile bitów ma adres <strong>IPv6</strong>?</p>
+  <label><input type="radio" name="q30" value="0"> 32</label>
+  <label><input type="radio" name="q30" value="0"> 64</label>
+  <label><input type="radio" name="q30" value="1"> 128</label>
+  <label><input type="radio" name="q30" value="0"> 256</label>
+</div>
+
+<!-- ===================== PRZYCISKI ===================== -->
+<div style="margin: 30px 0;">
+  <button class="btn-check" onclick="sprawdz()">Sprawdź wynik</button>
+  <button class="btn-reset" onclick="resetuj()">Resetuj test</button>
+</div>
+
+<!-- ===================== WYNIK ===================== -->
+<div id="wynik">
+  <h2>Wynik testu</h2>
+  <div id="info"></div>
+  <div class="bar-bg"><div class="bar" id="bar" style="width:0%"></div></div>
+  <div id="ocena" style="font-size:1.2em; font-weight:bold; margin-top:10px;"></div>
+  <div id="szczegoly" style="margin-top:15px;"></div>
+</div>
+
+</div>
+
+<script>
+const TOTAL = 30;
+
+const poprawneOdp = {
+  q1: "211", q2: "101010", q3: "1100 0001", q4: "15",
+  q5: "7 (lub 8 rozszerzone)", q6: "Właściciel: rw-, grupa: r--, inni: ---",
+  q7: "654", q8: "dodanie prawa do wykonywania dla wszystkich",
+  q9: "Tylko właściciel ma pełne prawa, reszta nic", q10: "katalog (directory)",
+  q11: "RAM", q12: "Graphics Processing Unit",
+  q13: "SSD używa pamięci flash, HDD ma talerze",
+  q14: "Łączy wszystkie podzespoły", q15: "Firmware uruchamiany przed OS",
+  q16: "GHz", q17: "Szybka pamięć wbudowana w CPU",
+  q18: "USB", q19: "Skończony ciąg kroków",
+  q20: "Romb", q21: "11 (pętla 3 razy: 5→7→9→11)",
+  q22: "O(n²)", q23: "Dzielimy posortowany zbiór na pół",
+  q24: "24 (4! = 1×2×3×4)", q25: "IF ... ELSE ...",
+  q26: "Funkcja wywołuje samą siebie",
+  q27: "8 bitów na hosty", q28: "HTTPS",
+  q29: "Automatycznie przydziela IP", q30: "128 bitów"
+};
+
+function sprawdz() {
+  const imie   = document.getElementById("imie").value || "—";
+  const klasa  = document.getElementById("klasa").value || "—";
+  const wiek   = document.getElementById("wiek").value || "—";
+  const szkola = document.getElementById("szkola").value || "—";
+
+  let suma = 0;
+  let szcz = "";
+
+  let sekcje = {
+    "System dwójkowy (1-5)": {od:1, do:5, pkt:0, max:5},
+    "Uprawnienia Linux (6-10)": {od:6, do:10, pkt:0, max:5},
+    "Sprzęt komputerowy (11-18)": {od:11, do:18, pkt:0, max:8},
+    "Algorytmika (19-26)": {od:19, do:26, pkt:0, max:8},
+    "Sieci komputerowe (27-30)": {od:27, do:30, pkt:0, max:4}
+  };
+
+  for (let i = 1; i <= TOTAL; i++) {
+    const odp = document.getElementsByName("q" + i);
+    const box = document.getElementById("box-q" + i);
+    let answered = false, correct = false;
+
+    box.classList.remove("correct","wrong");
+
+    for (let j = 0; j < odp.length; j++) {
+      if (odp[j].checked) {
+        answered = true;
+        if (odp[j].value === "1") { correct = true; suma++; }
+      }
+    }
+
+    if (answered) {
+      box.classList.add(correct ? "correct" : "wrong");
+    }
+
+    for (let s in sekcje) {
+      if (i >= sekcje[s].od && i <= sekcje[s].do && correct) {
+        sekcje[s].pkt++;
+      }
+    }
+  }
+
+  const procent = Math.round((suma / TOTAL) * 100);
+
+  let ocenaTxt, ocenaColor;
+  if      (procent >= 96) { ocenaTxt = "Celujący (6)";        ocenaColor = "#fbbf24"; }
+  else if (procent >= 86) { ocenaTxt = "Bardzo dobry (5)";    ocenaColor = "#4ade80"; }
+  else if (procent >= 70) { ocenaTxt = "Dobry (4)";           ocenaColor = "#38bdf8"; }
+  else if (procent >= 50) { ocenaTxt = "Dostateczny (3)";     ocenaColor = "#fb923c"; }
+  else if (procent >= 30) { ocenaTxt = "Dopuszczający (2)";   ocenaColor = "#f97316"; }
+  else                    { ocenaTxt = "Niedostateczny (1)";  ocenaColor = "#ef4444"; }
+
+  document.getElementById("info").innerHTML =
+    "<strong>Uczeń:</strong> " + imie +
+    " | <strong>Klasa:</strong> " + klasa +
+    " | <strong>Wiek:</strong> " + wiek +
+    " | <strong>Szkoła:</strong> " + szkola +
+    "<br><br><strong>Wynik:</strong> " + suma + " / " + TOTAL + " (" + procent + "%)";
+
+  const bar = document.getElementById("bar");
+  bar.style.width = procent + "%";
+  bar.textContent = procent + "%";
+
+  const ocenaEl = document.getElementById("ocena");
+  ocenaEl.textContent = "Ocena: " + ocenaTxt;
+  ocenaEl.style.color = ocenaColor;
+
+  szcz = "<h3 style='color:#ffa500;margin-bottom:10px;'>Wynik wg sekcji:</h3><table style='width:100%;border-collapse:collapse;'>";
+  for (let s in sekcje) {
+    const p = sekcje[s].pkt;
+    const m = sekcje[s].max;
+    const pr = Math.round((p/m)*100);
+    let c = pr >= 70 ? "#4ade80" : pr >= 50 ? "#ffa500" : "#f87171";
+    szcz += "<tr style='border-bottom:1px solid #333;'><td style='padding:6px;'>" + s + "</td><td style='padding:6px;text-align:right;color:" + c + ";font-weight:bold;'>" + p + "/" + m + " (" + pr + "%)</td></tr>";
+  }
+  szcz += "</table>";
+
+  document.getElementById("szczegoly").innerHTML = szcz;
+  document.getElementById("wynik").style.display = "block";
+  document.getElementById("wynik").scrollIntoView({ behavior: "smooth" });
+}
+
+function resetuj() {
+  for (let i = 1; i <= TOTAL; i++) {
+    const odp = document.getElementsByName("q" + i);
+    const box = document.getElementById("box-q" + i);
+    box.classList.remove("correct","wrong");
+    for (let j = 0; j < odp.length; j++) odp[j].checked = false;
+  }
+  document.getElementById("wynik").style.display = "none";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+</script>
+
+</body>
+</html>
