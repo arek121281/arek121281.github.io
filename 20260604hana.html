@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Quiz - Irregular Verbs & City Phrases</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .bg-animation {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-animation .bubble {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.08;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 0.08; }
+            100% { transform: translateY(-20vh) scale(1); opacity: 0; }
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 40px 20px 20px;
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            font-weight: 800;
+            background: linear-gradient(90deg, #f7971e, #ffd200, #f7971e);
+            background-size: 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        header p {
+            font-size: 1.1em;
+            color: #b8b8d4;
+            margin-top: 8px;
+        }
+
+        /* ===== NAVIGATION TABS ===== */
+        .tab-container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 28px;
+            border: 2px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.05);
+            color: #ccc;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-btn:hover {
+            border-color: #ffd200;
+            color: #ffd200;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 210, 0, 0.2);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+            border-color: transparent;
+            box-shadow: 0 8px 30px rgba(255, 210, 0, 0.35);
+        }
+
+        /* ===== SCORE PANEL ===== */
+        .score-panel {
+            position: relative;
+            z-index: 10;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-item .label {
+            font-size: 0.8em;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .score-item .value {
+            font-size: 2em;
+            font-weight: 700;
+        }
+
+        .score-item .value.correct { color: #00e676; }
+        .score-item .value.wrong { color: #ff5252; }
+        .score-item .value.total { color: #ffd200; }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f7971e, #ffd200);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        /* ===== QUIZ CONTAINER ===== */
+        .quiz-container {
+            position: relative;
+            z-index: 10;
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        /* ===== QUESTION CARD ===== */
+        .question-card {
+            background: rgba(255,255,255,0.07);
+            border-radius: 24px;
+            padding: 40px 35px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: fadeInUp 0.5s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-number {
+            font-size: 0.85em;
+            color: #ffd200;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+
+        .category-badge.verbs { background: rgba(156, 39, 176, 0.3); color: #ce93d8; }
+        .category-badge.shopping { background: rgba(0, 150, 136, 0.3); color: #80cbc4; }
+        .category-badge.directions { background: rgba(33, 150, 243, 0.3); color: #90caf9; }
+
+        .question-text {
+            font-size: 1.35em;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .question-text .blank {
+            color: #ffd200;
+            border-bottom: 3px dashed #ffd200;
+            padding: 0 5px;
+        }
+
+        .question-hint {
+            font-size: 0.9em;
+            color: #888;
+            font-style: italic;
+            margin-bottom: 28px;
+        }
+
+        /* ===== OPTIONS ===== */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        @media (max-width: 500px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+
+        .option-btn {
+            position: relative;
+            padding: 16px 20px;
+            border: 2px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.04);
+            color: #ddd;
+            border-radius: 16px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            overflow: hidden;
+        }
+
+        .option-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: #ffd200;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255,210,0,0.15);
+        }
+
+        .option-btn:hover:not(.disabled)::before { opacity: 1; }
+
+        .option-btn .option-letter {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            margin-right: 12px;
+            font-weight: 700;
+            font-size: 0.85em;
+        }
+
+        .option-btn.correct {
+            border-color: #00e676 !important;
+            background: rgba(0, 230, 118, 0.15) !important;
+            color: #00e676 !important;
+            animation: correctPulse 0.5s ease;
+        }
+
+        .option-btn.correct .option-letter {
+            background: #00e676;
+            color: #1a1a2e;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .option-btn.wrong {
+            border-color: #ff5252 !important;
+            background: rgba(255, 82, 82, 0.15) !important;
+            color: #ff5252 !important;
+            animation: shake 0.5s ease;
+        }
+
+        .option-btn.wrong .option-letter {
+            background: #ff5252;
+            color: #fff;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
+        .option-btn.disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        /* ===== EXPLANATION BOX ===== */
+        .explanation-box {
+            margin-top: 20px;
+            padding: 18px 22px;
+            border-radius: 14px;
+            background: rgba(255, 210, 0, 0.08);
+            border-left: 4px solid #ffd200;
+            font-size: 0.92em;
+            line-height: 1.6;
+            color: #ccc;
+            animation: fadeInUp 0.4s ease;
+            display: none;
+        }
+
+        .explanation-box strong {
+            color: #ffd200;
+        }
+
+        /* ===== NEXT BUTTON ===== */
+        .next-btn {
+            display: none;
+            margin: 25px auto 0;
+            padding: 14px 50px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.05em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(255,210,0,0.3);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(255,210,0,0.45);
+        }
+
+        /* ===== RESULTS SCREEN ===== */
+        .results-screen {
+            display: none;
+            text-align: center;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .results-screen .trophy {
+            font-size: 5em;
+            margin-bottom: 10px;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .results-screen h2 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .results-screen .final-score {
+            font-size: 3.5em;
+            font-weight: 800;
+            background: linear-gradient(90deg, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .results-screen .message {
+            font-size: 1.1em;
+            color: #b8b8d4;
+            margin: 15px 0 30px;
+            line-height: 1.6;
+        }
+
+        .results-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .results-details .detail-card {
+            background: rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .detail-card .detail-value {
+            font-size: 2em;
+            font-weight: 700;
+        }
+
+        .detail-card .detail-label {
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .restart-btn {
+            padding: 16px 55px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(255,210,0,0.3);
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(255,210,0,0.45);
+        }
+
+        /* ===== REVIEW SECTION ===== */
+        .review-section {
+            display: none;
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .review-section h3 {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #ffd200;
+        }
+
+        .review-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid;
+        }
+
+        .review-item.review-correct { border-left-color: #00e676; }
+        .review-item.review-wrong { border-left-color: #ff5252; }
+
+        .review-item .review-q {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .review-item .review-answer {
+            font-size: 0.9em;
+            color: #aaa;
+        }
+
+        .review-item .review-answer span {
+            font-weight: 600;
+        }
+
+        .review-item .review-answer .green { color: #00e676; }
+        .review-item .review-answer .red { color: #ff5252; }
+
+        /* ===== START SCREEN ===== */
+        .start-screen {
+            text-align: center;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .start-screen .icon-row {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .start-screen h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .start-screen p {
+            color: #b8b8d4;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .start-screen .feature-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px 15px;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover { transform: translateY(-5px); }
+
+        .feature-card .feat-icon { font-size: 2em; margin-bottom: 10px; }
+        .feature-card .feat-title { font-weight: 600; margin-bottom: 5px; }
+        .feature-card .feat-desc { font-size: 0.8em; color: #888; }
+
+        .start-btn {
+            padding: 18px 65px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.15em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(255,210,0,0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 8px 30px rgba(255,210,0,0.3); }
+            50% { box-shadow: 0 8px 50px rgba(255,210,0,0.55); }
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.8em; }
+            .start-screen .feature-list { grid-template-columns: 1fr; }
+            .results-details { grid-template-columns: 1fr; }
+            .question-text { font-size: 1.1em; }
+            .question-card { padding: 25px 20px; }
+        }
+
+        /* ===== INPUT-BASED QUESTIONS ===== */
+        .input-answer-container {
+            display: flex;
+            gap: 12px;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+
+        .input-answer {
+            flex: 1;
+            min-width: 200px;
+            padding: 14px 20px;
+            border: 2px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            border-radius: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-answer:focus {
+            border-color: #ffd200;
+        }
+
+        .submit-answer-btn {
+            padding: 14px 30px;
+            background: linear-gradient(135deg, #7c4dff, #b388ff);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-answer-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(124, 77, 255, 0.3);
+        }
+
+        .submit-answer-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Streak indicator */
+        .streak-container {
+            text-align: center;
+            margin-bottom: 10px;
+            min-height: 30px;
+        }
+
+        .streak-badge {
+            display: inline-block;
+            padding: 5px 18px;
+            background: linear-gradient(135deg, #ff6d00, #ff9100);
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 700;
+            color: #fff;
+            animation: fadeInUp 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Animated Background -->
+<div class="bg-animation" id="bgAnimation"></div>
+
+<!-- Header -->
+<header>
+    <h1>🇬🇧 English Quiz</h1>
+    <p>Nieregularne czasowniki • Zakupy • Pytanie o drogę</p>
+</header>
+
+<!-- Category Tabs -->
+<div class="tab-container" id="tabContainer" style="display:none;">
+    <button class="tab-btn active" data-category="all">📚 Wszystkie</button>
+    <button class="tab-btn" data-category="verbs">📝 Czasowniki</button>
+    <button class="tab-btn" data-category="shopping">🛍️ Zakupy</button>
+    <button class="tab-btn" data-category="directions">🗺️ Pytanie o drogę</button>
+</div>
+
+<!-- Score Panel -->
+<div class="score-panel" id="scorePanel" style="display:none;">
+    <div class="score-item">
+        <div class="label">Poprawne</div>
+        <div class="value correct" id="correctScore">0</div>
+    </div>
+    <div class="score-item">
+        <div class="label">Błędne</div>
+        <div class="value wrong" id="wrongScore">0</div>
+    </div>
+    <div class="score-item">
+        <div class="label">Pytanie</div>
+        <div class="value total" id="questionCounter">0/0</div>
+    </div>
+</div>
+
+<!-- Streak -->
+<div class="streak-container" id="streakContainer" style="display:none;"></div>
+
+<!-- Progress Bar -->
+<div class="progress-bar-container" id="progressContainer" style="display:none;">
+    <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
+</div>
+
+<!-- Quiz Container -->
+<div class="quiz-container" id="quizContainer">
+
+    <!-- Start Screen -->
+    <div class="start-screen" id="startScreen">
+        <div class="icon-row">📖 ✈️ 🛒</div>
+        <h2>Sprawdź swoją wiedzę!</h2>
+        <p>Quiz zawiera pytania z trzech kategorii: nieregularne formy czasowników angielskich, 
+           zwroty przydatne podczas zakupów oraz pytanie o drogę w mieście.</p>
+        
+        <div class="feature-list">
+            <div class="feature-card">
+                <div class="feat-icon">📝</div>
+                <div class="feat-title">Irregular Verbs</div>
+                <div class="feat-desc">Past Simple & Past Participle nieregularnych czasowników</div>
+            </div>
+            <div class="feature-card">
+                <div class="feat-icon">🛍️</div>
+                <div class="feat-title">Shopping</div>
+                <div class="feat-desc">Zwroty i dialogi w sklepie, na targu, w centrum handlowym</div>
+            </div>
+            <div class="feature-card">
+                <div class="feat-icon">🗺️</div>
+                <div class="feat-title">Directions</div>
+                <div class="feat-desc">Jak zapytać o drogę i zrozumieć wskazówki</div>
+            </div>
+        </div>
+
+        <button class="start-btn" onclick="startQuiz()">🚀 Rozpocznij Quiz</button>
+    </div>
+
+    <!-- Question Card (rendered dynamically) -->
+    <div id="questionArea" style="display:none;"></div>
+
+    <!-- Results Screen -->
+    <div class="results-screen" id="resultsScreen">
+        <div class="trophy" id="trophyIcon">🏆</div>
+        <h2>Quiz zakończony!</h2>
+        <div class="final-score" id="finalScore">0%</div>
+        <div class="message" id="resultMessage"></div>
+
+        <div class="results-details">
+            <div class="detail-card">
+                <div class="detail-value green" style="color:#00e676;" id="finalCorrect">0</div>
+                <div class="detail-label">Poprawne</div>
+            </div>
+            <div class="detail-card">
+                <div class="detail-value" style="color:#ff5252;" id="finalWrong">0</div>
+                <div class="detail-label">Błędne</div>
+            </div>
+            <div class="detail-card">
+                <div class="detail-value" style="color:#ffd200;" id="finalStreak">0</div>
+                <div class="detail-label">Najlepsza seria</div>
+            </div>
+        </div>
+
+        <button class="restart-btn" onclick="restartQuiz()">🔄 Zagraj ponownie</button>
+
+        <div class="review-section" id="reviewSection">
+            <h3>📋 Przegląd odpowiedzi</h3>
+            <div id="reviewList"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// QUESTION DATABASE
+// ============================================================
+const allQuestions = [
+
+    // ===================== IRREGULAR VERBS =====================
+    {
+        category: "verbs",
+        type: "choice",
+        question: 'Jakie są formy Past Simple i Past Participle czasownika <span class="blank">GO</span>?',
+        hint: "go → ??? → ???",
+        options: ["went / gone", "goed / goed", "went / went", "gone / went"],
+        correct: 0,
+        explanation: "<strong>Go → went → gone.</strong> Jeden z najczęściej używanych czasowników nieregularnych."
+    },
+    {
+        category: "verbs",
+        type: "choice",
+        question: 'Uzupełnij: She <span class="blank">______</span> a beautiful song yesterday.',
+        hint: "sing → ???",
+        options: ["singed", "sang", "sung", "singing"],
+        correct: 1,
+        explanation: "<strong>Sing → sang → sung.</strong> W Past Simple używamy formy 'sang'."
+    },
+    {
+        category: "verbs",
+        type: "choice",
+        question: 'Wybierz poprawną formę: They have <span class="blank">______</span> all the water.',
+        hint: "drink → drank → ???",
+        options: ["drank", "drinked", "drunk", "drinking"],
+        correct: 2,
+        explanation: "<strong>Drink → drank → drunk.</strong> W Present Perfect używamy Past Participle: 'drunk'."
+    },
+    {
+        category: "verbs",
+        type: "choice",
+        question: 'I <span class="blank">______</span> my keys on the table this morning.',
+        hint: "leave → ??? → left",
+        options: ["leaved", "lefted", "left", "leaving"],
+        correct: 2,
+        explanation: "<strong>Leave → left → left.</strong> Forma Past Simple i Past Participle jest taka sama: 'left'."
+    },
+    {
+        category: "verbs",
+        type: "choice",
+        question: 'He has never <span class="blank">______</span> a horse before.',
+        hint: "ride → rode → ???",
+        options: ["rode", "rided", "ridden", "riding"],
+        correct: 2,
+        explanation: "<strong>Ride → rode → ridden.</strong> Past Participle to 'ridden'."
+    },
+    {
+        category: "verbs",
+        type: "choice",
+        question: 'Jakie są trzy formy czasownika <span class="blank">BUY</span>?',
+        hint: "buy → ??? → ???",
+        options: ["buyed / buyed", "bought / bought", "bought / buyed", "buy / bought"],
+        correct: 1,
+        explanation: "<strong>Buy → bought → bought.</strong> Obie formy (Past Simple i Past Participle) są takie same."
+    },
+    {
+        category: "verbs",
+        type: "choice",
+        question: 'We <span class="blank">______</span> the movie together last weekend.',
+        hint: "see → ??? → seen",
+        options: ["seed", "seen", "saw", "seeing"],
+        correct: 2,
+        explanation: "<strong>See → saw → seen.</strong> W Past Simple używamy 'saw'."
+    },
+    {
+        category: "verbs",
+        type: "choice",
+        question: 'The bird has <span class="blank">______</span> away.',
+        hint: "fly → flew → ???",
+        options: ["flew", "flown", "flied", "flying"],
+        correct: 1,
+        explanation: "<strong>Fly → flew → flown.</strong> Past Participle to 'flown'."
+    },
+    {
+        category: "verbs",
+        type: "choice",
+        question: 'She <span class="blank">______</span> the letter and started crying.',
+        hint: "read → ??? → ???  (uwaga na wymowę!)",
+        options: ["readed", "red", "read", "reading"],
+        correct: 2,
+        explanation: "<strong>Read → read → read.</strong> Pisownia ta sama, ale wymowa zmienia się: /riːd/ → /red/ → /red/."
+    },
+    {
+        category: "verbs",
+        type: "choice",
+        question: 'I have <span class="blank">______</span> you a present.',
+        hint: "bring → brought → ???",
+        options: ["bringed", "brought", "bring", "brang"],
+        correct: 1,
+        explanation: "<strong>Bring → brought → brought.</strong> Obie formy brzmią tak samo."
+    },
+    {
+        category: "verbs",
+        type: "choice",
+        question: 'He <span class="blank">______</span> asleep during the film.',
+        hint: "fall → ??? → fallen",
+        options: ["falled", "fell", "fallen", "falling"],
+        correct: 1,
+        explanation: "<strong>Fall → fell → fallen.</strong> Past Simple to 'fell'."
+    },
+    {
+        category: "verbs",
+        type: "choice",
+        question: 'They have <span class="blank">______</span> that song many times.',
+        hint: "choose → chose → ???",
+        options: ["chose", "choosed", "chosen", "choosing"],
+        correct: 2,
+        explanation: "<strong>Choose → chose → chosen.</strong> Past Participle to 'chosen'."
+    },
+
+    // ===================== SHOPPING =====================
+    {
+        category: "shopping",
+        type: "choice",
+        question: 'Jak po angielsku powiesz: <em>"Ile to kosztuje?"</em>',
+        hint: "Typowe pytanie w sklepie",
+        options: ["How many does it cost?", "How much does it cost?", "What does it cost for?", "How is the price?"],
+        correct: 1,
+        explanation: "<strong>'How much does it cost?'</strong> lub krócej: 'How much is it?' — podstawowe pytanie o cenę."
+    },
+    {
+        category: "shopping",
+        type: "choice",
+        question: 'Co oznacza zdanie: <em>"I\'m just browsing, thank you."</em>?',
+        hint: "Typowa odpowiedź, gdy sprzedawca pyta czy pomóc",
+        options: ["Szukam czegoś konkretnego", "Tylko się rozglądam, dziękuję", "Chciałbym to kupić", "Potrzebuję pomocy"],
+        correct: 1,
+        explanation: "<strong>'I'm just browsing'</strong> = Tylko się rozglądam. Przydatne, gdy chcesz spokojnie popatrzeć."
+    },
+    {
+        category: "shopping",
+        type: "choice",
+        question: 'Jak zapytasz: <em>"Czy mogę to przymierzyć?"</em>',
+        hint: "try ___",
+        options: ["Can I try it on?", "Can I try it up?", "Can I put it?", "Can I wear it now?"],
+        correct: 0,
+        explanation: "<strong>'Can I try it on?'</strong> — phrasal verb 'try on' oznacza przymierzyć ubranie."
+    },
+    {
+        category: "shopping",
+        type: "choice",
+        question: 'Sprzedawca mówi: <em>"Would you like a receipt?"</em> Co to znaczy?',
+        hint: "receipt = ???",
+        options: ["Czy chciałbyś rabat?", "Czy chciałbyś paragon?", "Czy chciałbyś torbę?", "Czy chciałbyś zapłacić?"],
+        correct: 1,
+        explanation: "<strong>Receipt</strong> = paragon / rachunek. Standardowe pytanie przy kasie."
+    },
+    {
+        category: "shopping",
+        type: "choice",
+        question: 'Jak powiesz: <em>"Czy macie to w większym rozmiarze?"</em>',
+        hint: "bigger size",
+        options: [
+            "Do you have it in a bigger size?",
+            "Do you have it more big?",
+            "Can I get this in large amount?",
+            "Is there a most big one?"
+        ],
+        correct: 0,
+        explanation: "<strong>'Do you have it in a bigger size?'</strong> — naturalne pytanie o inny rozmiar."
+    },
+    {
+        category: "shopping",
+        type: "choice",
+        question: 'Co oznacza napis <em>"Buy one, get one free"</em>?',
+        hint: "Popularna promocja w sklepach anglojęzycznych",
+        options: [
+            "Kup jeden, drugi w połowie ceny",
+            "Kup jeden, dostaniesz jeden gratis",
+            "Kup dwa, zapłać za trzy",
+            "Pierwszy zakup za darmo"
+        ],
+        correct: 1,
+        explanation: "<strong>'Buy one, get one free' (BOGOF)</strong> = Kup jeden, drugi gratis. Bardzo popularna promocja!"
+    },
+    {
+        category: "shopping",
+        type: "choice",
+        question: 'Jak zapytasz: <em>"Czy mogę zapłacić kartą?"</em>',
+        hint: "pay by ___",
+        options: [
+            "Can I pay by card?",
+            "Can I give you card?",
+            "Do I use the card?",
+            "Is card available for pay?"
+        ],
+        correct: 0,
+        explanation: "<strong>'Can I pay by card?'</strong> Można też powiedzieć: 'Do you accept credit cards?'"
+    },
+    {
+        category: "shopping",
+        type: "choice",
+        question: 'Co odpowiada polskiemu <em>"Gdzie jest przymierzalnia?"</em>?',
+        hint: "fitting ___",
+        options: [
+            "Where is the changing room?",
+            "Where is the dressing table?",
+            "Where can I change my clothes?",
+            "Where is the wardrobe?"
+        ],
+        correct: 0,
+        explanation: "<strong>'Where is the changing room?'</strong> lub 'fitting room' — oba określenia są poprawne."
+    },
+    {
+        category: "shopping",
+        type: "choice",
+        question: '"I\'d like to <span class="blank">______</span> this item, please." (zwrócić)',
+        hint: "Chcesz oddać zakupiony produkt",
+        options: ["return", "give back", "send", "refuse"],
+        correct: 0,
+        explanation: "<strong>'Return'</strong> = zwrócić towar. 'I'd like to return this' — chciałbym to zwrócić."
+    },
+    {
+        category: "shopping",
+        type: "choice",
+        question: 'Ekspedientka pyta: <em>"What size are you?"</em> Jak odpowiesz, że nosisz rozmiar M?',
+        hint: "I'm a ___",
+        options: ["I'm size M.", "I wear the M.", "I'm a medium.", "My size is middle."],
+        correct: 2,
+        explanation: "<strong>'I'm a medium.'</strong> Rozmiary: small (S), medium (M), large (L), extra-large (XL)."
+    },
+
+    // ===================== ASKING FOR DIRECTIONS =====================
+    {
+        category: "directions",
+        type: "choice",
+        question: 'Jak grzecznie zapytasz o drogę po angielsku?',
+        hint: "Excuse me, could you…",
+        options: [
+            "Where is the station? Tell me!",
+            "Excuse me, could you tell me how to get to the station?",
+            "Hey, station where?",
+            "I need station. Show me."
+        ],
+        correct: 1,
+        explanation: "<strong>'Excuse me, could you tell me how to get to…?'</strong> — grzeczna i naturalna forma pytania o drogę."
+    },
+    {
+        category: "directions",
+        type: "choice",
+        question: 'Co oznacza: <em>"Turn left at the traffic lights"</em>?',
+        hint: "traffic lights = ???",
+        options: [
+            "Skręć w prawo przy sklepie",
+            "Jedź prosto do świateł",
+            "Skręć w lewo przy sygnalizacji świetlnej",
+            "Zawróć na skrzyżowaniu"
+        ],
+        correct: 2,
+        explanation: "<strong>'Turn left at the traffic lights'</strong> = Skręć w lewo przy światłach. 'Traffic lights' = sygnalizacja świetlna."
+    },
+    {
+        category: "directions",
+        type: "choice",
+        question: 'Ktoś mówi: <em>"Go straight on and it\'s on your right."</em> Co to znaczy?',
+        hint: "straight on = ???",
+        options: [
+            "Skręć w prawo od razu",
+            "Idź prosto, a to będzie po twojej prawej stronie",
+            "To jest po lewej, za rogiem",
+            "Musisz się cofnąć"
+        ],
+        correct: 1,
+        explanation: "<strong>'Go straight on'</strong> = idź prosto, <strong>'on your right'</strong> = po twojej prawej stronie."
+    },
+    {
+        category: "directions",
+        type: "choice",
+        question: 'Jak po angielsku powiedzieć <em>"naprzeciwko"</em>?',
+        hint: "The bank is ___ the post office.",
+        options: ["next to", "opposite", "behind", "between"],
+        correct: 1,
+        explanation: "<strong>'Opposite'</strong> = naprzeciwko. 'The bank is opposite the post office' = Bank jest naprzeciwko poczty."
+    },
+    {
+        category: "directions",
+        type: "choice",
+        question: 'Co oznacza: <em>"Take the second turning on the left"</em>?',
+        hint: "turning = ???",
+        options: [
+            "Skręć dwa razy w prawo",
+            "Skręć w drugą ulicę w lewo",
+            "Idź prosto dwa kilometry",
+            "Cofnij się do drugiego skrzyżowania"
+        ],
+        correct: 1,
+        explanation: "<strong>'Take the second turning on the left'</strong> = Skręć w drugą uliczkę/przecznicę w lewo."
+    },
+    {
+        category: "directions",
+        type: "choice",
+        question: 'Jak zapytasz: <em>"Czy to daleko stąd?"</em>',
+        hint: "Is it far ___?",
+        options: [
+            "Is it far from here?",
+            "Is it long from here?",
+            "Does it far away?",
+            "How long is it here?"
+        ],
+        correct: 0,
+        explanation: "<strong>'Is it far from here?'</strong> — proste i naturalne pytanie o odległość."
+    },
+    {
+        category: "directions",
+        type: "choice",
+        question: 'Ktoś mówi: <em>"It\'s just around the corner."</em> Znaczy to:',
+        hint: "around the corner = ???",
+        options: [
+            "To jest na końcu ulicy",
+            "To jest tuż za rogiem",
+            "To jest bardzo daleko",
+            "Musisz skręcić dwa razy"
+        ],
+        correct: 1,
+        explanation: "<strong>'Around the corner'</strong> = za rogiem. 'Just' podkreśla, że jest bardzo blisko."
+    },
+    {
+        category: "directions",
+        type: "choice",
+        question: 'Jak powiedzieć: <em>"Idź wzdłuż tej ulicy"</em>?',
+        hint: "___ along this street",
+        options: [
+            "Walk along this street",
+            "Walk through this street",
+            "Go inside this street",
+            "Run across this street"
+        ],
+        correct: 0,
+        explanation: "<strong>'Walk along this street'</strong> lub 'Go along this street' = Idź wzdłuż tej ulicy."
+    },
+    {
+        category: "directions",
+        type: "choice",
+        question: 'Co oznacza <em>"crossroads"</em>?',
+        hint: "cross + roads = ???",
+        options: [
+            "Chodnik",
+            "Przejście dla pieszych",
+            "Skrzyżowanie",
+            "Rondo"
+        ],
+        correct: 2,
+        explanation: "<strong>'Crossroads'</strong> = skrzyżowanie. 'Roundabout' = rondo. 'Pedestrian crossing' = przejście dla pieszych."
+    },
+    {
+        category: "directions",
+        type: "choice",
+        question: '"You can\'t <span class="blank">______</span> it." — Jak powiedzieć "Nie możesz tego przegapić"?',
+        hint: "To jest tak widoczne, że na pewno trafisz.",
+        options: ["lose", "miss", "pass", "forget"],
+        correct: 1,
+        explanation: "<strong>'You can't miss it.'</strong> — Nie da się tego przegapić / Na pewno trafisz. Bardzo popularne wyrażenie!"
+    },
+    {
+        category: "directions",
+        type: "choice",
+        question: 'Jak zapytać: <em>"Przepraszam, czy jest tu gdzieś w pobliżu apteka?"</em>',
+        hint: "Is there a ___ near here?",
+        options: [
+            "Excuse me, is there a pharmacy near here?",
+            "Sorry, where I find pharmacy?",
+            "Please, pharmacy is close?",
+            "Excuse me, do you have pharmacy?"
+        ],
+        correct: 0,
+        explanation: "<strong>'Excuse me, is there a pharmacy near here?'</strong> — grzeczne pytanie o miejsce w pobliżu."
+    },
+    {
+        category: "directions",
+        type: "choice",
+        question: 'Co oznacza: <em>"Go past the church"</em>?',
+        hint: "go past = ???",
+        options: [
+            "Wejdź do kościoła",
+            "Idź w stronę kościoła",
+            "Miń kościół (idź obok niego)",
+            "Skręć przy kościele"
+        ],
+        correct: 2,
+        explanation: "<strong>'Go past'</strong> = minąć coś, przejść obok. 'Go past the church' = Miń kościół."
+    }
+];
+
+// ============================================================
+// QUIZ STATE
+// ============================================================
+let currentQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let wrongCount = 0;
+let streak = 0;
+let bestStreak = 0;
+let answered = false;
+let userAnswers = []; // {questionIndex, userChoice, correct}
+
+// ============================================================
+// INITIALIZE BACKGROUND
+// ============================================================
+function createBubbles() {
+    const container = document.getElementById('bgAnimation');
+    const colors = ['#f7971e', '#ffd200', '#7c4dff', '#00e676', '#ff5252', '#90caf9'];
+    for (let i = 0; i < 25; i++) {
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+        const size = Math.random() * 120 + 40;
+        bubble.style.width = size + 'px';
+        bubble.style.height = size + 'px';
+        bubble.style.left = Math.random() * 100 + '%';
+        bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
+        bubble.style.animationDuration = (Math.random() * 15 + 10) + 's';
+        bubble.style.animationDelay = (Math.random() * 10) + 's';
+        container.appendChild(bubble);
+    }
+}
+createBubbles();
+
+// ============================================================
+// START QUIZ
+// ============================================================
+function startQuiz() {
+    const category = getActiveCategory();
+    filterQuestions(category);
+    shuffleArray(currentQuestions);
+
+    currentIndex = 0;
+    score = 0;
+    wrongCount = 0;
+    streak = 0;
+    bestStreak = 0;
+    userAnswers = [];
+
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('resultsScreen').style.display = 'none';
+    document.getElementById('tabContainer').style.display = 'flex';
+    document.getElementById('scorePanel').style.display = 'flex';
+    document.getElementById('streakContainer').style.display = 'block';
+    document.getElementById('progressContainer').style.display = 'block';
+    document.getElementById('questionArea').style.display = 'block';
+
+    updateScorePanel();
+    showQuestion();
+}
+
+function getActiveCategory() {
+    const activeTab = document.querySelector('.tab-btn.active');
+    return activeTab ? activeTab.dataset.category : 'all';
+}
+
+function filterQuestions(category) {
+    if (category === 'all') {
+        currentQuestions = [...allQuestions];
+    } else {
+        currentQuestions = allQuestions.filter(q => q.category === category);
+    }
+}
+
+// ============================================================
+// TAB CLICK
+// ============================================================
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        // Restart with new filter
+        startQuiz();
+    });
+});
+
+// ============================================================
+// SHOW QUESTION
+// ============================================================
+function showQuestion() {
+    if (currentIndex >= currentQuestions.length) {
+        showResults();
+        return;
+    }
+
+    answered = false;
+    const q = currentQuestions[currentIndex];
+    const area = document.getElementById('questionArea');
+
+    const categoryLabels = {
+        verbs: '📝 Nieregularne czasowniki',
+        shopping: '🛍️ Zakupy',
+        directions: '🗺️ Pytanie o drogę'
+    };
+
+    const letters = ['A', 'B', 'C', 'D'];
+
+    let optionsHTML = '';
+    if (q.type === 'choice') {
+        optionsHTML = `<div class="options-grid">`;
+        q.options.forEach((opt, i) => {
+            optionsHTML += `
+                <button class="option-btn" onclick="selectOption(this, ${i})" data-index="${i}">
+                    <span class="option-letter">${letters[i]}</span>${opt}
+                </button>`;
+        });
+        optionsHTML += `</div>`;
+    }
+
+    area.innerHTML = `
+        <div class="question-card" id="questionCard">
+            <div class="question-number">PYTANIE ${currentIndex + 1} / ${currentQuestions.length}</div>
+            <span class="category-badge ${q.category}">${categoryLabels[q.category]}</span>
+            <div class="question-text">${q.question}</div>
+            <div class="question-hint">💡 ${q.hint}</div>
+            ${optionsHTML}
+            <div class="explanation-box" id="explanationBox">${q.explanation}</div>
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Następne pytanie →</button>
+        </div>
+    `;
+
+    updateScorePanel();
+    updateProgressBar();
+}
+
+// ============================================================
+// SELECT OPTION
+// ============================================================
+function selectOption(btn, index) {
+    if (answered) return;
+    answered = true;
+
+    const q = currentQuestions[currentIndex];
+    const allBtns = document.querySelectorAll('.option-btn');
+    const isCorrect = index === q.correct;
+
+    // Disable all buttons
+    allBtns.forEach(b => b.classList.add('disabled'));
+
+    if (isCorrect) {
+        btn.classList.add('correct');
+        score++;
+        streak++;
+        if (streak > bestStreak) bestStreak = streak;
+    } else {
+        btn.classList.add('wrong');
+        allBtns[q.correct].classList.add('correct');
+        wrongCount++;
+        streak = 0;
+    }
+
+    userAnswers.push({
+        questionIndex: currentIndex,
+        userChoice: index,
+        correct: isCorrect
+    });
+
+    // Show explanation
+    document.getElementById('explanationBox').style.display = 'block';
+    document.getElementById('nextBtn').style.display = 'block';
+
+    updateScorePanel();
+    updateStreak();
+}
+
+// ============================================================
+// NEXT QUESTION
+// ============================================================
+function nextQuestion() {
+    currentIndex++;
+    showQuestion();
+}
+
+// ============================================================
+// UPDATE UI
+// ============================================================
+function updateScorePanel() {
+    document.getElementById('correctScore').textContent = score;
+    document.getElementById('wrongScore').textContent = wrongCount;
+    document.getElementById('questionCounter').textContent = `${currentIndex + 1}/${currentQuestions.length}`;
+}
+
+function updateProgressBar() {
+    const pct = ((currentIndex) / currentQuestions.length) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+}
+
+function updateStreak() {
+    const container = document.getElementById('streakContainer');
+    if (streak >= 3) {
+        container.innerHTML = `<span class="streak-badge">🔥 Seria ${streak} poprawnych!</span>`;
+    } else {
+        container.innerHTML = '';
+    }
+}
+
+// ============================================================
+// SHOW RESULTS
+// ============================================================
+function showResults() {
+    document.getElementById('questionArea').style.display = 'none';
+    document.getElementById('scorePanel').style.display = 'none';
+    document.getElementById('streakContainer').style.display = 'none';
+    document.getElementById('progressContainer').style.display = 'none';
+
+    const resultsScreen = document.getElementById('resultsScreen');
+    resultsScreen.style.display = 'block';
+
+    const total = currentQuestions.length;
+    const pct = Math.round((score / total) * 100);
+
+    document.getElementById('finalScore').textContent = pct + '%';
+    document.getElementById('finalCorrect').textContent = score;
+    document.getElementById('finalWrong').textContent = wrongCount;
+    document.getElementById('finalStreak').textContent = bestStreak;
+
+    let message = '';
+    let trophy = '🏆';
+
+    if (pct === 100) {
+        message = 'Perfekcyjnie! Jesteś mistrzem angielskiego! 🌟';
+        trophy = '👑';
+    } else if (pct >= 80) {
+        message = 'Świetny wynik! Masz bardzo dobrą wiedzę! 💪';
+        trophy = '🏆';
+    } else if (pct >= 60) {
+        message = 'Dobry wynik! Jeszcze trochę praktyki i będzie idealnie! 📚';
+        trophy = '🥈';
+    } else if (pct >= 40) {
+        message = 'Niezły start! Powtórz materiał i spróbuj ponownie. 💡';
+        trophy = '🥉';
+    } else {
+        message = 'Nie poddawaj się! Każdy błąd to lekcja. Spróbuj jeszcze raz! 🚀';
+        trophy = '💪';
+    }
+
+    document.getElementById('trophyIcon').textContent = trophy;
+    document.getElementById('resultMessage').textContent = message;
+
+    // Build review
+    const reviewSection = document.getElementById('reviewSection');
+    const reviewList = document.getElementById('reviewList');
+    reviewList.innerHTML = '';
+
+    userAnswers.forEach((ua, i) => {
+        const q = currentQuestions[ua.questionIndex];
+        const div = document.createElement('div');
+        div.classList.add('review-item', ua.correct ? 'review-correct' : 'review-wrong');
+
+        let cleanQuestion = q.question.replace(/<[^>]+>/g, '___');
+
+        div.innerHTML = `
+            <div class="review-q">${i + 1}. ${cleanQuestion}</div>
+            <div class="review-answer">
+                Twoja odpowiedź: <span class="${ua.correct ? 'green' : 'red'}">${q.options[ua.userChoice]}</span>
+                ${!ua.correct ? `<br>Poprawna: <span class="green">${q.options[q.correct]}</span>` : ''}
+            </div>
+        `;
+        reviewList.appendChild(div);
+    });
+
+    reviewSection.style.display = 'block';
+}
+
+// ============================================================
+// RESTART
+// ============================================================
+function restartQuiz() {
+    document.getElementById('resultsScreen').style.display = 'none';
+    document.getElementById('reviewSection').style.display = 'none';
+    document.getElementById('startScreen').style.display = 'block';
+    document.getElementById('tabContainer').style.display = 'none';
+
+    // Reset active tab
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.tab-btn[data-category="all"]').classList.add('active');
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+}
+</script>
+
+</body>
+</html>
